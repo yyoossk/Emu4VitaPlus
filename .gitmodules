@@ -1,0 +1,48 @@
+[submodule "cores/libretro-fba-lite"]
+	path = cores/libretro-fba-lite
+	url = https://gitee.com/yizhigai/libretro-fba-lite
+[submodule "cores/gpsp"]
+	path = cores/gpsp
+	url = git@github.com:libretro/gpsp.git
+[submodule "cores/libretro-fceumm"]
+	path = cores/libretro-fceumm
+	url = git@github.com:libretro/libretro-fceumm.git
+[submodule "cores/gambatte-libretro"]
+	path = cores/gambatte-libretro
+	url = git@github.com:libretro/gambatte-libretro.git
+[submodule "cores/beetle-ngp-libretro"]
+	path = cores/beetle-ngp-libretro
+	url = git@github.com:libretro/beetle-ngp-libretro.git
+[submodule "cores/beetle-pce-fast-libretro"]
+	path = cores/beetle-pce-fast-libretro
+	url = git@github.com:libretro/beetle-pce-fast-libretro.git
+[submodule "cores/Genesis-Plus-GX"]
+	path = cores/Genesis-Plus-GX
+	url = git@github.com:libretro/Genesis-Plus-GX.git
+[submodule "cores/beetle-supergrafx-libretro"]
+	path = cores/beetle-supergrafx-libretro
+	url = git@github.com:libretro/beetle-supergrafx-libretro.git
+[submodule "cores/beetle-wswan-libretro"]
+	path = cores/beetle-wswan-libretro
+	url = git@github.com:libretro/beetle-wswan-libretro.git
+[submodule "cores/nestopia"]
+	path = cores/nestopia
+	url = git@github.com:libretro/nestopia.git
+[submodule "cores/pcsx_rearmed"]
+	path = cores/pcsx_rearmed
+	url = git@github.com:libretro/pcsx_rearmed.git
+[submodule "cores/picodrive"]
+	path = cores/picodrive
+	url = git@github.com:libretro/picodrive.git
+[submodule "cores/snes9x2002"]
+	path = cores/snes9x2002
+	url = git@github.com:libretro/snes9x2002.git
+[submodule "cores/snes9x2005"]
+	path = cores/snes9x2005
+	url = git@github.com:libretro/snes9x2005.git
+[submodule "cores/snes9x2010"]
+	path = cores/snes9x2010
+	url = git@github.com:libretro/snes9x2010.git
+[submodule "cores/vba-next"]
+	path = cores/vba-next
+	url = git@github.com:libretro/vba-next.git
