@@ -1,0 +1,71 @@
+MAJOR_VER := 0
+MINOR_VER := 1
+
+PADDED_MAJOR_VER  := $(shell printf "%02d" $(MAJOR_VER))
+PADDED_MINOR_VER  := $(shell printf "%03d" $(MINOR_VER))
+APP_VER           := $(MAJOR_VER).$(PADDED_MINOR_VER)
+SFO_APP_VER       := $(PADDED_MAJOR_VER).$(PADDED_MINOR_VER)
+
+PREFIX  := arm-vita-eabi
+CC      := $(PREFIX)-gcc
+CXX     := $(PREFIX)-g++
+AS      := $(PREFIX)-as
+AR      := $(PREFIX)-ar
+OBJCOPY := $(PREFIX)-objcopy
+STRIP   := $(PREFIX)-strip
+NM      := $(PREFIX)-nm
+LD      := $(CXX)
+
+ARCHFLAGS := -marm -mcpu=cortex-a9 -mfloat-abi=hard -DVITA -D__vita__
+CFLAGS    := $(ARCHFLAGS) -mword-relocations -fno-optimize-sibling-calls
+CFLAGS    += -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables 
+CFLAGS    += -ffast-math -ftree-vectorize
+CFLAGS    += -O3
+ASFLAGS   := $(CFLAGS) $(INCDIRS)
+
+WARNINGS := -Wall -Wno-format-truncation
+
+CFLAGS    += $(WARNINGS) $(INCDIRS) $(DEFINES)
+CXXFLAGS  := $(CFLAGS) -fno-rtti -fno-exceptions
+LDFLAGS   := -Wl,-q $(LIBDIRS)
+
+DEFINES := \
+	-DAPP_NAME_STR=\"$(APP_NAME_STR)\" \
+	-DAPP_NAME_EXT_STR=\"$(APP_NAME_EXT_STR)\" \
+	-DAPP_VER_STR=\"$(APP_VER_STR)\" \
+	-DAPP_TITLEID=\"$(SFO_TITLE_ID)\" \
+	-DAPP_DIR_NAME=\"$(APP_DIR_NAME)\" \
+	-DBUILD_DATE=\"$(BUILD_DATE)\" \
+	-DCORE_SOFTWARE=\"$(CORE_SOFTWARE)\"
+
+DEFINES += $(CORE_DEFINES)
+DEFINES += $(SEVENZ_DEFINES)
+
+ifeq ($(WANT_OPENGL), 1)
+	DEFINES += -DSCE_LIBC_SIZE=$(SCE_LIBC_SIZE)
+endif
+
+ifeq ($(WANT_DISPLAY_ROTATE), 1)
+	DEFINES += -DWANT_DISPLAY_ROTATE
+endif
+
+ifeq ($(WANT_EXT_ARCHIVE_ROM), 1)
+	DEFINES += -DWANT_EXT_ARCHIVE_ROM
+endif
+
+CORE_ARGS += platform=vita EXTERNAL_ZLIB=1
+
+PRIVATE_PKG_DIR            := $(APP_DIR)/pkg
+PUBLIC_PKG_DIR             := $(FRONTEND_DIR)/pkgs/vita
+BUILD_DIR                  := $(FRONTEND_DIR)/../build/$(CORE_FILE_NAME)
+
+EBOOT_PATH         := $(PRIVATE_PKG_DIR)/eboot.bin
+SFO_PATH           := $(PRIVATE_PKG_DIR)/sce_sys/param.sfo
+
+all: create_dirs build-core
+
+create_dirs:
+	@mkdir -p $(BUILD_DIR)
+
+build-core:
+	cd $(CORE_MAKEFILE_DIR) && make -f $(CORE_MAKEFILE_NAME) $(CORE_ARGS)
