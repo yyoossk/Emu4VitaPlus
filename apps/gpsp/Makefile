@@ -11,11 +11,10 @@ SFO_TITLE_ID     := GPSP_PLUS
 CORE_SOFTWARE    := Nintendo\ -\ Game\ Boy\ Advance
 
 MAKEFILE_PATH      := $(abspath $(lastword $(MAKEFILE_LIST)))
-MAKEFILE_DIR       := $(dir $(MAKEFILE_PATH))
-
-APP_DIR            := $(patsubst %/,%, $(MAKEFILE_DIR))
-FRONTEND_DIR       := $(APP_DIR)/../../frontend
-CORE_DIR           := $(APP_DIR)/../../cores/$(CORE_FILE_NAME)
+APP_DIR            := $(dir $(MAKEFILE_PATH))
+ROOT_DIR           := $(APP_DIR)/../../
+FRONTEND_DIR       := $(ROOT_DIR)/frontend
+CORE_DIR           := $(ROOT_DIR)/cores/$(CORE_FILE_NAME)
 CORE_MAKEFILE_DIR  := $(CORE_DIR)
 CORE_MAKEFILE_NAME := Makefile
 

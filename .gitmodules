@@ -46,3 +46,6 @@
 [submodule "cores/vba-next"]
 	path = cores/vba-next
 	url = git@github.com:libretro/vba-next.git
+[submodule "deps/libretro-common"]
+	path = deps/libretro-common
+	url = git@github.com:libretro/libretro-common.git

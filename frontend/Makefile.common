@@ -24,19 +24,21 @@ CFLAGS    += -O3
 ASFLAGS   := $(CFLAGS) $(INCDIRS)
 
 WARNINGS := -Wall -Wno-format-truncation
-
 CFLAGS    += $(WARNINGS) $(INCDIRS) $(DEFINES)
-CXXFLAGS  := $(CFLAGS) -fno-rtti -fno-exceptions
+CXXFLAGS  := $(CFLAGS) -fno-rtti -fno-exceptions -std=c++11
 LDFLAGS   := -Wl,-q $(LIBDIRS)
 
+SCE_LIBC_SIZE  := 4194304
+
 DEFINES := \
-	-DAPP_NAME_STR=\"$(APP_NAME_STR)\" \
-	-DAPP_NAME_EXT_STR=\"$(APP_NAME_EXT_STR)\" \
-	-DAPP_VER_STR=\"$(APP_VER_STR)\" \
+	-DAPP_NAME_STR=\"$(APP_NAME)\" \
+	-DAPP_NAME_EXT_STR=\"$(APP_NAME_EXT)\" \
+	-DAPP_VER_STR=\"$(APP_VER)\" \
 	-DAPP_TITLEID=\"$(SFO_TITLE_ID)\" \
 	-DAPP_DIR_NAME=\"$(APP_DIR_NAME)\" \
 	-DBUILD_DATE=\"$(BUILD_DATE)\" \
-	-DCORE_SOFTWARE=\"$(CORE_SOFTWARE)\"
+	-DCORE_SOFTWARE=\"$(CORE_SOFTWARE)\" \
+	-DSCE_LIBC_SIZE=$(SCE_LIBC_SIZE)
 
 DEFINES += $(CORE_DEFINES)
 DEFINES += $(SEVENZ_DEFINES)
@@ -57,15 +59,95 @@ CORE_ARGS += platform=vita EXTERNAL_ZLIB=1
 
 PRIVATE_PKG_DIR            := $(APP_DIR)/pkg
 PUBLIC_PKG_DIR             := $(FRONTEND_DIR)/pkgs/vita
-BUILD_DIR                  := $(FRONTEND_DIR)/../build/$(CORE_FILE_NAME)
+BUILD_DIR                  := $(ROOT_DIR)/build/$(CORE_FILE_NAME)
+DEPS_DIR                   := $(ROOT_DIR)/deps
+SRC_DIR                    := $(FRONTEND_DIR)/source
+RELEASES_DIR               := $(ROOT_DIR)/releases
 
 EBOOT_PATH         := $(PRIVATE_PKG_DIR)/eboot.bin
 SFO_PATH           := $(PRIVATE_PKG_DIR)/sce_sys/param.sfo
+TARGET_PATH        := $(RELEASES_DIR)/$(TARGET)_v$(APP_VER).vpk
 
-all: create_dirs build-core
+rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
+
+SRC_C   := $(call rwildcard, $(SRC_DIR), *.c)
+SRC_CPP := $(call rwildcard, $(SRC_DIR), *.cpp)
+OBJS    := $(patsubst $(SRC_DIR)%,$(BUILD_DIR)%,$(patsubst %.c,%.o, $(SRC_C)))
+OBJS    += $(patsubst $(SRC_DIR)%,$(BUILD_DIR)%,$(patsubst %.cpp,%.o, $(SRC_CPP)))
+LIBS    := $(CORE_MAKEFILE_DIR)/$(CORE_FILE_NAME)_libretro_vita.a \
+    -lvita2d \
+    -lpng \
+	-ljpeg \
+	-lz \
+	-lScePvf_stub \
+	-lScePgf_stub \
+	-lSceDisplay_stub \
+	-lSceGxm_stub \
+	-lSceCtrl_stub \
+	-lSceTouch_stub \
+	-lScePower_stub \
+	-lSceAudio_stub \
+	-lSceRtc_stub \
+	-lSceCommonDialog_stub \
+	-lSceSysmodule_stub \
+	-lSceAppUtil_stub \
+	-lSceAppMgr_stub \
+	-lSceShellSvc_stub \
+	-lSceMotion_stub \
+	-lSceHid_stub \
+	-lSceFiber_stub
+
+all: create_dirs build-core build-deps build-app
 
 create_dirs:
 	@mkdir -p $(BUILD_DIR)
 
 build-core:
 	cd $(CORE_MAKEFILE_DIR) && make -f $(CORE_MAKEFILE_NAME) $(CORE_ARGS)
+
+build-deps:
+	cd $(DEPS_DIR) && make -f Makefile.libretro_comm
+
+build-app: $(EBOOT_PATH) $(SFO_PATH)
+	@rm -rf $(TARGET_PATH)
+	@mkdir -p $(RELEASES_DIR)
+	cd $(PUBLIC_PKG_DIR) && zip -r $(TARGET_PATH) ./*
+	cd $(PRIVATE_PKG_DIR) && zip -r $(TARGET_PATH) ./*
+
+$(SFO_PATH):
+	@mkdir -p $(dir $@)
+	vita-mksfoex -s APP_VER="$(SFO_APP_VER)" \
+		-s TITLE_ID="$(SFO_TITLE_ID)" "$(SFO_TITLE_NAME)" \
+		-d ATTRIBUTE2=12 $@
+
+$(EBOOT_PATH): $(BUILD_DIR)/$(TARGET).velf
+	@mkdir -p $(dir $@)
+	vita-make-fself -c -a 0x2800000000000001 $< $@
+
+$(BUILD_DIR)/$(TARGET).velf: $(BUILD_DIR)/$(TARGET).elf
+	@mkdir -p $(dir $@)
+	$(STRIP) -g $<
+	vita-elf-create $< $@
+
+$(BUILD_DIR)/$(TARGET).elf: $(OBJS)
+	@mkdir -p $(dir $@)
+	$(LD) -o $@ $^ $(LIBS) $(LDFLAGS)
+
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) -c -o $@ $< $(CXXFLAGS)
+
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.S
+	@mkdir -p $(dir $@)
+	$(CC) -c -o $@ $< $(ASFLAGS)
+
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.s
+	@mkdir -p $(dir $@)
+	$(CC) -c -o $@ $< $(ASFLAGS)
+
+clean:
+	rm -rf $(OBJS)
