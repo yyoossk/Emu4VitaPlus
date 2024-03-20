@@ -99,6 +99,10 @@ LIBS    := $(CORE_MAKEFILE_DIR)/$(CORE_FILE_NAME)_libretro_vita.a \
 
 all: create_dirs build-core build-deps build-app
 
+debug: CXXFLAGS += -DDEBUG -g
+debug: CFLAGS += -DDEBUG -g
+debug: all
+
 create_dirs:
 	@mkdir -p $(BUILD_DIR)
 
