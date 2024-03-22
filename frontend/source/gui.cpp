@@ -1,20 +1,54 @@
+
 #include "gui.h"
-#include <vita2d.h>
+#include "log.h"
+
+extern SceGxmProgram _binary_assets_imgui_v_cg_gxp_start;
+extern SceGxmProgram _binary_assets_imgui_f_cg_gxp_start;
 
 Gui::Gui()
 {
-    vita2d_init();
+    LogFunctionName;
+    if (sceGxmProgramCheck(&_binary_assets_imgui_v_cg_gxp_start) != SCE_OK)
+    {
+        LogError("sceGxmProgramCheck _binary_assets_imgui_v_cg_gxp_start error");
+        return;
+    }
+
+    if (sceGxmProgramCheck(&_binary_assets_imgui_f_cg_gxp_start) != SCE_OK)
+    {
+        LogError("sceGxmProgramCheck _binary_assets_imgui_f_cg_gxp_start error");
+        return;
+    }
+
+    if (sceGxmShaderPatcherRegisterProgram(vita2d_get_shader_patcher(),
+                                           &_binary_assets_imgui_v_cg_gxp_start,
+                                           &_vertexProgramId))
+    {
+        LogError("sceGxmShaderPatcherRegisterProgram error");
+        return;
+    }
+
+    if (sceGxmShaderPatcherRegisterProgram(vita2d_get_shader_patcher(),
+                                           &_binary_assets_imgui_f_cg_gxp_start,
+                                           &_fragmentProgramId))
+    {
+        LogError("sceGxmShaderPatcherRegisterProgram error");
+        return;
+    }
+
+    _imgui = ImGui::CreateContext();
 }
 
 Gui::~Gui()
 {
-    vita2d_fini();
+    LogFunctionName;
+    ImGui::DestroyContext(_imgui);
 }
 
 void Gui::Run()
 {
-    vita2d_start_drawing();
-    vita2d_clear_screen();
-    vita2d_end_drawing();
-    vita2d_swap_buffers();
+    LogFunctionNameLimited;
+    ImGui::NewFrame();
+    ImGuiIO &io = ImGui::GetIO();
+    ImGui::End();
 }

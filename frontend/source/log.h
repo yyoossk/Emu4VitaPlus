@@ -13,16 +13,10 @@
 
 const char LogLevelChars[] = "TDIWEFO";
 
-#ifdef _DEBUG
+#ifdef DEBUG
 #define LOG_LEVEL LOG_LEVEL_DEBUG
-#endif
-
-#ifndef LOG_LEVEL
-#ifdef _DEBUG
-#define LOG_LEVEL LOG_LEVEL_TRACE
 #else
-#define LOG_LEVEL LOG_LEVEL_OFF
-#endif
+#define LOG_LEVEL LOG_LEVEL_WARN
 #endif
 
 #if LOG_LEVEL <= LOG_LEVEL_TRACE
@@ -32,63 +26,65 @@ const char LogLevelChars[] = "TDIWEFO";
 #endif
 
 #if LOG_LEVEL <= LOG_LEVEL_DEBUG
-#define LogDebug(fmt, ...) gLog->log(LOG_LEVEL_DEBUG, fmt, __VA_ARGS__)
+#define LogDebug(fmt, ...) gLog->log(LOG_LEVEL_DEBUG, fmt, ##__VA_ARGS__)
 #else
 #define LogDebug(fmt, ...)
 #endif
 
 #if LOG_LEVEL <= LOG_LEVEL_INFO
-#define LogInfo(fmt, ...) gLog->log(LOG_LEVEL_INFO, fmt, __VA_ARGS__)
+#define LogInfo(fmt, ...) gLog->log(LOG_LEVEL_INFO, fmt, ##__VA_ARGS__)
 #else
 #define LogInfo(fmt, ...)
 #endif
 
 #if LOG_LEVEL <= LOG_LEVEL_WARN
-#define LogWarn(fmt, ...) gLog->log(LOG_LEVEL_WARN, fmt, __VA_ARGS__)
+#define LogWarn(fmt, ...) gLog->log(LOG_LEVEL_WARN, fmt, ##__VA_ARGS__)
 #else
 #define LogWarn(fmt, ...)
 #endif
 
 #if LOG_LEVEL <= LOG_LEVEL_ERROR
-#define LogError(fmt, ...) gLog->log(LOG_LEVEL_ERROR, fmt, __VA_ARGS__)
+#define LogError(fmt, ...) gLog->log(LOG_LEVEL_ERROR, fmt, ##__VA_ARGS__)
 #else
 #define LogError(fmt, ...)
 #endif
 
 #if LOG_LEVEL <= LOG_LEVEL_FATAL
-#define LogFatal(fmt, ...) gLog->log(LOG_LEVEL_FATAL, fmt, __VA_ARGS__)
+#define LogFatal(fmt, ...) gLog->log(LOG_LEVEL_FATAL, fmt, ##__VA_ARGS__)
 #else
 #define LogFatal(fmt, ...)
 #endif
-#if LOG_LEVEL != LOG_LEVEL_OFF
-#define LogFunctionName LogDebug(__FUNCTION__);
 
-#define LogFunctionNameLimited                           \
-    {                                                    \
-        static int LOG_COUNT = 10;                       \
-        if (LOG_COUNT >= 0)                              \
-        {                                                \
-            LogDebug(__FUNCTION__ " (%d)", LOG_COUNT--); \
-        }                                                \
+#if LOG_LEVEL <= LOG_LEVEL_DEBUG
+#define LogFunctionName LogDebug(__PRETTY_FUNCTION__);
+
+#define LogFunctionNameLimited                                     \
+    {                                                              \
+        static int LOG_COUNT = 10;                                 \
+        if (LOG_COUNT >= 0)                                        \
+        {                                                          \
+            LogDebug("%s (%d)", __PRETTY_FUNCTION__, LOG_COUNT--); \
+        }                                                          \
     }
 
-#define LogInfoLimited(fmt, ...)                                              \
-    {                                                                         \
-        static int LOG_COUNT = 10;                                            \
-        if (LOG_COUNT >= 0)                                                   \
-        {                                                                     \
-            gLog->log(LOG_LEVEL_INFO, fmt " (%d)", __VA_ARGS__, LOG_COUNT--); \
-        }                                                                     \
+#define LogInfoLimited(fmt, ...)                              \
+    {                                                         \
+        static int LOG_COUNT = 10;                            \
+        if (LOG_COUNT >= 0)                                   \
+        {                                                     \
+            LogInfo(fmt " (%d)", ##__VA_ARGS__, LOG_COUNT--); \
+        }                                                     \
     }
 #else
 #define LogFunctionName
 #define LogFunctionNameLimited
 #define LogInfoLimited
 #endif
+
 class cLog
 {
 public:
-    cLog(const char *name, bool log_time = false, int buf_len = 2048);
+    cLog(const char *name, bool log_time = true, int buf_len = 2048);
     virtual ~cLog();
     void log(int log_level, const char *format, ...);
     void set_log_time(bool is_log) { _is_log_time = is_log; };
@@ -106,7 +102,4 @@ protected:
 
 #if LOG_LEVEL != LOG_LEVEL_OFF
 extern cLog *gLog;
-// #ifndef DEFAULT_LOG_FILE
-//	#define DEFAULT_LOG_FILE _T("3dm.log")
-// #endif
 #endif

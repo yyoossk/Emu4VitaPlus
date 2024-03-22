@@ -26,7 +26,7 @@ void cLog::log(int log_level, const char *format, ...)
 {
 	va_list args;
 	va_start(args, format);
-	vsprintf(_bufA, format, args);
+	vsnprintf(_bufA, _buf_len, format, args);
 	va_end(args);
 
 	_log(log_level, _bufA);

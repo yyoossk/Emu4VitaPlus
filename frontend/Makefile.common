@@ -16,20 +16,6 @@ STRIP   := $(PREFIX)-strip
 NM      := $(PREFIX)-nm
 LD      := $(CXX)
 
-ARCHFLAGS := -marm -mcpu=cortex-a9 -mfloat-abi=hard -DVITA -D__vita__
-CFLAGS    := $(ARCHFLAGS) -mword-relocations -fno-optimize-sibling-calls
-CFLAGS    += -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables 
-CFLAGS    += -ffast-math -ftree-vectorize
-CFLAGS    += -O3
-ASFLAGS   := $(CFLAGS) $(INCDIRS)
-
-WARNINGS := -Wall -Wno-format-truncation
-CFLAGS    += $(WARNINGS) $(INCDIRS) $(DEFINES)
-CXXFLAGS  := $(CFLAGS) -fno-rtti -fno-exceptions -std=c++11
-LDFLAGS   := -Wl,-q $(LIBDIRS)
-
-SCE_LIBC_SIZE  := 4194304
-
 DEFINES := \
 	-DAPP_NAME_STR=\"$(APP_NAME)\" \
 	-DAPP_NAME_EXT_STR=\"$(APP_NAME_EXT)\" \
@@ -55,6 +41,20 @@ ifeq ($(WANT_EXT_ARCHIVE_ROM), 1)
 	DEFINES += -DWANT_EXT_ARCHIVE_ROM
 endif
 
+ARCHFLAGS := -marm -mcpu=cortex-a9 -mfloat-abi=hard -DVITA -D__vita__
+CFLAGS    := $(ARCHFLAGS) -mword-relocations -fno-optimize-sibling-calls
+CFLAGS    += -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables 
+CFLAGS    += -ffast-math -ftree-vectorize
+CFLAGS    += -O3
+ASFLAGS   := $(CFLAGS) $(INCDIRS)
+
+WARNINGS := -Wall -Wno-format-truncation
+CFLAGS    += $(WARNINGS) $(INCDIRS) $(DEFINES)
+CXXFLAGS  := $(CFLAGS) -fno-rtti -fno-exceptions -std=c++11
+LDFLAGS   := -Wl,-q $(LIBDIRS)
+
+SCE_LIBC_SIZE  := 4194304
+
 CORE_ARGS += platform=vita EXTERNAL_ZLIB=1
 
 PRIVATE_PKG_DIR            := $(APP_DIR)/pkg
@@ -79,6 +79,7 @@ LIBS    := $(CORE_MAKEFILE_DIR)/$(CORE_FILE_NAME)_libretro_vita.a \
     -lpng \
 	-ljpeg \
 	-lz \
+	-limgui_vita2d \
 	-lScePvf_stub \
 	-lScePgf_stub \
 	-lSceDisplay_stub \
@@ -154,4 +155,4 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.s
 	$(CC) -c -o $@ $< $(ASFLAGS)
 
 clean:
-	rm -rf $(OBJS)
+	rm -rf $(OBJS) $(EBOOT_PATH) $(SFO_PATH)
