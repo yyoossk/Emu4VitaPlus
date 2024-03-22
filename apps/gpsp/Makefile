@@ -1,12 +1,12 @@
-TARGET = gpSP
+TARGET = gpSP4vita
 
-APP_NAME         := gpSP+
+APP_NAME         := gpSP4vita
 APP_NAME_EXT     := 
 APP_DIR_NAME     := gpSP
-CORE_FILE_NAME   := gpsp
+CORE_FILE_NAME   := gpSP
 
-SFO_TITLE_NAME   := gpSP_plus
-SFO_TITLE_ID     := GPSP_PLUS
+SFO_TITLE_NAME   := gpSP4vita
+SFO_TITLE_ID     := GPSP4VITA
 
 CORE_SOFTWARE    := Nintendo\ -\ Game\ Boy\ Advance
 

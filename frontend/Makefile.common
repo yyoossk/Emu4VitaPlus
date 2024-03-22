@@ -2,7 +2,7 @@ MAJOR_VER := 0
 MINOR_VER := 1
 
 PADDED_MAJOR_VER  := $(shell printf "%02d" $(MAJOR_VER))
-PADDED_MINOR_VER  := $(shell printf "%03d" $(MINOR_VER))
+PADDED_MINOR_VER  := $(shell printf "%02d" $(MINOR_VER))
 APP_VER           := $(MAJOR_VER).$(PADDED_MINOR_VER)
 SFO_APP_VER       := $(PADDED_MAJOR_VER).$(PADDED_MINOR_VER)
 
