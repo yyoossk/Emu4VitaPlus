@@ -51,5 +51,6 @@ void App::Run()
         _gui->Run();
         vita2d_end_drawing();
         vita2d_swap_buffers();
+        sceDisplayWaitVblankStart();
     }
 }
