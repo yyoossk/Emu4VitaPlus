@@ -22,8 +22,8 @@ App::App() : _running(true)
     sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
     sceTouchSetSamplingState(SCE_TOUCH_PORT_BACK, SCE_TOUCH_SAMPLING_STATE_START);
 
-    gLog = new cLog(APP_LOG_PATH);
     File::MakeDirs(APP_DATA_DIR);
+    gLog = new cLog(APP_LOG_PATH);
 
     vita2d_init();
 
@@ -48,7 +48,7 @@ void App::Run()
     {
         vita2d_start_drawing();
         vita2d_clear_screen();
-        _gui->Run();
+        _running = _gui->Run();
         vita2d_end_drawing();
         vita2d_swap_buffers();
         sceDisplayWaitVblankStart();

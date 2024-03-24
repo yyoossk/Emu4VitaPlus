@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdio.h>
+#include <string>
 
 #define LOG_LEVEL_TRACE 0
 #define LOG_LEVEL_DEBUG 1
@@ -16,7 +17,7 @@ const char LogLevelChars[] = "TDIWEFO";
 #ifdef DEBUG
 #define LOG_LEVEL LOG_LEVEL_DEBUG
 #else
-#define LOG_LEVEL LOG_LEVEL_WARN
+#define LOG_LEVEL LOG_LEVEL_INFO
 #endif
 
 #if LOG_LEVEL <= LOG_LEVEL_TRACE
@@ -84,19 +85,15 @@ const char LogLevelChars[] = "TDIWEFO";
 class cLog
 {
 public:
-    cLog(const char *name, bool log_time = true, int buf_len = 2048);
+    cLog(const char *name, int buf_len = 2048);
     virtual ~cLog();
     void log(int log_level, const char *format, ...);
-    void set_log_time(bool is_log) { _is_log_time = is_log; };
-    bool is_valid() { return _fp != NULL; };
 
 protected:
-    FILE *_fp;
+    std::string _name;
     char *_bufA;
     int _buf_len;
-    bool _is_log_time;
 
-    void _log_time();
     void _log(int log_level, const char *s);
 };
 

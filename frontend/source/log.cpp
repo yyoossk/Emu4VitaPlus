@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdarg.h>
+#include <psp2/io/fcntl.h>
 #include <psp2/rtc.h>
 #include "log.h"
 
@@ -8,17 +9,15 @@
 cLog *gLog = NULL;
 #endif
 
-cLog::cLog(const char *name, bool log_time, int buf_len)
+cLog::cLog(const char *name, int buf_len)
 {
-	_fp = fopen(name, "w");
+	_name = name;
 	_bufA = new char[buf_len];
 	_buf_len = buf_len;
-	_is_log_time = log_time;
 }
 
 cLog::~cLog()
 {
-	fclose(_fp);
 	delete[] _bufA;
 }
 
@@ -34,21 +33,13 @@ void cLog::log(int log_level, const char *format, ...)
 
 void cLog::_log(int log_level, const char *s)
 {
-	fprintf(_fp, "[%c]", LogLevelChars[log_level]);
-	if (_is_log_time)
-	{
-		_log_time();
-	}
-
-	fputs(_bufA, _fp);
-	fputc('\n', _fp);
-
-	fflush(_fp);
-}
-
-void cLog::_log_time()
-{
 	SceDateTime time;
 	sceRtcGetCurrentClockLocalTime(&time);
-	fprintf(_fp, "%02d:%02d:%02d.%03d ", time.hour, time.minute, time.second, time.microsecond / 1000);
+
+	FILE *fp = fopen(_name.c_str(), "a");
+	if (fp)
+	{
+		fprintf(fp, "[%c] %02d:%02d:%02d.%03d %s\n", LogLevelChars[log_level], time.hour, time.minute, time.second, time.microsecond / 1000, s);
+		fclose(fp);
+	}
 }

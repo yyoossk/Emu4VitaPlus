@@ -17,7 +17,7 @@ bool File::Exist(const char *name)
 
 void File::MakeDirs(const char *path, SceIoMode mode)
 {
-    if (!(path && *path && Exist(path)))
+    if (!(path && *path) || Exist(path))
     {
         return;
     }
