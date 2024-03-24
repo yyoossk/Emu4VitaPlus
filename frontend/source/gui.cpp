@@ -22,20 +22,15 @@ Gui::Gui() : _running(true)
     //                              0,
     //                              io.Fonts->GetGlyphRangesJapanese());
 
-    _input.SetCallback(SCE_CTRL_CROSS, [this]()
-                       { LogInfo("Cross pressed");
-                       this->_running=false; });
+    _input.SetCallback(SCE_CTRL_CROSS, std::bind(&Gui::_OnCrossPress, this));
 
     LogDebug("Gui init end");
 }
 
-void gpu_free(SceUID uid)
+void Gui::_OnCrossPress()
 {
-    void *mem = NULL;
-    if (sceKernelGetMemBlockBase(uid, &mem) < 0)
-        return;
-    sceGxmUnmapMemory(mem);
-    sceKernelFreeMemBlock(uid);
+    LogFunctionName;
+    _running = false;
 }
 
 Gui::~Gui()

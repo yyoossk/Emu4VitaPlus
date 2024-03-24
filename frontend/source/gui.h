@@ -11,6 +11,8 @@ public:
     bool Run();
 
 private:
+    void _OnCrossPress();
+
     Input _input;
     bool _running;
 };
