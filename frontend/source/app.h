@@ -1,5 +1,4 @@
 #pragma once
-#include "gui.h"
 
 class App
 {
@@ -10,6 +9,8 @@ public:
     void Run();
 
 private:
-    Gui *_gui;
+    void _InitImgui();
+    void _DeinitImgui();
+
     bool _running;
 };

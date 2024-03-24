@@ -2,9 +2,6 @@
 #include "gui.h"
 #include "log.h"
 
-extern SceGxmProgram _binary_assets_imgui_v_cg_gxp_start;
-extern SceGxmProgram _binary_assets_imgui_f_cg_gxp_start;
-
 Gui::Gui() : _running(true)
 {
     LogFunctionName;

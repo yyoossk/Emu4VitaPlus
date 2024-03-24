@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <string>
+#include <psp2/kernel/processmgr.h>
 
 #define LOG_LEVEL_TRACE 0
 #define LOG_LEVEL_DEBUG 1
@@ -82,21 +83,19 @@ const char LogLevelChars[] = "TDIWEFO";
 #define LogInfoLimited
 #endif
 
-class cLog
+class Log
 {
 public:
-    cLog(const char *name, int buf_len = 2048);
-    virtual ~cLog();
+    Log(const char *name, int buf_len = 2048);
+    virtual ~Log();
     void log(int log_level, const char *format, ...);
 
-protected:
+private:
     std::string _name;
     char *_bufA;
     int _buf_len;
+    SceKernelLwMutexWork _mutex;
 
-    void _log(int log_level, const char *s);
+    void
+    _log(int log_level, const char *s);
 };
-
-#if LOG_LEVEL != LOG_LEVEL_OFF
-extern cLog *gLog;
-#endif
