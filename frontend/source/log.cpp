@@ -4,10 +4,16 @@
 #include <psp2/io/fcntl.h>
 #include <psp2/rtc.h>
 #include <psp2common/kernel/threadmgr.h>
+#include "file.h"
 #include "log.h"
+
+#if LOG_LEVEL != LOG_LEVEL_OFF
+Log *gLog = NULL;
+#endif
 
 Log::Log(const char *name, int buf_len)
 {
+	File::Remove(name);
 	_name = name;
 	_bufA = new char[buf_len];
 	_buf_len = buf_len;

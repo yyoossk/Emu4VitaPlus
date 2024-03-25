@@ -9,6 +9,7 @@ public:
 
     static bool Exist(const char *path);
     static void MakeDirs(const char *path, SceIoMode mode = (SceIoMode)0777);
+    static bool Remove(const char *path);
 
 private:
 };

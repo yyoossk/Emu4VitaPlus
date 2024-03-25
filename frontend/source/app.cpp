@@ -6,19 +6,14 @@
 #include <vita2d.h>
 #include <imgui_vita2d/imgui_vita.h>
 #include "app.h"
-#include "log.h"
+#include "global.h"
 #include "file.h"
 #include "log.h"
 
-#define APP_DATA_DIR "ux0:data/EMU4VITAPLUS/" APP_DIR_NAME
-#define APP_LOG_PATH APP_DATA_DIR "/app_log.txt"
-
-#if LOG_LEVEL != LOG_LEVEL_OFF
-Log *gLog = NULL;
-#endif
-
 App::App() : _running(true)
 {
+    LogFunctionName;
+
     scePowerSetArmClockFrequency(444);
     scePowerSetBusClockFrequency(222);
     scePowerSetGpuClockFrequency(222);
@@ -28,18 +23,17 @@ App::App() : _running(true)
     sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
     sceTouchSetSamplingState(SCE_TOUCH_PORT_BACK, SCE_TOUCH_SAMPLING_STATE_START);
 
-    File::MakeDirs(APP_DATA_DIR);
-    gLog = new Log(APP_LOG_PATH);
-
     vita2d_init();
+    _InitImgui();
 }
 
 App::~App()
 {
     LogFunctionName;
 
-    delete gLog;
+    _DeinitImgui();
     vita2d_fini();
+    delete gLog;
     sceAppUtilShutdown();
 }
 
@@ -50,10 +44,17 @@ void App::_InitImgui()
     ImGui::CreateContext();
     ImGui_ImplVita2D_Init();
 
+#ifdef DEBUG
+    ImGui_ImplVita2D_TouchUsage(true);
+    ImGui_ImplVita2D_UseIndirectFrontTouch(true);
+    ImGui_ImplVita2D_UseRearTouch(false);
+    ImGui_ImplVita2D_GamepadUsage(true);
+#else
     ImGui_ImplVita2D_TouchUsage(false);
     ImGui_ImplVita2D_UseIndirectFrontTouch(false);
     ImGui_ImplVita2D_UseRearTouch(false);
     ImGui_ImplVita2D_GamepadUsage(false);
+#endif
 }
 
 void App::_DeinitImgui()
@@ -72,7 +73,7 @@ void App::Run()
     {
         vita2d_start_drawing();
         vita2d_clear_screen();
-
+        _browser.Show();
         vita2d_end_drawing();
         vita2d_swap_buffers();
         sceDisplayWaitVblankStart();

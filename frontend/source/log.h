@@ -99,3 +99,7 @@ private:
     void
     _log(int log_level, const char *s);
 };
+
+#if LOG_LEVEL != LOG_LEVEL_OFF
+extern Log *gLog;
+#endif

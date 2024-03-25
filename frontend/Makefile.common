@@ -4,7 +4,21 @@ MINOR_VER := 1
 PADDED_MAJOR_VER  := $(shell printf "%02d" $(MAJOR_VER))
 PADDED_MINOR_VER  := $(shell printf "%02d" $(MINOR_VER))
 APP_VER           := $(MAJOR_VER).$(PADDED_MINOR_VER)
+
 SFO_APP_VER       := $(PADDED_MAJOR_VER).$(PADDED_MINOR_VER)
+PRIVATE_PKG_DIR            := $(APP_DIR)/pkg
+PUBLIC_PKG_DIR             := $(FRONTEND_DIR)/pkgs/vita
+BUILD_DIR                  := $(ROOT_DIR)/build/$(CORE_FILE_NAME)
+DEPS_DIR                   := $(ROOT_DIR)/deps
+SRC_DIR                    := $(FRONTEND_DIR)/source
+RELEASES_DIR               := $(ROOT_DIR)/releases
+LIBRETRO_COMM_DIR          := $(DEPS_DIR)/libretro-common
+LIBRETRO_COMM_INCLUDE_DIR  := $(LIBRETRO_COMM_DIR)/include
+LIB_DIR                    := $(ROOT_DIR)/build/libretro_comm
+
+EBOOT_PATH         := $(PRIVATE_PKG_DIR)/eboot.bin
+SFO_PATH           := $(PRIVATE_PKG_DIR)/sce_sys/param.sfo
+TARGET_PATH        := $(RELEASES_DIR)/$(TARGET)_v$(APP_VER).vpk
 
 PREFIX  := arm-vita-eabi
 CC      := $(PREFIX)-gcc
@@ -16,6 +30,8 @@ STRIP   := $(PREFIX)-strip
 NM      := $(PREFIX)-nm
 LD      := $(CXX)
 
+SCE_LIBC_SIZE  := 4194304
+
 DEFINES := \
 	-DAPP_NAME_STR=\"$(APP_NAME)\" \
 	-DAPP_NAME_EXT_STR=\"$(APP_NAME_EXT)\" \
@@ -24,7 +40,6 @@ DEFINES := \
 	-DAPP_DIR_NAME=\"$(APP_DIR_NAME)\" \
 	-DBUILD_DATE=\"$(BUILD_DATE)\" \
 	-DCORE_SOFTWARE=\"$(CORE_SOFTWARE)\" \
-	-DSCE_LIBC_SIZE=$(SCE_LIBC_SIZE)
 
 DEFINES += $(CORE_DEFINES)
 DEFINES += $(SEVENZ_DEFINES)
@@ -41,6 +56,8 @@ ifeq ($(WANT_EXT_ARCHIVE_ROM), 1)
 	DEFINES += -DWANT_EXT_ARCHIVE_ROM
 endif
 
+INCDIRS += -I$(LIBRETRO_COMM_INCLUDE_DIR) 
+
 ARCHFLAGS := -marm -mcpu=cortex-a9 -mfloat-abi=hard -DVITA -D__vita__
 CFLAGS    := $(ARCHFLAGS) -mword-relocations -fno-optimize-sibling-calls
 CFLAGS    += -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables 
@@ -51,22 +68,11 @@ ASFLAGS   := $(CFLAGS) $(INCDIRS)
 WARNINGS := -Wall -Wno-format-truncation
 CFLAGS    += $(WARNINGS) $(INCDIRS) $(DEFINES)
 CXXFLAGS  := $(CFLAGS) -fno-rtti -fno-exceptions -std=c++11
-LDFLAGS   := -Wl,-q $(LIBDIRS)
+LDFLAGS   := -Wl,-q -L$(LIB_DIR)
 
 SCE_LIBC_SIZE  := 4194304
 
 CORE_ARGS += platform=vita EXTERNAL_ZLIB=1
-
-PRIVATE_PKG_DIR            := $(APP_DIR)/pkg
-PUBLIC_PKG_DIR             := $(FRONTEND_DIR)/pkgs/vita
-BUILD_DIR                  := $(ROOT_DIR)/build/$(CORE_FILE_NAME)
-DEPS_DIR                   := $(ROOT_DIR)/deps
-SRC_DIR                    := $(FRONTEND_DIR)/source
-RELEASES_DIR               := $(ROOT_DIR)/releases
-
-EBOOT_PATH         := $(PRIVATE_PKG_DIR)/eboot.bin
-SFO_PATH           := $(PRIVATE_PKG_DIR)/sce_sys/param.sfo
-TARGET_PATH        := $(RELEASES_DIR)/$(TARGET)_v$(APP_VER).vpk
 
 rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
 
@@ -75,6 +81,7 @@ SRC_CPP := $(call rwildcard, $(SRC_DIR), *.cpp)
 OBJS    := $(patsubst $(SRC_DIR)%,$(BUILD_DIR)%,$(patsubst %.c,%.o, $(SRC_C)))
 OBJS    += $(patsubst $(SRC_DIR)%,$(BUILD_DIR)%,$(patsubst %.cpp,%.o, $(SRC_CPP)))
 LIBS    := $(CORE_MAKEFILE_DIR)/$(CORE_FILE_NAME)_libretro_vita.a \
+    -lretro_comm \
     -lvita2d \
     -lpng \
 	-ljpeg \

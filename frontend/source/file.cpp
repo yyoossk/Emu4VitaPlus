@@ -1,3 +1,4 @@
+#include <psp2/io/fcntl.h>
 #include <string.h>
 #include "file.h"
 
@@ -50,4 +51,9 @@ void File::MakeDirs(const char *path, SceIoMode mode)
     } while (true);
 
     delete[] _path;
+}
+
+bool File::Remove(const char *path)
+{
+    return sceIoRemove(path) == SCE_OK;
 }

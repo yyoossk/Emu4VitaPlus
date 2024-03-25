@@ -1,4 +1,6 @@
 #pragma once
+#include "browser.h"
+#include "emulator.h"
 
 class App
 {
@@ -13,4 +15,6 @@ private:
     void _DeinitImgui();
 
     bool _running;
+    Browser _browser;
+    Emulator _emulator;
 };

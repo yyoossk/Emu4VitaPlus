@@ -1,6 +1,15 @@
 #pragma once
-#include "log.h"
 
-#if LOG_LEVEL != LOG_LEVEL_OFF
-extern Log *gLog;
-#endif
+#define APP_DATA_DIR "ux0:data/EMU4VITAPLUS/" APP_DIR_NAME
+#define APP_LOG_PATH APP_DATA_DIR "/app_log.txt"
+
+#define SCREEN_WIDTH 960
+#define SCREEN_HEIGHT 544
+#define MAIN_WINDOW_PADDING 10
+
+enum SCREEN_STATUS
+{
+    SCREEN_BROWSER,
+    SCREEN_MENU,
+    SCREEN_GAME,
+};
