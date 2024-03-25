@@ -44,17 +44,10 @@ void App::_InitImgui()
     ImGui::CreateContext();
     ImGui_ImplVita2D_Init();
 
-#ifdef DEBUG
-    ImGui_ImplVita2D_TouchUsage(true);
-    ImGui_ImplVita2D_UseIndirectFrontTouch(true);
-    ImGui_ImplVita2D_UseRearTouch(false);
-    ImGui_ImplVita2D_GamepadUsage(true);
-#else
     ImGui_ImplVita2D_TouchUsage(false);
     ImGui_ImplVita2D_UseIndirectFrontTouch(false);
     ImGui_ImplVita2D_UseRearTouch(false);
     ImGui_ImplVita2D_GamepadUsage(false);
-#endif
 }
 
 void App::_DeinitImgui()

@@ -80,7 +80,7 @@ const char LogLevelChars[] = "TDIWEFO";
 #else
 #define LogFunctionName
 #define LogFunctionNameLimited
-#define LogInfoLimited
+#define LogInfoLimited(fmt, ...)
 #endif
 
 class Log
@@ -95,9 +95,6 @@ private:
     char *_bufA;
     int _buf_len;
     SceKernelLwMutexWork _mutex;
-
-    void
-    _log(int log_level, const char *s);
 };
 
 #if LOG_LEVEL != LOG_LEVEL_OFF
