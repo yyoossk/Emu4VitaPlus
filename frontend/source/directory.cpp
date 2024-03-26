@@ -38,7 +38,7 @@ void Directory::_SetExtensionFilter(const char *exts, char split)
         {
             *end = '\x00';
         }
-        _ext_filters.insert(p);
+        _extFilters.insert(p);
 
         if (end)
         {
@@ -58,8 +58,7 @@ bool Directory::SetCurrentPath(const char *path)
 {
     LogFunctionName;
 
-    _dirs.clear();
-    _files.clear();
+    _items.clear();
 
     SceUID dfd = sceIoDopen(path);
     if (dfd < 0)
@@ -67,37 +66,37 @@ bool Directory::SetCurrentPath(const char *path)
         return false;
     }
 
-    _current_path = path;
+    _currentPath = path;
+    std::vector<std::string> files;
 
     SceIoDirent dir;
     while (sceIoDread(dfd, &dir) > 0)
     {
         if (SCE_S_ISDIR(dir.d_stat.st_mode))
         {
-            _dirs.emplace_back(std::string(dir.d_name) + '/');
+            _items.emplace_back(std::string(dir.d_name) + '/');
         }
         else
         {
-            _files.emplace_back(dir.d_name);
+            files.emplace_back(dir.d_name);
         }
     }
     sceIoDclose(dfd);
+
+    _items.insert(_items.end(), files.begin(), files.end());
 
     return true;
 }
 
 const char *Directory::GetItem(int index)
 {
-    if (index >= int(_dirs.size() + _files.size()))
-    {
+    if (index >= 0 && index < (int)_items.size())
+        return _items[index].c_str();
+    else
         return nullptr;
-    }
-
-    return index >= int(_dirs.size()) ? _files[index - _dirs.size()].c_str()
-                                      : _dirs[index].c_str();
 }
 
 int Directory::GetSize()
 {
-    return _dirs.size() + _files.size();
+    return _items.size();
 }

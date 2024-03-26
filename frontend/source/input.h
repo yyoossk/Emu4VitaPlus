@@ -18,11 +18,12 @@ class Input
 public:
     Input();
     virtual ~Input();
-    void SetCallback(uint64_t key, InputFunc func);
-    void Run();
+    void SetKeyUpCallback(uint64_t key, InputFunc func);
+    void SetKeyDownCallback(uint64_t key, InputFunc func);
+    void Poll();
 
 private:
     std::unordered_map<uint64_t, InputFunc> _callbacks;
 
-    uint64_t _old_key;
+    uint64_t _last_key;
 };

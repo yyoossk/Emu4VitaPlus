@@ -12,15 +12,14 @@ public:
     virtual ~Directory();
 
     bool SetCurrentPath(const char *path);
-    const std::string &GetCurrentPath() { return _current_path; };
+    const std::string &GetCurrentPath() const { return _currentPath; };
     const char *GetItem(int index);
     int GetSize();
 
 private:
-    std::vector<std::string> _dirs;
-    std::vector<std::string> _files;
-    std::unordered_set<std::string> _ext_filters;
-    std::string _current_path;
+    std::vector<std::string> _items;
+    std::unordered_set<std::string> _extFilters;
+    std::string _currentPath;
 
     void _SetExtensionFilter(const char *exts, char split);
 };

@@ -92,7 +92,7 @@ public:
 
 private:
     std::string _name;
-    char *_bufA;
+    char *_buf;
     int _buf_len;
     SceKernelLwMutexWork _mutex;
 };
