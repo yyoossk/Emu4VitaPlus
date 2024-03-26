@@ -2,7 +2,12 @@
 #include "browser.h"
 #include "log.h"
 
-#define TAB_ITEM_NUM 2
+enum
+{
+    TAB_ITEM_BROWSER = 0,
+    TAB_ITEM_FAVORITE,
+    TAB_ITEM_COUNT
+};
 
 Browser::Browser(const char *path, const Emulator *emulator)
     : _emulator(emulator), _tabIndex(0), _browserIndex(0), _favoriteIndex(0)
@@ -13,6 +18,7 @@ Browser::Browser(const char *path, const Emulator *emulator)
     _input.SetKeyUpCallback(SCE_CTRL_R2, std::bind(&Browser::_OnKeyR2, this));
     _input.SetKeyUpCallback(SCE_CTRL_UP, std::bind(&Browser::_OnKeyUp, this));
     _input.SetKeyUpCallback(SCE_CTRL_DOWN, std::bind(&Browser::_OnKeyDown, this));
+    _input.SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&Browser::_OnKeyCircle, this));
 }
 
 Browser::~Browser()
@@ -24,33 +30,59 @@ Browser::~Browser()
 void Browser::_OnKeyL2()
 {
     LogFunctionName;
-    _tabIndex += TAB_ITEM_NUM - 1;
-    _tabIndex %= TAB_ITEM_NUM;
+    _tabIndex += TAB_ITEM_COUNT - 1;
+    _tabIndex %= TAB_ITEM_COUNT;
 }
 
 void Browser::_OnKeyR2()
 {
     LogFunctionName;
     _tabIndex++;
-    _tabIndex %= TAB_ITEM_NUM;
+    _tabIndex %= TAB_ITEM_COUNT;
 }
 
 void Browser::_OnKeyUp()
 {
-    if (_tabIndex == 0)
+    LogFunctionName;
+
+    switch (_tabIndex)
     {
+    case TAB_ITEM_BROWSER:
         _browserIndex += _directory->GetSize() - 1;
         _browserIndex %= _directory->GetSize();
+        break;
+
+    case TAB_ITEM_FAVORITE:
+        break;
+
+    default:
+        LogError("Wrong _tabIndex %d", _tabIndex);
+        break;
     }
 }
 
 void Browser::_OnKeyDown()
 {
-    if (_tabIndex == 0)
+    LogFunctionName;
+    switch (_tabIndex)
     {
+    case TAB_ITEM_BROWSER:
         _browserIndex++;
         _browserIndex %= _directory->GetSize();
+        break;
+
+    case TAB_ITEM_FAVORITE:
+        break;
+
+    default:
+        LogError("Wrong _tabIndex %d", _tabIndex);
+        break;
     }
+}
+
+void Browser::_OnKeyCircle()
+{
+    LogFunctionName;
 }
 
 static bool GetDirectoryItem(void *data, int idx, const char **out_text)

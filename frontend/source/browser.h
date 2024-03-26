@@ -16,6 +16,7 @@ private:
     void _OnKeyR2();
     void _OnKeyUp();
     void _OnKeyDown();
+    void _OnKeyCircle();
 
     Input _input;
     const Emulator *_emulator;
