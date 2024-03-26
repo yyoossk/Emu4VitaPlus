@@ -23,6 +23,9 @@ App::App() : _running(true)
     sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
     sceTouchSetSamplingState(SCE_TOUCH_PORT_BACK, SCE_TOUCH_SAMPLING_STATE_START);
 
+    _emulator = new Emulator();
+    _browser = new Browser("ux0:/", _emulator);
+
     vita2d_init();
     _InitImgui();
 }
@@ -33,7 +36,8 @@ App::~App()
 
     _DeinitImgui();
     vita2d_fini();
-    delete gLog;
+    delete _browser;
+    delete _emulator;
     sceAppUtilShutdown();
 }
 
@@ -66,7 +70,7 @@ void App::Run()
     {
         vita2d_start_drawing();
         vita2d_clear_screen();
-        _browser.Show();
+        _browser->Show();
         vita2d_end_drawing();
         vita2d_swap_buffers();
         sceDisplayWaitVblankStart();

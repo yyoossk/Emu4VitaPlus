@@ -1,10 +1,23 @@
+
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <stdint.h>
 #include "emulator.h"
 #include "log.h"
+
+extern "C"
+{
+    static bool EnvironmentCallback(unsigned cmd, void *data);
+    static void VideoRefreshCallback(const void *data, unsigned width, unsigned height, size_t pitch);
+    static size_t AudioSampleBatchCallback(const int16_t *data, size_t frames);
+    static void InputPollCallback();
+    static int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsigned id);
+};
 
 static bool EnvironmentCallback(unsigned cmd, void *data)
 {
     LogFunctionName;
-    LogDebug("cmd: %d", cmd);
     return true;
 }
 
@@ -41,7 +54,6 @@ Emulator::Emulator()
     retro_set_input_state(InputStateCallback);
 
     retro_get_system_info(&_info);
-    LogInfo(_info.valid_extensions);
 }
 
 Emulator::~Emulator()

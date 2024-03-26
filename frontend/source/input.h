@@ -23,4 +23,6 @@ public:
 
 private:
     std::unordered_map<uint64_t, InputFunc> _callbacks;
+
+    uint64_t _old_key;
 };
