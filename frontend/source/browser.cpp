@@ -8,10 +8,11 @@ enum
     TAB_ITEM_FAVORITE,
     TAB_ITEM_COUNT
 };
+
 Browser::Browser(const char *path)
-    : _tabIndex(0),
-      _browserIndex(0),
-      _favoriteIndex(0)
+    : _tab_index(0),
+      _browser_index(0),
+      _favorite_index(0)
 {
     LogFunctionName;
     _directory = new Directory(path, gEmulator->GetValidExtensions());
@@ -37,33 +38,33 @@ void Browser::_SetKeyHooks()
 void Browser::_OnKeyL2()
 {
     LogFunctionName;
-    _tabIndex += TAB_ITEM_COUNT - 1;
-    _tabIndex %= TAB_ITEM_COUNT;
+    _tab_index += TAB_ITEM_COUNT - 1;
+    _tab_index %= TAB_ITEM_COUNT;
 }
 
 void Browser::_OnKeyR2()
 {
     LogFunctionName;
-    _tabIndex++;
-    _tabIndex %= TAB_ITEM_COUNT;
+    _tab_index++;
+    _tab_index %= TAB_ITEM_COUNT;
 }
 
 void Browser::_OnKeyUp()
 {
     LogFunctionName;
 
-    switch (_tabIndex)
+    switch (_tab_index)
     {
     case TAB_ITEM_BROWSER:
-        _browserIndex += _directory->GetSize() - 1;
-        _browserIndex %= _directory->GetSize();
+        _browser_index += _directory->GetSize() - 1;
+        _browser_index %= _directory->GetSize();
         break;
 
     case TAB_ITEM_FAVORITE:
         break;
 
     default:
-        LogError("Wrong _tabIndex %d", _tabIndex);
+        LogError("Wrong _tabIndex %d", _tab_index);
         break;
     }
 }
@@ -71,18 +72,18 @@ void Browser::_OnKeyUp()
 void Browser::_OnKeyDown()
 {
     LogFunctionName;
-    switch (_tabIndex)
+    switch (_tab_index)
     {
     case TAB_ITEM_BROWSER:
-        _browserIndex++;
-        _browserIndex %= _directory->GetSize();
+        _browser_index++;
+        _browser_index %= _directory->GetSize();
         break;
 
     case TAB_ITEM_FAVORITE:
         break;
 
     default:
-        LogError("Wrong _tabIndex %d", _tabIndex);
+        LogError("Wrong _tabIndex %d", _tab_index);
         break;
     }
 }
@@ -90,9 +91,9 @@ void Browser::_OnKeyDown()
 void Browser::_OnKeyCircle()
 {
     LogFunctionName;
-    if (_tabIndex == 0)
+    if (_tab_index == 0)
     {
-        auto item = _directory->GetItem(_browserIndex);
+        auto item = _directory->GetItem(_browser_index);
 
         if (item.isDir)
         {
@@ -100,8 +101,10 @@ void Browser::_OnKeyCircle()
         }
         else
         {
-            LogDebug("%d", gEmulator->LoadGame((_directory->GetCurrentPath() + "/" + item.name).c_str()));
-            gStatus = APP_STATUS_RUN_GAME;
+            if (gEmulator->LoadGame((_directory->GetCurrentPath() + "/" + item.name).c_str()))
+            {
+                gStatus = APP_STATUS_RUN_GAME;
+            }
         }
     }
 }
@@ -109,7 +112,7 @@ void Browser::_OnKeyCircle()
 void Browser::_OnKeyCross()
 {
     LogFunctionName;
-    if (_tabIndex == 0)
+    if (_tab_index == 0)
     {
         auto path = _directory->GetCurrentPath();
         if (path.size() <= 5)
@@ -149,18 +152,18 @@ void Browser::Show()
     // ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoDecoration);
     if (ImGui::BeginTabBar("MyTabBar", ImGuiTabBarFlags_None))
     {
-        if (ImGui::BeginTabItem("Browser", NULL, _tabIndex == 0 ? ImGuiTabItemFlags_SetSelected : 0))
+        if (ImGui::BeginTabItem("Browser", NULL, _tab_index == 0 ? ImGuiTabItemFlags_SetSelected : 0))
         {
             ImGui::BeginGroup();
             ImGui::Text(_directory->GetCurrentPath().c_str());
             auto size = ImGui::GetWindowContentRegionMax();
             auto min_size = ImGui::GetWindowContentRegionMin();
             ImGui::SetNextItemWidth(size.x * 0.5f);
-            ImGui::ListBox("", &_browserIndex, GetDirectoryItem, _directory, _directory->GetSize(), size.y - min_size.y * 4);
+            ImGui::ListBox("", &_browser_index, GetDirectoryItem, _directory, _directory->GetSize(), size.y - min_size.y * 4);
             ImGui::EndGroup();
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("Favorite", NULL, _tabIndex == 1 ? ImGuiTabItemFlags_SetSelected : 0))
+        if (ImGui::BeginTabItem("Favorite", NULL, _tab_index == 1 ? ImGuiTabItemFlags_SetSelected : 0))
         {
             ImGui::Text("This is the Favorite tab!\nblah blah blah blah blah");
             ImGui::EndTabItem();

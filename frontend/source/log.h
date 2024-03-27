@@ -22,7 +22,7 @@ const char LogLevelChars[] = "TDIWEFO";
 #endif
 
 #if LOG_LEVEL <= LOG_LEVEL_TRACE
-#define LogTrace(fmt, ...) gLog->log(LOG_LEVEL_TRACE, fmt, __VA_ARGS__)
+#define LogTrace(fmt, ...) gLog->log(LOG_LEVEL_TRACE, fmt, ##__VA_ARGS__)
 #else
 #define LogTrace(fmt, ...)
 #endif

@@ -68,7 +68,8 @@ void App::Run()
 
     while (gStatus != APP_STATUS_EXIT)
     {
-        vita2d_start_drawing();
+        vita2d_pool_reset();
+        vita2d_start_drawing_advanced(NULL, 0);
         vita2d_clear_screen();
 
         switch (gStatus)

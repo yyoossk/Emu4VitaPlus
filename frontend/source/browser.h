@@ -23,7 +23,7 @@ private:
 
     Input _input;
     Directory *_directory;
-    int _tabIndex;
-    int _browserIndex;
-    int _favoriteIndex;
+    int _tab_index;
+    int _browser_index;
+    int _favorite_index;
 };

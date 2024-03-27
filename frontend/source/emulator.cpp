@@ -34,8 +34,8 @@ static int16_t _InputStateCallback(unsigned port, unsigned device, unsigned inde
 
 bool Emulator::EnvironmentCallback(unsigned cmd, void *data)
 {
-    LogFunctionName;
-    LogDebug("cmd: %u", cmd);
+    LogFunctionNameLimited;
+    LogTrace("cmd: %u", cmd);
     switch (cmd)
     {
     case RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY:
@@ -46,22 +46,7 @@ bool Emulator::EnvironmentCallback(unsigned cmd, void *data)
         break;
 
     case RETRO_ENVIRONMENT_SET_PIXEL_FORMAT:
-        LogDebug("retro_pixel_format %d", *(retro_pixel_format *)data);
-        switch (*(int *)data)
-        {
-        case RETRO_PIXEL_FORMAT_0RGB1555:
-            _videoPixelFormat = SCE_GXM_TEXTURE_FORMAT_X1U5U5U5_1RGB;
-            break;
-        case RETRO_PIXEL_FORMAT_XRGB8888:
-            _videoPixelFormat = SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1RGB;
-            break;
-        case RETRO_PIXEL_FORMAT_RGB565:
-            _videoPixelFormat = SCE_GXM_TEXTURE_FORMAT_U5U6U5_RGB;
-            break;
-        default:
-            LogWarn("unknown pixel format: %d", *(retro_pixel_format *)data);
-            break;
-        }
+        _SetPixelFormat(*(retro_pixel_format *)data);
         break;
 
     case RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS:
@@ -91,6 +76,41 @@ bool Emulator::EnvironmentCallback(unsigned cmd, void *data)
 void Emulator::VideoRefreshCallback(const void *data, unsigned width, unsigned height, size_t pitch)
 {
     LogFunctionNameLimited;
+    vita2d_texture *texture;
+
+    if (_texture_buf == nullptr)
+    {
+        _texture_buf = new TextureBuf(_video_pixel_format, width, height);
+        texture = _texture_buf->Current();
+    }
+    else if (_texture_buf->GetWidth() != width || _texture_buf->GetHeight() != height)
+    {
+        delete _texture_buf;
+        _texture_buf = new TextureBuf(_video_pixel_format, width, height);
+        texture = _texture_buf->Current();
+    }
+    else
+    {
+        texture = _texture_buf->Next();
+    }
+
+    unsigned out_pitch = vita2d_texture_get_stride(texture);
+    uint8_t *out = (uint8_t *)vita2d_texture_get_datap(texture);
+    uint8_t *in = (uint8_t *)data;
+
+    if (pitch == out_pitch)
+    {
+        memcpy(out, in, pitch * height);
+    }
+    else
+    {
+        for (unsigned i = 0; i < height; i++)
+        {
+            memcpy(out, in, pitch);
+            in += pitch;
+            out += out_pitch;
+        }
+    }
 }
 
 size_t Emulator::AudioSampleBatchCallback(const int16_t *data, size_t frames)
@@ -110,7 +130,7 @@ int16_t Emulator::InputStateCallback(unsigned port, unsigned device, unsigned in
     return 0;
 }
 
-Emulator::Emulator() : _texture_buf{0}
+Emulator::Emulator() : _texture_buf(nullptr)
 {
     LogFunctionName;
 
@@ -128,6 +148,11 @@ Emulator::Emulator() : _texture_buf{0}
 Emulator::~Emulator()
 {
     LogFunctionName;
+    if (_texture_buf)
+    {
+        delete _texture_buf;
+    }
+
     retro_deinit();
 }
 
@@ -145,10 +170,43 @@ bool Emulator::LoadGame(const char *path)
 
 void Emulator::UnloadGame()
 {
+    LogFunctionName;
     retro_unload_game();
 }
 
 void Emulator::Run()
 {
     retro_run();
+
+    if (_texture_buf != nullptr)
+        vita2d_draw_texture(_texture_buf->Current(), 0, 0);
+}
+
+void Emulator::_SetPixelFormat(retro_pixel_format format)
+{
+    LogFunctionName;
+
+    SceGxmTextureFormat old_format = _video_pixel_format;
+    switch (format)
+    {
+    case RETRO_PIXEL_FORMAT_0RGB1555:
+        _video_pixel_format = SCE_GXM_TEXTURE_FORMAT_X1U5U5U5_1RGB;
+        break;
+    case RETRO_PIXEL_FORMAT_XRGB8888:
+        _video_pixel_format = SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1RGB;
+        break;
+    case RETRO_PIXEL_FORMAT_RGB565:
+        _video_pixel_format = SCE_GXM_TEXTURE_FORMAT_U5U6U5_RGB;
+        break;
+    default:
+        LogWarn("unknown pixel format: %d", format);
+        break;
+    }
+
+    LogDebug("_video_pixel_format: %d", _video_pixel_format);
+    if (_texture_buf != nullptr && old_format != _video_pixel_format)
+    {
+        delete _texture_buf;
+        _texture_buf = nullptr;
+    }
 }

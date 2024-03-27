@@ -18,7 +18,7 @@ public:
     virtual ~Directory();
 
     bool SetCurrentPath(const std::string &path);
-    const std::string &GetCurrentPath() const { return _currentPath; };
+    const std::string &GetCurrentPath() const { return _current_path; };
     const DirItem &GetItem(int index) const { return _items[index]; };
     const std::string &GetItemName(int index) const { return _items[index].name; };
     const bool IsDir(int index) const { return _items[index].isDir; };
@@ -26,8 +26,8 @@ public:
 
 private:
     std::vector<DirItem> _items;
-    std::unordered_set<std::string> _extFilters;
-    std::string _currentPath;
+    std::unordered_set<std::string> _ext_filters;
+    std::string _current_path;
 
     void _SetExtensionFilter(const char *exts, char split);
 };

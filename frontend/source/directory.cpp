@@ -38,7 +38,7 @@ void Directory::_SetExtensionFilter(const char *exts, char split)
         {
             *end = '\x00';
         }
-        _extFilters.insert(p);
+        _ext_filters.insert(p);
 
         if (end)
         {
@@ -66,7 +66,7 @@ bool Directory::SetCurrentPath(const std::string &path)
         return false;
     }
 
-    _currentPath = path;
+    _current_path = path;
     std::vector<DirItem> files;
 
     SceIoDirent dir;

@@ -7,7 +7,7 @@
 #define ANALOG_CENTER 128
 #define ANALOG_THRESHOLD 64
 
-Input::Input() : _lastKey(0)
+Input::Input() : _last_key(0)
 {
 }
 
@@ -17,12 +17,12 @@ Input::~Input()
 
 void Input::SetKeyDownCallback(uint64_t key, InputFunc func)
 {
-    _downCallbacks[key] = func;
+    _key_down_callbacks[key] = func;
 }
 
 void Input::SetKeyUpCallback(uint64_t key, InputFunc func)
 {
-    _upCallbacks[key] = func;
+    _key_up_callbacks[key] = func;
 }
 
 void Input::Poll()
@@ -54,9 +54,9 @@ void Input::Poll()
     else if (ctrl_data.ry > ANALOG_CENTER + ANALOG_THRESHOLD)
         key |= SCE_CTRL_RSTICK_DOWN;
 
-    if (key != _lastKey)
+    if (key != _last_key)
     {
-        for (const auto &iter : _downCallbacks)
+        for (const auto &iter : _key_down_callbacks)
         {
             if ((iter.first & key))
             {
@@ -65,9 +65,9 @@ void Input::Poll()
             }
         }
 
-        for (const auto &iter : _upCallbacks)
+        for (const auto &iter : _key_up_callbacks)
         {
-            if ((iter.first & _lastKey))
+            if ((iter.first & _last_key))
             {
                 iter.second();
                 break;
@@ -88,5 +88,5 @@ void Input::Poll()
         //     }
         // }
     }
-    _lastKey = key;
+    _last_key = key;
 }
