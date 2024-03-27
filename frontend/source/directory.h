@@ -3,6 +3,12 @@
 #include <unordered_set>
 #include <string>
 
+struct DirItem
+{
+    std::string name;
+    bool isDir;
+};
+
 class Directory
 {
 public:
@@ -11,13 +17,15 @@ public:
               char split = '|');
     virtual ~Directory();
 
-    bool SetCurrentPath(const char *path);
+    bool SetCurrentPath(const std::string &path);
     const std::string &GetCurrentPath() const { return _currentPath; };
-    const char *GetItem(int index);
+    const DirItem &GetItem(int index) const { return _items[index]; };
+    const std::string &GetItemName(int index) const { return _items[index].name; };
+    const bool IsDir(int index) const { return _items[index].isDir; };
     int GetSize();
 
 private:
-    std::vector<std::string> _items;
+    std::vector<DirItem> _items;
     std::unordered_set<std::string> _extFilters;
     std::string _currentPath;
 

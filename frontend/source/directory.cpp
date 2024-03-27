@@ -54,31 +54,31 @@ void Directory::_SetExtensionFilter(const char *exts, char split)
     delete[] exts_string;
 }
 
-bool Directory::SetCurrentPath(const char *path)
+bool Directory::SetCurrentPath(const std::string &path)
 {
     LogFunctionName;
 
     _items.clear();
 
-    SceUID dfd = sceIoDopen(path);
+    SceUID dfd = sceIoDopen(path.c_str());
     if (dfd < 0)
     {
         return false;
     }
 
     _currentPath = path;
-    std::vector<std::string> files;
+    std::vector<DirItem> files;
 
     SceIoDirent dir;
     while (sceIoDread(dfd, &dir) > 0)
     {
         if (SCE_S_ISDIR(dir.d_stat.st_mode))
         {
-            _items.emplace_back(std::string(dir.d_name) + '/');
+            _items.push_back({dir.d_name, true});
         }
         else
         {
-            files.emplace_back(dir.d_name);
+            files.push_back({dir.d_name, false});
         }
     }
     sceIoDclose(dfd);
@@ -86,14 +86,6 @@ bool Directory::SetCurrentPath(const char *path)
     _items.insert(_items.end(), files.begin(), files.end());
 
     return true;
-}
-
-const char *Directory::GetItem(int index)
-{
-    if (index >= 0 && index < (int)_items.size())
-        return _items[index].c_str();
-    else
-        return nullptr;
 }
 
 int Directory::GetSize()

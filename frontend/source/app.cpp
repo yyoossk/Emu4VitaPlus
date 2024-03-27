@@ -10,7 +10,7 @@
 #include "file.h"
 #include "log.h"
 
-App::App() : _running(true)
+App::App()
 {
     LogFunctionName;
 
@@ -23,8 +23,8 @@ App::App() : _running(true)
     sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
     sceTouchSetSamplingState(SCE_TOUCH_PORT_BACK, SCE_TOUCH_SAMPLING_STATE_START);
 
-    _emulator = new Emulator();
-    _browser = new Browser("ux0:/", _emulator);
+    gEmulator = new Emulator();
+    _browser = new Browser("ux0:");
 
     vita2d_init();
     _InitImgui();
@@ -37,7 +37,7 @@ App::~App()
     _DeinitImgui();
     vita2d_fini();
     delete _browser;
-    delete _emulator;
+    delete gEmulator;
     sceAppUtilShutdown();
 }
 
@@ -66,11 +66,23 @@ void App::Run()
 {
     LogFunctionName;
 
-    while (_running)
+    while (gStatus != APP_STATUS_EXIT)
     {
         vita2d_start_drawing();
         vita2d_clear_screen();
-        _browser->Show();
+
+        switch (gStatus)
+        {
+        case APP_STATUS_SHOW_BROWSER:
+            _browser->Show();
+            break;
+        case APP_STATUS_RUN_GAME:
+            gEmulator->Run();
+            break;
+        default:
+            break;
+        }
+
         vita2d_end_drawing();
         vita2d_swap_buffers();
         sceDisplayWaitVblankStart();

@@ -1,15 +1,18 @@
 #pragma once
+#include "emulator.h"
 
 #define APP_DATA_DIR "ux0:data/EMU4VITAPLUS/" APP_DIR_NAME
 #define APP_LOG_PATH APP_DATA_DIR "/app_log.txt"
+#define CORE_DIR APP_DATA_DIR "/system"
 
-#define SCREEN_WIDTH 960
-#define SCREEN_HEIGHT 544
 #define MAIN_WINDOW_PADDING 10
 
-enum SCREEN_STATUS
+enum APP_STATUS
 {
-    SCREEN_BROWSER,
-    SCREEN_MENU,
-    SCREEN_GAME,
+    APP_STATUS_SHOW_BROWSER,
+    APP_STATUS_RUN_GAME,
+    APP_STATUS_EXIT
 };
+
+extern Emulator *gEmulator;
+extern APP_STATUS gStatus;

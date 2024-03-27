@@ -1,12 +1,13 @@
 #include <psp2/ctrl.h>
 #include <string.h>
 #include "input.h"
+#include "log.h"
 
 #define N_CTRL_PORTS 4
 #define ANALOG_CENTER 128
 #define ANALOG_THRESHOLD 64
 
-Input::Input() : _last_key(0)
+Input::Input() : _lastKey(0)
 {
 }
 
@@ -16,12 +17,12 @@ Input::~Input()
 
 void Input::SetKeyDownCallback(uint64_t key, InputFunc func)
 {
-    _callbacks[key] = func;
+    _downCallbacks[key] = func;
 }
 
 void Input::SetKeyUpCallback(uint64_t key, InputFunc func)
 {
-    _callbacks[~key] = func;
+    _upCallbacks[key] = func;
 }
 
 void Input::Poll()
@@ -53,21 +54,39 @@ void Input::Poll()
     else if (ctrl_data.ry > ANALOG_CENTER + ANALOG_THRESHOLD)
         key |= SCE_CTRL_RSTICK_DOWN;
 
-    if (key != _last_key)
+    if (key != _lastKey)
     {
-        auto iter = _callbacks.find(key);
-        if (iter != _callbacks.end())
+        for (const auto &iter : _downCallbacks)
         {
-            iter->second();
-        }
-        else
-        {
-            iter = _callbacks.find(~_last_key);
-            if (iter != _callbacks.end())
+            if ((iter.first & key))
             {
-                iter->second();
+                iter.second();
+                break;
             }
         }
+
+        for (const auto &iter : _upCallbacks)
+        {
+            if ((iter.first & _lastKey))
+            {
+                iter.second();
+                break;
+            }
+        }
+
+        // auto iter = _callbacks.find(key);
+        // if (iter != _callbacks.end())
+        // {
+        //     iter->second();
+        // }
+        // else
+        // {
+        //     iter = _callbacks.find(~_last_key);
+        //     if (iter != _callbacks.end())
+        //     {
+        //         iter->second();
+        //     }
+        // }
     }
-    _last_key = key;
+    _lastKey = key;
 }
