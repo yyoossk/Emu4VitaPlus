@@ -14,7 +14,5 @@ private:
     void _InitImgui();
     void _DeinitImgui();
 
-    bool _running;
     Browser *_browser;
-    Emulator *_emulator;
 };

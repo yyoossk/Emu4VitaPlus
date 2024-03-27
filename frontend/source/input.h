@@ -23,7 +23,7 @@ public:
     void Poll();
 
 private:
-    std::unordered_map<uint64_t, InputFunc> _callbacks;
-
-    uint64_t _last_key;
+    std::unordered_map<uint64_t, InputFunc> _upCallbacks;
+    std::unordered_map<uint64_t, InputFunc> _downCallbacks;
+    uint64_t _lastKey;
 };
