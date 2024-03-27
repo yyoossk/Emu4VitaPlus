@@ -121,11 +121,14 @@ Emulator::Emulator() : _texture_buf{0}
     retro_set_input_state(_InputStateCallback);
 
     retro_get_system_info(&_info);
+
+    retro_init();
 }
 
 Emulator::~Emulator()
 {
     LogFunctionName;
+    retro_deinit();
 }
 
 bool Emulator::LoadGame(const char *path)
@@ -136,14 +139,13 @@ bool Emulator::LoadGame(const char *path)
     game_info.data = nullptr;
     game_info.size = 0;
     game_info.meta = nullptr;
-    retro_init();
+
     return retro_load_game(&game_info);
 }
 
 void Emulator::UnloadGame()
 {
     retro_unload_game();
-    retro_deinit();
 }
 
 void Emulator::Run()
