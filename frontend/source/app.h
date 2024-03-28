@@ -1,6 +1,5 @@
 #pragma once
-#include "browser.h"
-#include "emulator.h"
+#include "drawer.h"
 
 class App
 {
@@ -14,5 +13,5 @@ private:
     void _InitImgui();
     void _DeinitImgui();
 
-    Browser *_browser;
+    Drawer *_drawer;
 };

@@ -24,19 +24,17 @@ App::App()
     sceTouchSetSamplingState(SCE_TOUCH_PORT_BACK, SCE_TOUCH_SAMPLING_STATE_START);
 
     gEmulator = new Emulator();
-    _browser = new Browser("ux0:");
+    gUi = new Ui("ux0:");
 
-    vita2d_init();
-    _InitImgui();
+    _drawer = new Drawer();
 }
 
 App::~App()
 {
     LogFunctionName;
 
-    _DeinitImgui();
-    vita2d_fini();
-    delete _browser;
+    delete _drawer;
+    delete gUi;
     delete gEmulator;
     sceAppUtilShutdown();
 }
@@ -66,16 +64,14 @@ void App::Run()
 {
     LogFunctionName;
 
+    _drawer->Start();
+
     while (gStatus != APP_STATUS_EXIT)
     {
-        vita2d_pool_reset();
-        vita2d_start_drawing_advanced(NULL, 0);
-        vita2d_clear_screen();
-
         switch (gStatus)
         {
         case APP_STATUS_SHOW_BROWSER:
-            _browser->Show();
+            gUi->Run();
             break;
         case APP_STATUS_RUN_GAME:
             gEmulator->Run();
@@ -84,8 +80,6 @@ void App::Run()
             break;
         }
 
-        vita2d_end_drawing();
-        vita2d_swap_buffers();
-        sceDisplayWaitVblankStart();
+        // sceDisplayWaitVblankStart();
     }
 }

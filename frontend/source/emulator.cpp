@@ -76,26 +76,28 @@ bool Emulator::EnvironmentCallback(unsigned cmd, void *data)
 void Emulator::VideoRefreshCallback(const void *data, unsigned width, unsigned height, size_t pitch)
 {
     LogFunctionNameLimited;
-    vita2d_texture *texture;
 
+    TextureInfo texture_info;
     if (_texture_buf == nullptr)
     {
         _texture_buf = new TextureBuf(_video_pixel_format, width, height);
-        texture = _texture_buf->Current();
+        _texture_buf->Current(&texture_info);
     }
     else if (_texture_buf->GetWidth() != width || _texture_buf->GetHeight() != height)
     {
         delete _texture_buf;
         _texture_buf = new TextureBuf(_video_pixel_format, width, height);
-        texture = _texture_buf->Current();
+        _texture_buf->Current(&texture_info);
     }
     else
     {
-        texture = _texture_buf->Next();
+        _texture_buf->Next(&texture_info);
     }
 
-    unsigned out_pitch = vita2d_texture_get_stride(texture);
-    uint8_t *out = (uint8_t *)vita2d_texture_get_datap(texture);
+    _texture_buf->Lock(texture_info.index);
+
+    unsigned out_pitch = vita2d_texture_get_stride(texture_info.texture);
+    uint8_t *out = (uint8_t *)vita2d_texture_get_datap(texture_info.texture);
     uint8_t *in = (uint8_t *)data;
 
     if (pitch == out_pitch)
@@ -111,6 +113,8 @@ void Emulator::VideoRefreshCallback(const void *data, unsigned width, unsigned h
             out += out_pitch;
         }
     }
+
+    _texture_buf->Unlock(texture_info.index);
 }
 
 size_t Emulator::AudioSampleBatchCallback(const int16_t *data, size_t frames)
@@ -130,7 +134,7 @@ int16_t Emulator::InputStateCallback(unsigned port, unsigned device, unsigned in
     return 0;
 }
 
-Emulator::Emulator() : _texture_buf(nullptr)
+Emulator::Emulator() : _texture_buf(nullptr), _speed(1.f)
 {
     LogFunctionName;
 
@@ -141,6 +145,7 @@ Emulator::Emulator() : _texture_buf(nullptr)
     retro_set_input_state(_InputStateCallback);
 
     retro_get_system_info(&_info);
+    retro_get_system_av_info(&_av_info);
 
     retro_init();
 }
@@ -177,9 +182,18 @@ void Emulator::UnloadGame()
 void Emulator::Run()
 {
     retro_run();
+}
 
+void Emulator::Show()
+{
     if (_texture_buf != nullptr)
-        vita2d_draw_texture(_texture_buf->Current(), 0, 0);
+    {
+        TextureInfo texture_info;
+        _texture_buf->Current(&texture_info);
+        _texture_buf->Lock(texture_info.index);
+        vita2d_draw_texture(texture_info.texture, 0, 0);
+        _texture_buf->Unlock(texture_info.index);
+    }
 }
 
 void Emulator::_SetPixelFormat(retro_pixel_format format)

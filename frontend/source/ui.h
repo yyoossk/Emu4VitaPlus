@@ -1,16 +1,15 @@
 #pragma once
-#include "global.h"
 #include "emulator.h"
 #include "input.h"
 #include "directory.h"
-#include "global.h"
 
-class Browser
+class Ui
 {
 public:
-    Browser(const char *path);
-    virtual ~Browser();
+    Ui(const char *path);
+    virtual ~Ui();
     void Show();
+    void Run();
 
 private:
     void _SetKeyHooks();
