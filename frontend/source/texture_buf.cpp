@@ -1,16 +1,18 @@
 #include "texture_buf.h"
 #include "log.h"
 
-TextureBuf::TextureBuf(SceGxmTextureFormat format, size_t width, size_t height, size_t count)
-    : _index(0), _width(width), _height(height)
+TextureBuf::TextureBuf(SceGxmTextureFormat format, size_t width, size_t height, size_t size)
+    : _size(size), _index(0), _width(width), _height(height)
 {
     LogFunctionName;
-    for (size_t i = 0; i < count; i++)
+
+    _buf = new vita2d_texture *[size];
+    _mutex = new SceKernelLwMutexWork[size];
+
+    for (size_t i = 0; i < size; i++)
     {
-        _buf.push_back(vita2d_create_empty_texture_format(width, height, format));
-        SceKernelLwMutexWork mutex;
-        sceKernelCreateLwMutex(&mutex, "texture_buf_mutex", 0, 1, nullptr);
-        _mutex.push_back(mutex);
+        _buf[i] = vita2d_create_empty_texture_format(width, height, format);
+        sceKernelCreateLwMutex(&_mutex[i], "texture_buf_mutex", 0, 1, nullptr);
     }
 }
 
@@ -20,31 +22,31 @@ TextureBuf::~TextureBuf()
 
     vita2d_wait_rendering_done();
 
-    for (auto texture : _buf)
+    for (size_t i = 0; i < _size; i++)
     {
-        vita2d_free_texture(texture);
+        vita2d_free_texture(_buf[i]);
+        sceKernelDeleteLwMutex(&_mutex[i]);
     }
 }
 
-void TextureBuf::Next(TextureInfo *info)
+vita2d_texture *TextureBuf::Next()
 {
     _index++;
-    _index %= _buf.size();
-    Current(info);
+    _index %= _size;
+    return _buf[_index];
 }
 
-void TextureBuf::Current(TextureInfo *info)
+vita2d_texture *TextureBuf::Current()
 {
-    info->index = _index;
-    info->texture = _buf[_index];
+    return _buf[_index];
 }
 
-void TextureBuf::Lock(int index)
+void TextureBuf::Lock()
 {
-    sceKernelLockLwMutex(&_mutex[index], 1, nullptr);
+    sceKernelLockLwMutex(&_mutex[_index], 1, nullptr);
 }
 
-void TextureBuf::Unlock(int index)
+void TextureBuf::Unlock()
 {
-    sceKernelUnlockLwMutex(&_mutex[index], 1);
+    sceKernelUnlockLwMutex(&_mutex[_index], 1);
 }

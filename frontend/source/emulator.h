@@ -19,6 +19,7 @@ public:
     void UnloadGame();
     void Run();
     void Show();
+    void SetSpeed(double speed);
 
     const char *GetValidExtensions() const { return _info.valid_extensions; };
 
@@ -27,7 +28,9 @@ private:
     retro_system_av_info _av_info;
     SceGxmTextureFormat _video_pixel_format;
     TextureBuf *_texture_buf;
-    float _speed;
+    double _speed;
+    uint64_t _micros_per_frame;
+    uint64_t _next_micros;
 
     void _SetPixelFormat(retro_pixel_format format);
 };

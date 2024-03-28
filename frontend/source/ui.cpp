@@ -38,21 +38,21 @@ void Ui::_SetKeyHooks()
 
 void Ui::_OnKeyL2()
 {
-    LogFunctionName;
+    // LogFunctionName;
     _tab_index += TAB_ITEM_COUNT - 1;
     _tab_index %= TAB_ITEM_COUNT;
 }
 
 void Ui::_OnKeyR2()
 {
-    LogFunctionName;
+    // LogFunctionName;
     _tab_index++;
     _tab_index %= TAB_ITEM_COUNT;
 }
 
 void Ui::_OnKeyUp()
 {
-    LogFunctionName;
+    // LogFunctionName;
 
     switch (_tab_index)
     {
@@ -72,7 +72,7 @@ void Ui::_OnKeyUp()
 
 void Ui::_OnKeyDown()
 {
-    LogFunctionName;
+    // LogFunctionName;
     switch (_tab_index)
     {
     case TAB_ITEM_BROWSER:
@@ -158,13 +158,11 @@ void Ui::Show()
     {
         if (ImGui::BeginTabItem("Browser", NULL, _tab_index == 0 ? ImGuiTabItemFlags_SetSelected : 0))
         {
-            ImGui::BeginGroup();
             ImGui::Text(_directory->GetCurrentPath().c_str());
             auto size = ImGui::GetWindowContentRegionMax();
             auto min_size = ImGui::GetWindowContentRegionMin();
             ImGui::SetNextItemWidth(size.x * 0.5f);
-            ImGui::ListBox("", &_browser_index, GetDirectoryItem, _directory, _directory->GetSize(), size.y - min_size.y * 4);
-            ImGui::EndGroup();
+            ImGui::ListBox("", &_browser_index, GetDirectoryItem, _directory, _directory->GetSize(), ImGui::GetTextLineHeight() * 10);
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem("Favorite", NULL, _tab_index == 1 ? ImGuiTabItemFlags_SetSelected : 0))

@@ -66,6 +66,16 @@ bool Emulator::EnvironmentCallback(unsigned cmd, void *data)
         *(bool *)data = false;
         break;
 
+    case RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO:
+    {
+        retro_system_av_info *av_info = (retro_system_av_info *)data;
+        // if (_av_info.timing.fps != av_info->timing.fps)
+        // {
+        //     LogDebug("av_info.timing.fps %d", av_info->timing.fps);
+        // }
+        memcpy(&_av_info, av_info, sizeof(retro_system_av_info));
+    }
+    break;
     default:
         return false;
     }
@@ -77,27 +87,23 @@ void Emulator::VideoRefreshCallback(const void *data, unsigned width, unsigned h
 {
     LogFunctionNameLimited;
 
-    TextureInfo texture_info;
+    vita2d_texture *texture;
     if (_texture_buf == nullptr)
     {
         _texture_buf = new TextureBuf(_video_pixel_format, width, height);
-        _texture_buf->Current(&texture_info);
     }
     else if (_texture_buf->GetWidth() != width || _texture_buf->GetHeight() != height)
     {
         delete _texture_buf;
         _texture_buf = new TextureBuf(_video_pixel_format, width, height);
-        _texture_buf->Current(&texture_info);
-    }
-    else
-    {
-        _texture_buf->Next(&texture_info);
     }
 
-    _texture_buf->Lock(texture_info.index);
+    texture = _texture_buf->Next();
 
-    unsigned out_pitch = vita2d_texture_get_stride(texture_info.texture);
-    uint8_t *out = (uint8_t *)vita2d_texture_get_datap(texture_info.texture);
+    _texture_buf->Lock();
+
+    unsigned out_pitch = vita2d_texture_get_stride(texture);
+    uint8_t *out = (uint8_t *)vita2d_texture_get_datap(texture);
     uint8_t *in = (uint8_t *)data;
 
     if (pitch == out_pitch)
@@ -114,7 +120,7 @@ void Emulator::VideoRefreshCallback(const void *data, unsigned width, unsigned h
         }
     }
 
-    _texture_buf->Unlock(texture_info.index);
+    _texture_buf->Unlock();
 }
 
 size_t Emulator::AudioSampleBatchCallback(const int16_t *data, size_t frames)
@@ -134,7 +140,7 @@ int16_t Emulator::InputStateCallback(unsigned port, unsigned device, unsigned in
     return 0;
 }
 
-Emulator::Emulator() : _texture_buf(nullptr), _speed(1.f)
+Emulator::Emulator() : _texture_buf(nullptr)
 {
     LogFunctionName;
 
@@ -144,10 +150,11 @@ Emulator::Emulator() : _texture_buf(nullptr), _speed(1.f)
     retro_set_input_poll(_InputPollCallback);
     retro_set_input_state(_InputStateCallback);
 
+    retro_init();
     retro_get_system_info(&_info);
     retro_get_system_av_info(&_av_info);
-
-    retro_init();
+    SetSpeed(1.0);
+    _next_micros = sceKernelGetProcessTimeWide();
 }
 
 Emulator::~Emulator()
@@ -181,19 +188,40 @@ void Emulator::UnloadGame()
 
 void Emulator::Run()
 {
+
     retro_run();
 }
 
 void Emulator::Show()
 {
-    if (_texture_buf != nullptr)
+    if (_texture_buf == nullptr)
     {
-        TextureInfo texture_info;
-        _texture_buf->Current(&texture_info);
-        _texture_buf->Lock(texture_info.index);
-        vita2d_draw_texture(texture_info.texture, 0, 0);
-        _texture_buf->Unlock(texture_info.index);
+        return;
     }
+
+    uint64_t cur_micros = sceKernelGetProcessTimeWide();
+    if (cur_micros < _next_micros)
+    {
+        uint64_t delay_micros = _next_micros - cur_micros;
+        sceKernelDelayThread(delay_micros);
+        _next_micros = cur_micros + delay_micros;
+    }
+    else
+    {
+        _next_micros = cur_micros + _micros_per_frame;
+    }
+
+    _texture_buf->Lock();
+    vita2d_draw_texture(_texture_buf->Current(), 0, 0);
+    _texture_buf->Unlock();
+}
+
+void Emulator::SetSpeed(double speed)
+{
+    LogFunctionName;
+    _speed = speed;
+    LogDebug("SetSpeed %lf", _av_info.timing.fps);
+    _micros_per_frame = 1000000.0 / (_av_info.timing.fps * speed);
 }
 
 void Emulator::_SetPixelFormat(retro_pixel_format format)

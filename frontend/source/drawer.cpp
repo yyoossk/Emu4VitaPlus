@@ -75,6 +75,7 @@ int Drawer::_DrawThread(SceSize args, void *argp)
 
         vita2d_end_drawing();
         vita2d_swap_buffers();
+        sceDisplayWaitVblankStart();
     }
 
     sceKernelExitThread(0);
