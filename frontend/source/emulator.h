@@ -2,6 +2,7 @@
 #include <vector>
 #include <libretro.h>
 #include "texture_buf.h"
+#include "delay.h"
 
 class Emulator
 {
@@ -29,8 +30,7 @@ private:
     SceGxmTextureFormat _video_pixel_format;
     TextureBuf *_texture_buf;
     double _speed;
-    uint64_t _micros_per_frame;
-    uint64_t _next_micros;
+    Delay _delay;
 
     void _SetPixelFormat(retro_pixel_format format);
 };

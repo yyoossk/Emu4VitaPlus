@@ -154,7 +154,6 @@ Emulator::Emulator() : _texture_buf(nullptr)
     retro_get_system_info(&_info);
     retro_get_system_av_info(&_av_info);
     SetSpeed(1.0);
-    _next_micros = sceKernelGetProcessTimeWide();
 }
 
 Emulator::~Emulator()
@@ -188,7 +187,7 @@ void Emulator::UnloadGame()
 
 void Emulator::Run()
 {
-
+    _delay.Wait();
     retro_run();
 }
 
@@ -197,18 +196,6 @@ void Emulator::Show()
     if (_texture_buf == nullptr)
     {
         return;
-    }
-
-    uint64_t cur_micros = sceKernelGetProcessTimeWide();
-    if (cur_micros < _next_micros)
-    {
-        uint64_t delay_micros = _next_micros - cur_micros;
-        sceKernelDelayThread(delay_micros);
-        _next_micros = cur_micros + delay_micros;
-    }
-    else
-    {
-        _next_micros = cur_micros + _micros_per_frame;
     }
 
     _texture_buf->Lock();
@@ -221,7 +208,7 @@ void Emulator::SetSpeed(double speed)
     LogFunctionName;
     _speed = speed;
     LogDebug("SetSpeed %lf", _av_info.timing.fps);
-    _micros_per_frame = 1000000.0 / (_av_info.timing.fps * speed);
+    _delay.SetInterval(1000000.0 / (_av_info.timing.fps * speed));
 }
 
 void Emulator::_SetPixelFormat(retro_pixel_format format)
