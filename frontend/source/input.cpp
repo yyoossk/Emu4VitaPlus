@@ -25,6 +25,16 @@ void Input::SetKeyUpCallback(uint64_t key, InputFunc func)
     _key_up_callbacks[key] = func;
 }
 
+void Input::UnsetKeyUpCallback(uint64_t key)
+{
+    _key_up_callbacks.erase(key);
+}
+
+void Input::UnsetKeyDownCallback(uint64_t key)
+{
+    _key_down_callbacks.erase(key);
+}
+
 void Input::Poll()
 {
     SceCtrlData ctrl_data;

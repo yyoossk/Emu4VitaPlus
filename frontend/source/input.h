@@ -20,6 +20,9 @@ public:
     virtual ~Input();
     void SetKeyUpCallback(uint64_t key, InputFunc func);
     void SetKeyDownCallback(uint64_t key, InputFunc func);
+    void UnsetKeyUpCallback(uint64_t key);
+    void UnsetKeyDownCallback(uint64_t key);
+
     void Poll();
 
 private:
