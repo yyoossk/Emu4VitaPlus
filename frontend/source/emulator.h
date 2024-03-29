@@ -10,12 +10,6 @@ public:
     Emulator();
     virtual ~Emulator();
 
-    bool EnvironmentCallback(unsigned cmd, void *data);
-    void VideoRefreshCallback(const void *data, unsigned width, unsigned height, size_t pitch);
-    size_t AudioSampleBatchCallback(const int16_t *data, size_t frames);
-    void InputPollCallback();
-    int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsigned id);
-
     bool LoadGame(const char *path);
     void UnloadGame();
     void Run();
@@ -23,6 +17,12 @@ public:
     void SetSpeed(double speed);
 
     const char *GetValidExtensions() const { return _info.valid_extensions; };
+
+    friend bool EnvironmentCallback(unsigned cmd, void *data);
+    friend void VideoRefreshCallback(const void *data, unsigned width, unsigned height, size_t pitch);
+    friend size_t AudioSampleBatchCallback(const int16_t *data, size_t frames);
+    friend void InputPollCallback();
+    friend int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsigned id);
 
 private:
     retro_system_info _info;

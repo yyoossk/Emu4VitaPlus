@@ -1,4 +1,3 @@
-
 #include <algorithm>
 #include <string>
 #include <string.h>
@@ -7,32 +6,7 @@
 #include "emulator.h"
 #include "log.h"
 
-static bool _EnvironmentCallback(unsigned cmd, void *data)
-{
-    return gEmulator->EnvironmentCallback(cmd, data);
-}
-
-static void _VideoRefreshCallback(const void *data, unsigned width, unsigned height, size_t pitch)
-{
-    return gEmulator->VideoRefreshCallback(data, width, height, pitch);
-}
-
-static size_t _AudioSampleBatchCallback(const int16_t *data, size_t frames)
-{
-    return gEmulator->AudioSampleBatchCallback(data, frames);
-}
-
-static void _InputPollCallback()
-{
-    return gEmulator->InputPollCallback();
-}
-
-static int16_t _InputStateCallback(unsigned port, unsigned device, unsigned index, unsigned id)
-{
-    return gEmulator->InputStateCallback(port, device, index, id);
-}
-
-bool Emulator::EnvironmentCallback(unsigned cmd, void *data)
+bool EnvironmentCallback(unsigned cmd, void *data)
 {
     LogFunctionNameLimited;
     LogTrace("cmd: %u", cmd);
@@ -46,7 +20,7 @@ bool Emulator::EnvironmentCallback(unsigned cmd, void *data)
         break;
 
     case RETRO_ENVIRONMENT_SET_PIXEL_FORMAT:
-        _SetPixelFormat(*(retro_pixel_format *)data);
+        gEmulator->_SetPixelFormat(*(retro_pixel_format *)data);
         break;
 
     case RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS:
@@ -57,8 +31,8 @@ bool Emulator::EnvironmentCallback(unsigned cmd, void *data)
 
     case RETRO_ENVIRONMENT_GET_VARIABLE:
     {
-        retro_variable *var = (retro_variable *)data;
-        LogDebug("retro_variable %s", var->key);
+        // retro_variable *var = (retro_variable *)data;
+        // LogDebug("retro_variable %s", var->key);
     }
     break;
 
@@ -73,7 +47,7 @@ bool Emulator::EnvironmentCallback(unsigned cmd, void *data)
         // {
         //     LogDebug("av_info.timing.fps %d", av_info->timing.fps);
         // }
-        memcpy(&_av_info, av_info, sizeof(retro_system_av_info));
+        memcpy(&gEmulator->_av_info, av_info, sizeof(retro_system_av_info));
     }
     break;
     default:
@@ -83,24 +57,24 @@ bool Emulator::EnvironmentCallback(unsigned cmd, void *data)
     return true;
 }
 
-void Emulator::VideoRefreshCallback(const void *data, unsigned width, unsigned height, size_t pitch)
+void VideoRefreshCallback(const void *data, unsigned width, unsigned height, size_t pitch)
 {
     LogFunctionNameLimited;
 
     vita2d_texture *texture;
-    if (_texture_buf == nullptr)
+    if (gEmulator->_texture_buf == nullptr)
     {
-        _texture_buf = new TextureBuf(_video_pixel_format, width, height);
+        gEmulator->_texture_buf = new TextureBuf(gEmulator->_video_pixel_format, width, height);
     }
-    else if (_texture_buf->GetWidth() != width || _texture_buf->GetHeight() != height)
+    else if (gEmulator->_texture_buf->GetWidth() != width || gEmulator->_texture_buf->GetHeight() != height)
     {
-        delete _texture_buf;
-        _texture_buf = new TextureBuf(_video_pixel_format, width, height);
+        delete gEmulator->_texture_buf;
+        gEmulator->_texture_buf = new TextureBuf(gEmulator->_video_pixel_format, width, height);
     }
 
-    texture = _texture_buf->Next();
+    texture = gEmulator->_texture_buf->Next();
 
-    _texture_buf->Lock();
+    gEmulator->_texture_buf->Lock();
 
     unsigned out_pitch = vita2d_texture_get_stride(texture);
     uint8_t *out = (uint8_t *)vita2d_texture_get_datap(texture);
@@ -120,21 +94,21 @@ void Emulator::VideoRefreshCallback(const void *data, unsigned width, unsigned h
         }
     }
 
-    _texture_buf->Unlock();
+    gEmulator->_texture_buf->Unlock();
 }
 
-size_t Emulator::AudioSampleBatchCallback(const int16_t *data, size_t frames)
+size_t AudioSampleBatchCallback(const int16_t *data, size_t frames)
 {
     LogFunctionNameLimited;
     return frames;
 }
 
-void Emulator::InputPollCallback()
+void InputPollCallback()
 {
     LogFunctionNameLimited;
 }
 
-int16_t Emulator::InputStateCallback(unsigned port, unsigned device, unsigned index, unsigned id)
+int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsigned id)
 {
     LogFunctionNameLimited;
     return 0;
@@ -144,11 +118,11 @@ Emulator::Emulator() : _texture_buf(nullptr)
 {
     LogFunctionName;
 
-    retro_set_environment(_EnvironmentCallback);
-    retro_set_video_refresh(_VideoRefreshCallback);
-    retro_set_audio_sample_batch(_AudioSampleBatchCallback);
-    retro_set_input_poll(_InputPollCallback);
-    retro_set_input_state(_InputStateCallback);
+    retro_set_environment(EnvironmentCallback);
+    retro_set_video_refresh(VideoRefreshCallback);
+    retro_set_audio_sample_batch(AudioSampleBatchCallback);
+    retro_set_input_poll(InputPollCallback);
+    retro_set_input_state(InputStateCallback);
 
     retro_init();
     retro_get_system_info(&_info);

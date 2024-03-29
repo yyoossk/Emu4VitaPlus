@@ -1,17 +1,17 @@
 #include "global.h"
-#include "drawer.h"
+#include "video.h"
 #include "log.h"
 #include "my_imgui.h"
 
-Drawer::Drawer() : _thread_id(-1)
+Video::Video() : ThreadBase(_DrawThread)
 {
     vita2d_init();
     _InitImgui();
 }
 
-Drawer::~Drawer()
+Video::~Video()
 {
-    if (_thread_id >= 0)
+    if (IsRunning())
     {
         Stop();
     }
@@ -19,44 +19,10 @@ Drawer::~Drawer()
     vita2d_fini();
 }
 
-bool Drawer::Start()
+int Video::_DrawThread(SceSize args, void *argp)
 {
-    LogFunctionName;
-
-    _thread_id = sceKernelCreateThread("draw_thread", Drawer::_DrawThread, 64, 0x10000, 0, 0, NULL);
-    if (_thread_id < 0)
-    {
-        LogError("failed to create drawer thread");
-        return false;
-    }
-
-    _keep_running = true;
-    int result = sceKernelStartThread(_thread_id, sizeof(this), this);
-    if (result != SCE_OK)
-    {
-        LogError("failed to start drawer thread: %d", result);
-        sceKernelDeleteThread(_thread_id);
-        _thread_id = -1;
-        return false;
-    }
-
-    return true;
-}
-
-void Drawer::Stop()
-{
-    LogFunctionName;
-    _keep_running = false;
-    sceKernelWaitThreadEnd(_thread_id, NULL, NULL);
-    sceKernelDeleteThread(_thread_id);
-    _thread_id = -1;
-}
-
-int Drawer::_DrawThread(SceSize args, void *argp)
-{
-    Drawer *drawer = (Drawer *)argp;
-
-    while (drawer->_keep_running)
+    Video *video = *(Video **)argp;
+    while (video->IsRunning())
     {
         vita2d_pool_reset();
         vita2d_start_drawing_advanced(NULL, 0);
@@ -84,7 +50,7 @@ int Drawer::_DrawThread(SceSize args, void *argp)
     return 0;
 }
 
-void Drawer::_InitImgui()
+void Video::_InitImgui()
 {
     LogFunctionName;
 
@@ -96,7 +62,7 @@ void Drawer::_InitImgui()
     ImGui_ImplVita2D_GamepadUsage(false);
 }
 
-void Drawer::_DeinitImgui()
+void Video::_DeinitImgui()
 {
     LogFunctionName;
 

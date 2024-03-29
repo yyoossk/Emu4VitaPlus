@@ -1,0 +1,19 @@
+#pragma once
+#include <psp2/kernel/threadmgr.h>
+
+class ThreadBase
+{
+public:
+    ThreadBase(SceKernelThreadEntry entry, int priority = 64, int stack_size = 0x10000);
+    virtual ~ThreadBase();
+    bool Start(void *data, SceSize size);
+    void Stop();
+    bool IsRunning() { return _keep_running; };
+
+private:
+    SceKernelThreadEntry _entry;
+    int _priority;
+    SceSize _stack_size;
+    bool _keep_running;
+    SceUID _thread_id;
+};

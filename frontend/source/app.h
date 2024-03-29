@@ -1,5 +1,5 @@
 #pragma once
-#include "drawer.h"
+#include "video.h"
 
 class App
 {
@@ -13,5 +13,5 @@ private:
     void _InitImgui();
     void _DeinitImgui();
 
-    Drawer *_drawer;
+    Video *_video;
 };

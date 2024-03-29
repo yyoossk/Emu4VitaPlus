@@ -1,20 +1,15 @@
 #pragma once
 #include <psp2/kernel/threadmgr.h>
+#include "thread_base.h"
 
-class Drawer
+class Video : public ThreadBase
 {
 public:
-    Drawer();
-    virtual ~Drawer();
-
-    bool Start();
-    void Stop();
+    Video();
+    virtual ~Video();
 
 private:
     static int _DrawThread(SceSize args, void *argp);
     void _InitImgui();
     void _DeinitImgui();
-
-    bool _keep_running;
-    SceUID _thread_id;
 };

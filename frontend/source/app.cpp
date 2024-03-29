@@ -26,14 +26,14 @@ App::App()
     gEmulator = new Emulator();
     gUi = new Ui("ux0:");
 
-    _drawer = new Drawer();
+    _video = new Video();
 }
 
 App::~App()
 {
     LogFunctionName;
 
-    delete _drawer;
+    delete _video;
     delete gUi;
     delete gEmulator;
     sceAppUtilShutdown();
@@ -64,7 +64,9 @@ void App::Run()
 {
     LogFunctionName;
 
-    _drawer->Start();
+    //_video->Start();
+    LogDebug("video %08x %08x", _video, *(uint32_t *)_video);
+    _video->ThreadBase::Start(&_video, sizeof(&_video));
 
     while (gStatus != APP_STATUS_EXIT)
     {
