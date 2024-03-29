@@ -1,4 +1,5 @@
 #include <imgui_vita2d/imgui_vita.h>
+#include "my_imgui.h"
 #include "ui.h"
 #include "global.h"
 #include "log.h"
@@ -175,7 +176,7 @@ void Ui::Show()
 
     ImGui::End();
     ImGui::Render();
-    ImGui_ImplVita2D_RenderDrawData(ImGui::GetDrawData());
+    My_ImGui_ImplVita2D_RenderDrawData(ImGui::GetDrawData());
 
     return;
 }

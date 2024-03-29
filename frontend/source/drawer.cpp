@@ -1,6 +1,7 @@
 #include "global.h"
 #include "drawer.h"
 #include "log.h"
+#include "my_imgui.h"
 
 Drawer::Drawer() : _thread_id(-1)
 {
@@ -88,8 +89,7 @@ void Drawer::_InitImgui()
     LogFunctionName;
 
     ImGui::CreateContext();
-    ImGui_ImplVita2D_Init();
-
+    My_ImGui_ImplVita2D_Init();
     ImGui_ImplVita2D_TouchUsage(false);
     ImGui_ImplVita2D_UseIndirectFrontTouch(false);
     ImGui_ImplVita2D_UseRearTouch(false);
@@ -100,6 +100,6 @@ void Drawer::_DeinitImgui()
 {
     LogFunctionName;
 
-    ImGui_ImplVita2D_Shutdown();
+    My_ImGui_ImplVita2D_Shutdown();
     ImGui::DestroyContext();
 }
