@@ -64,8 +64,6 @@ void App::Run()
 {
     LogFunctionName;
 
-    //_video->Start();
-    LogDebug("video %08x %08x", _video, *(uint32_t *)_video);
     _video->ThreadBase::Start(&_video, sizeof(&_video));
 
     while (gStatus != APP_STATUS_EXIT)
