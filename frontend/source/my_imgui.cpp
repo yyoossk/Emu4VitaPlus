@@ -68,7 +68,7 @@ static void My_Imgui_Create_Font()
     io.Fonts->AddFontFromFileTTF(APP_ASSETS_DIR "/" FONT_PVF_NAME,
                                  20.0f,
                                  &font_config,
-                                 io.Fonts->GetGlyphRangesJapanese());
+                                 io.Fonts->GetGlyphRangesChineseSimplifiedCommon());
     io.Fonts->GetTexDataAsRGBA32((uint8_t **)&pixels, &width, &height);
     gFontTexture = vita2d_create_empty_texture(width, height);
     const auto stride = vita2d_texture_get_stride(gFontTexture) / 4;
@@ -95,22 +95,20 @@ static void My_Imgui_Destroy_Font()
 
 IMGUI_API void My_ImGui_ImplVita2D_Init()
 {
-    uint32_t err;
-
     My_Imgui_Create_Font();
 
     // check the shaders
-    err = sceGxmProgramCheck(&_binary_assets_imgui_v_cg_gxp_start);
-    err = sceGxmProgramCheck(&_binary_assets_imgui_f_cg_gxp_start);
+    sceGxmProgramCheck(&_binary_assets_imgui_v_cg_gxp_start);
+    sceGxmProgramCheck(&_binary_assets_imgui_f_cg_gxp_start);
 
     // register programs with the patcher
-    err = sceGxmShaderPatcherRegisterProgram(vita2d_get_shader_patcher(),
-                                             &_binary_assets_imgui_v_cg_gxp_start,
-                                             &imguiVertexProgramId);
+    sceGxmShaderPatcherRegisterProgram(vita2d_get_shader_patcher(),
+                                       &_binary_assets_imgui_v_cg_gxp_start,
+                                       &imguiVertexProgramId);
 
-    err = sceGxmShaderPatcherRegisterProgram(vita2d_get_shader_patcher(),
-                                             &_binary_assets_imgui_f_cg_gxp_start,
-                                             &imguiFragmentProgramId);
+    sceGxmShaderPatcherRegisterProgram(vita2d_get_shader_patcher(),
+                                       &_binary_assets_imgui_f_cg_gxp_start,
+                                       &imguiFragmentProgramId);
 
     // get attributes by name to create vertex format bindings
     const SceGxmProgramParameter *paramTexturePositionAttribute = sceGxmProgramFindParameterByName(&_binary_assets_imgui_v_cg_gxp_start, "aPosition");
@@ -149,13 +147,13 @@ IMGUI_API void My_ImGui_ImplVita2D_Init()
     textureVertexStreams[0].indexSource = SCE_GXM_INDEX_SOURCE_INDEX_16BIT;
 
     // create texture shaders
-    err = sceGxmShaderPatcherCreateVertexProgram(vita2d_get_shader_patcher(),
-                                                 imguiVertexProgramId,
-                                                 textureVertexAttributes,
-                                                 3,
-                                                 textureVertexStreams,
-                                                 1,
-                                                 &_vita2d_imguiVertexProgram);
+    sceGxmShaderPatcherCreateVertexProgram(vita2d_get_shader_patcher(),
+                                           imguiVertexProgramId,
+                                           textureVertexAttributes,
+                                           3,
+                                           textureVertexStreams,
+                                           1,
+                                           &_vita2d_imguiVertexProgram);
 
     // Fill SceGxmBlendInfo
     static SceGxmBlendInfo blend_info{};
@@ -167,13 +165,13 @@ IMGUI_API void My_ImGui_ImplVita2D_Init()
     blend_info.alphaDst = SCE_GXM_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
     blend_info.colorMask = SCE_GXM_COLOR_MASK_ALL;
 
-    err = sceGxmShaderPatcherCreateFragmentProgram(vita2d_get_shader_patcher(),
-                                                   imguiFragmentProgramId,
-                                                   SCE_GXM_OUTPUT_REGISTER_FORMAT_UCHAR4,
-                                                   SCE_GXM_MULTISAMPLE_NONE,
-                                                   &blend_info,
-                                                   &_binary_assets_imgui_v_cg_gxp_start,
-                                                   &_vita2d_imguiFragmentProgram);
+    sceGxmShaderPatcherCreateFragmentProgram(vita2d_get_shader_patcher(),
+                                             imguiFragmentProgramId,
+                                             SCE_GXM_OUTPUT_REGISTER_FORMAT_UCHAR4,
+                                             SCE_GXM_MULTISAMPLE_NONE,
+                                             &blend_info,
+                                             &_binary_assets_imgui_v_cg_gxp_start,
+                                             &_vita2d_imguiFragmentProgram);
 
     // find vertex uniforms by name and cache parameter information
     _vita2d_imguiWvpParam = sceGxmProgramFindParameterByName(&_binary_assets_imgui_v_cg_gxp_start, "wvp");
@@ -239,20 +237,20 @@ IMGUI_API void My_ImGui_ImplVita2D_RenderDrawData(ImDrawData *draw_data)
                 sceGxmSetVertexProgram(_vita2d_context, _vita2d_imguiVertexProgram);
                 sceGxmSetFragmentProgram(_vita2d_context, _vita2d_imguiFragmentProgram);
 
-                auto err = sceGxmSetVertexStream(_vita2d_context, 0, vertices);
+                sceGxmSetVertexStream(_vita2d_context, 0, vertices);
 
                 void *vertex_wvp_buffer;
                 sceGxmReserveVertexDefaultUniformBuffer(vita2d_get_context(), &vertex_wvp_buffer);
                 sceGxmSetUniformDataF(vertex_wvp_buffer, _vita2d_imguiWvpParam, 0, 16, ortho_proj_matrix);
 
                 const auto texture = (vita2d_texture *)pcmd->TextureId;
-                err = sceGxmSetFragmentTexture(_vita2d_context, 0, &texture->gxm_tex);
+                sceGxmSetFragmentTexture(_vita2d_context, 0, &texture->gxm_tex);
 
-                err = sceGxmDraw(_vita2d_context,
-                                 SCE_GXM_PRIMITIVE_TRIANGLES,
-                                 SCE_GXM_INDEX_FORMAT_U16,
-                                 indices,
-                                 pcmd->ElemCount);
+                sceGxmDraw(_vita2d_context,
+                           SCE_GXM_PRIMITIVE_TRIANGLES,
+                           SCE_GXM_INDEX_FORMAT_U16,
+                           indices,
+                           pcmd->ElemCount);
             }
 
             indices += pcmd->ElemCount;

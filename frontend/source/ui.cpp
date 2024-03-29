@@ -100,6 +100,7 @@ void Ui::_OnKeyCircle()
         if (item.isDir)
         {
             _directory->SetCurrentPath(_directory->GetCurrentPath() + "/" + item.name);
+            _browser_index = 0;
         }
         else
         {
@@ -132,12 +133,6 @@ void Ui::_OnKeyCross()
     }
 }
 
-static bool GetDirectoryItem(void *data, int idx, const char **out_text)
-{
-    *out_text = ((Directory *)data)->GetItem(idx).name.c_str();
-    return *out_text != nullptr;
-}
-
 void Ui::Run()
 {
     _input.Poll();
@@ -151,19 +146,38 @@ void Ui::Show()
     ImGui::SetMouseCursor(ImGuiMouseCursor_None);
     ImGui::SetNextWindowPos({MAIN_WINDOW_PADDING, MAIN_WINDOW_PADDING});
     ImGui::SetNextWindowSize({VITA_WIDTH - MAIN_WINDOW_PADDING * 2, VITA_HEIGHT - MAIN_WINDOW_PADDING * 2});
-    ImGui::Begin(APP_NAME_STR,
-                 NULL,
-                 ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar);
-    // ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoDecoration);
+    ImGui::Begin(APP_NAME_STR, NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar);
+
     if (ImGui::BeginTabBar("MyTabBar", ImGuiTabBarFlags_None))
     {
         if (ImGui::BeginTabItem("Browser", NULL, _tab_index == 0 ? ImGuiTabItemFlags_SetSelected : 0))
         {
             ImGui::Text(_directory->GetCurrentPath().c_str());
-            auto size = ImGui::GetWindowContentRegionMax();
-            auto min_size = ImGui::GetWindowContentRegionMin();
-            ImGui::SetNextItemWidth(size.x * 0.5f);
-            ImGui::ListBox("", &_browser_index, GetDirectoryItem, _directory, _directory->GetSize(), ImGui::GetTextLineHeight() * 10);
+            auto size = ImGui::GetContentRegionAvail();
+            ImGui::ListBoxHeader("", {size.x * 0.5f, size.y});
+            for (int i = 0; i < _directory->GetSize(); i++)
+            {
+                const auto item = _directory->GetItem(i);
+
+                if (item.isDir)
+                {
+                    ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
+                }
+
+                ImGui::Selectable(item.name.c_str(), i == _browser_index);
+                if (item.isDir)
+                {
+                    ImGui::PopStyleColor();
+                }
+
+                if (i == _browser_index && ImGui::GetScrollMaxY() > 0.f)
+                {
+                    ImGui::SetScrollHereY((float)_browser_index / (float)_directory->GetSize());
+                }
+            }
+
+            // LogDebug("GetScrollY %f %f", ImGui::GetScrollY(), ImGui::GetScrollMaxY());
+            ImGui::ListBoxFooter();
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem("Favorite", NULL, _tab_index == 1 ? ImGuiTabItemFlags_SetSelected : 0))
