@@ -1,5 +1,6 @@
 #pragma once
 #include "video.h"
+#include "audio.h"
 
 class App
 {
@@ -14,4 +15,5 @@ private:
     void _DeinitImgui();
 
     Video *_video;
+    Audio *_audio;
 };

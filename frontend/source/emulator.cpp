@@ -50,6 +50,12 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         memcpy(&gEmulator->_av_info, av_info, sizeof(retro_system_av_info));
     }
     break;
+
+    case RETRO_ENVIRONMENT_GET_AUDIO_VIDEO_ENABLE:
+        if (data)
+            *(int *)data = 3;
+        break;
+
     default:
         return false;
     }

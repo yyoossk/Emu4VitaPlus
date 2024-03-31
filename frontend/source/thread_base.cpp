@@ -18,6 +18,27 @@ ThreadBase::~ThreadBase()
     }
 }
 
+bool ThreadBase::Start()
+{
+    LogFunctionName;
+    switch (sizeof(this))
+    {
+    case 4:
+    {
+        uint32_t p = (uint32_t)this;
+        return Start(&p, 4);
+    }
+    case 8:
+    {
+        uint64_t p = (uint64_t)this;
+        return Start(&p, 8);
+    }
+    default:
+        LogError("not the expected size");
+        return false;
+    }
+}
+
 bool ThreadBase::Start(void *data, SceSize size)
 {
     LogFunctionName;

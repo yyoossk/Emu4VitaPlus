@@ -1,5 +1,6 @@
 #include <psp2/kernel/processmgr.h>
 #include "delay.h"
+#include "log.h"
 
 Delay::Delay() : Delay(0ULL)
 {
@@ -17,6 +18,7 @@ Delay::~Delay()
 void Delay::SetInterval(uint64_t interval_ms)
 {
     _interval_ms = interval_ms;
+    _next_ms = sceKernelGetProcessTimeWide() + _interval_ms;
 }
 
 void Delay::Wait()
@@ -32,4 +34,15 @@ void Delay::Wait()
     {
         _next_ms = current + _interval_ms;
     }
+}
+
+bool Delay::TimeUp()
+{
+    uint64_t current = sceKernelGetProcessTimeWide();
+    bool result = (current >= _next_ms);
+    if (result)
+    {
+        _next_ms = current + _interval_ms;
+    }
+    return result;
 }

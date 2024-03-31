@@ -35,6 +35,7 @@ void Ui::_SetKeyHooks()
     _input.SetKeyUpCallback(SCE_CTRL_DOWN, std::bind(&Ui::_OnKeyDown, this));
     _input.SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&Ui::_OnKeyCircle, this));
     _input.SetKeyUpCallback(SCE_CTRL_CROSS, std::bind(&Ui::_OnKeyCross, this));
+    _input.SetKeyTurbo(SCE_CTRL_UP | SCE_CTRL_DOWN);
 }
 
 void Ui::_OnKeyL2()

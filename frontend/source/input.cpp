@@ -7,12 +7,16 @@
 #define ANALOG_CENTER 128
 #define ANALOG_THRESHOLD 64
 
-Input::Input() : _last_key(0)
+Input::Input() : _last_key(0ull),
+                 _turbo_key(0ull),
+                 _last_active(0ull)
 {
+    _delay = new Delay(DEFAULT_TURBO_INTERVAL);
 }
 
 Input::~Input()
 {
+    delete _delay;
 }
 
 void Input::SetKeyDownCallback(uint64_t key, InputFunc func)
@@ -68,35 +72,53 @@ void Input::Poll()
     {
         for (const auto &iter : _key_down_callbacks)
         {
-            if ((iter.first & key))
+            if (iter.first & key)
             {
                 iter.second();
+                _last_active &= key;
                 break;
             }
         }
 
         for (const auto &iter : _key_up_callbacks)
         {
-            if ((iter.first & _last_key))
+            if (iter.first & _last_key && (iter.first & ~_turbo_key || iter.first & ~_last_active))
             {
                 iter.second();
+                _last_active &= key;
                 break;
             }
         }
-
-        // auto iter = _callbacks.find(key);
-        // if (iter != _callbacks.end())
-        // {
-        //     iter->second();
-        // }
-        // else
-        // {
-        //     iter = _callbacks.find(~_last_key);
-        //     if (iter != _callbacks.end())
-        //     {
-        //         iter->second();
-        //     }
-        // }
     }
     _last_key = key;
+
+    if (_turbo_key && _delay->TimeUp())
+    {
+        for (const auto &iter : _key_up_callbacks)
+        {
+            if (iter.first & key & _turbo_key & ~_last_active)
+            {
+                iter.second();
+                _last_active &= key;
+                break;
+            }
+        }
+        _last_key &= ~_turbo_key;
+        _last_active = 0;
+    }
 }
+
+void Input::SetKeyTurbo(uint64_t key)
+{
+    _turbo_key |= key;
+}
+
+void Input::UnsetKeyTurbo(uint64_t key)
+{
+    _turbo_key &= ~key;
+}
+
+void Input::SetTurboInterval(uint64_t turbo_interval)
+{
+    _delay->SetInterval(turbo_interval);
+};

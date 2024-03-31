@@ -25,8 +25,8 @@ App::App()
 
     gEmulator = new Emulator();
     gUi = new Ui("ux0:");
-
     _video = new Video();
+    _audio = new Audio(gEmulator->GetSampleRate());
 }
 
 App::~App()
@@ -64,7 +64,7 @@ void App::Run()
 {
     LogFunctionName;
 
-    _video->ThreadBase::Start(&_video, sizeof(&_video));
+    _video->Start();
 
     while (gStatus != APP_STATUS_EXIT)
     {

@@ -6,6 +6,7 @@ class ThreadBase
 public:
     ThreadBase(SceKernelThreadEntry entry, int priority = 64, int stack_size = 0x10000);
     virtual ~ThreadBase();
+    bool Start(); // the point of class will be sent
     bool Start(void *data, SceSize size);
     void Stop();
     bool IsRunning() { return _keep_running; };
