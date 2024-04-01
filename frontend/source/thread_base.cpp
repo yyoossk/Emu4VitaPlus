@@ -6,8 +6,9 @@ ThreadBase::ThreadBase(SceKernelThreadEntry entry, int priority, int stack_size)
       _priority(priority),
       _stack_size(stack_size),
       _thread_id(-1)
-
 {
+    sceKernelCreateLwMutex(&_mutex, "thread_mutex", 2, 0, NULL);
+    sceKernelCreateLwCond(&_cond, "thread_cond", 0, &_mutex, NULL);
 }
 
 ThreadBase::~ThreadBase()
@@ -16,6 +17,8 @@ ThreadBase::~ThreadBase()
     {
         Stop();
     }
+    sceKernelDeleteLwMutex(&_mutex);
+    sceKernelDeleteLwCond(&_cond);
 }
 
 bool ThreadBase::Start()
@@ -71,4 +74,26 @@ void ThreadBase::Stop()
     sceKernelWaitThreadEnd(_thread_id, NULL, NULL);
     sceKernelDeleteThread(_thread_id);
     _thread_id = -1;
+}
+
+void ThreadBase::Lock()
+{
+    sceKernelLockLwMutex(&_mutex, 1, NULL);
+}
+
+void ThreadBase::Unlock()
+{
+    sceKernelUnlockLwMutex(&_mutex, 1);
+}
+
+void ThreadBase::Wait()
+{
+    Lock();
+    sceKernelWaitLwCond(&_cond, NULL);
+    Unlock();
+}
+
+void ThreadBase::Signal()
+{
+    sceKernelSignalLwCond(&_cond);
 }

@@ -34,6 +34,7 @@ App::~App()
     LogFunctionName;
 
     delete _video;
+    delete _audio;
     delete gUi;
     delete gEmulator;
     sceAppUtilShutdown();

@@ -2,6 +2,7 @@
 #include <vector>
 #include <libretro.h>
 #include "texture_buf.h"
+#include "audio_buf.h"
 #include "delay.h"
 
 class Emulator
@@ -30,6 +31,7 @@ private:
     retro_system_av_info _av_info;
     SceGxmTextureFormat _video_pixel_format;
     TextureBuf *_texture_buf;
+    AudioBuf *_audio_buf;
     double _speed;
     Delay _delay;
 

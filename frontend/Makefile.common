@@ -87,6 +87,7 @@ LIBS    := $(CORE_MAKEFILE_DIR)/$(CORE_FILE_NAME)_libretro_vita.a \
 	-ljpeg \
 	-lz \
 	-limgui_vita2d \
+	-lspeexdsp \
 	-lScePvf_stub \
 	-lScePgf_stub \
 	-lSceDisplay_stub \

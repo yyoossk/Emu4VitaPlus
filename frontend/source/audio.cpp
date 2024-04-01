@@ -1,5 +1,6 @@
 #include <speex/speex_resampler.h>
 #include <psp2/audioout.h>
+#include "global.h"
 #include "audio.h"
 #include "log.h"
 
@@ -10,7 +11,9 @@ const uint32_t SAMPLE_RATES[] = {8000, 11025, 12000, 16000, 22050, 24000, 32000,
 #define SOUND_QUALITY 1
 #define AUDIO_SAMPLES 256
 
-Audio::Audio(uint32_t sample_rate) : ThreadBase(_PlayThread), _in_sample_rate(sample_rate)
+Audio::Audio(uint32_t sample_rate)
+    : ThreadBase(_PlayThread),
+      _in_sample_rate(sample_rate)
 {
     LogFunctionName;
     _out_sample_rate = _GetSuitableSampleRate(sample_rate);
@@ -44,6 +47,13 @@ uint32_t Audio::_GetSuitableSampleRate(uint32_t sample_rate)
 
 int Audio::_PlayThread(SceSize args, void *argp)
 {
-
+    Audio *audio = *(Audio **)argp;
+    while (audio->IsRunning())
+    {
+        if (gStatus == APP_STATUS_RUN_GAME)
+        {
+            audio->Wait();
+        }
+    }
     return 0;
 }

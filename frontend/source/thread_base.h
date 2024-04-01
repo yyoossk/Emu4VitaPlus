@@ -10,6 +10,10 @@ public:
     bool Start(void *data, SceSize size);
     void Stop();
     bool IsRunning() { return _keep_running; };
+    void Lock();
+    void Unlock();
+    void Wait();
+    void Signal();
 
 private:
     SceKernelThreadEntry _entry;
@@ -17,4 +21,6 @@ private:
     SceSize _stack_size;
     bool _keep_running;
     SceUID _thread_id;
+    SceKernelLwMutexWork _mutex;
+    SceKernelLwCondWork _cond;
 };

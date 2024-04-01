@@ -9,19 +9,28 @@
 
 Input::Input() : _last_key(0ull),
                  _turbo_key(0ull),
-                 _last_active(0ull)
+                 _turbo_interval_ms(DEFAULT_TURBO_INTERVAL)
 {
-    _delay = new Delay(DEFAULT_TURBO_INTERVAL);
 }
 
 Input::~Input()
 {
-    delete _delay;
 }
 
-void Input::SetKeyDownCallback(uint64_t key, InputFunc func)
+void Input::SetKeyDownCallback(uint64_t key, InputFunc func, bool turbo)
 {
-    _key_down_callbacks[key] = func;
+    if (func == nullptr)
+    {
+        UnsetKeyDownCallback(key);
+    }
+    else
+    {
+        _key_down_callbacks[key] = func;
+        if (turbo)
+        {
+            _turbo_key |= key;
+        }
+    }
 }
 
 void Input::SetKeyUpCallback(uint64_t key, InputFunc func)
@@ -31,12 +40,22 @@ void Input::SetKeyUpCallback(uint64_t key, InputFunc func)
 
 void Input::UnsetKeyUpCallback(uint64_t key)
 {
-    _key_up_callbacks.erase(key);
+    auto iter = _key_up_callbacks.find(key);
+    if (iter != _key_up_callbacks.end())
+    {
+        _key_up_callbacks.erase(key);
+    }
 }
 
 void Input::UnsetKeyDownCallback(uint64_t key)
 {
-    _key_down_callbacks.erase(key);
+    auto iter = _key_down_callbacks.find(key);
+    if (iter != _key_down_callbacks.end())
+    {
+        _key_down_callbacks.erase(key);
+    }
+
+    _turbo_key &= ~key;
 }
 
 void Input::Poll()
@@ -68,6 +87,7 @@ void Input::Poll()
     else if (ctrl_data.ry > ANALOG_CENTER + ANALOG_THRESHOLD)
         key |= SCE_CTRL_RSTICK_DOWN;
 
+    bool called = false;
     if (key != _last_key)
     {
         for (const auto &iter : _key_down_callbacks)
@@ -75,50 +95,48 @@ void Input::Poll()
             if (iter.first & key)
             {
                 iter.second();
-                _last_active &= key;
+                called = true;
+                _next_turbo_times[iter.first] = sceKernelGetProcessTimeWide() + 500000;
                 break;
+            }
+            else if ((iter.first & _last_key) && (iter.first & _turbo_key))
+            {
+                auto next = _next_turbo_times.find(iter.first);
+                if (next != _next_turbo_times.end())
+                {
+                    _next_turbo_times.erase(next->first);
+                }
             }
         }
 
         for (const auto &iter : _key_up_callbacks)
         {
-            if (iter.first & _last_key && (iter.first & ~_turbo_key || iter.first & ~_last_active))
+            if (iter.first & _last_key)
             {
                 iter.second();
-                _last_active &= key;
+                called = true;
                 break;
             }
         }
     }
-    _last_key = key;
 
-    if (_turbo_key && _delay->TimeUp())
+    if (key && !called)
     {
-        for (const auto &iter : _key_up_callbacks)
+        uint64_t current = sceKernelGetProcessTimeWide();
+        for (auto &iter : _next_turbo_times)
         {
-            if (iter.first & key & _turbo_key & ~_last_active)
+            if (current >= iter.second)
             {
-                iter.second();
-                _last_active &= key;
-                break;
+                iter.second = current + _turbo_interval_ms;
+                _key_down_callbacks[iter.first]();
             }
         }
-        _last_key &= ~_turbo_key;
-        _last_active = 0;
     }
-}
 
-void Input::SetKeyTurbo(uint64_t key)
-{
-    _turbo_key |= key;
-}
-
-void Input::UnsetKeyTurbo(uint64_t key)
-{
-    _turbo_key &= ~key;
+    _last_key = key;
 }
 
 void Input::SetTurboInterval(uint64_t turbo_interval)
 {
-    _delay->SetInterval(turbo_interval);
+    _turbo_interval_ms = turbo_interval;
 };

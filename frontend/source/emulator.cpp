@@ -53,7 +53,9 @@ bool EnvironmentCallback(unsigned cmd, void *data)
 
     case RETRO_ENVIRONMENT_GET_AUDIO_VIDEO_ENABLE:
         if (data)
+        {
             *(int *)data = 3;
+        }
         break;
 
     default:
@@ -106,6 +108,10 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
 size_t AudioSampleBatchCallback(const int16_t *data, size_t frames)
 {
     LogFunctionNameLimited;
+    if (gEmulator->_audio_buf == nullptr)
+    {
+        gEmulator->_audio_buf = new AudioBuf();
+    }
     return frames;
 }
 
@@ -120,7 +126,9 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
     return 0;
 }
 
-Emulator::Emulator() : _texture_buf(nullptr)
+Emulator::Emulator()
+    : _texture_buf(nullptr),
+      _audio_buf(nullptr)
 {
     LogFunctionName;
 
@@ -139,9 +147,15 @@ Emulator::Emulator() : _texture_buf(nullptr)
 Emulator::~Emulator()
 {
     LogFunctionName;
+
     if (_texture_buf)
     {
         delete _texture_buf;
+    }
+
+    if (_audio_buf)
+    {
+        delete _audio_buf;
     }
 
     retro_deinit();
