@@ -7,7 +7,7 @@
 class AudioResampler
 {
 public:
-    AudioResampler(uint32_t in_rate, uint32_t out_rate)
+    AudioResampler(uint32_t in_rate, uint32_t out_rate) :
     {
         _speex = speex_resampler_init(1, in_rate, out_rate, SOUND_QUALITY, nullptr);
     };
@@ -22,6 +22,10 @@ public:
         return speex_resampler_process_int(_speex, 0, in, in_size, out, out_size);
     };
 
+    uint32_t GetInRate(){return _in_rate};
+    uint32_t GetOutRate() { return _out_rate; }
+
 private:
     SpeexResamplerState *_speex;
+    uint32_t _in_rate, _out_rate;
 };

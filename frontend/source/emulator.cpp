@@ -108,10 +108,7 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
 size_t AudioSampleBatchCallback(const int16_t *data, size_t frames)
 {
     LogFunctionNameLimited;
-    if (gEmulator->_audio_buf == nullptr)
-    {
-        gEmulator->_audio_buf = new AudioBuf();
-    }
+
     return frames;
 }
 
@@ -128,7 +125,6 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
 
 Emulator::Emulator()
     : _texture_buf(nullptr),
-      _audio_buf(nullptr)
 {
     LogFunctionName;
 
@@ -142,6 +138,8 @@ Emulator::Emulator()
     retro_get_system_info(&_info);
     retro_get_system_av_info(&_av_info);
     SetSpeed(1.0);
+
+    _audio_buf = new AudioBuf();
 }
 
 Emulator::~Emulator()

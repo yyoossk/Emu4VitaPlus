@@ -13,24 +13,30 @@ const uint32_t SAMPLE_RATES[] = {8000, 11025, 12000, 16000, 22050, 24000, 32000,
 
 Audio::Audio(uint32_t sample_rate)
     : ThreadBase(_PlayThread),
-      _in_sample_rate(sample_rate)
+      _in_sample_rate(sample_rate),
+      _resampler(nullptr)
 {
     LogFunctionName;
-    _out_sample_rate = _GetSuitableSampleRate(sample_rate);
-    _speex = speex_resampler_init(1, _in_sample_rate, _out_sample_rate, SOUND_QUALITY, NULL);
-    _output_port = sceAudioOutOpenPort(SCE_AUDIO_OUT_PORT_TYPE_VOICE, AUDIO_SAMPLES, _out_sample_rate, SCE_AUDIO_OUT_MODE_STEREO);
-
+    if (_GetSuitableSampleRate(sample_rate, &_out_sample_rate))
+    {
+        _resampler = new AudioResampler(sample_rate, _out_sample_rate);
+    }
     LogDebug("_in_sample_rate: %d _out_sample_rate:%d", _in_sample_rate, _out_sample_rate);
+
+    _output_port = sceAudioOutOpenPort(SCE_AUDIO_OUT_PORT_TYPE_VOICE, AUDIO_SAMPLES, _out_sample_rate, SCE_AUDIO_OUT_MODE_STEREO);
 }
 
 Audio::~Audio()
 {
     LogFunctionName;
     sceAudioOutReleasePort(_output_port);
-    speex_resampler_destroy(_speex);
+    if (_resampler)
+    {
+        delete _resampler;
+    }
 }
 
-uint32_t Audio::_GetSuitableSampleRate(uint32_t sample_rate)
+bool Audio::_GetSuitableSampleRate(uint32_t sample_rate, uint32_t *out_sample_rate)
 {
     LogFunctionName;
 
@@ -38,11 +44,13 @@ uint32_t Audio::_GetSuitableSampleRate(uint32_t sample_rate)
     {
         if ((sample_rate >= SAMPLE_RATES[i] - SAMPLE_RATE_NEGLECT) && (sample_rate <= SAMPLE_RATES[i] + SAMPLE_RATE_NEGLECT))
         {
-            return SAMPLE_RATES[i];
+            *out_sample_rate = SAMPLE_RATES[i];
+            return true;
         }
     }
 
-    return AUDIO_DEFAULT_SAMPLE_RATE;
+    *out_sample_rate = AUDIO_DEFAULT_SAMPLE_RATE;
+    return false;
 }
 
 int Audio::_PlayThread(SceSize args, void *argp)
