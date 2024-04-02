@@ -5,7 +5,7 @@ APP_NAME_EXT     :=
 APP_DIR_NAME     := gpSP
 CORE_FILE_NAME   := gpSP
 
-SFO_TITLE_NAME   := gpSP4vita
+SFO_TITLE_NAME   := Emu4Vita++ (gpSP)
 SFO_TITLE_ID     := GPSP4VITA
 
 CORE_SOFTWARE    := Nintendo\ -\ Game\ Boy\ Advance

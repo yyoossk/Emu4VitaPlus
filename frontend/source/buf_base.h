@@ -19,7 +19,10 @@ public:
     T Next()
     {
         _index++;
-        _index %= S;
+        if (_index >= S)
+        {
+            _index = 0;
+        }
         return _buf[_index];
     };
 

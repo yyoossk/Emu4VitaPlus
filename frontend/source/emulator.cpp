@@ -6,6 +6,8 @@
 #include "emulator.h"
 #include "log.h"
 
+#define CORE_OPTIONS_VERSION 2
+
 bool EnvironmentCallback(unsigned cmd, void *data)
 {
     LogFunctionNameLimited;
@@ -32,7 +34,13 @@ bool EnvironmentCallback(unsigned cmd, void *data)
     case RETRO_ENVIRONMENT_GET_VARIABLE:
     {
         // retro_variable *var = (retro_variable *)data;
-        // LogDebug("retro_variable %s", var->key);
+        LogDebug("RETRO_ENVIRONMENT_GET_VARIABLE: %s", ((retro_variable *)data)->key);
+    }
+    break;
+
+    case RETRO_ENVIRONMENT_SET_VARIABLES:
+    {
+        LogDebug("RETRO_ENVIRONMENT_SET_VARIABLES: %s", ((retro_variable *)data)->key);
     }
     break;
 
@@ -52,6 +60,13 @@ bool EnvironmentCallback(unsigned cmd, void *data)
     }
     break;
 
+    case RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION:
+    {
+        if (data)
+            *(unsigned *)data = CORE_OPTIONS_VERSION;
+    }
+    break;
+
     case RETRO_ENVIRONMENT_GET_AUDIO_VIDEO_ENABLE:
         if (data)
         {
@@ -60,6 +75,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         break;
 
     default:
+        LogDebug("UNSUPPORTED cmd:%d", cmd);
         return false;
     }
 

@@ -28,22 +28,23 @@ public:
 
     const int16_t *ProcessInt(const int16_t *in, uint32_t *in_size, uint32_t *out_size)
     {
-
         *out_size = (*in_size) * _out_rate / _in_rate;
         if (_out_buf == nullptr)
         {
             _out_buf_size = *out_size * 2;
             _out_buf = new int16_t[_out_buf_size];
+            LogDebug("AudioResampler::ProcessInt create _out_buf: %d", _out_buf_size);
         }
         else if (_out_buf_size < *out_size)
         {
             delete[] _out_buf;
             _out_buf_size = *out_size * 2;
             _out_buf = new int16_t[_out_buf_size];
+            LogDebug("AudioResampler::ProcessInt create _out_buf: %d", _out_buf_size);
         }
 
-        int result = speex_resampler_process_int(_speex, 0, in, in_size, _out_buf, out_size);
-        LogDebug("%d %d", result, *out_size);
+        speex_resampler_process_int(_speex, 0, in, in_size, _out_buf, out_size);
+
         return _out_buf;
     };
 
