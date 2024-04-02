@@ -48,6 +48,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         //     LogDebug("av_info.timing.fps %d", av_info->timing.fps);
         // }
         memcpy(&gEmulator->_av_info, av_info, sizeof(retro_system_av_info));
+        gEmulator->_audio->SetSampleRate(av_info->timing.sample_rate);
     }
     break;
 
@@ -80,9 +81,8 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
         gEmulator->_texture_buf = new TextureBuf(gEmulator->_video_pixel_format, width, height);
     }
 
-    texture = gEmulator->_texture_buf->Next();
-
     gEmulator->_texture_buf->Lock();
+    texture = gEmulator->_texture_buf->Next();
 
     unsigned out_pitch = vita2d_texture_get_stride(texture);
     uint8_t *out = (uint8_t *)vita2d_texture_get_datap(texture);
@@ -109,7 +109,7 @@ size_t AudioSampleBatchCallback(const int16_t *data, size_t frames)
 {
     LogFunctionNameLimited;
 
-    return frames;
+    return gEmulator->_audio->SendAudioSample(data, frames);
 }
 
 void InputPollCallback()
@@ -124,7 +124,7 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
 }
 
 Emulator::Emulator()
-    : _texture_buf(nullptr),
+    : _texture_buf(nullptr)
 {
     LogFunctionName;
 
@@ -139,7 +139,7 @@ Emulator::Emulator()
     retro_get_system_av_info(&_av_info);
     SetSpeed(1.0);
 
-    _audio_buf = new AudioBuf();
+    _audio = new Audio(_av_info.timing.sample_rate);
 }
 
 Emulator::~Emulator()
@@ -151,9 +151,9 @@ Emulator::~Emulator()
         delete _texture_buf;
     }
 
-    if (_audio_buf)
+    if (_audio)
     {
-        delete _audio_buf;
+        delete _audio;
     }
 
     retro_deinit();
@@ -162,6 +162,8 @@ Emulator::~Emulator()
 bool Emulator::LoadGame(const char *path)
 {
     LogFunctionName;
+    _audio->Start();
+
     retro_game_info game_info;
     game_info.path = path;
     game_info.data = nullptr;
@@ -175,6 +177,7 @@ void Emulator::UnloadGame()
 {
     LogFunctionName;
     retro_unload_game();
+    _audio->Stop();
 }
 
 void Emulator::Run()

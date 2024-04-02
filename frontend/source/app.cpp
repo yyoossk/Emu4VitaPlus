@@ -26,7 +26,6 @@ App::App()
     gEmulator = new Emulator();
     gUi = new Ui("ux0:");
     _video = new Video();
-    _audio = new Audio(gEmulator->GetSampleRate());
 }
 
 App::~App()
@@ -34,7 +33,6 @@ App::~App()
     LogFunctionName;
 
     delete _video;
-    delete _audio;
     delete gUi;
     delete gEmulator;
     sceAppUtilShutdown();
