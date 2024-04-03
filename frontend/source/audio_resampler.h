@@ -3,7 +3,7 @@
 #include <speex/speex_resampler.h>
 #include "log.h"
 
-#define SOUND_QUALITY 10
+#define SOUND_QUALITY 1
 
 class AudioResampler
 {

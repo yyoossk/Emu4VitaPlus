@@ -23,6 +23,7 @@ App::App()
     sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
     sceTouchSetSamplingState(SCE_TOUCH_PORT_BACK, SCE_TOUCH_SAMPLING_STATE_START);
 
+    gConfig = new Config();
     gEmulator = new Emulator();
     gUi = new Ui("ux0:");
     _video = new Video();
@@ -35,6 +36,7 @@ App::~App()
     delete _video;
     delete gUi;
     delete gEmulator;
+    delete gConfig;
     sceAppUtilShutdown();
 }
 

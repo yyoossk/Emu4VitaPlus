@@ -52,7 +52,7 @@ public:
     }
 
 private:
-    const size_t _block_size = STEREO ? SAMPLES : SAMPLES << 1;
+    const size_t _block_size = STEREO ? SAMPLES << 1 : SAMPLES;
     const size_t _total_size = _block_size << 8;
 
     int16_t *_buf;

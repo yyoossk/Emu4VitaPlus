@@ -136,7 +136,16 @@ void InputPollCallback()
 int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsigned id)
 {
     LogFunctionNameLimited;
-    return 0;
+    int16_t res = 0;
+    if (device == RETRO_DEVICE_JOYPAD)
+    {
+        auto iter = gConfig->key_maps.find(RETRO_BITMASK_KEY(id));
+        if (iter != gConfig->key_maps.end())
+        {
+            res = iter->second & gEmulator->_input.GetKeyStates();
+        }
+    }
+    return res;
 }
 
 Emulator::Emulator()
@@ -200,6 +209,7 @@ void Emulator::UnloadGame()
 void Emulator::Run()
 {
     _delay.Wait();
+    _input.Poll();
     retro_run();
 }
 

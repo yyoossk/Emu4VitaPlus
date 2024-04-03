@@ -110,11 +110,9 @@ size_t Audio::SendAudioSample(const int16_t *data, size_t frames)
 
     _buf->Write(in, in_size);
 
-    // if (full)
-    LogDebug("SendAudioSample lock");
     Lock();
     Signal();
     Unlock();
-    LogDebug("SendAudioSample unlock");
+
     return frames;
 }

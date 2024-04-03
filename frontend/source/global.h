@@ -1,6 +1,7 @@
 #pragma once
 #include "emulator.h"
 #include "ui.h"
+#include "config.h"
 
 #define APP_ASSETS_DIR "app0:assets"
 #define APP_DATA_DIR "ux0:data/EMU4VITAPLUS/" APP_DIR_NAME
@@ -20,3 +21,4 @@ enum APP_STATUS
 extern Ui *gUi;
 extern Emulator *gEmulator;
 extern APP_STATUS gStatus;
+extern Config *gConfig;
