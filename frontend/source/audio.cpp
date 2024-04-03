@@ -103,12 +103,14 @@ size_t Audio::SendAudioSample(const int16_t *data, size_t frames)
     const int16_t *in = data;
     if (_resampler != nullptr)
     {
-        size_t out_size;
-        in = _resampler->ProcessInt(data, &in_size, &out_size);
-        in_size = out_size;
+        size_t out_size = _resampler->GetOutSize(in_size);
+        _resampler->ProcessInt(data, &in_size, _buf->BeginWrite(out_size), &out_size);
+        _buf->EndWrite(out_size);
     }
-
-    _buf->Write(in, in_size);
+    else
+    {
+        _buf->Write(in, in_size);
+    }
 
     Lock();
     Signal();

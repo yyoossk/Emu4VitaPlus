@@ -8,7 +8,11 @@ template <size_t SAMPLES = AUDIO_OUTPUT_COUNT, bool STEREO = true>
 class AudioBuf
 {
 public:
-    AudioBuf() : _read_pos(0), _write_pos(0)
+    AudioBuf()
+        : _read_pos(0),
+          _write_pos(0),
+          _tmp_buf(nullptr),
+          _tmp_buf_size(0)
     {
         LogFunctionName;
         _buf = new int16_t[_total_size];
@@ -19,6 +23,44 @@ public:
         LogFunctionName;
         delete[] _buf;
     };
+
+    int16_t *BeginWrite(size_t size)
+    {
+        _continue_write = _write_pos + size < _total_size;
+
+        if (_continue_write)
+        {
+            return _buf + _write_pos;
+        }
+        else if (_tmp_buf == nullptr)
+        {
+        NEW_TMP_BUF:
+            _tmp_buf_size = size << 1;
+            _tmp_buf = new int16_t[_tmp_buf_size];
+            return _tmp_buf;
+        }
+        else if (_tmp_buf_size < size)
+        {
+            delete[] _tmp_buf;
+            goto NEW_TMP_BUF;
+        }
+        else
+        {
+            return _tmp_buf;
+        }
+    }
+
+    void EndWrite(size_t size)
+    {
+        if (_continue_write)
+        {
+            _write_pos += size;
+        }
+        else
+        {
+            Write(_tmp_buf, size);
+        }
+    }
 
     void Write(const int16_t *data, size_t size)
     {
@@ -58,4 +100,9 @@ private:
     int16_t *_buf;
     size_t _read_pos;
     size_t _write_pos;
+
+    int16_t *_tmp_buf;
+    size_t _tmp_buf_size;
+
+    bool _continue_write;
 };
