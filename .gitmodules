@@ -49,3 +49,6 @@
 [submodule "deps/libretro-common"]
 	path = deps/libretro-common
 	url = git@github.com:libretro/libretro-common.git
+[submodule "deps/tomlplusplus"]
+	path = deps/tomlplusplus
+	url = git@github.com:marzer/tomlplusplus.git

@@ -16,7 +16,7 @@ Audio::Audio(uint32_t sample_rate)
 {
     LogFunctionName;
 
-    _buf = new AudioBuf();
+    _buf = new AudioBuf<>;
 
     if (!_GetSuitableSampleRate(sample_rate, &_out_sample_rate))
     {
@@ -82,18 +82,16 @@ int Audio::_AudioThread(SceSize args, void *argp)
 {
     LogFunctionName;
     Audio *audio = *(Audio **)argp;
-    int16_t *buf = nullptr;
+    int16_t *buf;
     while (audio->IsRunning())
     {
-        do
+        audio->Lock();
+        while ((buf = audio->_buf->Read()) == nullptr)
         {
             audio->Wait();
-            buf = audio->_buf->Read();
-        } while (buf == nullptr);
-
-        //  audio->_buf->Lock();
+        }
+        audio->Unlock();
         sceAudioOutOutput(audio->_output_port, buf);
-        // audio->_buf->Unlock();
     }
     return 0;
 }
@@ -110,11 +108,13 @@ size_t Audio::SendAudioSample(const int16_t *data, size_t frames)
         in_size = out_size;
     }
 
-    //_buf->Lock();
     _buf->Write(in, in_size);
-    //_buf->Unlock();
 
     // if (full)
+    LogDebug("SendAudioSample lock");
+    Lock();
     Signal();
+    Unlock();
+    LogDebug("SendAudioSample unlock");
     return frames;
 }

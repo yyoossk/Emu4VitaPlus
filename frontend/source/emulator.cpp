@@ -154,6 +154,7 @@ Emulator::Emulator()
     retro_get_system_info(&_info);
     retro_get_system_av_info(&_av_info);
     SetSpeed(1.0);
+    retro_set_controller_port_device(0, RETRO_DEVICE_JOYPAD);
 
     _audio = new Audio(_av_info.timing.sample_rate);
 }

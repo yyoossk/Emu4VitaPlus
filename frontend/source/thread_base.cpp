@@ -7,7 +7,7 @@ ThreadBase::ThreadBase(SceKernelThreadEntry entry, int priority, int stack_size)
       _stack_size(stack_size),
       _thread_id(-1)
 {
-    sceKernelCreateLwMutex(&_mutex, "thread_mutex", 0, 0, NULL);
+    sceKernelCreateLwMutex(&_mutex, "thread_mutex", 2, 0, NULL);
     sceKernelCreateLwCond(&_cond, "thread_cond", 0, &_mutex, NULL);
 }
 
@@ -88,14 +88,14 @@ void ThreadBase::Unlock()
 
 void ThreadBase::Wait()
 {
-    Lock();
+    // Lock();
     sceKernelWaitLwCond(&_cond, NULL);
-    Unlock();
+    // Unlock();
 }
 
 void ThreadBase::Signal()
 {
-    Lock();
+    // Lock();
     sceKernelSignalLwCond(&_cond);
-    Unlock();
+    // Unlock();
 }

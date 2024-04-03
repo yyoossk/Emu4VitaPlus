@@ -9,6 +9,7 @@
 
 Input::Input() : _last_key(0ull),
                  _turbo_key(0ull),
+                 _turbo_start_ms(DEFAULT_TURBO_START_TIME),
                  _turbo_interval_ms(DEFAULT_TURBO_INTERVAL)
 {
 }
@@ -96,7 +97,7 @@ void Input::Poll()
             {
                 iter.second();
                 called = true;
-                _next_turbo_times[iter.first] = sceKernelGetProcessTimeWide() + 500000;
+                _next_turbo_times[iter.first] = sceKernelGetProcessTimeWide() + _turbo_start_ms;
                 break;
             }
             else if ((iter.first & _last_key) && (iter.first & _turbo_key))
@@ -136,7 +137,8 @@ void Input::Poll()
     _last_key = key;
 }
 
-void Input::SetTurboInterval(uint64_t turbo_interval)
+void Input::SetTurboInterval(uint64_t turbo_start, uint64_t turbo_interval)
 {
+    _turbo_start_ms = turbo_start;
     _turbo_interval_ms = turbo_interval;
 };

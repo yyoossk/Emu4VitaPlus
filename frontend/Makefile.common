@@ -15,6 +15,8 @@ RELEASES_DIR               := $(ROOT_DIR)/releases
 LIBRETRO_COMM_DIR          := $(DEPS_DIR)/libretro-common
 LIBRETRO_COMM_INCLUDE_DIR  := $(LIBRETRO_COMM_DIR)/include
 LIB_DIR                    := $(ROOT_DIR)/build/libretro_comm
+LIBTOMLPP_DIR              := $(DEPS_DIR)/tomlplusplus
+LIBTOMLPP_INCLUDE_DIR      := $(LIBTOMLPP_DIR)/include
 
 EBOOT_PATH         := $(PRIVATE_PKG_DIR)/eboot.bin
 SFO_PATH           := $(PRIVATE_PKG_DIR)/sce_sys/param.sfo
@@ -43,6 +45,7 @@ DEFINES := \
 
 DEFINES += $(CORE_DEFINES)
 DEFINES += $(SEVENZ_DEFINES)
+DEFINES += -DTOML_EXCEPTIONS=0
 
 ifeq ($(WANT_OPENGL), 1)
 	DEFINES += -DSCE_LIBC_SIZE=$(SCE_LIBC_SIZE)
@@ -56,7 +59,8 @@ ifeq ($(WANT_EXT_ARCHIVE_ROM), 1)
 	DEFINES += -DWANT_EXT_ARCHIVE_ROM
 endif
 
-INCDIRS += -I$(LIBRETRO_COMM_INCLUDE_DIR) 
+INCDIRS += -I$(LIBRETRO_COMM_INCLUDE_DIR) \
+           -I$(LIBTOMLPP_INCLUDE_DIR)
 
 ARCHFLAGS := -marm -mcpu=cortex-a9 -mfloat-abi=hard -DVITA -D__vita__
 CFLAGS    := $(ARCHFLAGS) -mword-relocations -fno-optimize-sibling-calls
@@ -67,7 +71,7 @@ ASFLAGS   := $(CFLAGS) $(INCDIRS)
 
 WARNINGS := -Wall -Wno-format-truncation
 CFLAGS    += $(WARNINGS) $(INCDIRS) $(DEFINES)
-CXXFLAGS  := $(CFLAGS) -fno-rtti -fno-exceptions -std=c++11
+CXXFLAGS  := $(CFLAGS) -fno-rtti -fno-exceptions -std=c++17
 LDFLAGS   := -Wl,-q -L$(LIB_DIR)
 
 SCE_LIBC_SIZE  := 4194304

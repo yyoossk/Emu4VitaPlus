@@ -4,6 +4,7 @@
 #include "texture_buf.h"
 #include "audio.h"
 #include "delay.h"
+#include "input.h"
 
 class Emulator
 {
@@ -29,9 +30,11 @@ public:
 private:
     retro_system_info _info;
     retro_system_av_info _av_info;
+
     SceGxmTextureFormat _video_pixel_format;
     TextureBuf *_texture_buf;
     Audio *_audio;
+    Input _input;
 
     double _speed;
     Delay _delay;

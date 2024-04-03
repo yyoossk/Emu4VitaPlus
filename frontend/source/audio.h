@@ -24,5 +24,5 @@ private:
     int _output_port;
     AudioResampler *_resampler;
 
-    AudioBuf *_buf;
+    AudioBuf<> *_buf;
 };
