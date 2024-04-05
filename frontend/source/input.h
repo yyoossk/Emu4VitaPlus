@@ -3,6 +3,7 @@
 #include <functional>
 #include <unordered_map>
 #include <libretro.h>
+#include <psp2/ctrl.h>
 
 typedef std::function<void()> InputFunc;
 

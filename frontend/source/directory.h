@@ -22,7 +22,7 @@ public:
     const DirItem &GetItem(int index) const { return _items[index]; };
     const std::string &GetItemName(int index) const { return _items[index].name; };
     const bool IsDir(int index) const { return _items[index].isDir; };
-    int GetSize();
+    size_t GetSize();
 
 private:
     std::vector<DirItem> _items;

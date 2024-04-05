@@ -88,7 +88,7 @@ bool Directory::SetCurrentPath(const std::string &path)
     return true;
 }
 
-int Directory::GetSize()
+size_t Directory::GetSize()
 {
     return _items.size();
 }
