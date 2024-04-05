@@ -136,20 +136,18 @@ void InputPollCallback()
 int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsigned id)
 {
     LogFunctionNameLimited;
-    int16_t res = 0;
     if (device == RETRO_DEVICE_JOYPAD)
     {
-        auto iter = gConfig->key_maps.find(RETRO_BITMASK_KEY(id));
-        if (iter != gConfig->key_maps.end())
-        {
-            res = iter->second & gEmulator->_input.GetKeyStates();
-        }
+        return gEmulator->_input.GetKeyStates() & gEmulator->_keys[id];
     }
-    return res;
+    else
+    {
+        return 0;
+    }
 }
 
 Emulator::Emulator()
-    : _texture_buf(nullptr)
+    : _texture_buf(nullptr), _keys{0}
 {
     LogFunctionName;
 
@@ -164,6 +162,7 @@ Emulator::Emulator()
     retro_get_system_av_info(&_av_info);
     SetSpeed(1.0);
     retro_set_controller_port_device(0, RETRO_DEVICE_JOYPAD);
+    _SetupKeys();
 
     _audio = new Audio(_av_info.timing.sample_rate);
 }
@@ -259,5 +258,19 @@ void Emulator::_SetPixelFormat(retro_pixel_format format)
     {
         delete _texture_buf;
         _texture_buf = nullptr;
+    }
+}
+
+void Emulator::_SetupKeys()
+{
+    LogFunctionName;
+    memset(_keys, 0, sizeof(_keys) * sizeof(*_keys));
+    for (const auto &k : gConfig->key_maps)
+    {
+        _keys[k.retro] |= k.psv;
+        if (k.turbo)
+        {
+            _input.SetTurbo(k.psv);
+        }
     }
 }

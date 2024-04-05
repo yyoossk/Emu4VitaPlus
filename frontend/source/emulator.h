@@ -35,9 +35,10 @@ private:
     TextureBuf *_texture_buf;
     Audio *_audio;
     Input _input;
-
+    uint32_t _keys[16];
     double _speed;
     Delay _delay;
 
     void _SetPixelFormat(retro_pixel_format format);
+    void _SetupKeys();
 };

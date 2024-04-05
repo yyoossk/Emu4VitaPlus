@@ -1,11 +1,24 @@
 #pragma once
 #include <stdint.h>
-#include <unordered_map>
+#include <vector>
 
-struct Config
+struct KeyMapConfig
 {
+    uint32_t psv;
+    uint8_t retro;
+    bool turbo = false;
+};
+
+class Config
+{
+public:
     Config();
     virtual ~Config();
 
-    std::unordered_map<uint32_t, uint64_t> key_maps;
+    bool Load(const char *path);
+    bool Save(const char *path);
+
+    std::vector<KeyMapConfig> key_maps;
+
+private:
 };
