@@ -4,8 +4,9 @@
 class TabSystem : public TabBase
 {
 public:
-    virtual void SetInputHooks();
-    virtual void UnsetInputHooks();
+    virtual ~TabSystem(){};
+    virtual void SetInputHooks(Input *input);
+    virtual void UnsetInputHooks(Input *input);
     virtual void Show(bool selected);
 
 private:
@@ -15,4 +16,4 @@ private:
     void _OnKeyCross();
 
     size_t _index;
-}
+};

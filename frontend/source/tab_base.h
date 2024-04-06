@@ -5,24 +5,17 @@
 class TabBase
 {
 public:
-    TabBase(Input *input, bool visable = true) : _input(input), _visable(visable)
-    {
-        SetInputHooks();
-    };
+    TabBase(bool visable = true) : _visable(visable){};
 
-    virtual ~TabBase()
-    {
-        UnsetInputHooks();
-    };
+    virtual ~TabBase(){};
 
-    virtual void SetInputHooks() {};
-    virtual void UnsetInputHooks() {};
-    virtual void Show() = 0;
+    virtual void SetInputHooks(Input *input){};
+    virtual void UnsetInputHooks(Input *input){};
+    virtual void Show(bool selected) = 0;
 
     void SetVisable(bool visable) { _visable = visable; };
     bool Visable() { return _visable; };
 
 protected:
-    Input *_input;
     bool _visable;
 };

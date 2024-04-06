@@ -3,134 +3,73 @@
 #include "ui.h"
 #include "global.h"
 #include "log.h"
+#include "tab_system.h"
+#include "tab_browser.h"
+#include "tab_about.h"
 
 enum
 {
-    TAB_ITEM_BROWSER = 0,
-    TAB_ITEM_FAVORITE,
+    TAB_ITEM_SYSTEM = 0,
+    TAB_ITEM_BROWSER,
+    TAB_ITEM_ABOUT,
+    // TAB_ITEM_FAVORITE,
     TAB_ITEM_COUNT
 };
 
 Ui::Ui(const char *path)
-    : _tab_index(0),
-      _browser_index(0),
-      _favorite_index(0)
+    : _tab_index(1)
 {
     LogFunctionName;
-    _directory = new Directory(path, gEmulator->GetValidExtensions());
+    _tabs[0] = new TabSystem();
+    _tabs[1] = new TabBrowser(path);
+    _tabs[2] = new TabAbout();
+
+    _tabs[_tab_index]->SetInputHooks(&_input);
+
     _SetKeyHooks();
 }
 
 Ui::~Ui()
 {
     LogFunctionName;
-    delete _directory;
+    for (auto &tab : _tabs)
+    {
+        delete tab;
+    }
 }
 
 void Ui::_SetKeyHooks()
 {
-    _input.SetKeyUpCallback(SCE_CTRL_L2, std::bind(&Ui::_OnKeyL2, this));
-    _input.SetKeyUpCallback(SCE_CTRL_R2, std::bind(&Ui::_OnKeyR2, this));
-    _input.SetKeyDownCallback(SCE_CTRL_UP, std::bind(&Ui::_OnKeyUp, this), true);
-    _input.SetKeyDownCallback(SCE_CTRL_DOWN, std::bind(&Ui::_OnKeyDown, this), true);
-    _input.SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&Ui::_OnKeyCircle, this));
-    _input.SetKeyUpCallback(SCE_CTRL_CROSS, std::bind(&Ui::_OnKeyCross, this));
+    _input.SetKeyUpCallback(SCE_CTRL_L1, std::bind(&Ui::_OnKeyL2, this));
+    _input.SetKeyUpCallback(SCE_CTRL_R1, std::bind(&Ui::_OnKeyR2, this));
 }
 
 void Ui::_OnKeyL2()
 {
     // LogFunctionName;
-    _tab_index += TAB_ITEM_COUNT - 1;
-    _tab_index %= TAB_ITEM_COUNT;
+    _tabs[_tab_index]->UnsetInputHooks(&_input);
+
+    do
+    {
+        _tab_index += TAB_ITEM_COUNT - 1;
+        _tab_index %= TAB_ITEM_COUNT;
+    } while (!_tabs[_tab_index]->Visable());
+
+    _tabs[_tab_index]->SetInputHooks(&_input);
 }
 
 void Ui::_OnKeyR2()
 {
     // LogFunctionName;
-    _tab_index++;
-    _tab_index %= TAB_ITEM_COUNT;
-}
+    _tabs[_tab_index]->UnsetInputHooks(&_input);
 
-void Ui::_OnKeyUp()
-{
-    // LogFunctionName;
-
-    switch (_tab_index)
+    do
     {
-    case TAB_ITEM_BROWSER:
-        _browser_index += _directory->GetSize() - 1;
-        _browser_index %= _directory->GetSize();
-        break;
+        _tab_index++;
+        _tab_index %= TAB_ITEM_COUNT;
+    } while (!_tabs[_tab_index]->Visable());
 
-    case TAB_ITEM_FAVORITE:
-        break;
-
-    default:
-        LogError("Wrong _tabIndex %d", _tab_index);
-        break;
-    }
-}
-
-void Ui::_OnKeyDown()
-{
-    // LogFunctionName;
-    switch (_tab_index)
-    {
-    case TAB_ITEM_BROWSER:
-        _browser_index++;
-        _browser_index %= _directory->GetSize();
-        break;
-
-    case TAB_ITEM_FAVORITE:
-        break;
-
-    default:
-        LogError("Wrong _tabIndex %d", _tab_index);
-        break;
-    }
-}
-
-void Ui::_OnKeyCircle()
-{
-    LogFunctionName;
-    if (_tab_index == 0)
-    {
-        auto item = _directory->GetItem(_browser_index);
-
-        if (item.isDir)
-        {
-            _directory->SetCurrentPath(_directory->GetCurrentPath() + "/" + item.name);
-            _browser_index = 0;
-        }
-        else
-        {
-            if (gEmulator->LoadGame((_directory->GetCurrentPath() + "/" + item.name).c_str()))
-            {
-                gStatus = APP_STATUS_RUN_GAME;
-            }
-        }
-    }
-}
-
-void Ui::_OnKeyCross()
-{
-    LogFunctionName;
-    if (_tab_index == 0)
-    {
-        auto path = _directory->GetCurrentPath();
-        if (path.size() <= 5)
-        {
-            return;
-        }
-        size_t pos = path.rfind('/');
-        if (pos != std::string::npos)
-        {
-            LogDebug(path.c_str());
-            path = path.substr(0, pos);
-            LogDebug(path.c_str());
-            _directory->SetCurrentPath(path);
-        }
-    }
+    _tabs[_tab_index]->SetInputHooks(&_input);
 }
 
 void Ui::Run()
@@ -150,41 +89,48 @@ void Ui::Show()
 
     if (ImGui::BeginTabBar("MyTabBar", ImGuiTabBarFlags_None))
     {
-        if (ImGui::BeginTabItem("Browser", NULL, _tab_index == 0 ? ImGuiTabItemFlags_SetSelected : 0))
+        for (size_t i = 0; i < _tabs.size(); i++)
         {
-            ImGui::Text(_directory->GetCurrentPath().c_str());
-            auto size = ImGui::GetContentRegionAvail();
-            ImGui::ListBoxHeader("", {size.x * 0.5f, size.y});
-            for (int i = 0; i < _directory->GetSize(); i++)
+            if (_tabs[i]->Visable())
             {
-                const auto item = _directory->GetItem(i);
-
-                if (item.isDir)
-                {
-                    ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
-                }
-
-                ImGui::Selectable(item.name.c_str(), i == _browser_index);
-                if (item.isDir)
-                {
-                    ImGui::PopStyleColor();
-                }
-
-                if (i == _browser_index && ImGui::GetScrollMaxY() > 0.f)
-                {
-                    ImGui::SetScrollHereY((float)_browser_index / (float)_directory->GetSize());
-                }
+                _tabs[i]->Show(_tab_index == i);
             }
+        }
+        // if (ImGui::BeginTabItem("Browser", NULL, _tab_index == 0 ? ImGuiTabItemFlags_SetSelected : 0))
+        // {
+        //     ImGui::Text(_directory->GetCurrentPath().c_str());
+        //     auto size = ImGui::GetContentRegionAvail();
+        //     ImGui::ListBoxHeader("", {size.x * 0.5f, size.y});
+        //     for (size_t i = 0; i < _directory->GetSize(); i++)
+        //     {
+        //         const auto item = _directory->GetItem(i);
 
-            // LogDebug("GetScrollY %f %f", ImGui::GetScrollY(), ImGui::GetScrollMaxY());
-            ImGui::ListBoxFooter();
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("Favorite", NULL, _tab_index == 1 ? ImGuiTabItemFlags_SetSelected : 0))
-        {
-            ImGui::Text("This is the Favorite tab!\nblah blah blah blah blah");
-            ImGui::EndTabItem();
-        }
+        //         if (item.isDir)
+        //         {
+        //             ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
+        //         }
+
+        //         ImGui::Selectable(item.name.c_str(), i == _browser_index);
+        //         if (item.isDir)
+        //         {
+        //             ImGui::PopStyleColor();
+        //         }
+
+        //         if (i == _browser_index && ImGui::GetScrollMaxY() > 0.f)
+        //         {
+        //             ImGui::SetScrollHereY((float)_browser_index / (float)_directory->GetSize());
+        //         }
+        //     }
+
+        //     // LogDebug("GetScrollY %f %f", ImGui::GetScrollY(), ImGui::GetScrollMaxY());
+        //     ImGui::ListBoxFooter();
+        //     ImGui::EndTabItem();
+        // }
+        // if (ImGui::BeginTabItem("Favorite", NULL, _tab_index == 1 ? ImGuiTabItemFlags_SetSelected : 0))
+        // {
+        //     ImGui::Text("This is the Favorite tab!\nblah blah blah blah blah");
+        //     ImGui::EndTabItem();
+        // }
         ImGui::EndTabBar();
     }
 

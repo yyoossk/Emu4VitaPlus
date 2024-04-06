@@ -1,7 +1,8 @@
 #pragma once
+#include <array>
 #include "emulator.h"
 #include "input.h"
-#include "directory.h"
+#include "tab_base.h"
 
 class Ui
 {
@@ -15,14 +16,9 @@ private:
     void _SetKeyHooks();
     void _OnKeyL2();
     void _OnKeyR2();
-    void _OnKeyUp();
-    void _OnKeyDown();
-    void _OnKeyCircle();
-    void _OnKeyCross();
 
     Input _input;
-    Directory *_directory;
-    int _tab_index;
-    int _browser_index;
-    int _favorite_index;
+    size_t _tab_index;
+
+    std::array<TabBase *, 3> _tabs;
 };

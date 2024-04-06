@@ -138,6 +138,12 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
     LogFunctionNameLimited;
     if (device == RETRO_DEVICE_JOYPAD)
     {
+        if (id >= 16)
+        {
+            LogError("InputStateCallback, wrong id %d", id);
+            return 0;
+        }
+
         return gEmulator->_input.GetKeyStates() & gEmulator->_keys[id];
     }
     else
@@ -267,10 +273,20 @@ void Emulator::_SetupKeys()
     memset(_keys, 0, sizeof(_keys) * sizeof(*_keys));
     for (const auto &k : gConfig->key_maps)
     {
+        if (k.retro >= 16)
+        {
+            LogError("wrong key config: %d %08x", k.retro, k.psv);
+            continue;
+        }
         _keys[k.retro] |= k.psv;
         if (k.turbo)
         {
             _input.SetTurbo(k.psv);
         }
+    }
+
+    for (int i = 0; i < 16; i++)
+    {
+        LogDebug("%d %08x", i, _keys[i]);
     }
 }

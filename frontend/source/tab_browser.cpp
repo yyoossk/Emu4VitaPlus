@@ -2,7 +2,7 @@
 #include "tab_browser.h"
 #include "log.h"
 
-TabBrowser::TabBrowser(Input *input, const char *path) : TabBase(input), _index(0)
+TabBrowser::TabBrowser(const char *path) : _index(0)
 {
     LogFunctionName;
     _directory = new Directory(path, gEmulator->GetValidExtensions());
@@ -14,20 +14,20 @@ TabBrowser::~TabBrowser()
     delete _directory;
 }
 
-void TabBrowser::SetInputHooks()
+void TabBrowser::SetInputHooks(Input *input)
 {
-    _input->SetKeyDownCallback(SCE_CTRL_UP, std::bind(&TabBrowser::_OnKeyUp, this), true);
-    _input->SetKeyDownCallback(SCE_CTRL_DOWN, std::bind(&TabBrowser::_OnKeyDown, this), true);
-    _input->SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&TabBrowser::_OnKeyCircle, this));
-    _input->SetKeyUpCallback(SCE_CTRL_CROSS, std::bind(&TabBrowser::_OnKeyCross, this));
+    input->SetKeyDownCallback(SCE_CTRL_UP, std::bind(&TabBrowser::_OnKeyUp, this), true);
+    input->SetKeyDownCallback(SCE_CTRL_DOWN, std::bind(&TabBrowser::_OnKeyDown, this), true);
+    input->SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&TabBrowser::_OnKeyCircle, this));
+    input->SetKeyUpCallback(SCE_CTRL_CROSS, std::bind(&TabBrowser::_OnKeyCross, this));
 }
 
-void TabBrowser::UnsetInputHooks()
+void TabBrowser::UnsetInputHooks(Input *input)
 {
-    _input->UnsetKeyDownCallback(SCE_CTRL_UP);
-    _input->UnsetKeyDownCallback(SCE_CTRL_DOWN);
-    _input->UnsetKeyUpCallback(SCE_CTRL_CIRCLE);
-    _input->UnsetKeyUpCallback(SCE_CTRL_CROSS);
+    input->UnsetKeyDownCallback(SCE_CTRL_UP);
+    input->UnsetKeyDownCallback(SCE_CTRL_DOWN);
+    input->UnsetKeyUpCallback(SCE_CTRL_CIRCLE);
+    input->UnsetKeyUpCallback(SCE_CTRL_CROSS);
 }
 
 void TabBrowser::Show(bool selected)

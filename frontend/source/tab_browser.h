@@ -5,10 +5,10 @@
 class TabBrowser : public TabBase
 {
 public:
-    TabBrowser(Input *input, const char *path);
+    TabBrowser(const char *path);
     virtual ~TabBrowser();
-    virtual void SetInputHooks();
-    virtual void UnsetInputHooks();
+    virtual void SetInputHooks(Input *input);
+    virtual void UnsetInputHooks(Input *input);
     virtual void Show(bool selected);
 
 private:
