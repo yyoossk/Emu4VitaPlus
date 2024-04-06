@@ -2,7 +2,7 @@
 #include <string.h>
 #include "log.h"
 
-#define AUDIO_OUTPUT_COUNT 256
+#define AUDIO_OUTPUT_COUNT 512
 
 template <size_t SAMPLES = AUDIO_OUTPUT_COUNT, bool STEREO = true>
 class AudioBuf

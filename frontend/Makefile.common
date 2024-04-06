@@ -59,7 +59,9 @@ ifeq ($(WANT_EXT_ARCHIVE_ROM), 1)
 	DEFINES += -DWANT_EXT_ARCHIVE_ROM
 endif
 
-INCDIRS += -I$(LIBRETRO_COMM_INCLUDE_DIR) \
+INCDIRS += -I$(SRC_DIR) \
+           -I$(SRC_DIR)/ui \
+           -I$(LIBRETRO_COMM_INCLUDE_DIR) \
            -I$(LIBTOMLPP_INCLUDE_DIR)
 
 ARCHFLAGS := -marm -mcpu=cortex-a9 -mfloat-abi=hard -DVITA -D__vita__
@@ -91,7 +93,9 @@ LIBS    := $(CORE_MAKEFILE_DIR)/$(CORE_FILE_NAME)_libretro_vita.a \
 	-ljpeg \
 	-lz \
 	-limgui_vita2d \
-	-lspeexdsp \
+	-lswresample \
+	-lavutil \
+	-lpthread \
 	-lScePvf_stub \
 	-lScePgf_stub \
 	-lSceDisplay_stub \

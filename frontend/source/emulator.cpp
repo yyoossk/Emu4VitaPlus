@@ -285,8 +285,8 @@ void Emulator::_SetupKeys()
         }
     }
 
-    for (int i = 0; i < 16; i++)
-    {
-        LogDebug("%d %08x", i, _keys[i]);
-    }
+    // for (int i = 0; i < 16; i++)
+    // {
+    //     LogDebug("%d %08x", i, _keys[i]);
+    // }
 }

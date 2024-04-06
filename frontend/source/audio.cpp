@@ -85,12 +85,13 @@ int Audio::_AudioThread(SceSize args, void *argp)
     int16_t *buf;
     while (audio->IsRunning())
     {
-        audio->Lock();
+        // audio->Lock();
         while ((buf = audio->_buf->Read()) == nullptr)
         {
             audio->Wait();
+            LogDebug("audio wait resampler");
         }
-        audio->Unlock();
+        // audio->Unlock();
         sceAudioOutOutput(audio->_output_port, buf);
     }
     return 0;
@@ -98,23 +99,23 @@ int Audio::_AudioThread(SceSize args, void *argp)
 
 size_t Audio::SendAudioSample(const int16_t *data, size_t frames)
 {
-    size_t in_size = frames * 2;
+    size_t in_size = frames; // * 2;
 
     const int16_t *in = data;
     if (_resampler != nullptr)
     {
         size_t out_size = _resampler->GetOutSize(in_size);
-        _resampler->ProcessInt(data, &in_size, _buf->BeginWrite(out_size), &out_size);
-        _buf->EndWrite(out_size);
+        out_size = _resampler->ProcessInt(data, in_size, _buf->BeginWrite(out_size * 2), out_size);
+        _buf->EndWrite(out_size * 2);
     }
     else
     {
-        _buf->Write(in, in_size);
+        _buf->Write(in, in_size * 2);
     }
 
-    Lock();
+    // Lock();
     Signal();
-    Unlock();
+    // Unlock();
 
     return frames;
 }
