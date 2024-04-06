@@ -2,7 +2,7 @@
 #include "tab_browser.h"
 #include "log.h"
 
-TabBrowser::TabBrowser(const char *path) : _index(0)
+TabBrowser::TabBrowser(Input *input, const char *path) : TabBase(input), _index(0)
 {
     LogFunctionName;
     _directory = new Directory(path, gEmulator->GetValidExtensions());
@@ -14,24 +14,55 @@ TabBrowser::~TabBrowser()
     delete _directory;
 }
 
-void TabBrowser::SetInputHooks(Input *input)
+void TabBrowser::SetInputHooks()
 {
-    input->SetKeyDownCallback(SCE_CTRL_UP, std::bind(&TabBrowser::_OnKeyUp, this), true);
-    input->SetKeyDownCallback(SCE_CTRL_DOWN, std::bind(&TabBrowser::_OnKeyDown, this), true);
-    input->SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&TabBrowser::_OnKeyCircle, this));
-    input->SetKeyUpCallback(SCE_CTRL_CROSS, std::bind(&TabBrowser::_OnKeyCross, this));
+    _input->SetKeyDownCallback(SCE_CTRL_UP, std::bind(&TabBrowser::_OnKeyUp, this), true);
+    _input->SetKeyDownCallback(SCE_CTRL_DOWN, std::bind(&TabBrowser::_OnKeyDown, this), true);
+    _input->SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&TabBrowser::_OnKeyCircle, this));
+    _input->SetKeyUpCallback(SCE_CTRL_CROSS, std::bind(&TabBrowser::_OnKeyCross, this));
 }
 
-void TabBrowser::UnsetInputHooks(Input *input)
+void TabBrowser::UnsetInputHooks()
 {
-    input->UnsetKeyDownCallback(SCE_CTRL_UP);
-    input->UnsetKeyDownCallback(SCE_CTRL_DOWN);
-    input->UnsetKeyUpCallback(SCE_CTRL_CIRCLE);
-    input->UnsetKeyUpCallback(SCE_CTRL_CROSS);
+    _input->UnsetKeyDownCallback(SCE_CTRL_UP);
+    _input->UnsetKeyDownCallback(SCE_CTRL_DOWN);
+    _input->UnsetKeyUpCallback(SCE_CTRL_CIRCLE);
+    _input->UnsetKeyUpCallback(SCE_CTRL_CROSS);
 }
 
-void TabBrowser::Show()
+void TabBrowser::Show(bool selected)
 {
+    if (ImGui::BeginTabItem("Browser", NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
+    {
+        ImGui::Text(_directory->GetCurrentPath().c_str());
+        auto size = ImGui::GetContentRegionAvail();
+        ImGui::ListBoxHeader("", {size.x * 0.5f, size.y});
+
+        for (size_t i = 0; i < _directory->GetSize(); i++)
+        {
+            const auto item = _directory->GetItem(i);
+
+            if (item.isDir)
+            {
+                ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
+            }
+
+            ImGui::Selectable(item.name.c_str(), i == _index);
+            if (item.isDir)
+            {
+                ImGui::PopStyleColor();
+            }
+
+            if (i == _index && ImGui::GetScrollMaxY() > 0.f)
+            {
+                ImGui::SetScrollHereY((float)_index / (float)_directory->GetSize());
+            }
+        }
+
+        // LogDebug("GetScrollY %f %f", ImGui::GetScrollY(), ImGui::GetScrollMaxY());
+        ImGui::ListBoxFooter();
+        ImGui::EndTabItem();
+    }
 }
 
 void TabBrowser::_OnKeyUp()
