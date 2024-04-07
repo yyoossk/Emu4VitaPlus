@@ -1,9 +1,7 @@
 #include "audio_resampler.h"
 
-AudioResampler::AudioResampler(uint32_t in_rate, uint32_t out_rate, SceKernelLwCondWork *end_cond)
-    : ThreadBase(_ResampleThread),
-      _swr_ctx(nullptr),
-      _end_cond(end_cond)
+AudioResampler::AudioResampler(uint32_t in_rate, uint32_t out_rate)
+    : _swr_ctx(nullptr)
 {
     LogFunctionName;
     SetRate(in_rate, out_rate);
@@ -36,9 +34,4 @@ void AudioResampler::SetRate(uint32_t in_rate, uint32_t out_rate)
                         &channel, AV_SAMPLE_FMT_S16, _in_rate,
                         0, NULL);
     swr_init(_swr_ctx);
-}
-
-int AudioResampler::_ResampleThread(SceSize args, void *argp)
-{
-    return 0;
 }

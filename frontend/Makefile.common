@@ -17,6 +17,7 @@ LIBRETRO_COMM_INCLUDE_DIR  := $(LIBRETRO_COMM_DIR)/include
 LIB_DIR                    := $(ROOT_DIR)/build/libretro_comm
 LIBTOMLPP_DIR              := $(DEPS_DIR)/tomlplusplus
 LIBTOMLPP_INCLUDE_DIR      := $(LIBTOMLPP_DIR)/include
+SCRIPT_DIR                 := $(ROOT_DIR)/script
 
 EBOOT_PATH         := $(PRIVATE_PKG_DIR)/eboot.bin
 SFO_PATH           := $(PRIVATE_PKG_DIR)/sce_sys/param.sfo
@@ -115,11 +116,14 @@ LIBS    := $(CORE_MAKEFILE_DIR)/$(CORE_FILE_NAME)_libretro_vita.a \
 	-lSceHid_stub \
 	-lSceFiber_stub
 
-all: create_dirs build-core build-deps build-app
+all: create_dirs build-core build-deps gen-language build-app
 
 debug: CXXFLAGS += -DDEBUG -g
 debug: CFLAGS += -DDEBUG -g
 debug: all
+
+gen-language:
+	cd $(SCRIPT_DIR) && python to_toml.py && mv language.toml $(PUBLIC_PKG_DIR)/assets/
 
 create_dirs:
 	@mkdir -p $(BUILD_DIR)

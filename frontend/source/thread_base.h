@@ -15,7 +15,7 @@ public:
     void Wait();
     void Signal();
 
-private:
+protected:
     SceKernelThreadEntry _entry;
     int _priority;
     SceSize _stack_size;

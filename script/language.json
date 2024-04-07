@@ -1,0 +1,30 @@
+[
+    {
+        "No.": "1",
+        "Tag": "TAB_SYSTEM",
+        "English": "System",
+        "Chinese": "系统",
+        "Comments": ""
+    },
+    {
+        "No.": "2",
+        "Tag": "TAB_BROWSER",
+        "English": "Browser",
+        "Chinese": "浏览",
+        "Comments": ""
+    },
+    {
+        "No.": "3",
+        "Tag": "TAB_FAVORITE",
+        "English": "Favorite",
+        "Chinese": "收藏",
+        "Comments": ""
+    },
+    {
+        "No.": "4",
+        "Tag": "TAB_ABOUT",
+        "English": "About",
+        "Chinese": "关于",
+        "Comments": ""
+    }
+]
