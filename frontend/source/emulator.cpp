@@ -166,7 +166,9 @@ Emulator::Emulator()
     retro_init();
     retro_get_system_info(&_info);
     retro_get_system_av_info(&_av_info);
+
     SetSpeed(1.0);
+
     retro_set_controller_port_device(0, RETRO_DEVICE_JOYPAD);
     _SetupKeys();
 
@@ -193,6 +195,7 @@ Emulator::~Emulator()
 bool Emulator::LoadGame(const char *path)
 {
     LogFunctionName;
+
     _audio->Start();
 
     retro_game_info game_info;
@@ -234,8 +237,7 @@ void Emulator::SetSpeed(double speed)
 {
     LogFunctionName;
     _speed = speed;
-    LogDebug("SetSpeed %lf", _av_info.timing.fps);
-    _delay.SetInterval(1000000.0 / (_av_info.timing.fps * speed));
+    _delay.SetInterval(1000000ull / (uint64_t)(_av_info.timing.fps * speed));
 }
 
 void Emulator::_SetPixelFormat(retro_pixel_format format)
@@ -270,7 +272,7 @@ void Emulator::_SetPixelFormat(retro_pixel_format format)
 void Emulator::_SetupKeys()
 {
     LogFunctionName;
-    memset(_keys, 0, sizeof(_keys) * sizeof(*_keys));
+    memset(_keys, 0, sizeof(_keys));
     for (const auto &k : gConfig->key_maps)
     {
         if (k.retro >= 16)

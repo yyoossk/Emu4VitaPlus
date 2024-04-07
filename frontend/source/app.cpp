@@ -40,27 +40,6 @@ App::~App()
     sceAppUtilShutdown();
 }
 
-void App::_InitImgui()
-{
-    LogFunctionName;
-
-    ImGui::CreateContext();
-    ImGui_ImplVita2D_Init();
-
-    ImGui_ImplVita2D_TouchUsage(false);
-    ImGui_ImplVita2D_UseIndirectFrontTouch(false);
-    ImGui_ImplVita2D_UseRearTouch(false);
-    ImGui_ImplVita2D_GamepadUsage(false);
-}
-
-void App::_DeinitImgui()
-{
-    LogFunctionName;
-
-    ImGui_ImplVita2D_Shutdown();
-    ImGui::DestroyContext();
-}
-
 void App::Run()
 {
     LogFunctionName;

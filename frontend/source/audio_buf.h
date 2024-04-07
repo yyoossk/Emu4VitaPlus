@@ -22,6 +22,9 @@ public:
     {
         LogFunctionName;
         delete[] _buf;
+
+        if (_tmp_buf)
+            delete[] _tmp_buf;
     };
 
     int16_t *BeginWrite(size_t size)
@@ -81,6 +84,7 @@ public:
 
     int16_t *Read()
     {
+        // LogDebug("%d %d", _read_pos, _write_pos);
         if (((_write_pos - _read_pos) & (_total_size - 1)) < _block_size)
             return nullptr;
 

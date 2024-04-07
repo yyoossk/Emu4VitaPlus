@@ -1,5 +1,4 @@
 #pragma once
-#include <speex/speex_resampler.h>
 #include "thread_base.h"
 #include "audio_resampler.h"
 #include "audio_buf.h"

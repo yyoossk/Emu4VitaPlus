@@ -10,8 +10,5 @@ public:
     void Run();
 
 private:
-    void _InitImgui();
-    void _DeinitImgui();
-
     Video *_video;
 };
