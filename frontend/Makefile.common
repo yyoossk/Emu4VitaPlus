@@ -61,6 +61,7 @@ endif
 
 INCDIRS += -I$(SRC_DIR) \
            -I$(SRC_DIR)/ui \
+		   -I$(SRC_DIR)/audio \
            -I$(LIBRETRO_COMM_INCLUDE_DIR) \
            -I$(LIBTOMLPP_INCLUDE_DIR)
 
