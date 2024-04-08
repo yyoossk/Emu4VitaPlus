@@ -3,38 +3,76 @@ from trans import Translation
 
 trans = Translation('language.json').get_trans(index='Tag')
 
+# Generate language_define.h
 languages = None
 
-header = []
-header.append('#pragma once\n')
-header.append('emun {')
+TEXT_ENUM = []
+LANGUAGE_ENUM = []
+
 for i, (k, v) in enumerate(trans.items()):
-    if i == 0:
-        attr = f'{k} = 0,'
-    else:
-        attr = f'{k},'
-    header.append(f'    {attr:20s} // "{v["English"]}"')
+    attr = f'{k},'
+    TEXT_ENUM.append(f'    {attr:20s} // "{v["English"]}"')
     if languages is None:
         languages = list(filter(lambda x: x not in ('No.', 'Tag', 'Comments'), v.keys()))
-header.append('};\n')
+TEXT_ENUM.append('    TEXT_COUNT,')
 
-header.append('emun {')
 for i, language in enumerate(languages):
-    header.append(f'    LANGUAGE_{language.upper()},')
-header.append('    LANGUAGE_COUNT,')
-header.append('};\n')
+    LANGUAGE_ENUM.append(f'    LANGUAGE_{language.upper()},')
+LANGUAGE_ENUM.append('    LANGUAGE_COUNT,')
 
+TEXT_ENUM = '\n'.join(TEXT_ENUM)
+LANGUAGE_ENUM = '\n'.join(LANGUAGE_ENUM)
+
+with open('language_define.h', 'w') as fp:
+    fp.write(
+        f'''#pragma once
+
+enum TEXT{{
+{TEXT_ENUM}
+}};
+
+enum LANGUAGE{{
+{LANGUAGE_ENUM}
+}};
+
+extern const char *gTexts[][TEXT::TEXT_COUNT];
+extern const char *gLanguageNames[];
+'''
+    )
+
+
+# Generate language_define.cpp
+TEXTS = []
 for language in languages:
-    header.append(f'const char *gLanguage{language}[];')
-
-
-open('language_define.h', 'w').write('\n'.join(header))
-
-source = []
-for language in languages:
-    source.append(f'const char *gLanguage{language}[] = {{')
+    T = []
     for k, v in trans.items():
         s = f'"{v[language]}",'
-        source.append(f'    {s:30s} // {k}')
-    source.append('};\n')
-open('language_define.cpp', 'w').write('\n'.join(source))
+        T.append(f'    {s:30s} // {k}')
+    T = '\n'.join(T)
+    TEXTS.append(
+        f'''// {language}
+{{
+{T}
+}},
+'''
+    )
+TEXTS = '\n'.join(TEXTS)
+
+
+NAMES = []
+for language in languages:
+    NAMES.append(f'    "{language}", ')
+NAMES = '\n'.join(NAMES)
+
+with open('language_define.cpp', 'w') as fp:
+    fp.write(
+        f'''#include "language_define.h"
+
+const char *gTexts[][TEXT::TEXT_COUNT] = {{
+{TEXTS}
+}};
+
+const char *gLanguageNames[] = {{
+{NAMES}
+}};'''
+    )

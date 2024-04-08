@@ -1,4 +1,5 @@
 #pragma once
+#include "global.h"
 #include "tab_base.h"
 
 class TabAbout : public TabBase

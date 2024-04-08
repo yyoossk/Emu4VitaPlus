@@ -24,6 +24,7 @@ App::App()
     sceTouchSetSamplingState(SCE_TOUCH_PORT_BACK, SCE_TOUCH_SAMPLING_STATE_START);
 
     gConfig = new Config();
+    gLanguage = new Language();
     gEmulator = new Emulator();
     gUi = new Ui("ux0:");
     _video = new Video();

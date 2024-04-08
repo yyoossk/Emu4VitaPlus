@@ -2,7 +2,7 @@
 
 void TabSystem::Show(bool selected)
 {
-    if (ImGui::BeginTabItem("System", NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
+    if (ImGui::BeginTabItem(TEXT(TAB_SYSTEM), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
     {
         ImGui::EndTabItem();
     }

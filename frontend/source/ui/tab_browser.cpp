@@ -32,7 +32,7 @@ void TabBrowser::UnsetInputHooks(Input *input)
 
 void TabBrowser::Show(bool selected)
 {
-    if (ImGui::BeginTabItem("Browser", NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
+    if (ImGui::BeginTabItem(TEXT(TAB_BROWSER), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
     {
         ImGui::Text(_directory->GetCurrentPath().c_str());
         auto size = ImGui::GetContentRegionAvail();
