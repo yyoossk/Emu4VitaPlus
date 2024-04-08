@@ -123,7 +123,9 @@ debug: CFLAGS += -DDEBUG -g
 debug: all
 
 gen-language:
-	cd $(SCRIPT_DIR) && python to_toml.py && mv language.toml $(PUBLIC_PKG_DIR)/assets/
+	cd $(SCRIPT_DIR) && python export.py \
+	&& mv language_define.h $(SRC_DIR) \
+	&& mv language_define.cpp $(SRC_DIR)
 
 create_dirs:
 	@mkdir -p $(BUILD_DIR)

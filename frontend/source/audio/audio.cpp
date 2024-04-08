@@ -81,7 +81,8 @@ bool Audio::_GetSuitableSampleRate(uint32_t sample_rate, uint32_t *out_sample_ra
 int Audio::_AudioThread(SceSize args, void *argp)
 {
     LogFunctionName;
-    Audio *audio = *(Audio **)argp;
+
+    CLASS_POINT(Audio, audio, argp);
     int16_t *buf;
     while (audio->IsRunning())
     {

@@ -21,7 +21,9 @@ Video::~Video()
 
 int Video::_DrawThread(SceSize args, void *argp)
 {
-    Video *video = *(Video **)argp;
+    LogFunctionName;
+
+    CLASS_POINT(Video, video, argp);
     while (video->IsRunning())
     {
         vita2d_pool_reset();
