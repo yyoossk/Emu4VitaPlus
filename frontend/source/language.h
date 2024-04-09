@@ -8,8 +8,11 @@ public:
     Language();
     virtual ~Language();
 
+    void Set(LANGUAGE lang);
+    LANGUAGE Get();
+    const char *GetName();
     const char *Get(size_t index);
 
 private:
-    const char **_texts;
+    LANGUAGE _lang;
 };
