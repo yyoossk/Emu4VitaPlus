@@ -2,6 +2,7 @@
 #include <vita2d.h>
 #include <imgui_vita2d/imgui_vita_touch.h>
 #include "my_imgui.h"
+#include "gb2312.i"
 #include "global.h"
 
 extern SceGxmProgram _binary_assets_imgui_v_cg_gxp_start;
@@ -68,7 +69,8 @@ static void My_Imgui_Create_Font()
     io.Fonts->AddFontFromFileTTF(APP_ASSETS_DIR "/" FONT_PVF_NAME,
                                  20.0f,
                                  &font_config,
-                                 io.Fonts->GetGlyphRangesChineseSimplifiedCommon());
+                                 GB_2312);
+    // io.Fonts->GetGlyphRangesChineseSimplifiedCommon());
     io.Fonts->GetTexDataAsRGBA32((uint8_t **)&pixels, &width, &height);
     gFontTexture = vita2d_create_empty_texture(width, height);
     const auto stride = vita2d_texture_get_stride(gFontTexture) / 4;
