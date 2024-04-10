@@ -15,6 +15,8 @@ Video::~Video()
     {
         Stop();
     }
+
+    vita2d_wait_rendering_done();
     _DeinitImgui();
     vita2d_fini();
 }
@@ -47,8 +49,8 @@ int Video::_DrawThread(SceSize args, void *argp)
         sceDisplayWaitVblankStart();
     }
 
-    sceKernelExitThread(0);
     LogDebug("_DrawThread exit");
+    sceKernelExitThread(0);
     return 0;
 }
 

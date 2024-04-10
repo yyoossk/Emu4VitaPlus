@@ -196,8 +196,6 @@ bool Emulator::LoadGame(const char *path)
 {
     LogFunctionName;
 
-    _audio->Start();
-
     retro_game_info game_info;
     game_info.path = path;
     game_info.data = nullptr;
@@ -211,7 +209,6 @@ void Emulator::UnloadGame()
 {
     LogFunctionName;
     retro_unload_game();
-    _audio->Stop();
 }
 
 void Emulator::Run()

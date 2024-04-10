@@ -1,3 +1,4 @@
+#include "string.h"
 #include "language.h"
 
 Language::Language()
@@ -7,6 +8,18 @@ Language::Language()
 
 Language::~Language()
 {
+}
+
+void Language::Set(const char *lang_str)
+{
+    for (size_t i = 0; i < LANGUAGE_COUNT; i++)
+    {
+        if (strcmp(lang_str, gLanguageNames[i]) == 0)
+        {
+            return Set(LANGUAGE(i));
+        }
+    }
+    return Set(LANGUAGE::LANGUAGE_ENGLISH);
 }
 
 void Language::Set(LANGUAGE lang)

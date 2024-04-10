@@ -1,6 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include <vector>
+#include "language.h"
 
 struct KeyMapConfig
 {
@@ -19,6 +20,7 @@ public:
     bool Save(const char *path);
 
     std::vector<KeyMapConfig> key_maps;
+    LANGUAGE language;
 
 private:
 };

@@ -26,5 +26,12 @@
         "English": "About",
         "Chinese": "关于",
         "Comments": ""
+    },
+    {
+        "No.": "5",
+        "Tag": "SYSTEM_MENU_EXIT",
+        "English": "Exit",
+        "Chinese": "退出",
+        "Comments": ""
     }
 ]

@@ -34,10 +34,10 @@ App::~App()
 {
     LogFunctionName;
 
-    delete _video;
     delete gUi;
     delete gEmulator;
     delete gConfig;
+    delete _video;
     sceAppUtilShutdown();
 }
 
@@ -60,7 +60,5 @@ void App::Run()
         default:
             break;
         }
-
-        // sceDisplayWaitVblankStart();
     }
 }

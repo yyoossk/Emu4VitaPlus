@@ -8,6 +8,7 @@ public:
     Language();
     virtual ~Language();
 
+    void Set(const char *lang_str);
     void Set(LANGUAGE lang);
     LANGUAGE Get();
     const char *GetName();

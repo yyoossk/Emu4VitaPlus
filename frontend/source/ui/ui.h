@@ -4,6 +4,15 @@
 #include "input.h"
 #include "tab_base.h"
 
+enum
+{
+    TAB_ITEM_SYSTEM = 0,
+    TAB_ITEM_BROWSER,
+    TAB_ITEM_ABOUT,
+    // TAB_ITEM_FAVORITE,
+    TAB_ITEM_COUNT
+};
+
 class Ui
 {
 public:
@@ -20,5 +29,5 @@ private:
     Input _input;
     size_t _tab_index;
 
-    std::array<TabBase *, 3> _tabs;
+    std::array<TabBase *, TAB_ITEM_COUNT> _tabs;
 };

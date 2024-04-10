@@ -5,36 +5,33 @@
 #include "audio.h"
 #include "log.h"
 
+#define AUDIO_OUTPUT_COUNT 512
+#define AUDIO_STEREO true
 #define AUDIO_DEFAULT_SAMPLE_RATE 48000
 #define SAMPLE_RATE_NEGLECT 50
 const uint32_t SAMPLE_RATES[] = {8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000};
 
 Audio::Audio(uint32_t sample_rate)
-    : ThreadBase(_AudioThread),
-      _in_sample_rate(sample_rate),
-      _resampler(nullptr)
+    : _in_sample_rate(0),
+      _resampler(nullptr),
+      _output(nullptr)
 {
     LogFunctionName;
 
-    _buf = new AudioBuf<>;
+    _buf = new AudioBuf(AUDIO_OUTPUT_COUNT, AUDIO_STEREO);
 
-    if (!_GetSuitableSampleRate(sample_rate, &_out_sample_rate))
-    {
-        _resampler = new AudioResampler(sample_rate, _out_sample_rate);
-    }
+    SetSampleRate(sample_rate);
     LogDebug("_in_sample_rate: %d _out_sample_rate:%d _resampler:%08x", _in_sample_rate, _out_sample_rate, _resampler);
-
-    _output_port = sceAudioOutOpenPort(SCE_AUDIO_OUT_PORT_TYPE_VOICE, AUDIO_OUTPUT_COUNT, _out_sample_rate, SCE_AUDIO_OUT_MODE_STEREO);
 }
 
 Audio::~Audio()
 {
     LogFunctionName;
-    sceAudioOutReleasePort(_output_port);
     if (_resampler)
     {
         delete _resampler;
     }
+    delete _output;
     delete _buf;
 }
 
@@ -46,18 +43,30 @@ void Audio::SetSampleRate(uint32_t sample_rate)
         return;
     }
 
-    if (!_GetSuitableSampleRate(sample_rate, &_out_sample_rate))
+    _in_sample_rate = sample_rate;
+
+    bool need_resample = !_GetSuitableSampleRate(sample_rate, &_out_sample_rate);
+    if (_output == nullptr)
+    {
+        _output = new AudioOutput(AUDIO_OUTPUT_COUNT, _out_sample_rate, _buf);
+        _output->Start();
+    }
+    else
+    {
+        _output->SetRate(AUDIO_OUTPUT_COUNT, _out_sample_rate);
+    }
+
+    if (need_resample)
     {
         if (_resampler == nullptr)
         {
-            _resampler = new AudioResampler(sample_rate, _out_sample_rate);
+            _resampler = new AudioResampler(sample_rate, _out_sample_rate, _output, _buf);
+            _resampler->Start();
         }
         else
         {
             _resampler->SetRate(sample_rate, _out_sample_rate);
         }
-
-        sceAudioOutSetConfig(_output_port, AUDIO_OUTPUT_COUNT, _out_sample_rate, SCE_AUDIO_OUT_MODE_STEREO);
     }
 }
 
@@ -78,45 +87,17 @@ bool Audio::_GetSuitableSampleRate(uint32_t sample_rate, uint32_t *out_sample_ra
     return false;
 }
 
-int Audio::_AudioThread(SceSize args, void *argp)
-{
-    LogFunctionName;
-
-    CLASS_POINT(Audio, audio, argp);
-    int16_t *buf;
-    while (audio->IsRunning())
-    {
-        // audio->Lock();
-        while ((buf = audio->_buf->Read()) == nullptr)
-        {
-            audio->Wait();
-            LogDebug("audio wait resampler");
-        }
-        // audio->Unlock();
-        sceAudioOutOutput(audio->_output_port, buf);
-    }
-    return 0;
-}
-
 size_t Audio::SendAudioSample(const int16_t *data, size_t frames)
 {
-    size_t in_size = frames; // * 2;
-
-    const int16_t *in = data;
     if (_resampler != nullptr)
     {
-        size_t out_size = _resampler->GetOutSize(in_size);
-        out_size = _resampler->ProcessInt(data, in_size, _buf->BeginWrite(out_size * 2), out_size);
-        _buf->EndWrite(out_size * 2);
+        _resampler->Process(data, frames);
     }
     else
     {
-        _buf->Write(in, in_size * 2);
+        _buf->Write(data, frames * 2);
+        _output->Signal();
     }
-
-    // Lock();
-    Signal();
-    // Unlock();
 
     return frames;
 }

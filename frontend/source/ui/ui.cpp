@@ -7,15 +7,6 @@
 #include "tab_browser.h"
 #include "tab_about.h"
 
-enum
-{
-    TAB_ITEM_SYSTEM = 0,
-    TAB_ITEM_BROWSER,
-    TAB_ITEM_ABOUT,
-    // TAB_ITEM_FAVORITE,
-    TAB_ITEM_COUNT
-};
-
 Ui::Ui(const char *path)
     : _tab_index(1)
 {
@@ -96,41 +87,6 @@ void Ui::Show()
                 _tabs[i]->Show(_tab_index == i);
             }
         }
-        // if (ImGui::BeginTabItem("Browser", NULL, _tab_index == 0 ? ImGuiTabItemFlags_SetSelected : 0))
-        // {
-        //     ImGui::Text(_directory->GetCurrentPath().c_str());
-        //     auto size = ImGui::GetContentRegionAvail();
-        //     ImGui::ListBoxHeader("", {size.x * 0.5f, size.y});
-        //     for (size_t i = 0; i < _directory->GetSize(); i++)
-        //     {
-        //         const auto item = _directory->GetItem(i);
-
-        //         if (item.isDir)
-        //         {
-        //             ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
-        //         }
-
-        //         ImGui::Selectable(item.name.c_str(), i == _browser_index);
-        //         if (item.isDir)
-        //         {
-        //             ImGui::PopStyleColor();
-        //         }
-
-        //         if (i == _browser_index && ImGui::GetScrollMaxY() > 0.f)
-        //         {
-        //             ImGui::SetScrollHereY((float)_browser_index / (float)_directory->GetSize());
-        //         }
-        //     }
-
-        //     // LogDebug("GetScrollY %f %f", ImGui::GetScrollY(), ImGui::GetScrollMaxY());
-        //     ImGui::ListBoxFooter();
-        //     ImGui::EndTabItem();
-        // }
-        // if (ImGui::BeginTabItem("Favorite", NULL, _tab_index == 1 ? ImGuiTabItemFlags_SetSelected : 0))
-        // {
-        //     ImGui::Text("This is the Favorite tab!\nblah blah blah blah blah");
-        //     ImGui::EndTabItem();
-        // }
         ImGui::EndTabBar();
     }
 

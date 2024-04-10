@@ -2,19 +2,19 @@
 #include <string.h>
 #include "log.h"
 
-#define AUDIO_OUTPUT_COUNT 512
-
-template <size_t SAMPLES = AUDIO_OUTPUT_COUNT, bool STEREO = true>
+// template <size_t SAMPLES = AUDIO_OUTPUT_COUNT, bool STEREO = true>
 class AudioBuf
 {
 public:
-    AudioBuf()
+    AudioBuf(size_t samples, bool stereo)
         : _read_pos(0),
           _write_pos(0),
           _tmp_buf(nullptr),
           _tmp_buf_size(0)
     {
         LogFunctionName;
+        _block_size = stereo ? samples << 1 : samples;
+        _total_size = _block_size << 8;
         _buf = new int16_t[_total_size];
     };
 
@@ -98,8 +98,8 @@ public:
     }
 
 private:
-    const size_t _block_size = STEREO ? SAMPLES << 1 : SAMPLES;
-    const size_t _total_size = _block_size << 8;
+    size_t _block_size;
+    size_t _total_size;
 
     int16_t *_buf;
     size_t _read_pos;

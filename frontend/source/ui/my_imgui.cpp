@@ -67,7 +67,7 @@ static void My_Imgui_Create_Font()
     font_config.PixelSnapH = 1;
 
     io.Fonts->AddFontFromFileTTF(APP_ASSETS_DIR "/" FONT_PVF_NAME,
-                                 20.0f,
+                                 25.0f,
                                  &font_config,
                                  GB_2312);
     // io.Fonts->GetGlyphRangesChineseSimplifiedCommon());
