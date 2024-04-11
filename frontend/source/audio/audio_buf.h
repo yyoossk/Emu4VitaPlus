@@ -14,7 +14,7 @@ public:
     {
         LogFunctionName;
         _block_size = stereo ? samples << 1 : samples;
-        _total_size = _block_size << 8;
+        _total_size = _block_size << 10;
         _buf = new int16_t[_total_size];
     };
 
@@ -40,17 +40,14 @@ public:
         NEW_TMP_BUF:
             _tmp_buf_size = size << 1;
             _tmp_buf = new int16_t[_tmp_buf_size];
-            return _tmp_buf;
         }
         else if (_tmp_buf_size < size)
         {
             delete[] _tmp_buf;
             goto NEW_TMP_BUF;
         }
-        else
-        {
-            return _tmp_buf;
-        }
+
+        return _tmp_buf;
     }
 
     void EndWrite(size_t size)
@@ -84,7 +81,7 @@ public:
 
     int16_t *Read()
     {
-        // LogDebug("%d %d", _read_pos, _write_pos);
+        // LogDebug("%d %d %d %d", _read_pos, _write_pos, _write_pos - _read_pos, ((_write_pos - _read_pos) & (_total_size - 1)) < _block_size);
         if (((_write_pos - _read_pos) & (_total_size - 1)) < _block_size)
             return nullptr;
 

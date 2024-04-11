@@ -24,12 +24,16 @@ public:
     void Process(const int16_t *in, uint32_t in_size);
 
 private:
-    static int _ResempleThread(SceSize args, void *argp);
+    static int _ResampleThread(SceSize args, void *argp);
 
     SwrContext *_swr_ctx;
     uint32_t _in_rate, _out_rate;
-    std::vector<int16_t> _in_buf;
+    // std::vector<int16_t> _in_buf;
+    int16_t *_in_buf;
+    uint32_t _in_buf_size;
     uint32_t _in_size;
     AudioOutput *_output;
     AudioBuf *_buf;
+
+    SceUID _resample_done_sema;
 };
