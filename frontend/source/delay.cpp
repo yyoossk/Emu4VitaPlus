@@ -23,7 +23,7 @@ void Delay::SetInterval(uint64_t interval_ms)
     LogFunctionName;
     _interval_ms = interval_ms;
     _next_ms = sceKernelGetProcessTimeWide() + _interval_ms;
-    // LogDebug("_interval_ms: %lld _next_ms:%lld", _interval_ms, _next_ms);
+    LogDebug("_interval_ms: %lld _next_ms:%lld", _interval_ms, _next_ms);
 }
 
 void Delay::Wait()
@@ -34,7 +34,7 @@ void Delay::Wait()
         uint64_t delay_ms = _next_ms - current;
         // LogDebug("delay %lld", delay_ms);
         sceKernelDelayThread(delay_ms);
-        _next_ms = current + delay_ms;
+        _next_ms = sceKernelGetProcessTimeWide() + _interval_ms;
     }
     else
     {

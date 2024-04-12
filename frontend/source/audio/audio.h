@@ -1,7 +1,8 @@
 #pragma once
-#include "audio_resampler.h"
+#include <lockfree.hpp>
+#include "audio_define.h"
 #include "audio_output.h"
-#include "audio_buf.h"
+#include "audio_resampler.h"
 
 class Audio
 {
@@ -21,5 +22,5 @@ private:
     AudioResampler *_resampler;
     AudioOutput *_output;
 
-    AudioBuf *_buf;
+    lockfree::spsc::BipartiteBuf<int16_t, AUDIO_OUTPUT_BUF_SIZE> _out_buf;
 };

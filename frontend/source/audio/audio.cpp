@@ -18,8 +18,6 @@ Audio::Audio(uint32_t sample_rate)
 {
     LogFunctionName;
 
-    _buf = new AudioBuf(AUDIO_OUTPUT_COUNT, AUDIO_STEREO);
-
     SetSampleRate(sample_rate);
     LogDebug("_in_sample_rate: %d _out_sample_rate:%d _resampler:%08x", _in_sample_rate, _out_sample_rate, _resampler);
 }
@@ -32,7 +30,6 @@ Audio::~Audio()
         delete _resampler;
     }
     delete _output;
-    delete _buf;
 }
 
 void Audio::SetSampleRate(uint32_t sample_rate)
@@ -48,7 +45,7 @@ void Audio::SetSampleRate(uint32_t sample_rate)
     bool need_resample = !_GetSuitableSampleRate(sample_rate, &_out_sample_rate);
     if (_output == nullptr)
     {
-        _output = new AudioOutput(AUDIO_OUTPUT_COUNT, _out_sample_rate, _buf);
+        _output = new AudioOutput(AUDIO_OUTPUT_COUNT, _out_sample_rate, &_out_buf);
         _output->Start();
     }
     else
@@ -60,7 +57,7 @@ void Audio::SetSampleRate(uint32_t sample_rate)
     {
         if (_resampler == nullptr)
         {
-            _resampler = new AudioResampler(sample_rate, _out_sample_rate, _output, _buf);
+            _resampler = new AudioResampler(sample_rate, _out_sample_rate, _output, &_out_buf);
             _resampler->Start();
         }
         else
@@ -95,7 +92,7 @@ size_t Audio::SendAudioSample(const int16_t *data, size_t frames)
     }
     else
     {
-        _buf->Write(data, frames * 2);
+        //_buf->Write(data, frames * 2);
         _output->Signal();
     }
 

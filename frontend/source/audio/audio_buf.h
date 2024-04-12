@@ -38,7 +38,7 @@ public:
         else if (_tmp_buf == nullptr)
         {
         NEW_TMP_BUF:
-            _tmp_buf_size = size << 1;
+            _tmp_buf_size = size << 2;
             _tmp_buf = new int16_t[_tmp_buf_size];
         }
         else if (_tmp_buf_size < size)
