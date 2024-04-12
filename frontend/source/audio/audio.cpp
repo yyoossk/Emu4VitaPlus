@@ -5,7 +5,7 @@
 #include "audio.h"
 #include "log.h"
 
-#define AUDIO_OUTPUT_COUNT 512
+#define AUDIO_OUTPUT_COUNT 256
 #define AUDIO_STEREO true
 #define AUDIO_DEFAULT_SAMPLE_RATE 48000
 #define SAMPLE_RATE_NEGLECT 50

@@ -17,6 +17,8 @@ LIBRETRO_COMM_INCLUDE_DIR  := $(LIBRETRO_COMM_DIR)/include
 LIB_DIR                    := $(ROOT_DIR)/build/libretro_comm
 LIBTOMLPP_DIR              := $(DEPS_DIR)/tomlplusplus
 LIBTOMLPP_INCLUDE_DIR      := $(LIBTOMLPP_DIR)/include
+LIBLOCKFREE_DIR            := $(DEPS_DIR)/lockfree
+LIBLOCKFREE_INCLUDE_DIR    := $(LIBLOCKFREE_DIR)/lockfree
 SCRIPT_DIR                 := $(ROOT_DIR)/script
 
 EBOOT_PATH         := $(PRIVATE_PKG_DIR)/eboot.bin
@@ -64,7 +66,8 @@ INCDIRS += -I$(SRC_DIR) \
            -I$(SRC_DIR)/ui \
 		   -I$(SRC_DIR)/audio \
            -I$(LIBRETRO_COMM_INCLUDE_DIR) \
-           -I$(LIBTOMLPP_INCLUDE_DIR)
+           -I$(LIBTOMLPP_INCLUDE_DIR) \
+		   -I$(LIBLOCKFREE_INCLUDE_DIR)
 
 ARCHFLAGS := -marm -mcpu=cortex-a9 -mfloat-abi=hard -DVITA -D__vita__
 CFLAGS    := $(ARCHFLAGS) -mword-relocations -fno-optimize-sibling-calls

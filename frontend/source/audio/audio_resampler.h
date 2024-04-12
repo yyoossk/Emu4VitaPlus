@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <stdint.h>
+#include <lockfree.hpp>
 #include "thread_base.h"
 #include "audio_buf.h"
 #include "audio_output.h"
@@ -28,12 +29,8 @@ private:
 
     SwrContext *_swr_ctx;
     uint32_t _in_rate, _out_rate;
-    // std::vector<int16_t> _in_buf;
-    int16_t *_in_buf;
-    uint32_t _in_buf_size;
-    uint32_t _in_size;
+    lockfree::spsc::BipartiteBuf<int16_t, 0x10000> _in_buf;
+
     AudioOutput *_output;
     AudioBuf *_buf;
-
-    SceUID _resample_done_sema;
 };
