@@ -17,6 +17,7 @@ AudioOutput::~AudioOutput()
 
 void AudioOutput::SetRate(uint32_t sample_size, uint32_t sample_rate)
 {
+    _sample_size = sample_size * 2;
     sceAudioOutSetConfig(_port, sample_size, sample_rate, SCE_AUDIO_OUT_MODE_STEREO);
 }
 
@@ -35,12 +36,13 @@ int AudioOutput::_AudioThread(SceSize args, void *argp)
             if (out.first != nullptr)
                 output->_out_buf->ReadRelease(0);
             output->Wait();
-            LogDebug("audio wait resampler");
+            // LogDebug("audio wait resampler");
             out = output->_out_buf->ReadAcquire();
         }
         // output->Unlock();
-        LogDebug("%08x %u", out.first, out.second);
+        LogDebug("output %08x %u", out.first, out.second);
         sceAudioOutOutput(output->_port, out.first);
+        LogDebug("output end");
         output->_out_buf->ReadRelease(output->_sample_size);
     }
 

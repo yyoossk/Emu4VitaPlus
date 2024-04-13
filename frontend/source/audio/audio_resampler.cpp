@@ -55,7 +55,6 @@ void AudioResampler::Process(const int16_t *in, uint32_t in_size)
     // out_size = swr_convert(_swr_ctx, (uint8_t **)&out, out_size, (const uint8_t **)&in, in_size);
     // _buf->EndWrite(out_size * 2);
     // _output->Signal();
-    LogFunctionName;
 
     in_size *= 2;
     size_t out_size = GetOutSize(in_size);
@@ -67,6 +66,10 @@ void AudioResampler::Process(const int16_t *in, uint32_t in_size)
         LogDebug("%d %d", in_size, out_size);
         _out_buf->WriteRelease(out_size);
         _output->Signal();
+    }
+    else
+    {
+        LogDebug("out is nullptr");
     }
 
     // size_t size = in_size * 2;
