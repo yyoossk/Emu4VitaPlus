@@ -1,4 +1,5 @@
 #include <psp2/io/dirent.h>
+#include <algorithm>
 #include <string.h>
 #include "directory.h"
 #include "log.h"
@@ -54,6 +55,23 @@ void Directory::_SetExtensionFilter(const char *exts, char split)
     delete[] exts_string;
 }
 
+bool Directory::_LeagleTest(const char *name)
+{
+    name = strrchr(name, '.');
+    if (!name)
+    {
+        return false;
+    }
+
+    name++;
+
+    std::string n(name);
+    std::transform(n.begin(), n.end(), n.begin(),
+                   [](unsigned char c)
+                   { return std::tolower(c); });
+    return _ext_filters.find(n) != _ext_filters.end();
+}
+
 bool Directory::SetCurrentPath(const std::string &path)
 {
     LogFunctionName;
@@ -78,7 +96,10 @@ bool Directory::SetCurrentPath(const std::string &path)
         }
         else
         {
-            files.push_back({dir.d_name, false});
+            if (_LeagleTest(dir.d_name))
+            {
+                files.push_back({dir.d_name, false});
+            }
         }
     }
     sceIoDclose(dfd);

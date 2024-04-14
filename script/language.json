@@ -22,13 +22,48 @@
     },
     {
         "No.": "4",
+        "Tag": "TAB_GRAPHICS",
+        "English": "Graphics",
+        "Chinese": "图像",
+        "Comments": ""
+    },
+    {
+        "No.": "5",
+        "Tag": "TAB_CONTROL",
+        "English": "Control",
+        "Chinese": "控制",
+        "Comments": ""
+    },
+    {
+        "No.": "6",
+        "Tag": "TAB_HOTKEY",
+        "English": "Hotkey",
+        "Chinese": "快捷键",
+        "Comments": ""
+    },
+    {
+        "No.": "7",
+        "Tag": "TAB_CORE",
+        "English": "Core",
+        "Chinese": "核心",
+        "Comments": ""
+    },
+    {
+        "No.": "8",
+        "Tag": "TAB_MISC",
+        "English": "Misc",
+        "Chinese": "杂项",
+        "Comments": ""
+    },
+    {
+        "No.": "9",
         "Tag": "TAB_ABOUT",
         "English": "About",
         "Chinese": "关于",
         "Comments": ""
     },
     {
-        "No.": "5",
+        "No.": "10",
         "Tag": "SYSTEM_MENU_EXIT",
         "English": "Exit",
         "Chinese": "退出",

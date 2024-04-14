@@ -30,4 +30,5 @@ private:
     std::string _current_path;
 
     void _SetExtensionFilter(const char *exts, char split);
+    bool _LeagleTest(const char *name);
 };

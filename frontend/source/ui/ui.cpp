@@ -5,15 +5,17 @@
 #include "log.h"
 #include "tab_system.h"
 #include "tab_browser.h"
+#include "tab_graphics.h"
 #include "tab_about.h"
 
 Ui::Ui(const char *path)
     : _tab_index(1)
 {
     LogFunctionName;
-    _tabs[0] = new TabSystem();
-    _tabs[1] = new TabBrowser(path);
-    _tabs[2] = new TabAbout();
+    _tabs[TAB_ITEM_SYSTEM] = new TabSystem();
+    _tabs[TAB_ITEM_BROWSER] = new TabBrowser(path);
+    _tabs[TAB_ITEM_GRAPHICS] = new TabGraphics();
+    _tabs[TAB_ITEM_ABOUT] = new TabAbout();
 
     _tabs[_tab_index]->SetInputHooks(&_input);
 

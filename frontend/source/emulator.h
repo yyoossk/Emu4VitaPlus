@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <libretro.h>
+#include <stdint.h>
 #include "texture_buf.h"
 #include "audio.h"
 #include "delay.h"
