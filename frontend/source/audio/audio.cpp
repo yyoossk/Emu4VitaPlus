@@ -5,10 +5,6 @@
 #include "audio.h"
 #include "log.h"
 
-#define AUDIO_OUTPUT_COUNT 256
-#define AUDIO_STEREO true
-#define AUDIO_DEFAULT_SAMPLE_RATE 48000
-#define SAMPLE_RATE_NEGLECT 50
 const uint32_t SAMPLE_RATES[] = {8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000};
 
 Audio::Audio(uint32_t sample_rate)
@@ -92,7 +88,7 @@ size_t Audio::SendAudioSample(const int16_t *data, size_t frames)
     }
     else
     {
-        //_buf->Write(data, frames * 2);
+        _out_buf.Write(data, frames * 2);
         _output->Signal();
     }
 

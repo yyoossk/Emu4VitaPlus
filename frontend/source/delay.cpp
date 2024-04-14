@@ -34,7 +34,7 @@ void Delay::Wait()
         uint64_t delay_ms = _next_ms - current;
         // LogDebug("delay %lld", delay_ms);
         sceKernelDelayThread(delay_ms);
-        _next_ms = sceKernelGetProcessTimeWide() + _interval_ms;
+        _next_ms += _interval_ms;
     }
     else
     {
