@@ -68,5 +68,89 @@
         "English": "Exit",
         "Chinese": "退出",
         "Comments": ""
+    },
+    {
+        "No.": "11",
+        "Tag": "GRAPHICS_MENU_DISPLAY_SIZE",
+        "English": "Display size",
+        "Chinese": "画面尺寸",
+        "Comments": ""
+    },
+    {
+        "No.": "12",
+        "Tag": "GRAPHICS_MENU_ASPECT_RATIO",
+        "English": "Aspect ratio",
+        "Chinese": "画面比例",
+        "Comments": ""
+    },
+    {
+        "No.": "13",
+        "Tag": "GRAPHICS_MENU_DISPLAY_ROTATE",
+        "English": "Display rotate",
+        "Chinese": "画面旋转",
+        "Comments": ""
+    },
+    {
+        "No.": "14",
+        "Tag": "GRAPHICS_MENU_GRAPHICS_SHADER",
+        "English": "Graphics shader",
+        "Chinese": "图形着色器",
+        "Comments": ""
+    },
+    {
+        "No.": "15",
+        "Tag": "GRAPHICS_MENU_GRAPHICS_SMOOTH",
+        "English": "Graphics smooth",
+        "Chinese": "平滑图像",
+        "Comments": ""
+    },
+    {
+        "No.": "16",
+        "Tag": "GRAPHICS_MENU_OVERLAY_SELECT",
+        "English": "Overlay select",
+        "Chinese": "遮罩图选择",
+        "Comments": ""
+    },
+    {
+        "No.": "17",
+        "Tag": "GRAPHICS_MENU_OVERLAY_MODE",
+        "English": "Overlay mode",
+        "Chinese": "遮罩图显示模式",
+        "Comments": ""
+    },
+    {
+        "No.": "18",
+        "Tag": "GRAPHICS_MENU_SHOW_FPS",
+        "English": "Show FPS",
+        "Chinese": "显示帧数",
+        "Comments": ""
+    },
+    {
+        "No.": "19",
+        "Tag": "DISPLAY_SIZE_1X",
+        "English": "1X",
+        "Chinese": "1倍大小",
+        "Comments": ""
+    },
+    {
+        "No.": "20",
+        "Tag": "DISPLAY_SIZE_2X",
+        "English": "2X",
+        "Chinese": "2倍大小",
+        "Comments": ""
+    },
+    {
+        "No.": "21",
+        "Tag": "DISPLAY_SIZE_3X",
+        "English": "3X",
+        "Chinese": "3倍大小",
+        "Comments": ""
+    },
+    {
+        "No.": "22",
+        "Tag": "DISPLAY_SIZE_FULL",
+        "English": "Full",
+        "Chinese": "铺满屏幕",
+        "Comments": ""
     }
 ]
