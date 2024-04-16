@@ -87,14 +87,14 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
     LogFunctionNameLimited;
 
     vita2d_texture *texture;
-    if (gEmulator->_texture_buf == nullptr)
+    if (gEmulator->_texture_buf == nullptr || gEmulator->_texture_buf->GetWidth() != width || gEmulator->_texture_buf->GetHeight() != height)
     {
+        if (gEmulator->_texture_buf != nullptr)
+        {
+            delete gEmulator->_texture_buf;
+        }
         gEmulator->_texture_buf = new TextureBuf(gEmulator->_video_pixel_format, width, height);
-    }
-    else if (gEmulator->_texture_buf->GetWidth() != width || gEmulator->_texture_buf->GetHeight() != height)
-    {
-        delete gEmulator->_texture_buf;
-        gEmulator->_texture_buf = new TextureBuf(gEmulator->_video_pixel_format, width, height);
+        gEmulator->_SetVideoSize(width, height);
     }
 
     gEmulator->_texture_buf->Lock();
@@ -226,7 +226,14 @@ void Emulator::Show()
     }
 
     _texture_buf->Lock();
-    vita2d_draw_texture(_texture_buf->Current(), 0, 0);
+    vita2d_draw_texture_part_scale_rotate(_texture_buf->Current(),
+                                          VITA_WIDTH / 2, VITA_HEIGHT / 2, _video_rect.x, _video_rect.y,
+                                          _texture_buf->GetWidth(), _texture_buf->GetHeight(),
+                                          _video_rect.width / _texture_buf->GetWidth(),
+                                          _video_rect.height / _texture_buf->GetHeight(),
+                                          0.f);
+    // LogDebug("%f %f %f %f", _video_rect.x, _video_rect.y,
+    //          _video_rect.width, _video_rect.height);
     _texture_buf->Unlock();
 }
 
@@ -288,4 +295,74 @@ void Emulator::_SetupKeys()
     // {
     //     LogDebug("%d %08x", i, _keys[i]);
     // }
+}
+
+void Emulator::_SetVideoSize(uint32_t width, uint32_t height)
+{
+    float aspect_ratio = .0f;
+
+    switch (gConfig->graphics_config.ratio)
+    {
+    case CONFIG_DISPLAY_RATIO_DEFAULT:
+        aspect_ratio = _av_info.geometry.aspect_ratio;
+        break;
+
+    case CONFIG_DISPLAY_RATIO_BY_DEVICE_SCREEN:
+        aspect_ratio = (float)VITA_WIDTH / (float)VITA_HEIGHT;
+        break;
+
+    case CONFIG_DISPLAY_RATIO_8_7:
+        aspect_ratio = 8.f / 7.f;
+        break;
+
+    case CONFIG_DISPLAY_RATIO_4_3:
+        aspect_ratio = 4.f / 3.f;
+        break;
+
+    case CONFIG_DISPLAY_RATIO_3_2:
+        aspect_ratio = 3.f / 2.f;
+        break;
+
+    case CONFIG_DISPLAY_RATIO_16_9:
+        aspect_ratio = 16.f / 9.f;
+        break;
+
+    case CONFIG_DISPLAY_RATIO_BY_GAME_RESOLUTION:
+    default:
+        break;
+    }
+
+    if (aspect_ratio > 0.f && (width / aspect_ratio) < height)
+    {
+        width = height * aspect_ratio;
+    }
+    else
+    {
+        aspect_ratio = (float)width / (float)height;
+    }
+
+    switch (gConfig->graphics_config.size)
+    {
+    case CONFIG_DISPLAY_SIZE_2X:
+        width *= 2;
+        height *= 2;
+        break;
+
+    case CONFIG_DISPLAY_SIZE_3X:
+        width *= 3;
+        height *= 3;
+        break;
+
+    case CONFIG_DISPLAY_SIZE_FULL:
+        width = VITA_HEIGHT * aspect_ratio;
+        height = VITA_HEIGHT;
+        break;
+
+    case CONFIG_DISPLAY_SIZE_1X:
+    default:
+        break;
+    }
+
+    _video_rect.width = width;
+    _video_rect.height = height;
 }

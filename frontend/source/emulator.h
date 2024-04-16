@@ -7,6 +7,14 @@
 #include "delay.h"
 #include "input.h"
 
+struct Rect
+{
+    float x = 0.f;
+    float y = 0.f;
+    float width = 0.f;
+    float height = 0.f;
+};
+
 class Emulator
 {
 public:
@@ -34,6 +42,8 @@ private:
 
     SceGxmTextureFormat _video_pixel_format;
     TextureBuf *_texture_buf;
+    Rect _video_rect;
+
     Audio *_audio;
     Input _input;
     uint32_t _keys[16];
@@ -41,5 +51,6 @@ private:
     Delay _delay;
 
     void _SetPixelFormat(retro_pixel_format format);
+    void _SetVideoSize(uint32_t width, uint32_t height);
     void _SetupKeys();
 };

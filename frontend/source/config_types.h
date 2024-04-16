@@ -52,9 +52,9 @@ enum GraphicsOverlayModeConfig
 
 struct GraphicsConfig
 {
-    DisplaySizeConfig size;
-    DisplayRatioConfig ratio;
-    DisplayRotateConfig rotate;
-    GraphicsShaderConfig shader;
-    GraphicsOverlayModeConfig overlay;
+    DisplaySizeConfig size = CONFIG_DISPLAY_SIZE_FULL;
+    DisplayRatioConfig ratio = CONFIG_DISPLAY_RATIO_DEFAULT;
+    DisplayRotateConfig rotate = CONFIG_DISPLAY_ROTATE_DEFAULT;
+    GraphicsShaderConfig shader = CONFIG_GRAPHICS_SHADER_DEFAULT;
+    GraphicsOverlayModeConfig overlay = CONFIG_GRAPHICS_OVERLAY_MODE_OVERLAY;
 };
