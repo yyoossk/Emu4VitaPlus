@@ -62,6 +62,12 @@ Config::Config()
     };
 
     language = LANGUAGE_ENGLISH;
+    graphics_config = {
+        CONFIG_DISPLAY_SIZE_FULL,
+        CONFIG_DISPLAY_RATIO_DEFAULT,
+        CONFIG_DISPLAY_ROTATE_DISABLE,
+        CONFIG_GRAPHICS_SHADER_DEFAULT,
+        CONFIG_GRAPHICS_OVERLAY_MODE_OVERLAY};
 
     Load(APP_CONFIG_PATH);
 }
