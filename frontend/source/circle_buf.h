@@ -1,6 +1,7 @@
 #pragma once
 #include <atomic>
 #include <string.h>
+#include "log.h"
 
 template <typename T, size_t SIZE>
 class CircleBuf
@@ -10,10 +11,7 @@ public:
                   _write_pos(0),
                   _tmp(nullptr),
                   _tmp_size(0),
-                  _continue_write(false)
-    {
-        _buf = new T[SIZE];
-    };
+                  _continue_write(false){};
 
     virtual ~CircleBuf()
     {
@@ -21,7 +19,6 @@ public:
         {
             delete[] _tmp;
         }
-        delete[] _buf;
     };
 
     T *WriteBegin(size_t size)
@@ -113,6 +110,29 @@ public:
         _read_pos.store(read_pos, std::memory_order_release);
     };
 
+    int16_t *Read(size_t size)
+    {
+// LogDebug("%d %d %d %d", _read_pos, _write_pos, _write_pos - _read_pos, ((_write_pos - _read_pos) & (_total_size - 1)) < _block_size);
+#if LOG_LEVEL >= LOG_LEVEL_DEBUG
+        if ((SIZE / size) * size != SIZE)
+        {
+            LogError("SIZE must be a multiple of size.");
+        }
+#endif
+        if (AvailableSize() < size)
+            return nullptr;
+        size_t read_pos = _read_pos.load(std::memory_order_relaxed);
+
+        int16_t *buf = _buf + read_pos;
+        _read_pos += size;
+        if (_read_pos >= SIZE)
+        {
+            _read_pos = 0;
+        }
+        return buf;
+    }
+
+    // the size can be written
     size_t FreeSize(const size_t write_pos, const size_t read_pos)
     {
         if (read_pos > write_pos)
@@ -125,6 +145,7 @@ public:
         }
     };
 
+    // the size can be read
     size_t AvailableSize()
     {
         const size_t write_pos = _write_pos.load(std::memory_order_relaxed);
@@ -146,7 +167,7 @@ protected:
         return _tmp;
     }
 
-    T *_buf;
+    T _buf[SIZE];
     std::atomic_size_t _read_pos;
     std::atomic_size_t _write_pos;
 

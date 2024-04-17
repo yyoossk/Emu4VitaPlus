@@ -152,5 +152,47 @@
         "English": "Full",
         "Chinese": "铺满屏幕",
         "Comments": ""
+    },
+    {
+        "No.": "23",
+        "Tag": "ASPECT_RATIO_BY_GAME_RESOLUTION",
+        "English": "By game resolution",
+        "Chinese": "由游戏分辨率",
+        "Comments": ""
+    },
+    {
+        "No.": "24",
+        "Tag": "ASPECT_RATIO_BY_DEV_SCREEN",
+        "English": "By device screen",
+        "Chinese": "由设备屏幕",
+        "Comments": ""
+    },
+    {
+        "No.": "25",
+        "Tag": "ASPECT_RATIO_8_7",
+        "English": "8:7",
+        "Chinese": "8:7",
+        "Comments": ""
+    },
+    {
+        "No.": "26",
+        "Tag": "ASPECT_RATIO_4_3",
+        "English": "3:3",
+        "Chinese": "3:3",
+        "Comments": ""
+    },
+    {
+        "No.": "27",
+        "Tag": "ASPECT_RATIO_3_2",
+        "English": "3:2",
+        "Chinese": "3:2",
+        "Comments": ""
+    },
+    {
+        "No.": "28",
+        "Tag": "ASPECT_RATIO_16_9",
+        "English": "16:9",
+        "Chinese": "16:9",
+        "Comments": ""
     }
 ]

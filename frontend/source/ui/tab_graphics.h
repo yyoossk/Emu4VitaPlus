@@ -1,6 +1,8 @@
 #pragma once
+#include "array"
 #include "global.h"
 #include "tab_base.h"
+#include "menu_item.h"
 
 class TabGraphics : public TabBase
 {
@@ -18,4 +20,5 @@ private:
     void _OnKeyCross();
 
     size_t _index;
+    std::array<MenuItem *, 2> _items;
 };

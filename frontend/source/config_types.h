@@ -17,8 +17,7 @@ enum DisplaySizeConfig
 
 enum DisplayRatioConfig
 {
-    CONFIG_DISPLAY_RATIO_DEFAULT = 0,
-    CONFIG_DISPLAY_RATIO_BY_GAME_RESOLUTION,
+    CONFIG_DISPLAY_RATIO_BY_GAME_RESOLUTION = 0,
     CONFIG_DISPLAY_RATIO_BY_DEVICE_SCREEN,
     CONFIG_DISPLAY_RATIO_8_7,
     CONFIG_DISPLAY_RATIO_4_3,
@@ -53,7 +52,7 @@ enum GraphicsOverlayModeConfig
 struct GraphicsConfig
 {
     DisplaySizeConfig size = CONFIG_DISPLAY_SIZE_FULL;
-    DisplayRatioConfig ratio = CONFIG_DISPLAY_RATIO_DEFAULT;
+    DisplayRatioConfig ratio = CONFIG_DISPLAY_RATIO_BY_GAME_RESOLUTION;
     DisplayRotateConfig rotate = CONFIG_DISPLAY_ROTATE_DEFAULT;
     GraphicsShaderConfig shader = CONFIG_GRAPHICS_SHADER_DEFAULT;
     GraphicsOverlayModeConfig overlay = CONFIG_GRAPHICS_OVERLAY_MODE_OVERLAY;

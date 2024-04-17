@@ -303,10 +303,6 @@ void Emulator::_SetVideoSize(uint32_t width, uint32_t height)
 
     switch (gConfig->graphics_config.ratio)
     {
-    case CONFIG_DISPLAY_RATIO_DEFAULT:
-        aspect_ratio = _av_info.geometry.aspect_ratio;
-        break;
-
     case CONFIG_DISPLAY_RATIO_BY_DEVICE_SCREEN:
         aspect_ratio = (float)VITA_WIDTH / (float)VITA_HEIGHT;
         break;

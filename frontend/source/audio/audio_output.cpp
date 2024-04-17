@@ -29,7 +29,7 @@ int AudioOutput::_AudioThread(SceSize args, void *argp)
     int16_t *buf;
     while (output->IsRunning())
     {
-        while ((buf = output->_out_buf->Read()) == nullptr)
+        while ((buf = output->_out_buf->Read(AUDIO_OUTPUT_BLOCK_SIZE)) == nullptr)
         {
             output->Wait();
         }
