@@ -1,6 +1,6 @@
 #include "tab_graphics.h"
 
-TabGraphics::TabGraphics() : _index(0)
+TabGraphics::TabGraphics()
 {
     _items[0] = new MenuItem(GRAPHICS_MENU_DISPLAY_SIZE,
                              (size_t *)&gConfig->graphics_config.size,
@@ -37,12 +37,4 @@ void TabGraphics::Show(bool selected)
         ImGui::Columns(1);
         ImGui::EndTabItem();
     }
-}
-
-void TabGraphics::SetInputHooks(Input *input)
-{
-}
-
-void TabGraphics::UnsetInputHooks(Input *input)
-{
 }

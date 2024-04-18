@@ -1,6 +1,6 @@
 #include "tab_system.h"
 
-TabSystem::TabSystem() : _index(0)
+TabSystem::TabSystem()
 {
 }
 
@@ -35,14 +35,6 @@ void TabSystem::UnsetInputHooks(Input *input)
     input->UnsetKeyDownCallback(SCE_CTRL_UP);
     input->UnsetKeyDownCallback(SCE_CTRL_DOWN);
     input->UnsetKeyUpCallback(SCE_CTRL_CIRCLE);
-}
-
-void TabSystem::_OnKeyUp()
-{
-}
-
-void TabSystem::_OnKeyDown()
-{
 }
 
 void TabSystem::_OnKeyCircle()

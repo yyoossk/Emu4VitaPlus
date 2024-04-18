@@ -8,16 +8,15 @@ class TabBrowser : public TabBase
 public:
     TabBrowser(const char *path);
     virtual ~TabBrowser();
-    virtual void SetInputHooks(Input *input);
-    virtual void UnsetInputHooks(Input *input);
-    virtual void Show(bool selected);
+    void SetInputHooks(Input *input);
+    void UnsetInputHooks(Input *input);
+    void Show(bool selected);
+    void OnClick();
 
 private:
-    void _OnKeyUp();
-    void _OnKeyDown();
+    size_t _GetItemCount() { return _directory->GetSize(); };
     void _OnKeyCircle();
     void _OnKeyCross();
 
     Directory *_directory;
-    size_t _index;
 };

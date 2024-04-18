@@ -2,7 +2,7 @@
 #include "tab_browser.h"
 #include "log.h"
 
-TabBrowser::TabBrowser(const char *path) : _index(0)
+TabBrowser::TabBrowser(const char *path)
 {
     LogFunctionName;
     _directory = new Directory(path, gEmulator->GetValidExtensions());
@@ -16,17 +16,13 @@ TabBrowser::~TabBrowser()
 
 void TabBrowser::SetInputHooks(Input *input)
 {
-    input->SetKeyDownCallback(SCE_CTRL_UP, std::bind(&TabBrowser::_OnKeyUp, this), true);
-    input->SetKeyDownCallback(SCE_CTRL_DOWN, std::bind(&TabBrowser::_OnKeyDown, this), true);
-    input->SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&TabBrowser::_OnKeyCircle, this));
+    TabBase::SetInputHooks(input);
     input->SetKeyUpCallback(SCE_CTRL_CROSS, std::bind(&TabBrowser::_OnKeyCross, this));
 }
 
 void TabBrowser::UnsetInputHooks(Input *input)
 {
-    input->UnsetKeyDownCallback(SCE_CTRL_UP);
-    input->UnsetKeyDownCallback(SCE_CTRL_DOWN);
-    input->UnsetKeyUpCallback(SCE_CTRL_CIRCLE);
+    TabBase::UnsetInputHooks(input);
     input->UnsetKeyUpCallback(SCE_CTRL_CROSS);
 }
 
@@ -65,19 +61,7 @@ void TabBrowser::Show(bool selected)
     }
 }
 
-void TabBrowser::_OnKeyUp()
-{
-    _index += _directory->GetSize() - 1;
-    _index %= _directory->GetSize();
-}
-
-void TabBrowser::_OnKeyDown()
-{
-    _index++;
-    _index %= _directory->GetSize();
-}
-
-void TabBrowser::_OnKeyCircle()
+void TabBrowser::OnClick()
 {
     auto item = _directory->GetItem(_index);
 
