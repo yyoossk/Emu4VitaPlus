@@ -13,7 +13,6 @@ public:
     virtual void UnsetInputHooks(Input *input);
 
     virtual void Show(bool selected) = 0;
-    virtual void OnClick(){};
 
     void SetVisable(bool visable) { _visable = visable; };
     bool Visable() { return _visable; };
@@ -22,6 +21,7 @@ protected:
     virtual size_t _GetItemCount() = 0;
     virtual void _OnKeyUp();
     virtual void _OnKeyDown();
+    virtual void _OnClick(){};
 
     size_t _index;
     bool _visable;

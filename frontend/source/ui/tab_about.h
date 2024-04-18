@@ -2,7 +2,7 @@
 #include "global.h"
 #include "tab_base.h"
 
-class TabAbout : public TabBase
+class TabAbout : public virtual TabBase
 {
 public:
     virtual void Show(bool selected);

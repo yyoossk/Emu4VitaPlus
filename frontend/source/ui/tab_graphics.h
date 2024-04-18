@@ -4,7 +4,7 @@
 #include "tab_base.h"
 #include "menu_item.h"
 
-class TabGraphics : public virtual TabBase
+class TabGraphics : virtual public TabBase
 {
 public:
     TabGraphics();

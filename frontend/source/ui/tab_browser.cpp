@@ -61,7 +61,7 @@ void TabBrowser::Show(bool selected)
     }
 }
 
-void TabBrowser::OnClick()
+void TabBrowser::_OnClick()
 {
     auto item = _directory->GetItem(_index);
 

@@ -46,7 +46,7 @@ void TabBase::SetInputHooks(Input *input)
 {
     input->SetKeyDownCallback(SCE_CTRL_UP, std::bind(&TabBase::_OnKeyUp, this), true);
     input->SetKeyDownCallback(SCE_CTRL_DOWN, std::bind(&TabBase::_OnKeyDown, this), true);
-    input->SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&TabBase::OnClick, this));
+    input->SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&TabBase::_OnClick, this));
 }
 
 void TabBase::UnsetInputHooks(Input *input)

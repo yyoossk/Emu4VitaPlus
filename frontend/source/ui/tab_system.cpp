@@ -23,21 +23,7 @@ void TabSystem::Show(bool selected)
     }
 }
 
-void TabSystem::SetInputHooks(Input *input)
-{
-    input->SetKeyDownCallback(SCE_CTRL_UP, std::bind(&TabSystem::_OnKeyUp, this), true);
-    input->SetKeyDownCallback(SCE_CTRL_DOWN, std::bind(&TabSystem::_OnKeyDown, this), true);
-    input->SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&TabSystem::_OnKeyCircle, this));
-}
-
-void TabSystem::UnsetInputHooks(Input *input)
-{
-    input->UnsetKeyDownCallback(SCE_CTRL_UP);
-    input->UnsetKeyDownCallback(SCE_CTRL_DOWN);
-    input->UnsetKeyUpCallback(SCE_CTRL_CIRCLE);
-}
-
-void TabSystem::_OnKeyCircle()
+void TabSystem::_OnClick()
 {
     (*(this).*_menu[_index].function)();
 }

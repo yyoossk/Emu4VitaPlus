@@ -3,7 +3,7 @@
 #include "global.h"
 #include "tab_base.h"
 
-class TabSystem : public TabBase
+class TabSystem : public virtual TabBase
 {
 public:
     struct MenuItem
@@ -15,13 +15,11 @@ public:
 
     TabSystem();
     virtual ~TabSystem();
-    virtual void SetInputHooks(Input *input);
-    virtual void UnsetInputHooks(Input *input);
     virtual void Show(bool selected);
 
 private:
     size_t _GetItemCount() { return _menu.size(); };
-    void _OnKeyCircle();
+    void _OnClick();
 
     void _ExitApp();
 
