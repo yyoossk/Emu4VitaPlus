@@ -18,4 +18,6 @@ private:
     size_t _config_mask;
     size_t _config_text_start;
     size_t _config_count;
+
+    bool _actived;
 };

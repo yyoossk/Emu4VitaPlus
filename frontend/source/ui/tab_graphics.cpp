@@ -27,13 +27,14 @@ void TabGraphics::Show(bool selected)
 {
     if (ImGui::BeginTabItem(TEXT(TAB_GRAPHICS), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
     {
-        auto size = ImGui::GetContentRegionAvail();
-        ImGui::ListBoxHeader("", {size.x / 2, size.y});
+        // ImGui::ListBoxHeader("", {size.x / 2, size.y});
+        ImGui::Columns(2, NULL, false);
         for (size_t i = 0; i < _items.size(); i++)
         {
             _items[i]->Show(i == _index);
         }
-        ImGui::ListBoxFooter();
+        // ImGui::ListBoxFooter();
+        ImGui::Columns(1);
         ImGui::EndTabItem();
     }
 }
