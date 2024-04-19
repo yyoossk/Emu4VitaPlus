@@ -43,6 +43,12 @@ enum GraphicsShaderConfig
     CONFIG_GRAPHICS_SHADER_ADVANCED_AA,
 };
 
+enum GraphicsSmooth
+{
+    CONFIG_GRAPHICS_SMOOTHER_NO,
+    CONFIG_GRAPHICS_SMOOTHER_YES,
+};
+
 enum GraphicsOverlayModeConfig
 {
     CONFIG_GRAPHICS_OVERLAY_MODE_OVERLAY = 0,
@@ -55,5 +61,6 @@ struct GraphicsConfig
     DisplayRatioConfig ratio = CONFIG_DISPLAY_RATIO_BY_GAME_RESOLUTION;
     DisplayRotateConfig rotate = CONFIG_DISPLAY_ROTATE_DEFAULT;
     GraphicsShaderConfig shader = CONFIG_GRAPHICS_SHADER_DEFAULT;
-    GraphicsOverlayModeConfig overlay = CONFIG_GRAPHICS_OVERLAY_MODE_OVERLAY;
+    GraphicsSmooth smooth = CONFIG_GRAPHICS_SMOOTHER_NO;
+    GraphicsOverlayModeConfig overlay_mode = CONFIG_GRAPHICS_OVERLAY_MODE_OVERLAY;
 };

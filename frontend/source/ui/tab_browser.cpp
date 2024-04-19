@@ -17,7 +17,7 @@ TabBrowser::~TabBrowser()
 void TabBrowser::SetInputHooks(Input *input)
 {
     TabBase::SetInputHooks(input);
-    input->SetKeyUpCallback(SCE_CTRL_CROSS, std::bind(&TabBrowser::_OnKeyCross, this));
+    input->SetKeyUpCallback(SCE_CTRL_CROSS, std::bind(&TabBrowser::_OnKeyCross, this, input));
 }
 
 void TabBrowser::UnsetInputHooks(Input *input)
@@ -61,7 +61,7 @@ void TabBrowser::Show(bool selected)
     }
 }
 
-void TabBrowser::_OnClick()
+void TabBrowser::_OnClick(Input *input)
 {
     auto item = _directory->GetItem(_index);
 
@@ -79,7 +79,7 @@ void TabBrowser::_OnClick()
     }
 }
 
-void TabBrowser::_OnKeyCross()
+void TabBrowser::_OnKeyCross(Input *input)
 {
     auto path = _directory->GetCurrentPath();
     if (path.size() <= 5)

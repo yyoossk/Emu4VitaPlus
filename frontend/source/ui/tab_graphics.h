@@ -4,6 +4,12 @@
 #include "tab_base.h"
 #include "menu_item.h"
 
+#ifdef WANT_DISPLAY_ROTATE
+#define GRAPHICS_MENU_COUNT 6
+#else
+#define GRAPHICS_MENU_COUNT 5
+#endif
+
 class TabGraphics : virtual public TabBase
 {
 public:
@@ -16,5 +22,5 @@ private:
     size_t _GetItemCount() { return _items.size(); };
     void _OnClick(Input *input);
 
-    std::array<MenuItem *, 2> _items;
+    std::array<MenuItem *, GRAPHICS_MENU_COUNT> _items;
 };
