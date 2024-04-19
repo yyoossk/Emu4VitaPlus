@@ -194,5 +194,68 @@
         "English": "16:9",
         "Chinese": "16:9",
         "Comments": ""
+    },
+    {
+        "No.": "29",
+        "Tag": "DISPLAY_ROTATE_CW_90",
+        "English": "Rotate 90°CW",
+        "Chinese": "旋转90度(顺时针)",
+        "Comments": ""
+    },
+    {
+        "No.": "30",
+        "Tag": "DISPLAY_ROTATE_CW_180",
+        "English": "Rotate 180°CW",
+        "Chinese": "旋转180度(顺时针)",
+        "Comments": ""
+    },
+    {
+        "No.": "31",
+        "Tag": "DISPLAY_ROTATE_CW_270",
+        "English": "Rotate 270°CW",
+        "Chinese": "旋转270度(顺时针)",
+        "Comments": ""
+    },
+    {
+        "No.": "32",
+        "Tag": "SHADER_LCD3X",
+        "English": "LCD3x",
+        "Chinese": "LCD3x",
+        "Comments": ""
+    },
+    {
+        "No.": "33",
+        "Tag": "SHADER_SHARP_BILINEAR_SIMPLE",
+        "English": "Sharp bilinear simple",
+        "Chinese": "锐利双线性",
+        "Comments": ""
+    },
+    {
+        "No.": "34",
+        "Tag": "SHADER_SHARP_BILINEAR",
+        "English": "Sharp bilinear",
+        "Chinese": "锐利双线性+扫描线",
+        "Comments": ""
+    },
+    {
+        "No.": "35",
+        "Tag": "SHADER_ADVANCED_AA",
+        "English": "Advanced AA",
+        "Chinese": "高级AA",
+        "Comments": ""
+    },
+    {
+        "No.": "36",
+        "Tag": "OVERLAY_MODE_OVERLAY",
+        "English": "Overlay",
+        "Chinese": "覆层模式",
+        "Comments": ""
+    },
+    {
+        "No.": "37",
+        "Tag": "OVERLAY_MODE_BACKGROUND",
+        "English": "Background",
+        "Chinese": "背景模式",
+        "Comments": ""
     }
 ]
