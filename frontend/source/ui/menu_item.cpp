@@ -20,23 +20,19 @@ void MenuItem::Show(bool selected)
     ImGui::Selectable(TEXT(_text_id), selected);
     ImGui::NextColumn();
 
-    if (_actived)
+    bool is_popup = ImGui::IsPopupOpen(TEXT(_text_id));
+
+    if (_actived && !is_popup)
     {
-        if (!ImGui::IsPopupOpen(TEXT(_text_id)))
-        {
-            ImGui::OpenPopup(TEXT(_text_id));
-        }
-    }
-    else
-    {
-        if (ImGui::IsPopupOpen(TEXT(_text_id)))
-        {
-            ImGui::CloseCurrentPopup();
-        }
+        ImGui::OpenPopup(TEXT(_text_id));
     }
 
     if (MyBeginCombo(TEXT(_text_id), TEXT(_config_text_start + GetConfig()), ImGuiComboFlags_NoArrowButton))
     {
+        if (!_actived && is_popup)
+        {
+            ImGui::CloseCurrentPopup();
+        }
         for (size_t i = 0; i < _config_count; i++)
         {
             ImGui::Selectable(TEXT(_config_text_start + i), GetConfig() == i);
