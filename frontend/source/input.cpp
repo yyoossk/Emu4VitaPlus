@@ -137,7 +137,7 @@ void Input::_ProcCallbacks(uint32_t key)
         {
             if (iter.first & key && iter.first & ~_last_key)
             {
-                iter.second();
+                iter.second(this);
                 break;
             }
         }
@@ -146,7 +146,7 @@ void Input::_ProcCallbacks(uint32_t key)
         {
             if (iter.first & _last_key)
             {
-                iter.second();
+                iter.second(this);
                 break;
             }
         }
@@ -176,4 +176,18 @@ void Input::Reset()
     _key_up_callbacks.clear();
     _turbo_start_ms = DEFAULT_TURBO_START_TIME;
     _turbo_interval_ms = DEFAULT_TURBO_INTERVAL;
+}
+
+void Input::PushCallbacks()
+{
+    _callback_stack.push(_key_up_callbacks);
+    _callback_stack.push(_key_down_callbacks);
+}
+
+void Input::PopCallbacks()
+{
+    _key_down_callbacks = _callback_stack.top();
+    _callback_stack.pop();
+    _key_up_callbacks = _callback_stack.top();
+    _callback_stack.pop();
 }

@@ -8,7 +8,7 @@ TabBase::~TabBase()
 {
 }
 
-void TabBase::_OnKeyUp()
+void TabBase::_OnKeyUp(Input *input)
 {
     if (_GetItemCount() == 0)
     {
@@ -25,7 +25,7 @@ void TabBase::_OnKeyUp()
     };
 }
 
-void TabBase::_OnKeyDown()
+void TabBase::_OnKeyDown(Input *input)
 {
     if (_GetItemCount() == 0)
     {
@@ -44,9 +44,9 @@ void TabBase::_OnKeyDown()
 
 void TabBase::SetInputHooks(Input *input)
 {
-    input->SetKeyDownCallback(SCE_CTRL_UP, std::bind(&TabBase::_OnKeyUp, this), true);
-    input->SetKeyDownCallback(SCE_CTRL_DOWN, std::bind(&TabBase::_OnKeyDown, this), true);
-    input->SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&TabBase::_OnClick, this));
+    input->SetKeyDownCallback(SCE_CTRL_UP, std::bind(&TabBase::_OnKeyUp, this, input), true);
+    input->SetKeyDownCallback(SCE_CTRL_DOWN, std::bind(&TabBase::_OnKeyDown, this, input), true);
+    input->SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&TabBase::_OnClick, this, input));
 }
 
 void TabBase::UnsetInputHooks(Input *input)

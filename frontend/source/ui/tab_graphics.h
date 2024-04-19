@@ -14,5 +14,7 @@ public:
 
 private:
     size_t _GetItemCount() { return _items.size(); };
+    void _OnClick(Input *input);
+
     std::array<MenuItem *, 2> _items;
 };

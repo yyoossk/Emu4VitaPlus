@@ -33,11 +33,11 @@ Ui::~Ui()
 
 void Ui::_SetKeyHooks()
 {
-    _input.SetKeyUpCallback(SCE_CTRL_L1, std::bind(&Ui::_OnKeyL2, this));
-    _input.SetKeyUpCallback(SCE_CTRL_R1, std::bind(&Ui::_OnKeyR2, this));
+    _input.SetKeyUpCallback(SCE_CTRL_L1, std::bind(&Ui::_OnKeyL2, this, &_input));
+    _input.SetKeyUpCallback(SCE_CTRL_R1, std::bind(&Ui::_OnKeyR2, this, &_input));
 }
 
-void Ui::_OnKeyL2()
+void Ui::_OnKeyL2(Input *input)
 {
     // LogFunctionName;
     _tabs[_tab_index]->UnsetInputHooks(&_input);
@@ -51,7 +51,7 @@ void Ui::_OnKeyL2()
     _tabs[_tab_index]->SetInputHooks(&_input);
 }
 
-void Ui::_OnKeyR2()
+void Ui::_OnKeyR2(Input *input)
 {
     // LogFunctionName;
     _tabs[_tab_index]->UnsetInputHooks(&_input);

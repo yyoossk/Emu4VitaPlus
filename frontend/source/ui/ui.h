@@ -24,8 +24,8 @@ public:
 
 private:
     void _SetKeyHooks();
-    void _OnKeyL2();
-    void _OnKeyR2();
+    void _OnKeyL2(Input *input);
+    void _OnKeyR2(Input *input);
 
     Input _input;
     size_t _tab_index;

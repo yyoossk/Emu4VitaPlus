@@ -2,10 +2,13 @@
 #include <stdint.h>
 #include <functional>
 #include <unordered_map>
+#include <stack>
 #include <libretro.h>
 #include <psp2/ctrl.h>
 
-typedef std::function<void()> InputFunc;
+class Input;
+
+typedef std::function<void(Input *)> InputFunc;
 
 const uint32_t SCE_CTRL_LSTICK_UP = 0x00400000;
 const uint32_t SCE_CTRL_LSTICK_RIGHT = 0x00800000;
@@ -42,6 +45,9 @@ public:
 
     uint64_t GetKeyStates() { return _last_key; };
 
+    void PushCallbacks();
+    void PopCallbacks();
+
 private:
     std::unordered_map<uint32_t, InputFunc> _key_up_callbacks;
     std::unordered_map<uint32_t, InputFunc> _key_down_callbacks;
@@ -50,6 +56,8 @@ private:
     uint64_t _turbo_key;
     uint64_t _turbo_start_ms;
     uint64_t _turbo_interval_ms;
+
+    std::stack<std::unordered_map<uint32_t, InputFunc>> _callback_stack;
 
     void _ProcTurbo(uint32_t key);
     void _ProcCallbacks(uint32_t key);

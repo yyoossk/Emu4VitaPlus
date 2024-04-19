@@ -11,17 +11,15 @@ public:
 
     virtual void SetInputHooks(Input *input);
     virtual void UnsetInputHooks(Input *input);
-
     virtual void Show(bool selected) = 0;
-
     void SetVisable(bool visable) { _visable = visable; };
     bool Visable() { return _visable; };
 
 protected:
     virtual size_t _GetItemCount() = 0;
-    virtual void _OnKeyUp();
-    virtual void _OnKeyDown();
-    virtual void _OnClick(){};
+    virtual void _OnKeyUp(Input *input);
+    virtual void _OnKeyDown(Input *input);
+    virtual void _OnClick(Input *input){};
 
     size_t _index;
     bool _visable;

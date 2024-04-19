@@ -38,3 +38,8 @@ void TabGraphics::Show(bool selected)
         ImGui::EndTabItem();
     }
 }
+
+void TabGraphics::_OnClick(Input *input)
+{
+    _items[_index]->OnActive(input);
+}
