@@ -59,7 +59,7 @@ void Video::_InitImgui()
     LogFunctionName;
 
     ImGui::CreateContext();
-    My_ImGui_ImplVita2D_Init(gLanguage->Get());
+    My_ImGui_ImplVita2D_Init(gConfig->language);
     ImGui_ImplVita2D_TouchUsage(false);
     ImGui_ImplVita2D_UseIndirectFrontTouch(false);
     ImGui_ImplVita2D_UseRearTouch(false);
