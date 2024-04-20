@@ -8,6 +8,7 @@
 #include "tab_graphics.h"
 #include "tab_control.h"
 #include "tab_hotkey.h"
+#include "tab_core.h"
 #include "tab_about.h"
 
 Ui::Ui(const char *path)
@@ -19,6 +20,7 @@ Ui::Ui(const char *path)
     _tabs[TAB_ITEM_GRAPHICS] = new TabGraphics();
     _tabs[TAB_ITME_CONTROL] = new TabControl();
     _tabs[TAB_ITEM_HOTKEY] = new TabHotkey();
+    _tabs[TAB_ITEM_CORE] = new TabCore();
     _tabs[TAB_ITEM_ABOUT] = new TabAbout();
 
     _tabs[_tab_index]->SetInputHooks(&_input);

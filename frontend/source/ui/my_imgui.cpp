@@ -55,7 +55,7 @@ namespace
     constexpr auto ImguiVertexSize = 20;
 }
 
-static void My_Imgui_Create_Font()
+static void My_Imgui_Create_Font(LANGUAGE language)
 {
     // Build texture atlas
     ImGuiIO &io = ImGui::GetIO();
@@ -68,10 +68,24 @@ static void My_Imgui_Create_Font()
     font_config.OversampleV = 1;
     font_config.PixelSnapH = 1;
 
+    const ImWchar *glyph_ranges = nullptr;
+    switch (language)
+    {
+    case LANGUAGE_CHINESE:
+        glyph_ranges = GB_2312;
+        break;
+    // case LANGUAGE_JAPANESE:
+    //     glyph_ranges = GetGlyphRangesJapanese();
+    //     break;
+    case LANGUAGE_ENGLISH:
+    default:
+        glyph_ranges = io.Fonts->GetGlyphRangesDefault();
+    }
+
     io.Fonts->AddFontFromFileTTF(APP_ASSETS_DIR "/" FONT_PVF_NAME,
                                  25.0f,
                                  &font_config,
-                                 GB_2312);
+                                 glyph_ranges);
     // io.Fonts->GetGlyphRangesChineseSimplifiedCommon());
     io.Fonts->GetTexDataAsRGBA32((uint8_t **)&pixels, &width, &height);
     gFontTexture = vita2d_create_empty_texture(width, height);
@@ -97,9 +111,9 @@ static void My_Imgui_Destroy_Font()
     }
 }
 
-IMGUI_API void My_ImGui_ImplVita2D_Init()
+IMGUI_API void My_ImGui_ImplVita2D_Init(LANGUAGE language)
 {
-    My_Imgui_Create_Font();
+    My_Imgui_Create_Font(language);
 
     // check the shaders
     sceGxmProgramCheck(&_binary_assets_imgui_v_cg_gxp_start);
