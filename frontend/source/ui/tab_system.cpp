@@ -1,6 +1,6 @@
 #include "tab_system.h"
 
-TabSystem::TabSystem()
+TabSystem::TabSystem() : TabBase(TAB_SYSTEM)
 {
 }
 

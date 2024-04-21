@@ -34,10 +34,12 @@ App::~App()
 {
     LogFunctionName;
 
+    delete _video;
     delete gUi;
     delete gEmulator;
+    delete gLanguage;
     delete gConfig;
-    delete _video;
+
     sceAppUtilShutdown();
 }
 

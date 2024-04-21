@@ -1,6 +1,6 @@
 #include "tab_graphics.h"
 
-TabGraphics::TabGraphics()
+TabGraphics::TabGraphics() : TabBase(TAB_GRAPHICS)
 {
     size_t i = 0;
     _items[i++] = new MenuItem(GRAPHICS_MENU_DISPLAY_SIZE,

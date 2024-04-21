@@ -1,6 +1,6 @@
 #include "tab_control.h"
 
-TabControl::TabControl()
+TabControl::TabControl() : TabBase(TAB_CONTROL)
 {
 }
 

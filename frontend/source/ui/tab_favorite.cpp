@@ -1,6 +1,6 @@
 #include "tab_favorite.h"
 
-TabFavorite::TabFavorite()
+TabFavorite::TabFavorite() : TabBase(TAB_FAVORITE)
 {
 }
 

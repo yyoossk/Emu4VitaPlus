@@ -1,6 +1,6 @@
 #include "tab_hotkey.h"
 
-TabHotkey::TabHotkey()
+TabHotkey::TabHotkey() : TabBase(TAB_HOTKEY)
 {
 }
 

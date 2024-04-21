@@ -8,7 +8,7 @@ class TabSystem : public virtual TabBase
 public:
     struct MenuItem
     {
-        TEXT text_id;
+        TEXT_ENUM text_id;
         bool visable;
         void (TabSystem::*function)(void);
     };

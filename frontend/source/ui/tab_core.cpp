@@ -1,6 +1,6 @@
 #include "tab_core.h"
 
-TabCore::TabCore()
+TabCore::TabCore() : TabBase(TAB_CORE)
 {
 }
 

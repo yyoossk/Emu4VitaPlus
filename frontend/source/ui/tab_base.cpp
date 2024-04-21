@@ -1,6 +1,10 @@
 #include "tab_base.h"
+#include "global.h"
 
-TabBase::TabBase(bool visable) : _index(0), _visable(visable)
+TabBase::TabBase(TEXT_ENUM title_id, bool visable)
+    : _title_id(title_id),
+      _index(0),
+      _visable(visable)
 {
 }
 
@@ -54,4 +58,18 @@ void TabBase::UnsetInputHooks(Input *input)
     input->UnsetKeyDownCallback(SCE_CTRL_UP);
     input->UnsetKeyDownCallback(SCE_CTRL_DOWN);
     input->UnsetKeyUpCallback(SCE_CTRL_CIRCLE);
+}
+
+void TabBase::Show(bool selected)
+{
+    if (ImGui::BeginTabItem(TEXT(_title_id), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
+    {
+        ImGui::Columns(2, NULL, false);
+        for (size_t i = 0; i < _GetItemCount(); i++)
+        {
+            _ShowItem(i, i == _index);
+        }
+        ImGui::Columns(1);
+        ImGui::EndTabItem();
+    }
 }

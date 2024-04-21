@@ -27,7 +27,7 @@ with open('language_define.h', 'w') as fp:
     fp.write(
         f'''#pragma once
 
-enum TEXT{{
+enum TEXT_ENUM{{
 {TEXT_ENUM}
 }};
 
@@ -35,7 +35,7 @@ enum LANGUAGE{{
 {LANGUAGE_ENUM}
 }};
 
-extern const char *gTexts[][TEXT::TEXT_COUNT];
+extern const char *gTexts[][TEXT_ENUM::TEXT_COUNT];
 extern const char *gLanguageNames[];
 '''
     )
@@ -68,7 +68,7 @@ with open('language_define.cpp', 'w') as fp:
     fp.write(
         f'''#include "language_define.h"
 
-const char *gTexts[][TEXT::TEXT_COUNT] = {{
+const char *gTexts[][TEXT_ENUM::TEXT_COUNT] = {{
 {TEXTS}
 }};
 

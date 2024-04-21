@@ -5,6 +5,8 @@
 class TabAbout : public virtual TabBase
 {
 public:
+    TabAbout() : TabBase(TAB_ABOUT){};
+    virtual ~TabAbout(){};
     virtual void Show(bool selected);
 
 private:

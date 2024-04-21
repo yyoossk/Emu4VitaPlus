@@ -2,7 +2,7 @@
 #include "tab_browser.h"
 #include "log.h"
 
-TabBrowser::TabBrowser(const char *path)
+TabBrowser::TabBrowser(const char *path) : TabBase(TAB_BROWSER)
 {
     LogFunctionName;
     _directory = new Directory(path, gEmulator->GetValidExtensions());
