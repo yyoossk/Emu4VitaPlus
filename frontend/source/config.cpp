@@ -109,5 +109,7 @@ bool Config::Load(const char *path)
         return false;
     }
 
+    const toml::table *tbl = &result.table();
+
     return true;
 }

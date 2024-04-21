@@ -1,9 +1,10 @@
 #include "string.h"
 #include "language.h"
+#include "global.h"
 
 Language::Language()
 {
-    Set(LANGUAGE_CHINESE);
+    Set(gConfig->language);
 }
 
 Language::~Language()
