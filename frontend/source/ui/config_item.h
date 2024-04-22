@@ -1,8 +1,9 @@
 #pragma once
 #include <imgui_vita2d/imgui_vita.h>
+#include "item_base.h"
 #include "global.h"
 
-class ConfigItem
+class ConfigItem : public virtual ItemBase
 {
 public:
     ConfigItem(size_t text_id, size_t *config, size_t sizeof_config, size_t config_text_start, size_t config_count);
@@ -20,8 +21,6 @@ private:
     void _OnKeyDown(Input *input);
     void _OnClick(Input *input);
     void _OnCancel(Input *input);
-
-    size_t _text_id;
 
     size_t *_config;
     size_t _config_mask;

@@ -9,7 +9,7 @@
 
 #define MAIN_WINDOW_PADDING 10
 
-#define TEXT(I) gLanguage->Get(I)
+#define TEXT(I) ((I) < TEXT_COUNT ? gTexts[gConfig->language][I] : "Unknown")
 
 enum APP_STATUS
 {
@@ -18,13 +18,12 @@ enum APP_STATUS
     APP_STATUS_EXIT
 };
 
+#include "language_define.h"
 #include "emulator.h"
 #include "ui.h"
 #include "config.h"
-#include "language.h"
 
 extern Ui *gUi;
 extern Emulator *gEmulator;
 extern APP_STATUS gStatus;
 extern Config *gConfig;
-extern Language *gLanguage;

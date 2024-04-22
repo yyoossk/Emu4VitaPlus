@@ -62,7 +62,6 @@ void TabBase::UnsetInputHooks(Input *input)
 
 void TabBase::Show(bool selected)
 {
-    LogFunctionName;
     if (ImGui::BeginTabItem(TEXT(_title_id), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
     {
         ImGui::Columns(2, NULL, false);

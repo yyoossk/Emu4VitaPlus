@@ -37,7 +37,7 @@ static const std::unordered_map<uint32_t, std::string> PSV_KEYS = {
     KEY_PAIR(SCE_CTRL_LSTICK_RIGHT),
 };
 
-Config::Config()
+Config::Config() : language(LANGUAGE_ENGLISH)
 {
     LogFunctionName;
     key_maps = {
@@ -83,7 +83,7 @@ bool Config::Save(const char *path)
     }
 
     toml::table main{
-        {"language", gLanguage->GetName()},
+        {"language", gLanguageNames[language]},
     };
 
     auto tbl = toml::table{{"MAIN", main}, {"KEYS", keys}};
@@ -109,6 +109,14 @@ bool Config::Load(const char *path)
 
     const toml::table tbl(std::move(result.table()));
     auto lang = tbl["MAIN"]["language"].ref<std::string>();
-    gLanguage->Set(lang.c_str());
+    for (size_t i = 0; i < LANGUAGE_COUNT; i++)
+    {
+        if (lang == gLanguageNames[i])
+        {
+            language = (LANGUAGE)i;
+            break;
+        }
+    }
+
     return true;
 }

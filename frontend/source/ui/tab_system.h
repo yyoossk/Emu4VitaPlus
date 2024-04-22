@@ -9,14 +9,13 @@ class TabSystem : public virtual TabBase
 public:
     TabSystem();
     virtual ~TabSystem();
-    // virtual void Show(bool selected);
 
 private:
     size_t _GetItemCount() { return _items.size(); };
     void _ShowItem(size_t index, bool selected);
-    // void _OnClick();
+    void _ActiveItem(Input *input, size_t index);
 
-    void _ExitApp(Input *input);
+    void _ExitApp();
 
-    std::array<ItemBase *, 1> _items;
+    std::array<ItemBase *, 2> _items;
 };

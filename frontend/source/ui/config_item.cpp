@@ -2,7 +2,7 @@
 #include "my_imgui.h"
 
 ConfigItem::ConfigItem(size_t text_id, size_t *config, size_t sizeof_config, size_t config_text_start, size_t config_count)
-    : _text_id(text_id),
+    : ItemBase(text_id),
       _config(config),
       _config_mask((1 << (sizeof_config * 8)) - 1),
       _config_text_start(config_text_start),

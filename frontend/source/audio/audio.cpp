@@ -1,9 +1,9 @@
 #include <speex/speex_resampler.h>
 #include <psp2/audioout.h>
 #include <string.h>
-#include "global.h"
 #include "audio.h"
 #include "log.h"
+#include "global.h"
 
 const uint32_t SAMPLE_RATES[] = {8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000};
 

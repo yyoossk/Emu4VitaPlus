@@ -23,7 +23,6 @@ App::App()
     sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
     sceTouchSetSamplingState(SCE_TOUCH_PORT_BACK, SCE_TOUCH_SAMPLING_STATE_START);
 
-    gLanguage = new Language();
     gConfig = new Config();
     gEmulator = new Emulator();
     gUi = new Ui("ux0:");
@@ -38,7 +37,6 @@ App::~App()
     delete gUi;
     delete gEmulator;
     delete gConfig;
-    delete gLanguage;
 
     sceAppUtilShutdown();
 }

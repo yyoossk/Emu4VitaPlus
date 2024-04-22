@@ -3,10 +3,12 @@
 #include "my_imgui.h"
 #include "global.h"
 
+typedef std::function<void()> ActiveFunc;
+
 class ItemBase
 {
 public:
-    ItemBase(size_t text_id, InputFunc active_callback = nullptr) : _text_id(text_id), _active_callback(active_callback){};
+    ItemBase(size_t text_id, ActiveFunc active_callback = nullptr) : _text_id(text_id), _active_callback(active_callback){};
     virtual ~ItemBase(){};
 
     virtual void Show(bool selected)
@@ -20,11 +22,11 @@ public:
     {
         if (_active_callback != nullptr)
         {
-            _active_callback(input);
+            _active_callback();
         }
     };
 
 protected:
     size_t _text_id;
-    InputFunc _active_callback;
+    ActiveFunc _active_callback;
 };
