@@ -2,11 +2,11 @@
 #include <imgui_vita2d/imgui_vita.h>
 #include "global.h"
 
-class MenuItem
+class ConfigItem
 {
 public:
-    MenuItem(size_t text_id, size_t *config, size_t sizeof_config, size_t config_text_start, size_t config_count);
-    virtual ~MenuItem();
+    ConfigItem(size_t text_id, size_t *config, size_t sizeof_config, size_t config_text_start, size_t config_count);
+    virtual ~ConfigItem();
 
     virtual void SetInputHooks(Input *input);
     virtual void UnsetInputHooks(Input *input);

@@ -2,7 +2,7 @@
 #include "array"
 #include "global.h"
 #include "tab_base.h"
-#include "menu_item.h"
+#include "config_item.h"
 
 #ifdef WANT_DISPLAY_ROTATE
 #define GRAPHICS_MENU_COUNT 6
@@ -22,5 +22,5 @@ private:
     size_t _GetItemCount() { return _items.size(); };
     void _OnClick(Input *input);
 
-    std::array<MenuItem *, GRAPHICS_MENU_COUNT> _items;
+    std::array<ConfigItem *, GRAPHICS_MENU_COUNT> _items;
 };
