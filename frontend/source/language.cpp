@@ -2,7 +2,7 @@
 #include "language.h"
 #include "global.h"
 
-Language::Language()
+Language::Language() : _lang(LANGUAGE_ENGLISH)
 {
 }
 
