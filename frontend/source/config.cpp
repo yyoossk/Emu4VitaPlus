@@ -61,8 +61,6 @@ Config::Config()
         {SCE_CTRL_LSTICK_RIGHT, RETRO_DEVICE_ID_JOYPAD_RIGHT},
     };
 
-    language = LANGUAGE_ENGLISH;
-
     Load(APP_CONFIG_PATH);
 }
 
@@ -85,7 +83,7 @@ bool Config::Save(const char *path)
     }
 
     toml::table main{
-        {"language", gLanguageNames[language]},
+        {"language", gLanguage->GetName()},
     };
 
     auto tbl = toml::table{{"MAIN", main}, {"KEYS", keys}};
@@ -109,7 +107,8 @@ bool Config::Load(const char *path)
         return false;
     }
 
-    const toml::table *tbl = &result.table();
-
+    const toml::table tbl(std::move(result.table()));
+    auto lang = tbl["MAIN"]["language"].ref<std::string>();
+    gLanguage->Set(lang.c_str());
     return true;
 }

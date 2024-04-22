@@ -14,7 +14,6 @@ public:
     bool Save(const char *path);
 
     std::vector<KeyMapConfig> key_maps;
-    LANGUAGE language;
     GraphicsConfig graphics_config;
 
 private:

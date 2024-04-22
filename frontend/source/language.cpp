@@ -4,7 +4,6 @@
 
 Language::Language()
 {
-    Set(gConfig->language);
 }
 
 Language::~Language()
