@@ -14,7 +14,7 @@ public:
     bool Save(const char *path);
 
     LANGUAGE language;
-    std::vector<KeyMapConfig> key_maps;
+    std::vector<ControlMapConfig> control_maps;
     GraphicsConfig graphics_config;
 
 private:

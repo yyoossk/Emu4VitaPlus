@@ -40,7 +40,7 @@ static const std::unordered_map<uint32_t, std::string> PSV_KEYS = {
 Config::Config() : language(LANGUAGE_ENGLISH)
 {
     LogFunctionName;
-    key_maps = {
+    control_maps = {
 #if defined(GBA_BUILD)
         {SCE_CTRL_CROSS, RETRO_DEVICE_ID_JOYPAD_B},
         {SCE_CTRL_TRIANGLE, RETRO_DEVICE_ID_JOYPAD_B, true},
@@ -74,7 +74,7 @@ bool Config::Save(const char *path)
 {
     LogFunctionName;
     toml::table keys;
-    for (const auto &k : key_maps)
+    for (const auto &k : control_maps)
     {
         toml::table t{{"psv", k.psv},
                       {"retro", k.retro},

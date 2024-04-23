@@ -3,14 +3,14 @@
 #include "tab_base.h"
 #include "item_base.h"
 
-class TabConfig : virtual public TabBase
+class TabSeletable : virtual public TabBase
 {
 public:
-    TabConfig(TEXT_ENUM title_id, std::vector<ItemBase *> items)
+    TabSeletable(TEXT_ENUM title_id, std::vector<ItemBase *> items)
         : TabBase(title_id),
           _items(std::move(items)){};
 
-    virtual ~TabConfig()
+    virtual ~TabSeletable()
     {
         for (auto &item : _items)
         {

@@ -491,28 +491,28 @@
     },
     {
         "No.": "58",
-        "Tag": "LANG_BUTTON_CROSS",
+        "Tag": "BUTTON_CROSS",
         "English": "×",
         "Chinese": "×",
         "Comments": ""
     },
     {
         "No.": "59",
-        "Tag": "LANG_BUTTON_CIRCLE",
+        "Tag": "BUTTON_CIRCLE",
         "English": "○",
         "Chinese": "○",
         "Comments": ""
     },
     {
         "No.": "60",
-        "Tag": "LANG_BUTTON_SQUARE",
+        "Tag": "BUTTON_SQUARE",
         "English": "□",
         "Chinese": "□",
         "Comments": ""
     },
     {
         "No.": "61",
-        "Tag": "LANG_BUTTON_TRIANGLE",
+        "Tag": "BUTTON_TRIANGLE",
         "English": "△",
         "Chinese": "△",
         "Comments": ""

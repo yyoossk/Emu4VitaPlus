@@ -1,5 +1,4 @@
 #pragma once
-#include <imgui_vita2d/imgui_vita.h>
 #include <vector>
 #include "language_string.h"
 #include "item_base.h"

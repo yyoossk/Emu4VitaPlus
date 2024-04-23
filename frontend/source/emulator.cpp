@@ -277,7 +277,7 @@ void Emulator::_SetupKeys()
 {
     LogFunctionName;
     memset(_keys, 0, sizeof(_keys));
-    for (const auto &k : gConfig->key_maps)
+    for (const auto &k : gConfig->control_maps)
     {
         if (k.retro >= 16)
         {

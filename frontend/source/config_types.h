@@ -1,6 +1,6 @@
 #pragma once
 
-struct KeyMapConfig
+struct ControlMapConfig
 {
     uint32_t psv;
     uint8_t retro;

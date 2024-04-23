@@ -1,3 +1,4 @@
+#include <imgui_vita2d/imgui_vita.h>
 #include "item_config.h"
 #include "my_imgui.h"
 
@@ -105,6 +106,7 @@ void ItemConfig<T>::_OnClick(Input *input)
     LogFunctionName;
     _actived = false;
     input->PopCallbacks();
+    gConfig->Save(APP_CONFIG_PATH);
 }
 
 template <typename T>
