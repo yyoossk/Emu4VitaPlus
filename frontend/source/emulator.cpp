@@ -2,9 +2,9 @@
 #include <string>
 #include <string.h>
 #include <stdint.h>
-#include "global.h"
 #include "emulator.h"
 #include "log.h"
+#include "global.h"
 
 #define CORE_OPTIONS_VERSION 2
 

@@ -1,9 +1,9 @@
 #include "tab_system.h"
-#include "config_item.h"
+#include "item_config.h"
 
 TabSystem::TabSystem() : TabBase(TAB_SYSTEM)
 {
-    //_items[0] = new ConfigItem(SYSTEM_MENU_LANGUAGE, &gConfig->language, sizeof(gConfig->language), )
+    _items[0] = new ItemConfig<decltype(gConfig->language)>(SYSTEM_MENU_LANGUAGE, &gConfig->language, {LanguageString(gLanguageNames[LANGUAGE_ENGLISH]), LanguageString(gLanguageNames[LANGUAGE_CHINESE])});
     _items[1] = new ItemBase(SYSTEM_MENU_EXIT, std::bind(&TabSystem::_ExitApp, this));
 }
 
