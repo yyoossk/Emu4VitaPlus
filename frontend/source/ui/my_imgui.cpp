@@ -10,6 +10,19 @@
 extern SceGxmProgram _binary_assets_imgui_v_cg_gxp_start;
 extern SceGxmProgram _binary_assets_imgui_f_cg_gxp_start;
 static vita2d_texture *gFontTexture = nullptr;
+const static ImWchar BUTTONS[] = {
+    0x00d7,
+    0x00d7,
+    0x2190,
+    0x2193,
+    0x25a1,
+    0x25a1,
+    0x25b3,
+    0x25b3,
+    0x25cb,
+    0x25cb,
+    0x0000,
+};
 
 namespace
 {
@@ -68,26 +81,27 @@ static void My_Imgui_Create_Font(LANGUAGE language)
     font_config.OversampleV = 1;
     font_config.PixelSnapH = 1;
 
-    const ImWchar *glyph_ranges = nullptr;
+    ImVector<ImWchar> ranges;
+    ImFontGlyphRangesBuilder builder;
+    builder.AddRanges(BUTTONS);
     switch (language)
     {
     case LANGUAGE_CHINESE:
-        glyph_ranges = GB_2312;
+        builder.AddRanges(GB_2312);
         break;
-    // case LANGUAGE_JAPANESE:
-    //     glyph_ranges = GetGlyphRangesJapanese();
-    //     break;
     case LANGUAGE_ENGLISH:
     default:
-        glyph_ranges = io.Fonts->GetGlyphRangesDefault();
+        builder.AddRanges(io.Fonts->GetGlyphRangesDefault());
     }
 
+    builder.BuildRanges(&ranges);
     io.Fonts->AddFontFromFileTTF(APP_ASSETS_DIR "/" FONT_PVF_NAME,
                                  25.0f,
                                  &font_config,
-                                 glyph_ranges);
+                                 ranges.Data);
     // io.Fonts->GetGlyphRangesChineseSimplifiedCommon());
     io.Fonts->GetTexDataAsRGBA32((uint8_t **)&pixels, &width, &height);
+
     gFontTexture = vita2d_create_empty_texture(width, height);
     const auto stride = vita2d_texture_get_stride(gFontTexture) / 4;
     auto texture_data = (uint32_t *)vita2d_texture_get_datap(gFontTexture);

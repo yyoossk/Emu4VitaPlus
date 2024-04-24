@@ -26,6 +26,8 @@ private:
     void _OnClick(Input *input);
     void _OnCancel(Input *input);
 
+    const char *_GetText() { return TEXT(_text_id); };
+
     T *_config;
     std::vector<LanguageString> _config_texts;
     T _old_config;

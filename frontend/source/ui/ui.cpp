@@ -4,6 +4,7 @@
 #include "log.h"
 #include "tab_selectable.h"
 #include "item_config.h"
+#include "item_control.h"
 #include "tab_browser.h"
 #include "tab_control.h"
 #include "tab_hotkey.h"
@@ -22,39 +23,45 @@ Ui::Ui(const char *path)
 {
     LogFunctionName;
 
-    _tabs[TAB_ITEM_SYSTEM] = new TabSeletable(TAB_SYSTEM, {new ItemConfig<decltype(gConfig->language)>(SYSTEM_MENU_LANGUAGE,
-                                                                                                       &gConfig->language,
-                                                                                                       {LanguageString(gLanguageNames[LANGUAGE_ENGLISH]),
-                                                                                                        LanguageString(gLanguageNames[LANGUAGE_CHINESE])}),
+    _tabs[TAB_ITEM_SYSTEM] = new TabSeletable(TAB_SYSTEM, {new ItemConfig(SYSTEM_MENU_LANGUAGE,
+                                                                          &gConfig->language,
+                                                                          {LanguageString(gLanguageNames[LANGUAGE_ENGLISH]),
+                                                                           LanguageString(gLanguageNames[LANGUAGE_CHINESE])}),
                                                            new ItemBase(SYSTEM_MENU_EXIT, ExitApp)});
     _tabs[TAB_ITEM_BROWSER] = new TabBrowser(path);
-    _tabs[TAB_ITEM_GRAPHICS] = new TabSeletable(TAB_GRAPHICS, {new ItemConfig<decltype(gConfig->graphics_config.size)>(GRAPHICS_MENU_DISPLAY_SIZE,
-                                                                                                                       &gConfig->graphics_config.size,
-                                                                                                                       DISPLAY_SIZE_1X,
-                                                                                                                       4),
-                                                               new ItemConfig<decltype(gConfig->graphics_config.ratio)>(GRAPHICS_MENU_ASPECT_RATIO,
-                                                                                                                        &gConfig->graphics_config.ratio,
-                                                                                                                        ASPECT_RATIO_BY_GAME_RESOLUTION,
-                                                                                                                        6),
+    _tabs[TAB_ITEM_GRAPHICS] = new TabSeletable(TAB_GRAPHICS, {new ItemConfig(GRAPHICS_MENU_DISPLAY_SIZE,
+                                                                              &gConfig->graphics_config.size,
+                                                                              DISPLAY_SIZE_1X,
+                                                                              4),
+                                                               new ItemConfig(GRAPHICS_MENU_ASPECT_RATIO,
+                                                                              &gConfig->graphics_config.ratio,
+                                                                              ASPECT_RATIO_BY_GAME_RESOLUTION,
+                                                                              6),
 #ifdef WANT_DISPLAY_ROTATE
                                                                new ItemConfig(GRAPHICS_MENU_DISPLAY_ROTATE, (size_t *)&gConfig->graphics_config.rotate,
                                                                               sizeof(gConfig->graphics_config.rotate),
                                                                               DISPLAY_ROTATE_DISABLE,
                                                                               5),
 #endif
-                                                               new ItemConfig<decltype(gConfig->graphics_config.shader)>(GRAPHICS_MENU_GRAPHICS_SHADER,
-                                                                                                                         &gConfig->graphics_config.shader,
-                                                                                                                         SHADER_DEFAULT,
-                                                                                                                         5),
-                                                               new ItemConfig<decltype(gConfig->graphics_config.smooth)>(GRAPHICS_MENU_GRAPHICS_SMOOTH,
-                                                                                                                         &gConfig->graphics_config.smooth,
-                                                                                                                         NO,
-                                                                                                                         2),
-                                                               new ItemConfig<decltype(gConfig->graphics_config.overlay_mode)>(GRAPHICS_MENU_OVERLAY_MODE,
-                                                                                                                               &gConfig->graphics_config.overlay_mode,
-                                                                                                                               OVERLAY_MODE_OVERLAY,
-                                                                                                                               2)});
-    _tabs[TAB_ITME_CONTROL] = new TabControl();
+                                                               new ItemConfig(GRAPHICS_MENU_GRAPHICS_SHADER,
+                                                                              &gConfig->graphics_config.shader,
+                                                                              SHADER_DEFAULT,
+                                                                              5),
+                                                               new ItemConfig(GRAPHICS_MENU_GRAPHICS_SMOOTH,
+                                                                              &gConfig->graphics_config.smooth,
+                                                                              NO,
+                                                                              2),
+                                                               new ItemConfig(GRAPHICS_MENU_OVERLAY_MODE,
+                                                                              &gConfig->graphics_config.overlay_mode,
+                                                                              OVERLAY_MODE_OVERLAY,
+                                                                              2)});
+    std::vector<ItemBase *> controls;
+    for (ControlMapConfig &cmap : gConfig->control_maps)
+    {
+        controls.emplace_back(new ItemControl(&cmap));
+    }
+
+    _tabs[TAB_ITME_CONTROL] = new TabSeletable(TAB_CONTROL, controls);
     _tabs[TAB_ITEM_HOTKEY] = new TabHotkey();
     _tabs[TAB_ITEM_CORE] = new TabCore();
     _tabs[TAB_ITEM_ABOUT] = new TabAbout();

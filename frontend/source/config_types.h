@@ -3,7 +3,7 @@
 struct ControlMapConfig
 {
     uint32_t psv;
-    uint8_t retro;
+    uint8_t retro = 0xff;
     bool turbo = false;
 };
 

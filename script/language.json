@@ -429,8 +429,8 @@
     {
         "No.": "52",
         "Tag": "BUTTON_HOME",
-        "English": "Home",
-        "Chinese": "Home",
+        "English": "PS",
+        "Chinese": "PS",
         "Comments": ""
     },
     {
@@ -515,6 +515,13 @@
         "Tag": "BUTTON_TRIANGLE",
         "English": "△",
         "Chinese": "△",
+        "Comments": ""
+    },
+    {
+        "No.": "62",
+        "Tag": "TURBO",
+        "English": "Turbo",
+        "Chinese": "连发",
         "Comments": ""
     }
 ]

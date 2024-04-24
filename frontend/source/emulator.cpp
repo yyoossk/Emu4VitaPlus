@@ -279,6 +279,11 @@ void Emulator::_SetupKeys()
     memset(_keys, 0, sizeof(_keys));
     for (const auto &k : gConfig->control_maps)
     {
+        if (k.retro == 0xff)
+        {
+            continue;
+        }
+
         if (k.retro >= 16)
         {
             LogError("wrong key config: %d %08x", k.retro, k.psv);
