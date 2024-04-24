@@ -11,6 +11,7 @@ public:
     virtual void SetInputHooks(Input *input);
     virtual void UnsetInputHooks(Input *input);
     void Show(bool selected);
+    virtual void OnActive(Input *input);
 
 private:
     void _OnKeyUp(Input *input);

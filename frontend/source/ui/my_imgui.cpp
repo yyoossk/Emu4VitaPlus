@@ -99,7 +99,7 @@ static void My_Imgui_Create_Font(LANGUAGE language)
                                  25.0f,
                                  &font_config,
                                  ranges.Data);
-    // io.Fonts->GetGlyphRangesChineseSimplifiedCommon());
+
     io.Fonts->GetTexDataAsRGBA32((uint8_t **)&pixels, &width, &height);
 
     gFontTexture = vita2d_create_empty_texture(width, height);

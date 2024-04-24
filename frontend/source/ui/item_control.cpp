@@ -50,6 +50,19 @@ static std::unordered_map<uint8_t, TEXT_ENUM> RetroTextMap = {
     {RETRO_DEVICE_ID_JOYPAD_R3, BUTTON_R3},
 };
 
+static uint8_t RetroKeys[] = {
+    RETRO_DEVICE_ID_JOYPAD_UP,
+    RETRO_DEVICE_ID_JOYPAD_DOWN,
+    RETRO_DEVICE_ID_JOYPAD_LEFT,
+    RETRO_DEVICE_ID_JOYPAD_RIGHT,
+#if defined(GBA_BUILD)
+    RETRO_DEVICE_ID_JOYPAD_A,
+    RETRO_DEVICE_ID_JOYPAD_B,
+    RETRO_DEVICE_ID_JOYPAD_L,
+    RETRO_DEVICE_ID_JOYPAD_R,
+#endif
+};
+
 ItemControl::ItemControl(ControlMapConfig *control_map)
     : ItemBase(ControlTextMap[control_map->psv]),
       _control_map(control_map),
@@ -89,24 +102,34 @@ void ItemControl::Show(bool selected)
         ImGui::OpenPopup(_GetText());
     }
 
-    // if (MyBeginCombo(_GetText(), _config_texts[GetConfig()].Get(), ImGuiComboFlags_NoArrowButton))
-    // {
-    //     if (!_actived && is_popup)
-    //     {
-    //         ImGui::CloseCurrentPopup();
-    //     }
-    //     for (size_t i = 0; i < _config_texts.size(); i++)
-    //     {
-    //         ImGui::Selectable(_config_texts[i].Get(), GetConfig() == i);
-    //         if (GetConfig() == i)
-    //         {
-    //             ImGui::SetItemDefaultFocus();
-    //         }
-    //     }
-    //     ImGui::EndCombo();
-    // }
+    if (MyBeginCombo(_GetText(), TEXT(RetroTextMap[_control_map->retro]), ImGuiComboFlags_NoArrowButton))
+    {
+        if (!_actived && is_popup)
+        {
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::Checkbox(TEXT(TURBO), &_control_map->turbo);
+        for (size_t i = 0; i < sizeof(RetroKeys) / sizeof(RetroKeys[0]); i++)
+        {
+            ImGui::Selectable(TEXT(RetroTextMap[RetroKeys[i]]), _control_map->retro + 1 == i);
+            if (_control_map->retro + 1 == i)
+            {
+                ImGui::SetItemDefaultFocus();
+            }
+        }
+
+        ImGui::EndCombo();
+    }
 
     ImGui::NextColumn();
+}
+
+void ItemControl::OnActive(Input *input)
+{
+    LogFunctionName;
+    _actived = true;
+    input->PushCallbacks();
+    SetInputHooks(input);
 }
 
 void ItemControl::_OnKeyUp(Input *input)
@@ -119,10 +142,16 @@ void ItemControl::_OnKeyDown(Input *input)
 
 void ItemControl::_OnClick(Input *input)
 {
+    LogFunctionName;
+    _actived = false;
+    input->PopCallbacks();
 }
 
 void ItemControl::_OnCancel(Input *input)
 {
+    LogFunctionName;
+    _actived = false;
+    input->PopCallbacks();
 }
 
 const char *ItemControl::_GetText()

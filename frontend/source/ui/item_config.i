@@ -39,14 +39,12 @@ void ItemConfig<T>::Show(bool selected)
     if (_actived && !is_popup)
     {
         ImGui::OpenPopup(_GetText());
-        LogDebug("open!!!");
     }
 
     if (MyBeginCombo(_GetText(), _config_texts[GetConfig()].Get(), ImGuiComboFlags_NoArrowButton))
     {
         if (!_actived && is_popup)
         {
-            LogDebug("close!!!");
             ImGui::CloseCurrentPopup();
         }
         for (size_t i = 0; i < _config_texts.size(); i++)
@@ -117,8 +115,8 @@ void ItemConfig<T>::_OnCancel(Input *input)
 {
     LogFunctionName;
     _actived = false;
-    SetConfig(_old_config);
     input->PopCallbacks();
+    SetConfig(_old_config);
 }
 
 template <typename T>
