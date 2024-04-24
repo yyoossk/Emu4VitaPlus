@@ -34,6 +34,7 @@ private:
 
     void _ActiveItem(Input *input, size_t index)
     {
+        LogFunctionName;
         if (index < _items.size())
         {
             _items[index]->OnActive(input);

@@ -89,6 +89,23 @@ void ItemControl::Show(bool selected)
         ImGui::OpenPopup(_GetText());
     }
 
+    // if (MyBeginCombo(_GetText(), _config_texts[GetConfig()].Get(), ImGuiComboFlags_NoArrowButton))
+    // {
+    //     if (!_actived && is_popup)
+    //     {
+    //         ImGui::CloseCurrentPopup();
+    //     }
+    //     for (size_t i = 0; i < _config_texts.size(); i++)
+    //     {
+    //         ImGui::Selectable(_config_texts[i].Get(), GetConfig() == i);
+    //         if (GetConfig() == i)
+    //         {
+    //             ImGui::SetItemDefaultFocus();
+    //         }
+    //     }
+    //     ImGui::EndCombo();
+    // }
+
     ImGui::NextColumn();
 }
 

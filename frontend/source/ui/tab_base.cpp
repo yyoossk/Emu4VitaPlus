@@ -64,12 +64,23 @@ void TabBase::Show(bool selected)
 {
     if (ImGui::BeginTabItem(TEXT(_title_id), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
     {
+        // auto size = ImGui::GetContentRegionAvail();
+        // ImGui::ListBoxHeader("", {size.x, size.y});
+
+        // ImGui::BeginChild(TEXT(_title_id));
         ImGui::Columns(2, NULL, false);
         for (size_t i = 0; i < _GetItemCount(); i++)
         {
             _ShowItem(i, i == _index);
+            // if (i == _index && ImGui::GetScrollMaxY() > 0.f)
+            // {
+            //     ImGui::SetScrollHereY((float)_index / (float)_GetItemCount());
+            // }
         }
         ImGui::Columns(1);
+        // ImGui::EndChild();
+
+        // ImGui::ListBoxFooter();
         ImGui::EndTabItem();
     }
 }

@@ -39,12 +39,14 @@ void ItemConfig<T>::Show(bool selected)
     if (_actived && !is_popup)
     {
         ImGui::OpenPopup(_GetText());
+        LogDebug("open!!!");
     }
 
     if (MyBeginCombo(_GetText(), _config_texts[GetConfig()].Get(), ImGuiComboFlags_NoArrowButton))
     {
         if (!_actived && is_popup)
         {
+            LogDebug("close!!!");
             ImGui::CloseCurrentPopup();
         }
         for (size_t i = 0; i < _config_texts.size(); i++)
@@ -64,6 +66,7 @@ void ItemConfig<T>::Show(bool selected)
 template <typename T>
 void ItemConfig<T>::OnActive(Input *input)
 {
+    LogFunctionName;
     _actived = true;
     _old_config = GetConfig();
     input->PushCallbacks();
