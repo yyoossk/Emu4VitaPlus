@@ -530,5 +530,61 @@
         "English": "None",
         "Chinese": "无",
         "Comments": ""
+    },
+    {
+        "No.": "64",
+        "Tag": "HOTKEY_SAVESTATE",
+        "English": "Save state",
+        "Chinese": "保存存档",
+        "Comments": ""
+    },
+    {
+        "No.": "65",
+        "Tag": "HOTKEY_LOADSTATE",
+        "English": "Load state",
+        "Chinese": "读取存档",
+        "Comments": ""
+    },
+    {
+        "No.": "66",
+        "Tag": "HOTKEY_GAME_SPEED_UP",
+        "English": "Game speed up",
+        "Chinese": "加速游戏",
+        "Comments": ""
+    },
+    {
+        "No.": "67",
+        "Tag": "HOTKEY_GAME_SPEED_DOWN",
+        "English": "Game speed down",
+        "Chinese": "减速游戏",
+        "Comments": ""
+    },
+    {
+        "No.": "68",
+        "Tag": "HOTKEY_GAME_REWIND",
+        "English": "Game rewind",
+        "Chinese": "回溯游戏",
+        "Comments": ""
+    },
+    {
+        "No.": "69",
+        "Tag": "HOTKEY_CONTROLLER_PORT_UP",
+        "English": "Controller port +",
+        "Chinese": "控制器端口+",
+        "Comments": ""
+    },
+    {
+        "No.": "70",
+        "Tag": "HOTKEY_CONTROLLER_PORT_DOWN",
+        "English": "Controller port -",
+        "Chinese": "控制器端口-",
+        "Comments": ""
+    },
+    {
+        "No.": "71",
+        "Tag": "HOTKEY_EXIT_GAME               ",
+        "English": "Exit game",
+        "Chinese": "退出游戏",
+        "Comments": ""
     }
 ]

@@ -31,29 +31,29 @@ Ui::Ui(const char *path)
     _tabs[TAB_ITEM_GRAPHICS] = new TabSeletable(TAB_GRAPHICS, {new ItemConfig(GRAPHICS_MENU_DISPLAY_SIZE,
                                                                               &gConfig->graphics_config.size,
                                                                               DISPLAY_SIZE_1X,
-                                                                              4),
+                                                                              CONFIG_DISPLAY_SIZE_COUNT),
                                                                new ItemConfig(GRAPHICS_MENU_ASPECT_RATIO,
                                                                               &gConfig->graphics_config.ratio,
                                                                               ASPECT_RATIO_BY_GAME_RESOLUTION,
-                                                                              6),
+                                                                              CONFIG_DISPLAY_RATIO_COUNT),
 #ifdef WANT_DISPLAY_ROTATE
                                                                new ItemConfig(GRAPHICS_MENU_DISPLAY_ROTATE, (size_t *)&gConfig->graphics_config.rotate,
                                                                               sizeof(gConfig->graphics_config.rotate),
                                                                               DISPLAY_ROTATE_DISABLE,
-                                                                              5),
+                                                                              CONFIG_DISPLAY_ROTATE_COUNT),
 #endif
                                                                new ItemConfig(GRAPHICS_MENU_GRAPHICS_SHADER,
                                                                               &gConfig->graphics_config.shader,
                                                                               SHADER_DEFAULT,
-                                                                              5),
+                                                                              CONFIG_GRAPHICS_SHADER_COUNT),
                                                                new ItemConfig(GRAPHICS_MENU_GRAPHICS_SMOOTH,
                                                                               &gConfig->graphics_config.smooth,
                                                                               NO,
-                                                                              2),
+                                                                              CONFIG_GRAPHICS_SMOOTHER_COUNT),
                                                                new ItemConfig(GRAPHICS_MENU_OVERLAY_MODE,
                                                                               &gConfig->graphics_config.overlay_mode,
                                                                               OVERLAY_MODE_OVERLAY,
-                                                                              2)});
+                                                                              CONFIG_GRAPHICS_OVERLAY_MODE_COUNT)});
     std::vector<ItemBase *> controls;
     for (ControlMapConfig &cmap : gConfig->control_maps)
     {

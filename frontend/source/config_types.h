@@ -1,5 +1,5 @@
 #pragma once
-
+#include <stdint.h>
 #define RETRO_DEVICE_ID_NONE 0xFF
 
 struct ControlMapConfig
@@ -9,12 +9,26 @@ struct ControlMapConfig
     bool turbo = false;
 };
 
+enum HotKeyConfig
+{
+    SAVE_STATE = 0,
+    LOAD_STATE,
+    GAME_SPEED_UP,
+    GAME_SPEED_DOWN,
+    GAME_REWIND,
+    CONTROLLER_PORT_UP,
+    CONTROLLER_PORT_DOWN,
+    EXIT_GAME,
+    HOT_KEY_COUNT
+};
+
 enum DisplaySizeConfig
 {
     CONFIG_DISPLAY_SIZE_1X = 0,
     CONFIG_DISPLAY_SIZE_2X,
     CONFIG_DISPLAY_SIZE_3X,
     CONFIG_DISPLAY_SIZE_FULL,
+    CONFIG_DISPLAY_SIZE_COUNT,
 };
 
 enum DisplayRatioConfig
@@ -25,6 +39,7 @@ enum DisplayRatioConfig
     CONFIG_DISPLAY_RATIO_4_3,
     CONFIG_DISPLAY_RATIO_3_2,
     CONFIG_DISPLAY_RATIO_16_9,
+    CONFIG_DISPLAY_RATIO_COUNT,
 };
 
 enum DisplayRotateConfig
@@ -34,6 +49,7 @@ enum DisplayRotateConfig
     CONFIG_DISPLAY_ROTATE_CW_180,
     CONFIG_DISPLAY_ROTATE_CW_270,
     CONFIG_DISPLAY_ROTATE_DEFAULT,
+    CONFIG_DISPLAY_ROTATE_COUNT,
 };
 
 enum GraphicsShaderConfig
@@ -43,18 +59,21 @@ enum GraphicsShaderConfig
     CONFIG_GRAPHICS_SHADER_SHARP_BILINEAR_SIMPLE,
     CONFIG_GRAPHICS_SHADER_SHARP_BILINEAR,
     CONFIG_GRAPHICS_SHADER_ADVANCED_AA,
+    CONFIG_GRAPHICS_SHADER_COUNT,
 };
 
 enum GraphicsSmooth
 {
     CONFIG_GRAPHICS_SMOOTHER_NO,
     CONFIG_GRAPHICS_SMOOTHER_YES,
+    CONFIG_GRAPHICS_SMOOTHER_COUNT,
 };
 
 enum GraphicsOverlayModeConfig
 {
     CONFIG_GRAPHICS_OVERLAY_MODE_OVERLAY = 0,
     CONFIG_GRAPHICS_OVERLAY_MODE_BACKGROUND,
+    CONFIG_GRAPHICS_OVERLAY_MODE_COUNT,
 };
 
 struct GraphicsConfig

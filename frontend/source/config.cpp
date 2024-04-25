@@ -48,6 +48,20 @@ static const std::unordered_map<uint32_t, std::string> PSV_KEYS = {
 Config::Config() : language(LANGUAGE_ENGLISH)
 {
     LogFunctionName;
+    if (!Load(APP_CONFIG_PATH))
+    {
+        Default();
+    }
+}
+
+Config::~Config()
+{
+    LogFunctionName;
+    Save(APP_CONFIG_PATH);
+}
+
+void Config::Default()
+{
     control_maps = {
 #if defined(GBA_BUILD)
         {SCE_CTRL_UP, RETRO_DEVICE_ID_JOYPAD_UP},
@@ -77,13 +91,12 @@ Config::Config() : language(LANGUAGE_ENGLISH)
         {SCE_CTRL_RSTICK_RIGHT},
     };
 
-    Load(APP_CONFIG_PATH);
-}
-
-Config::~Config()
-{
-    LogFunctionName;
-    Save(APP_CONFIG_PATH);
+    graphics_config.size = CONFIG_DISPLAY_SIZE_FULL;
+    graphics_config.ratio = CONFIG_DISPLAY_RATIO_BY_GAME_RESOLUTION;
+    graphics_config.rotate = CONFIG_DISPLAY_ROTATE_DEFAULT;
+    graphics_config.shader = CONFIG_GRAPHICS_SHADER_DEFAULT;
+    graphics_config.smooth = CONFIG_GRAPHICS_SMOOTHER_NO;
+    graphics_config.overlay_mode = CONFIG_GRAPHICS_OVERLAY_MODE_OVERLAY;
 }
 
 bool Config::Save(const char *path)
