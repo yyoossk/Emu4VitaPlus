@@ -6,7 +6,6 @@
 #include "item_config.h"
 #include "item_control.h"
 #include "tab_browser.h"
-#include "tab_control.h"
 #include "tab_hotkey.h"
 #include "tab_core.h"
 #include "tab_about.h"
@@ -91,11 +90,8 @@ void Ui::_OnKeyL2(Input *input)
     // LogFunctionName;
     _tabs[_tab_index]->UnsetInputHooks(&_input);
 
-    do
-    {
-        _tab_index += TAB_ITEM_COUNT - 1;
-        _tab_index %= TAB_ITEM_COUNT;
-    } while (!_tabs[_tab_index]->Visable());
+    _tab_index += TAB_ITEM_COUNT - 1;
+    _tab_index %= TAB_ITEM_COUNT;
 
     _tabs[_tab_index]->SetInputHooks(&_input);
 }
@@ -105,11 +101,8 @@ void Ui::_OnKeyR2(Input *input)
     // LogFunctionName;
     _tabs[_tab_index]->UnsetInputHooks(&_input);
 
-    do
-    {
-        _tab_index++;
-        _tab_index %= TAB_ITEM_COUNT;
-    } while (!_tabs[_tab_index]->Visable());
+    _tab_index++;
+    _tab_index %= TAB_ITEM_COUNT;
 
     _tabs[_tab_index]->SetInputHooks(&_input);
 }
@@ -134,10 +127,7 @@ void Ui::Show()
     {
         for (size_t i = 0; i < _tabs.size(); i++)
         {
-            if (_tabs[i]->Visable())
-            {
-                _tabs[i]->Show(_tab_index == i);
-            }
+            _tabs[i]->Show(_tab_index == i);
         }
         ImGui::EndTabBar();
     }

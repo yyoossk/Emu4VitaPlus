@@ -492,8 +492,8 @@
     {
         "No.": "58",
         "Tag": "BUTTON_CROSS",
-        "English": "×",
-        "Chinese": "×",
+        "English": "╳",
+        "Chinese": "╳",
         "Comments": ""
     },
     {
@@ -522,6 +522,13 @@
         "Tag": "TURBO",
         "English": "Turbo",
         "Chinese": "连发",
+        "Comments": ""
+    },
+    {
+        "No.": "63",
+        "Tag": "NONE",
+        "English": "None",
+        "Chinese": "无",
         "Comments": ""
     }
 ]

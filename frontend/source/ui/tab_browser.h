@@ -15,7 +15,7 @@ public:
 private:
     size_t _GetItemCount() { return _directory->GetSize(); };
     void _OnKeyCross(Input *input);
-    void _OnClick(Input *input);
+    void _OnActive(Input *input);
 
     Directory *_directory;
 };

@@ -1,10 +1,9 @@
 #include "tab_base.h"
 #include "global.h"
 
-TabBase::TabBase(TEXT_ENUM title_id, bool visable)
+TabBase::TabBase(TEXT_ENUM title_id)
     : _title_id(title_id),
-      _index(0),
-      _visable(visable)
+      _index(0)
 {
 }
 
@@ -50,7 +49,8 @@ void TabBase::SetInputHooks(Input *input)
 {
     input->SetKeyDownCallback(SCE_CTRL_UP, std::bind(&TabBase::_OnKeyUp, this, input), true);
     input->SetKeyDownCallback(SCE_CTRL_DOWN, std::bind(&TabBase::_OnKeyDown, this, input), true);
-    input->SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&TabBase::_OnClick, this, input));
+    input->SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&TabBase::_OnActive, this, input));
+    input->SetKeyUpCallback(SCE_CTRL_TRIANGLE, std::bind(&TabBase::_OnOption, this, input));
 }
 
 void TabBase::UnsetInputHooks(Input *input)
@@ -58,6 +58,7 @@ void TabBase::UnsetInputHooks(Input *input)
     input->UnsetKeyDownCallback(SCE_CTRL_UP);
     input->UnsetKeyDownCallback(SCE_CTRL_DOWN);
     input->UnsetKeyUpCallback(SCE_CTRL_CIRCLE);
+    input->UnsetKeyUpCallback(SCE_CTRL_TRIANGLE);
 }
 
 void TabBase::Show(bool selected)

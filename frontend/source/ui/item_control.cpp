@@ -48,9 +48,11 @@ static std::unordered_map<uint8_t, TEXT_ENUM> RetroTextMap = {
     {RETRO_DEVICE_ID_JOYPAD_R2, BUTTON_R2},
     {RETRO_DEVICE_ID_JOYPAD_L3, BUTTON_L3},
     {RETRO_DEVICE_ID_JOYPAD_R3, BUTTON_R3},
+    {RETRO_DEVICE_ID_NONE, NONE},
 };
 
 static uint8_t RetroKeys[] = {
+    RETRO_DEVICE_ID_NONE,
     RETRO_DEVICE_ID_JOYPAD_UP,
     RETRO_DEVICE_ID_JOYPAD_DOWN,
     RETRO_DEVICE_ID_JOYPAD_LEFT,
@@ -62,6 +64,8 @@ static uint8_t RetroKeys[] = {
     RETRO_DEVICE_ID_JOYPAD_R,
 #endif
 };
+
+#define RETRO_KEYS_SIZE (sizeof(RetroKeys) / sizeof(RetroKeys[0]))
 
 ItemControl::ItemControl(ControlMapConfig *control_map)
     : ItemBase(ControlTextMap[control_map->psv]),
@@ -108,18 +112,23 @@ void ItemControl::Show(bool selected)
         {
             ImGui::CloseCurrentPopup();
         }
-        ImGui::Checkbox(TEXT(TURBO), &_control_map->turbo);
-        for (size_t i = 0; i < sizeof(RetroKeys) / sizeof(RetroKeys[0]); i++)
+        for (size_t i = 0; i < RETRO_KEYS_SIZE; i++)
         {
-            ImGui::Selectable(TEXT(RetroTextMap[RetroKeys[i]]), _control_map->retro + 1 == i);
-            if (_control_map->retro + 1 == i)
+            ImGui::Selectable(TEXT(RetroTextMap[RetroKeys[i]]), _control_map->retro == RetroKeys[i]);
+            if (_control_map->retro == RetroKeys[i])
             {
                 ImGui::SetItemDefaultFocus();
+                if (ImGui::GetScrollMaxY() > 0.f)
+                {
+                    ImGui::SetScrollHereY((float)i / (float)RETRO_KEYS_SIZE);
+                }
             }
         }
 
         ImGui::EndCombo();
     }
+    ImGui::SameLine();
+    ImGui::Checkbox(TEXT(TURBO), &_control_map->turbo);
 
     ImGui::NextColumn();
 }
@@ -128,16 +137,53 @@ void ItemControl::OnActive(Input *input)
 {
     LogFunctionName;
     _actived = true;
+    _old_retro = _control_map->retro;
     input->PushCallbacks();
     SetInputHooks(input);
 }
 
+void ItemControl::OnOption(Input *input)
+{
+    LogFunctionName;
+    _control_map->turbo = !_control_map->turbo;
+}
+
+uint8_t ItemControl::_GetCurrentRetroIndex()
+{
+    for (uint8_t i = 0; i < RETRO_KEYS_SIZE; i++)
+    {
+        if (RetroKeys[i] == _control_map->retro)
+        {
+            return i;
+        }
+    }
+    return 0;
+}
+
 void ItemControl::_OnKeyUp(Input *input)
 {
+    uint8_t current = _GetCurrentRetroIndex();
+    if (current == 0)
+    {
+        _control_map->retro = RetroKeys[RETRO_KEYS_SIZE - 1];
+    }
+    else
+    {
+        _control_map->retro = RetroKeys[current - 1];
+    }
 }
 
 void ItemControl::_OnKeyDown(Input *input)
 {
+    uint8_t current = _GetCurrentRetroIndex();
+    if (current == RETRO_KEYS_SIZE - 1)
+    {
+        _control_map->retro = RetroKeys[0];
+    }
+    else
+    {
+        _control_map->retro = RetroKeys[current + 1];
+    }
 }
 
 void ItemControl::_OnClick(Input *input)
@@ -152,6 +198,7 @@ void ItemControl::_OnCancel(Input *input)
     LogFunctionName;
     _actived = false;
     input->PopCallbacks();
+    _control_map->retro = _old_retro;
 }
 
 const char *ItemControl::_GetText()

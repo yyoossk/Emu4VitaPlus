@@ -19,27 +19,36 @@ public:
     };
 
 private:
-    size_t _GetItemCount()
+    size_t _GetItemCount() override
     {
         return _items.size();
     };
 
-    void _ShowItem(size_t index, bool selected)
+    void _ShowItem(size_t index, bool selected) override
     {
         if (index < _items.size())
         {
             _items[index]->Show(selected);
         }
-    }
+    };
 
-    void _ActiveItem(Input *input, size_t index)
+    void _OnActive(Input *input) override
     {
         LogFunctionName;
-        if (index < _items.size())
+        if (_index < _items.size())
         {
-            _items[index]->OnActive(input);
+            _items[_index]->OnActive(input);
         }
-    }
+    };
+
+    void _OnOption(Input *input) override
+    {
+        LogFunctionName;
+        if (_index < _items.size())
+        {
+            _items[_index]->OnOption(input);
+        }
+    };
 
     std::vector<ItemBase *> _items;
 };
