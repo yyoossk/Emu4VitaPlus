@@ -5,8 +5,8 @@
 #include "tab_selectable.h"
 #include "item_config.h"
 #include "item_control.h"
+#include "item_hotkey.h"
 #include "tab_browser.h"
-#include "tab_hotkey.h"
 #include "tab_core.h"
 #include "tab_about.h"
 #include "global.h"
@@ -61,7 +61,14 @@ Ui::Ui(const char *path)
     }
 
     _tabs[TAB_ITME_CONTROL] = new TabSeletable(TAB_CONTROL, controls);
-    _tabs[TAB_ITEM_HOTKEY] = new TabHotkey();
+
+    std::vector<ItemBase *> hotkeys;
+    for (size_t i = 0; i < HOT_KEY_COUNT; i++)
+    {
+        hotkeys.emplace_back(new ItemHotkey((HotKeyConfig)i, &gConfig->hotkeys[i]));
+    }
+
+    _tabs[TAB_ITEM_HOTKEY] = new TabSeletable(TAB_HOTKEY, hotkeys);
     _tabs[TAB_ITEM_CORE] = new TabCore();
     _tabs[TAB_ITEM_ABOUT] = new TabAbout();
 
@@ -127,7 +134,10 @@ void Ui::Show()
     {
         for (size_t i = 0; i < _tabs.size(); i++)
         {
-            _tabs[i]->Show(_tab_index == i);
+            if (_tabs[i]->Visable())
+            {
+                _tabs[i]->Show(_tab_index == i);
+            }
         }
         ImGui::EndTabBar();
     }

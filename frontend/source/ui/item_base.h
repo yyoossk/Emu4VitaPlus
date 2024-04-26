@@ -17,7 +17,7 @@ public:
 
     virtual void Show(bool selected)
     {
-        ImGui::Selectable(TEXT(_text_id), selected);
+        ImGui::Selectable(GetText(), selected);
         ImGui::NextColumn();
         ImGui::NextColumn();
     };
@@ -37,6 +37,8 @@ public:
             _option_callback();
         }
     }
+
+    const char *GetText() { return TEXT(_text_id); };
 
 protected:
     size_t _text_id;

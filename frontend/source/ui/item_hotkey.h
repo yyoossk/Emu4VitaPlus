@@ -1,28 +1,27 @@
 #pragma once
 #include <stdint.h>
+#include <string>
 #include "item_base.h"
-#include "global.h"
 
-class ItemControl : public virtual ItemBase
+class ItemHotkey : public virtual ItemBase
 {
 public:
-    ItemControl(ControlMapConfig *control_map);
-    virtual ~ItemControl();
+    ItemHotkey(HotKeyConfig index, uint32_t *hotkey);
+    virtual ~ItemHotkey();
 
     virtual void SetInputHooks(Input *input);
     virtual void UnsetInputHooks(Input *input);
     void Show(bool selected);
     virtual void OnActive(Input *input);
-    virtual void OnOption(Input *input);
 
 private:
+    const char *_GetPreviewText();
     void _OnKeyUp(Input *input);
     void _OnKeyDown(Input *input);
     void _OnClick(Input *input);
-    void _OnCancel(Input *input);
-    uint8_t _GetCurrentRetroIndex();
+    void _OnQuit(Input *input);
 
-    ControlMapConfig *_control_map;
-    uint8_t _old_retro;
+    uint32_t *_hotkey;
     bool _actived;
+    size_t _index;
 };

@@ -31,17 +31,18 @@ ItemConfig<T>::~ItemConfig()
 template <typename T>
 void ItemConfig<T>::Show(bool selected)
 {
-    ImGui::Selectable(_GetText(), selected);
+    const char *text = GetText();
+    ImGui::Selectable(text, selected);
     ImGui::NextColumn();
 
-    bool is_popup = ImGui::IsPopupOpen(_GetText());
+    bool is_popup = ImGui::IsPopupOpen(text);
 
     if (_actived && !is_popup)
     {
-        ImGui::OpenPopup(_GetText());
+        ImGui::OpenPopup(text);
     }
 
-    if (MyBeginCombo(_GetText(), _config_texts[GetConfig()].Get(), ImGuiComboFlags_NoArrowButton))
+    if (MyBeginCombo(text, _config_texts[GetConfig()].Get(), ImGuiComboFlags_NoArrowButton))
     {
         if (!_actived && is_popup)
         {

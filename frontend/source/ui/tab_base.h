@@ -6,13 +6,15 @@
 class TabBase
 {
 public:
-    TabBase(TEXT_ENUM title_id);
+    TabBase(TEXT_ENUM title_id, bool visable = true);
 
     virtual ~TabBase();
 
     virtual void SetInputHooks(Input *input);
     virtual void UnsetInputHooks(Input *input);
     virtual void Show(bool selected);
+    void SetVisable(bool visable) { _visable = visable; };
+    bool Visable() { return _visable; };
 
 protected:
     virtual void _ShowItem(size_t index, bool selected){};
@@ -25,4 +27,5 @@ protected:
 
     TEXT_ENUM _title_id;
     size_t _index;
+    bool _visable;
 };

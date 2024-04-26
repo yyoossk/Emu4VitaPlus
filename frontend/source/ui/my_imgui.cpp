@@ -97,10 +97,12 @@ static void My_Imgui_Create_Font(LANGUAGE language)
     }
 
     builder.BuildRanges(&ranges);
-    io.Fonts->AddFontFromFileTTF(APP_ASSETS_DIR "/" FONT_PVF_NAME,
-                                 25.0f,
-                                 &font_config,
-                                 ranges.Data);
+    const char *font_name = "sa0:data/font/pvf/cn0.pvf";
+    io.Fonts->AddFontFromFileTTF( // APP_ASSETS_DIR "/" FONT_PVF_NAME,
+        font_name,
+        25.0f,
+        &font_config,
+        ranges.Data);
 
     io.Fonts->GetTexDataAsRGBA32((uint8_t **)&pixels, &width, &height);
 

@@ -1,9 +1,10 @@
 #include "tab_base.h"
 #include "global.h"
 
-TabBase::TabBase(TEXT_ENUM title_id)
+TabBase::TabBase(TEXT_ENUM title_id, bool visable)
     : _title_id(title_id),
-      _index(0)
+      _index(0),
+      _visable(visable)
 {
 }
 
