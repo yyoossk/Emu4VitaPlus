@@ -10,21 +10,14 @@
 extern SceGxmProgram _binary_assets_imgui_v_cg_gxp_start;
 extern SceGxmProgram _binary_assets_imgui_f_cg_gxp_start;
 static vita2d_texture *gFontTexture = nullptr;
-const static ImWchar BUTTONS[] = {
-    0x00d7,
-    0x00d7,
-    0x2190,
-    0x2193,
-    0x2573,
-    0x2573,
-    0x25a1,
-    0x25a1,
-    0x25b3,
-    0x25b3,
-    0x25cb,
-    0x25cb,
-    0x0000,
-};
+const static ImWchar GamePadCharset[] = {0x219c, 0x21a1,
+                                         0x21b0, 0x21b3,
+                                         0x21bc, 0x21c3,
+                                         0x21d0, 0x21d3,
+                                         0x21e0, 0x21e3,
+                                         0x21f7, 0x21f8,
+                                         0xe000, 0xe000,
+                                         0x0000};
 
 namespace
 {
@@ -83,27 +76,29 @@ static void My_Imgui_Create_Font(LANGUAGE language)
     font_config.OversampleV = 1;
     font_config.PixelSnapH = 1;
 
-    ImVector<ImWchar> ranges;
-    ImFontGlyphRangesBuilder builder;
-    builder.AddRanges(BUTTONS);
+    const ImWchar *glyph_ranges = nullptr;
     switch (language)
     {
     case LANGUAGE_CHINESE:
-        builder.AddRanges(GB_2312);
+        glyph_ranges = GB_2312;
         break;
+    // case LANGUAGE_JAPANESE:
+    //     glyph_ranges = GetGlyphRangesJapanese();
+    //     break;
     case LANGUAGE_ENGLISH:
     default:
-        builder.AddRanges(io.Fonts->GetGlyphRangesDefault());
+        glyph_ranges = io.Fonts->GetGlyphRangesDefault();
     }
 
-    builder.BuildRanges(&ranges);
-    const char *font_name = "sa0:data/font/pvf/cn0.pvf";
-    io.Fonts->AddFontFromFileTTF( // APP_ASSETS_DIR "/" FONT_PVF_NAME,
-        font_name,
-        25.0f,
-        &font_config,
-        ranges.Data);
-
+    io.Fonts->AddFontFromFileTTF(APP_ASSETS_DIR "/" TEXT_FONT_NAME,
+                                 25.0f,
+                                 &font_config,
+                                 glyph_ranges);
+    font_config.MergeMode = true;
+    io.Fonts->AddFontFromFileTTF(APP_ASSETS_DIR "/" GAMEPAD_FONT_NAME,
+                                 25.0f,
+                                 &font_config,
+                                 GamePadCharset);
     io.Fonts->GetTexDataAsRGBA32((uint8_t **)&pixels, &width, &height);
 
     gFontTexture = vita2d_create_empty_texture(width, height);
@@ -127,6 +122,13 @@ static void My_Imgui_Destroy_Font()
         gFontTexture = nullptr;
         ImGui::GetIO().Fonts->TexID = nullptr;
     }
+
+    // if (gGamePadTexture)
+    // {
+    //     vita2d_free_texture(gGamePadTexture);
+    //     gGamePadTexture = nullptr;
+    //     gGamePadFont->TexID = nullptr;
+    // }
 }
 
 IMGUI_API void My_ImGui_ImplVita2D_Init(LANGUAGE language)

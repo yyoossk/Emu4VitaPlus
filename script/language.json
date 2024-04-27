@@ -303,99 +303,99 @@
     {
         "No.": "43",
         "Tag": "BUTTON_LEFT",
-        "English": "←",
-        "Chinese": "←",
+        "English": "↞",
+        "Chinese": "↞",
         "Comments": ""
     },
     {
         "No.": "44",
         "Tag": "BUTTON_UP",
-        "English": "↑",
-        "Chinese": "↑",
+        "English": "↟",
+        "Chinese": "↟",
         "Comments": ""
     },
     {
         "No.": "44",
         "Tag": "BUTTON_RIGHT",
-        "English": "→",
-        "Chinese": "→",
+        "English": "↠",
+        "Chinese": "↠",
         "Comments": ""
     },
     {
         "No.": "45",
         "Tag": "BUTTON_DOWN",
-        "English": "↓",
-        "Chinese": "↓",
+        "English": "↡",
+        "Chinese": "↡",
         "Comments": ""
     },
     {
         "No.": "45",
         "Tag": "BUTTON_A",
-        "English": "A",
-        "Chinese": "A",
+        "English": "⇓",
+        "Chinese": "⇓",
         "Comments": ""
     },
     {
         "No.": "46",
         "Tag": "BUTTON_B",
-        "English": "B",
-        "Chinese": "B",
+        "English": "⇒",
+        "Chinese": "⇒",
         "Comments": ""
     },
     {
         "No.": "46",
         "Tag": "BUTTON_X",
-        "English": "X",
-        "Chinese": "X",
+        "English": "⇐",
+        "Chinese": "⇐",
         "Comments": ""
     },
     {
         "No.": "47",
         "Tag": "BUTTON_Y",
-        "English": "Y",
-        "Chinese": "Y",
+        "English": "⇑",
+        "Chinese": "⇑",
         "Comments": ""
     },
     {
         "No.": "47",
         "Tag": "BUTTON_L",
-        "English": "L",
-        "Chinese": "L",
+        "English": "↜",
+        "Chinese": "↜",
         "Comments": ""
     },
     {
         "No.": "48",
         "Tag": "BUTTON_R",
-        "English": "R",
-        "Chinese": "R",
+        "English": "↝",
+        "Chinese": "↝",
         "Comments": ""
     },
     {
         "No.": "48",
         "Tag": "BUTTON_L1",
-        "English": "L1",
-        "Chinese": "L1",
+        "English": "↰",
+        "Chinese": "↰",
         "Comments": ""
     },
     {
         "No.": "49",
         "Tag": "BUTTON_R1",
-        "English": "R1",
-        "Chinese": "R1",
+        "English": "↱",
+        "Chinese": "↱",
         "Comments": ""
     },
     {
         "No.": "49",
         "Tag": "BUTTON_L2",
-        "English": "L2",
-        "Chinese": "L2",
+        "English": "↲",
+        "Chinese": "↲",
         "Comments": ""
     },
     {
         "No.": "50",
         "Tag": "BUTTON_R2",
-        "English": "R2",
-        "Chinese": "R2",
+        "English": "↳",
+        "Chinese": "↳",
         "Comments": ""
     },
     {
@@ -415,106 +415,106 @@
     {
         "No.": "51",
         "Tag": "BUTTON_SELECT",
-        "English": "Select",
-        "Chinese": "Select",
+        "English": "⇷",
+        "Chinese": "⇷",
         "Comments": ""
     },
     {
         "No.": "52",
         "Tag": "BUTTON_START",
-        "English": "Start",
-        "Chinese": "Start",
+        "English": "⇸",
+        "Chinese": "⇸",
         "Comments": ""
     },
     {
         "No.": "52",
         "Tag": "BUTTON_HOME",
-        "English": "PS",
-        "Chinese": "PS",
+        "English": "",
+        "Chinese": "",
         "Comments": ""
     },
     {
         "No.": "53",
         "Tag": "BUTTON_LEFT_ANALOG_LEFT",
-        "English": "Left analog ←",
-        "Chinese": "左摇杆←",
+        "English": "↼",
+        "Chinese": "↼",
         "Comments": ""
     },
     {
         "No.": "53",
         "Tag": "BUTTON_LEFT_ANALOG_UP",
-        "English": "Left analog ↑",
-        "Chinese": "左摇杆↑",
+        "English": "↾",
+        "Chinese": "↾",
         "Comments": ""
     },
     {
         "No.": "54",
         "Tag": "BUTTON_LEFT_ANALOG_RIGHT",
-        "English": "Left analog →",
-        "Chinese": "左摇杆→",
+        "English": "⇀",
+        "Chinese": "⇀",
         "Comments": ""
     },
     {
         "No.": "54",
         "Tag": "BUTTON_LEFT_ANALOG_DOWN",
-        "English": "Left analog ↓",
-        "Chinese": "左摇杆↓",
+        "English": "⇂",
+        "Chinese": "⇂",
         "Comments": ""
     },
     {
         "No.": "55",
         "Tag": "BUTTON_RIGHT_ANALOG_LEFT",
-        "English": "Right analog ←",
-        "Chinese": "右摇杆←",
+        "English": "↽",
+        "Chinese": "↽",
         "Comments": ""
     },
     {
         "No.": "55",
         "Tag": "BUTTON_RIGHT_ANALOG_UP",
-        "English": "Right analog ↑",
-        "Chinese": "右摇杆↑",
+        "English": "↿",
+        "Chinese": "↿",
         "Comments": ""
     },
     {
         "No.": "56",
         "Tag": "BUTTON_RIGHT_ANALOG_RIGHT",
-        "English": "Right analog →",
-        "Chinese": "右摇杆→",
+        "English": "⇁",
+        "Chinese": "⇁",
         "Comments": ""
     },
     {
         "No.": "57",
         "Tag": "BUTTON_RIGHT_ANALOG_DOWN",
-        "English": "Right analog ↓",
-        "Chinese": "右摇杆↓",
+        "English": "⇃",
+        "Chinese": "⇃",
         "Comments": ""
     },
     {
         "No.": "58",
         "Tag": "BUTTON_CROSS",
-        "English": "×",
-        "Chinese": "×",
+        "English": "⇣",
+        "Chinese": "⇣",
         "Comments": ""
     },
     {
         "No.": "59",
         "Tag": "BUTTON_CIRCLE",
-        "English": "○",
-        "Chinese": "○",
+        "English": "⇢",
+        "Chinese": "⇢",
         "Comments": ""
     },
     {
         "No.": "60",
         "Tag": "BUTTON_SQUARE",
-        "English": "□",
-        "Chinese": "□",
+        "English": "⇠",
+        "Chinese": "⇠",
         "Comments": ""
     },
     {
         "No.": "61",
         "Tag": "BUTTON_TRIANGLE",
-        "English": "△",
-        "Chinese": "△",
+        "English": "⇡",
+        "Chinese": "⇡",
         "Comments": ""
     },
     {
