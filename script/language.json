@@ -401,15 +401,15 @@
     {
         "No.": "50",
         "Tag": "BUTTON_L3",
-        "English": "L3",
-        "Chinese": "L3",
+        "English": "⇋",
+        "Chinese": "⇋",
         "Comments": ""
     },
     {
         "No.": "51",
         "Tag": "BUTTON_R3",
-        "English": "R3",
-        "Chinese": "R3",
+        "English": "⇌",
+        "Chinese": "⇌",
         "Comments": ""
     },
     {

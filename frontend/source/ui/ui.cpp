@@ -97,8 +97,11 @@ void Ui::_OnKeyL2(Input *input)
     // LogFunctionName;
     _tabs[_tab_index]->UnsetInputHooks(&_input);
 
-    _tab_index += TAB_ITEM_COUNT - 1;
-    _tab_index %= TAB_ITEM_COUNT;
+    do
+    {
+        _tab_index += TAB_ITEM_COUNT - 1;
+        _tab_index %= TAB_ITEM_COUNT;
+    } while (!_tabs[_tab_index]->Visable());
 
     _tabs[_tab_index]->SetInputHooks(&_input);
 }
@@ -108,8 +111,11 @@ void Ui::_OnKeyR2(Input *input)
     // LogFunctionName;
     _tabs[_tab_index]->UnsetInputHooks(&_input);
 
-    _tab_index++;
-    _tab_index %= TAB_ITEM_COUNT;
+    do
+    {
+        _tab_index++;
+        _tab_index %= TAB_ITEM_COUNT;
+    } while (!_tabs[_tab_index]->Visable());
 
     _tabs[_tab_index]->SetInputHooks(&_input);
 }

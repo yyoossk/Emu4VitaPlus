@@ -71,7 +71,6 @@ void ItemControl::Show(bool selected)
             ImGui::Selectable(TEXT(RetroTextMap[RetroKeys[i]]), _control_map->retro == RetroKeys[i]);
             if (_control_map->retro == RetroKeys[i])
             {
-                ImGui::SetItemDefaultFocus();
                 if (ImGui::GetScrollMaxY() > 0.f)
                 {
                     ImGui::SetScrollHereY((float)i / (float)RETRO_KEYS_SIZE);

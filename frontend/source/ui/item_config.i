@@ -51,10 +51,6 @@ void ItemConfig<T>::Show(bool selected)
         for (size_t i = 0; i < _config_texts.size(); i++)
         {
             ImGui::Selectable(_config_texts[i].Get(), GetConfig() == i);
-            if (GetConfig() == i)
-            {
-                ImGui::SetItemDefaultFocus();
-            }
         }
         ImGui::EndCombo();
     }

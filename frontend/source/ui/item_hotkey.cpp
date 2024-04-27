@@ -76,22 +76,21 @@ void ItemHotkey::Show(bool selected)
         for (size_t i = 0; i < PSV_KEYS_SIZE; i++)
         {
             bool enabled = PsvKeys[i] & *_hotkey;
-            if (enabled)
+            if (!enabled)
             {
-                ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
+                ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(100, 100, 100, 255));
             }
 
             ImGui::Selectable(TEXT(ControlTextMap[PsvKeys[i]]), i == _index);
             if (i == _index)
             {
-                ImGui::SetItemDefaultFocus();
                 if (ImGui::GetScrollMaxY() > 0.f)
                 {
                     ImGui::SetScrollHereY((float)i / (float)PSV_KEYS_SIZE);
                 }
             }
 
-            if (enabled)
+            if (!enabled)
             {
                 ImGui::PopStyleColor();
             }
@@ -160,7 +159,18 @@ void ItemHotkey::_OnKeyDown(Input *input)
         _index++;
     }
 }
-void ItemHotkey::_OnClick(Input *input) {}
+void ItemHotkey::_OnClick(Input *input)
+{
+    uint32_t k = PsvKeys[_index];
+    if (*_hotkey & k)
+    {
+        *_hotkey &= ~k;
+    }
+    else
+    {
+        *_hotkey |= k;
+    }
+}
 
 void ItemHotkey::_OnQuit(Input *input)
 {
