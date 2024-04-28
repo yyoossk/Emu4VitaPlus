@@ -12,9 +12,13 @@
 
 #define TEXT(I) ((I) < TEXT_COUNT ? gTexts[gConfig->language][I] : "Unknown")
 
-#define APP_STATUS_SHOW_UI 1
-#define APP_STATUS_RUN_GAME (1 << 1)
-#define APP_STATUS_EXIT (1 << 2)
+enum APP_STATUS
+{
+    APP_STATUS_SHOW_UI,
+    APP_STATUS_RUN_GAME,
+    APP_STATUS_SHOW_UI_IN_GAME,
+    APP_STATUS_EXIT
+};
 
 #include "language_define.h"
 #include "emulator.h"
@@ -23,5 +27,5 @@
 
 extern Ui *gUi;
 extern Emulator *gEmulator;
-extern uint32_t gStatus;
+extern APP_STATUS gStatus;
 extern Config *gConfig;

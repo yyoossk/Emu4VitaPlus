@@ -1,22 +1,23 @@
 #pragma once
 #include <vita2d.h>
-#include "circle_buf.h"
+#include "buf_base.h"
 #include "log.h"
 
-#define TEXTURE_BUF_COUNT 10
+#define TEXTURE_BUF_COUNT 4
 
-class TextureBuf : public CircleBuf<vita2d_texture *, TEXTURE_BUF_COUNT>
+class TextureBuf : public BufBase<vita2d_texture *, TEXTURE_BUF_COUNT>
 {
 public:
     TextureBuf(SceGxmTextureFormat format, size_t width, size_t height)
         : _width(width), _height(height)
     {
         LogFunctionName;
-        for (size_t i = 0; i < TEXTURE_BUF_COUNT; i++)
+        for (auto &buf : _buf)
         {
-            _buf[i] = vita2d_create_empty_texture_format(width, height, format);
-            LogDebug("TextureBuf %i %08x", i, _buf[i]);
+            buf = vita2d_create_empty_texture_format(width, height, format);
         }
+
+        sceKernelCreateLwMutex(&_mutex, "texture_buf_mutex", 0, 1, nullptr);
     };
 
     virtual ~TextureBuf()
@@ -24,15 +25,21 @@ public:
         LogFunctionName;
 
         vita2d_wait_rendering_done();
-        for (size_t i = 0; i < TEXTURE_BUF_COUNT; i++)
+        for (auto &buf : _buf)
         {
-            vita2d_free_texture(_buf[i]);
+            vita2d_free_texture(buf);
         }
+
+        sceKernelDeleteLwMutex(&_mutex);
     }
 
     size_t GetWidth() const { return _width; };
     size_t GetHeight() const { return _height; };
 
+    void Lock() { sceKernelLockLwMutex(&_mutex, 1, nullptr); };
+    void Unlock() { sceKernelUnlockLwMutex(&_mutex, 1); };
+
 private:
     size_t _width, _height;
+    SceKernelLwMutexWork _mutex;
 };

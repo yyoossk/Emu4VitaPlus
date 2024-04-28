@@ -11,7 +11,7 @@ public:
                   _write_pos(0),
                   _tmp(nullptr),
                   _tmp_size(0),
-                  _continue_write(false){};
+                  _continue_write(true){};
 
     virtual ~CircleBuf()
     {
@@ -110,7 +110,7 @@ public:
         _read_pos.store(read_pos, std::memory_order_release);
     };
 
-    T *Read(size_t size, bool forward = true)
+    T *Read(size_t size)
     {
 // LogDebug("%d %d %d %d", _read_pos, _write_pos, _write_pos - _read_pos, ((_write_pos - _read_pos) & (_total_size - 1)) < _block_size);
 #if LOG_LEVEL >= LOG_LEVEL_DEBUG
@@ -125,16 +125,13 @@ public:
         size_t read_pos = _read_pos.load(std::memory_order_relaxed);
         T *buf = _buf + read_pos;
 
-        if (forward)
+        // LogDebug("read_pos %d %d", read_pos, SIZE);
+        read_pos += size;
+        if (read_pos >= SIZE)
         {
-            LogDebug("read_pos %d %d", read_pos, SIZE);
-            read_pos += size;
-            if (read_pos >= SIZE)
-            {
-                read_pos = 0;
-            }
-            _read_pos.store(read_pos, std::memory_order_release);
+            read_pos = 0;
         }
+        _read_pos.store(read_pos, std::memory_order_release);
 
         return buf;
     }

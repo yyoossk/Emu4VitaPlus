@@ -37,9 +37,16 @@ int Video::_DrawThread(SceSize args, void *argp)
         case APP_STATUS_SHOW_UI:
             gUi->Show();
             break;
+
         case APP_STATUS_RUN_GAME:
             gEmulator->Show();
             break;
+
+        case APP_STATUS_SHOW_UI_IN_GAME:
+            gEmulator->Show();
+            gUi->Show();
+            break;
+
         default:
             break;
         }

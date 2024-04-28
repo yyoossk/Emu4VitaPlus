@@ -96,12 +96,8 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
         gEmulator->_SetVideoSize(width, height);
     }
 
-    vita2d_texture *texture = *gEmulator->_texture_buf->WriteBegin(1);
-    LogDebug("VideoRefreshCallback %08x", texture);
-    if (texture == nullptr)
-    {
-        return;
-    }
+    gEmulator->_texture_buf->Lock();
+    vita2d_texture *texture = gEmulator->_texture_buf->Next();
 
     unsigned out_pitch = vita2d_texture_get_stride(texture);
     uint8_t *out = (uint8_t *)vita2d_texture_get_datap(texture);
@@ -121,9 +117,7 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
         }
     }
 
-    gEmulator->_texture_buf->WriteEnd(1);
-
-    LogDebug("VideoRefreshCallback end");
+    gEmulator->_texture_buf->Unlock();
 }
 
 size_t AudioSampleBatchCallback(const int16_t *data, size_t frames)
@@ -218,7 +212,6 @@ void Emulator::UnloadGame()
 
 void Emulator::Run()
 {
-    // LogFunctionName;
     _delay.Wait();
     _input.Poll();
     retro_run();
@@ -230,18 +223,17 @@ void Emulator::Show()
     {
         return;
     }
-    const vita2d_texture *texture = *_texture_buf->Read(1);
 
-    LogDebug("vita2d_texture %08x", texture);
-    vita2d_draw_texture_part_scale_rotate(texture,
+    _texture_buf->Lock();
+    vita2d_draw_texture_part_scale_rotate(_texture_buf->Current(),
                                           VITA_WIDTH / 2, VITA_HEIGHT / 2, _video_rect.x, _video_rect.y,
                                           _texture_buf->GetWidth(), _texture_buf->GetHeight(),
                                           _video_rect.width / _texture_buf->GetWidth(),
                                           _video_rect.height / _texture_buf->GetHeight(),
                                           0.f);
-    LogDebug("Emulator::Show() end");
     // LogDebug("%f %f %f %f", _video_rect.x, _video_rect.y,
     //          _video_rect.width, _video_rect.height);
+    _texture_buf->Unlock();
 }
 
 void Emulator::SetSpeed(double speed)

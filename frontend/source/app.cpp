@@ -52,6 +52,7 @@ void App::Run()
         switch (gStatus)
         {
         case APP_STATUS_SHOW_UI:
+        case APP_STATUS_SHOW_UI_IN_GAME:
             gUi->Run();
             break;
         case APP_STATUS_RUN_GAME:
