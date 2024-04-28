@@ -34,7 +34,7 @@ int Video::_DrawThread(SceSize args, void *argp)
 
         switch (gStatus)
         {
-        case APP_STATUS_SHOW_BROWSER:
+        case APP_STATUS_SHOW_UI:
             gUi->Show();
             break;
         case APP_STATUS_RUN_GAME:

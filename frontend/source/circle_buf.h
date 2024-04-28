@@ -110,7 +110,7 @@ public:
         _read_pos.store(read_pos, std::memory_order_release);
     };
 
-    int16_t *Read(size_t size)
+    T *Read(size_t size, bool forward = true)
     {
 // LogDebug("%d %d %d %d", _read_pos, _write_pos, _write_pos - _read_pos, ((_write_pos - _read_pos) & (_total_size - 1)) < _block_size);
 #if LOG_LEVEL >= LOG_LEVEL_DEBUG
@@ -121,14 +121,21 @@ public:
 #endif
         if (AvailableSize() < size)
             return nullptr;
-        size_t read_pos = _read_pos.load(std::memory_order_relaxed);
 
-        int16_t *buf = _buf + read_pos;
-        _read_pos += size;
-        if (_read_pos >= SIZE)
+        size_t read_pos = _read_pos.load(std::memory_order_relaxed);
+        T *buf = _buf + read_pos;
+
+        if (forward)
         {
-            _read_pos = 0;
+            LogDebug("read_pos %d %d", read_pos, SIZE);
+            read_pos += size;
+            if (read_pos >= SIZE)
+            {
+                read_pos = 0;
+            }
+            _read_pos.store(read_pos, std::memory_order_release);
         }
+
         return buf;
     }
 

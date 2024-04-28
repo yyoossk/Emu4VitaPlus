@@ -1,20 +1,21 @@
 #pragma once
 #include <vita2d.h>
-#include "buf_base.h"
+#include "circle_buf.h"
 #include "log.h"
 
-#define TEXTURE_BUF_COUNT 4
+#define TEXTURE_BUF_COUNT 10
 
-class TextureBuf : public BufBase<vita2d_texture *, TEXTURE_BUF_COUNT>
+class TextureBuf : public CircleBuf<vita2d_texture *, TEXTURE_BUF_COUNT>
 {
 public:
     TextureBuf(SceGxmTextureFormat format, size_t width, size_t height)
         : _width(width), _height(height)
     {
         LogFunctionName;
-        for (auto &buf : _buf)
+        for (size_t i = 0; i < TEXTURE_BUF_COUNT; i++)
         {
-            buf = vita2d_create_empty_texture_format(width, height, format);
+            _buf[i] = vita2d_create_empty_texture_format(width, height, format);
+            LogDebug("TextureBuf %i %08x", i, _buf[i]);
         }
     };
 
@@ -23,9 +24,9 @@ public:
         LogFunctionName;
 
         vita2d_wait_rendering_done();
-        for (auto &buf : _buf)
+        for (size_t i = 0; i < TEXTURE_BUF_COUNT; i++)
         {
-            vita2d_free_texture(buf);
+            vita2d_free_texture(_buf[i]);
         }
     }
 

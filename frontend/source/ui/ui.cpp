@@ -122,7 +122,7 @@ void Ui::_OnKeyR2(Input *input)
 
 void Ui::Run()
 {
-    _input.Poll();
+    _input.Poll(true);
 }
 
 void Ui::Show()
