@@ -53,4 +53,5 @@ private:
     void _SetPixelFormat(retro_pixel_format format);
     void _SetVideoSize(uint32_t width, uint32_t height);
     void _SetupKeys();
+    void _OnPsButton(Input *input);
 };

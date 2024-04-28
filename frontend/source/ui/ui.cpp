@@ -11,6 +11,10 @@
 #include "tab_about.h"
 #include "global.h"
 
+void ResumeGame()
+{
+}
+
 void ExitApp()
 {
     LogFunctionName;

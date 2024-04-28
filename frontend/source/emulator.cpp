@@ -295,6 +295,7 @@ void Emulator::_SetupKeys()
         }
     }
 
+    _input.SetKeyUpCallback(SCE_CTRL_PSBUTTON, std::bind(&Emulator::_OnPsButton, this, &_input));
     // for (int i = 0; i < 16; i++)
     // {
     //     LogDebug("%d %08x", i, _keys[i]);
@@ -365,4 +366,10 @@ void Emulator::_SetVideoSize(uint32_t width, uint32_t height)
 
     _video_rect.width = width;
     _video_rect.height = height;
+}
+
+void Emulator::_OnPsButton(Input *input)
+{
+    LogFunctionName;
+    gStatus = APP_STATUS_SHOW_UI_IN_GAME;
 }
