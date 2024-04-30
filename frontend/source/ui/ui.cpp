@@ -103,8 +103,7 @@ void Ui::_OnKeyL2(Input *input)
 
     do
     {
-        _tab_index += TAB_ITEM_COUNT - 1;
-        _tab_index %= TAB_ITEM_COUNT;
+        _tab_index = (_tab_index == 0 ? TAB_ITEM_COUNT - 1 : _tab_index - 1);
     } while (!_tabs[_tab_index]->Visable());
 
     _tabs[_tab_index]->SetInputHooks(&_input);
@@ -117,8 +116,7 @@ void Ui::_OnKeyR2(Input *input)
 
     do
     {
-        _tab_index++;
-        _tab_index %= TAB_ITEM_COUNT;
+        _tab_index = (_tab_index + 1 == TAB_ITEM_COUNT ? 0 : TAB_ITEM_COUNT - 1);
     } while (!_tabs[_tab_index]->Visable());
 
     _tabs[_tab_index]->SetInputHooks(&_input);

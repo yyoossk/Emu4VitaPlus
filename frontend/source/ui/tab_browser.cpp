@@ -1,8 +1,8 @@
-#include "global.h"
 #include "tab_browser.h"
 #include "log.h"
+#include "global.h"
 
-TabBrowser::TabBrowser(const char *path) : TabBase(TAB_BROWSER)
+TabBrowser::TabBrowser(const char *path) : TabSeletable(TAB_BROWSER)
 {
     LogFunctionName;
     _directory = new Directory(path, gEmulator->GetValidExtensions());
@@ -16,13 +16,13 @@ TabBrowser::~TabBrowser()
 
 void TabBrowser::SetInputHooks(Input *input)
 {
-    TabBase::SetInputHooks(input);
+    TabSeletable::SetInputHooks(input);
     input->SetKeyUpCallback(SCE_CTRL_CROSS, std::bind(&TabBrowser::_OnKeyCross, this, input));
 }
 
 void TabBrowser::UnsetInputHooks(Input *input)
 {
-    TabBase::UnsetInputHooks(input);
+    TabSeletable::UnsetInputHooks(input);
     input->UnsetKeyUpCallback(SCE_CTRL_CROSS);
 }
 

@@ -7,10 +7,10 @@
 #define TEXT_FONT_NAME "wqy-microhei.ttf"
 #define GAMEPAD_FONT_NAME "promptfont.ttf"
 #define APP_CONFIG_PATH APP_DATA_DIR "/config.toml"
+#define OVERLAYS_DIR_NAME "overlays"
+#define PREVIEW_DIR_NAME "images"
 
 #define MAIN_WINDOW_PADDING 10
-
-#define TEXT(I) ((I) < TEXT_COUNT ? gTexts[gConfig->language][I] : "Unknown")
 
 enum APP_STATUS
 {
@@ -21,11 +21,14 @@ enum APP_STATUS
 };
 
 #include "language_define.h"
+#include "config.h"
+
+extern Config *gConfig;
+#define TEXT(I) ((I) < TEXT_COUNT ? gTexts[gConfig->language][I] : "Unknown")
+
 #include "emulator.h"
 #include "ui.h"
-#include "config.h"
 
 extern Ui *gUi;
 extern Emulator *gEmulator;
 extern APP_STATUS gStatus;
-extern Config *gConfig;

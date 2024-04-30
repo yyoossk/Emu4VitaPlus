@@ -3,52 +3,26 @@
 #include "tab_base.h"
 #include "item_base.h"
 
-class TabSeletable : virtual public TabBase
+class TabSeletable : public TabBase
 {
 public:
-    TabSeletable(TEXT_ENUM title_id, std::vector<ItemBase *> items)
-        : TabBase(title_id),
-          _items(std::move(items)){};
+    TabSeletable(TEXT_ENUM title_id, std::vector<ItemBase *> items);
+    TabSeletable(TEXT_ENUM title_id);
+    virtual ~TabSeletable();
 
-    virtual ~TabSeletable()
-    {
-        for (auto &item : _items)
-        {
-            delete item;
-        }
-    };
+    virtual void SetInputHooks(Input *input);
+    virtual void UnsetInputHooks(Input *input);
+    virtual void Show(bool selected);
 
-private:
-    size_t _GetItemCount() override
-    {
-        return _items.size();
-    };
-
-    void _ShowItem(size_t index, bool selected) override
-    {
-        if (index < _items.size())
-        {
-            _items[index]->Show(selected);
-        }
-    };
-
-    void _OnActive(Input *input) override
-    {
-        LogFunctionName;
-        if (_index < _items.size())
-        {
-            _items[_index]->OnActive(input);
-        }
-    };
-
-    void _OnOption(Input *input) override
-    {
-        LogFunctionName;
-        if (_index < _items.size())
-        {
-            _items[_index]->OnOption(input);
-        }
-    };
+protected:
+    virtual void _OnKeyUp(Input *input);
+    virtual void _OnKeyDown(Input *input);
+    virtual size_t _GetItemCount();
+    virtual void _ShowItem(size_t index, bool selected);
+    virtual void _OnActive(Input *input);
+    virtual void _OnOption(Input *input);
+    virtual bool _ItemVisable(size_t index);
 
     std::vector<ItemBase *> _items;
+    size_t _index;
 };
