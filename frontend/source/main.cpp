@@ -5,6 +5,8 @@
 
 int main(int argc, char *const argv[])
 {
+    printf("START!!!!\n");
+
     File::MakeDirs(APP_DATA_DIR);
     gLog = new Log(APP_LOG_PATH);
 

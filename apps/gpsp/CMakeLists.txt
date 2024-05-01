@@ -48,4 +48,5 @@ set_target_properties(gpSP PROPERTIES IMPORTED_LOCATION_NOCONFIG
                                       "${LIBRETRO_LIBRARY}")
 add_dependencies(gpSP gpSP_build)
 
+add_compile_definitions(GPSP_BUILD GBA_BUILD)
 add_subdirectory(../../frontend ${CMAKE_CURRENT_BINARY_DIR}/frontend)
