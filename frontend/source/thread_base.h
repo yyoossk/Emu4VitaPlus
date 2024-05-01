@@ -1,7 +1,7 @@
 #pragma once
 #include <psp2/kernel/threadmgr.h>
 
-#define CLASS_POINT(CLASS, POINT, ARGP) CLASS *POINT = *(CLASS **)ARGP;
+#define CLASS_POINTER(CLASS, POINT, ARGP) CLASS *POINT = *(CLASS **)ARGP;
 
 class ThreadBase
 {

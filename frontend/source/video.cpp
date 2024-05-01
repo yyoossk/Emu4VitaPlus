@@ -6,6 +6,7 @@
 Video::Video() : ThreadBase(_DrawThread)
 {
     vita2d_init();
+    vita2d_set_vblank_wait(1);
     _InitImgui();
 }
 
@@ -25,9 +26,11 @@ int Video::_DrawThread(SceSize args, void *argp)
 {
     LogFunctionName;
 
-    CLASS_POINT(Video, video, argp);
+    CLASS_POINTER(Video, video, argp);
     while (video->IsRunning())
     {
+        // video->Lock();
+        // LogDebug("video %08x", video);
         vita2d_pool_reset();
         vita2d_start_drawing_advanced(NULL, 0);
         vita2d_clear_screen();
@@ -53,7 +56,9 @@ int Video::_DrawThread(SceSize args, void *argp)
 
         vita2d_end_drawing();
         vita2d_swap_buffers();
-        sceDisplayWaitVblankStart();
+        // video->Unlock();
+        // sceDisplayWaitVblankStart();
+        // LogDebug("Unlock %08x", video);
     }
 
     LogDebug("_DrawThread exit");

@@ -52,7 +52,7 @@ int AudioResampler::_ResampleThread(SceSize args, void *argp)
 {
     LogFunctionName;
 
-    CLASS_POINT(AudioResampler, resampler, argp);
+    CLASS_POINTER(AudioResampler, resampler, argp);
 
     while (resampler->IsRunning())
     {

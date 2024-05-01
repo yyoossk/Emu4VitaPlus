@@ -39,7 +39,7 @@ public:
 
     void SetTurboInterval(uint64_t turbo_start, uint64_t turbo_interval);
 
-    void Poll(bool waiting = false);
+    bool Poll();
 
     void Reset();
 

@@ -79,6 +79,8 @@ Ui::Ui(const char *path)
     _tabs[_tab_index]->SetInputHooks(&_input);
 
     _SetKeyHooks();
+
+    // _update_sema = sceKernelCreateSema("ui", 0, 1, 1, NULL);
 }
 
 Ui::~Ui()
@@ -88,6 +90,7 @@ Ui::~Ui()
     {
         delete tab;
     }
+    // sceKernelDeleteSema(_update_sema);
 }
 
 void Ui::_SetKeyHooks()
@@ -116,7 +119,7 @@ void Ui::_OnKeyR2(Input *input)
 
     do
     {
-        _tab_index = (_tab_index + 1 == TAB_ITEM_COUNT ? 0 : TAB_ITEM_COUNT - 1);
+        _tab_index = (_tab_index + 1 == TAB_ITEM_COUNT ? 0 : _tab_index + 1);
     } while (!_tabs[_tab_index]->Visable());
 
     _tabs[_tab_index]->SetInputHooks(&_input);
@@ -124,12 +127,21 @@ void Ui::_OnKeyR2(Input *input)
 
 void Ui::Run()
 {
-    _input.Poll(true);
+    // LogFunctionName;
+
+    // while (!_input.Poll())
+    // {
+    //     sceKernelDelayThread(10000);
+    // }
+    _input.Poll();
+    // sceKernelSignalSema(_update_sema, 1);
 }
 
 void Ui::Show()
 {
     LogFunctionNameLimited;
+
+    // sceKernelWaitSema(_update_sema, 1, NULL);
 
     ImGui_ImplVita2D_NewFrame();
     ImGui::SetMouseCursor(ImGuiMouseCursor_None);

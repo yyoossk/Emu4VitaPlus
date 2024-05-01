@@ -1,4 +1,5 @@
 #pragma once
+#include <psp2/kernel/threadmgr.h>
 #include <array>
 #include "emulator.h"
 #include "input.h"
@@ -34,4 +35,6 @@ private:
     size_t _tab_index;
 
     std::array<TabBase *, TAB_ITEM_COUNT> _tabs;
+
+    // SceUID _update_sema;
 };

@@ -2,7 +2,7 @@
 
 #define APP_ASSETS_DIR "app0:assets"
 #define APP_DATA_DIR "ux0:data/EMU4VITAPLUS/" APP_DIR_NAME
-#define APP_LOG_PATH APP_DATA_DIR "/app_log.txt"
+#define APP_LOG_PATH APP_DATA_DIR "/Emu4Vita++.log"
 #define CORE_DIR APP_DATA_DIR "/system"
 #define TEXT_FONT_NAME "wqy-microhei.ttf"
 #define GAMEPAD_FONT_NAME "promptfont.ttf"
@@ -28,7 +28,9 @@ extern Config *gConfig;
 
 #include "emulator.h"
 #include "ui.h"
+#include "video.h"
 
 extern Ui *gUi;
 extern Emulator *gEmulator;
+extern Video *gVideo;
 extern APP_STATUS gStatus;

@@ -26,14 +26,14 @@ App::App()
     gConfig = new Config();
     gEmulator = new Emulator();
     gUi = new Ui("ux0:");
-    _video = new Video();
+    gVideo = new Video();
 }
 
 App::~App()
 {
     LogFunctionName;
 
-    delete _video;
+    delete gVideo;
     delete gUi;
     delete gEmulator;
     delete gConfig;
@@ -45,7 +45,7 @@ void App::Run()
 {
     LogFunctionName;
 
-    _video->Start();
+    gVideo->Start();
 
     while (gStatus != APP_STATUS_EXIT)
     {

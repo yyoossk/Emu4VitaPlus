@@ -1,15 +1,20 @@
 #pragma once
 #include <psp2/io/stat.h>
 
-class File
+namespace File
 {
-public:
-    File(const char *name);
-    virtual ~File();
 
-    static bool Exist(const char *path);
-    static void MakeDirs(const char *path, SceIoMode mode = (SceIoMode)0777);
-    static bool Remove(const char *path);
+    bool Exist(const char *path);
+    void MakeDirs(const char *path, SceIoMode mode = (SceIoMode)0777);
+    bool Remove(const char *path);
 
-private:
-};
+    class File
+    {
+    public:
+        File(const char *name);
+        virtual ~File();
+
+    private:
+    };
+
+}

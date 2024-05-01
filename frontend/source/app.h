@@ -10,5 +10,4 @@ public:
     void Run();
 
 private:
-    Video *_video;
 };

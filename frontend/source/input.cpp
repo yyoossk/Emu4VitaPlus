@@ -59,14 +59,13 @@ void Input::UnsetKeyDownCallback(uint32_t key)
     _turbo_key &= ~key;
 }
 
-void Input::Poll(bool waiting)
+bool Input::Poll()
 {
     SceCtrlData ctrl_data;
 
     memset(&ctrl_data, 0, sizeof(SceCtrlData));
-    int result = waiting ? sceCtrlReadBufferPositiveExt2(0, &ctrl_data, 1) : sceCtrlPeekBufferPositiveExt2(0, &ctrl_data, 1);
-    if (result < 0)
-        return;
+    if (sceCtrlPeekBufferPositiveExt2(0, &ctrl_data, 1) < 0)
+        return false;
 
     uint64_t key = ctrl_data.buttons;
     if (ctrl_data.lx < ANALOG_CENTER - ANALOG_THRESHOLD)
@@ -92,7 +91,9 @@ void Input::Poll(bool waiting)
     _ProcTurbo(key);
     _ProcCallbacks(key);
 
+    bool changed = (_last_key != key);
     _last_key = key;
+    return changed;
 }
 
 void Input::_ProcTurbo(uint32_t key)

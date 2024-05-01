@@ -25,7 +25,7 @@ int AudioOutput::_AudioThread(SceSize args, void *argp)
 {
     LogFunctionName;
 
-    CLASS_POINT(AudioOutput, output, argp);
+    CLASS_POINTER(AudioOutput, output, argp);
     int16_t *buf;
     while (output->IsRunning())
     {

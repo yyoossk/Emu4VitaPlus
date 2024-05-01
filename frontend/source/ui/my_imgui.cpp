@@ -111,7 +111,6 @@ static void My_Imgui_Create_Font(LANGUAGE language)
             texture_data[y * stride + x] = pixels[y * width + x];
 
     io.Fonts->TexID = gFontTexture;
-
     return;
 }
 
@@ -123,13 +122,6 @@ static void My_Imgui_Destroy_Font()
         gFontTexture = nullptr;
         ImGui::GetIO().Fonts->TexID = nullptr;
     }
-
-    // if (gGamePadTexture)
-    // {
-    //     vita2d_free_texture(gGamePadTexture);
-    //     gGamePadTexture = nullptr;
-    //     gGamePadFont->TexID = nullptr;
-    // }
 }
 
 IMGUI_API void My_ImGui_ImplVita2D_Init(LANGUAGE language)

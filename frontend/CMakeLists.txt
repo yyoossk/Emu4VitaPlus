@@ -1,14 +1,88 @@
 cmake_minimum_required(VERSION 3.12)
 
-set(CMAKE_TOOLCHAIN_FILE "$ENV{VITASDK}/share/vita.toolchain.cmake" CACHE PATH "toolchain file")
+set(CMAKE_TOOLCHAIN_FILE
+    "$ENV{VITASDK}/share/vita.toolchain.cmake"
+    CACHE PATH "toolchain file")
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
-include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/source
-    ${CMAKE_CURRENT_SOURCE_DIR}/source/ui
-    ${CMAKE_CURRENT_SOURCE_DIR}/source/audio
-)
+set(MAJOR_VER "00")
+set(MINOR_VER "01")
+set(SFO_APP_VER "${MAJOR_VER}.${MINOR_VER}")
+set(PUBLIC_PKG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pkg)
 
-file(GLOB src "*.c" "*.cpp" "*.h")
-add_executable(${APP_NAME}.elf ${src})
-target_link_libraries(${APP_NAME}.elf )
+file(GLOB_RECURSE PKG_FILES ${PUBLIC_PKG_DIR}/*)
+set(PUBLIC_PKG_FILES "")
+foreach(file ${PKG_FILES})
+  file(RELATIVE_PATH rel ${PUBLIC_PKG_DIR} ${file})
+  list(APPEND PUBLIC_PKG_FILES FILE ${file} ${rel})
+endforeach(PKG_FILES)
+
+include_directories(
+  source source/ui source/audio ../deps/libretro-common/include
+  ../deps/libvita2d/libvita2d/include ../deps/tomlplusplus/include)
+
+file(GLOB SRC source/*.c source/*.cpp source/ui/*.cpp source/audio/*.cpp)
+
+set(INC frontend/source frontend/source/ui frontend/source/audio
+        deps/libretro-common/include deps/tomlplusplus/include)
+
+add_compile_definitions(
+  APP_NAME_STR="${APP_NAME}" APP_NAME_EXT_STR=${APP_NAME_EXT}
+  APP_VER_STR=${APP_VER} APP_TITLEID=${SFO_TITLE_ID} APP_DIR_NAME="${APP_NAME}"
+  CORE_SOFTWARE=${CORE_SOFTWARE})
+
+add_executable(${APP_NAME}.elf ${SRC})
+
+add_custom_target(
+  LANGUAGE
+  COMMAND python export.py
+  COMMAND mv language_define.h ${CMAKE_CURRENT_SOURCE_DIR}/source
+  COMMAND mv language_define.cpp ${CMAKE_CURRENT_SOURCE_DIR}/source
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../script
+  SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/../script/language.json)
+
+target_link_libraries(
+  ${APP_NAME}.elf
+  ${LIBRETRO_LIBRARY}
+  retro_comm
+  vita2d
+  imgui_vita2d
+  swresample
+  avutil
+  png
+  jpeg
+  z
+  pthread
+  ScePvf_stub
+  ScePgf_stub
+  SceDisplay_stub
+  SceGxm_stub
+  SceCtrl_stub
+  SceTouch_stub
+  ScePower_stub
+  SceAudio_stub
+  SceRtc_stub
+  SceCommonDialog_stub
+  SceSysmodule_stub
+  SceAppUtil_stub
+  SceAppMgr_stub
+  SceShellSvc_stub
+  SceMotion_stub
+  SceHid_stub
+  SceFiber_stub)
+
+add_dependencies(${APP_NAME}.elf LANGUAGE)
+# add_file_dependencies(LANGUAGE
+# ${CMAKE_CURRENT_SOURCE_DIR}/../script/language.json)
+
+vita_create_self(eboot.bin ${APP_NAME}.elf)
+vita_create_vpk(
+  ${APP_NAME}.vpk
+  ${SFO_TITLE_ID}
+  eboot.bin
+  VERSION
+  ${SFO_APP_VER}
+  NAME
+  "${SFO_TITLE_NAME}"
+  ${PRIVATE_PKG_FILES}
+  ${PUBLIC_PKG_FILES})

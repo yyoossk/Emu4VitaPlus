@@ -2,58 +2,61 @@
 #include <string.h>
 #include "file.h"
 
-File::File(const char *name)
+namespace File
 {
-}
-
-File::~File()
-{
-}
-
-bool File::Exist(const char *name)
-{
-    SceIoStat stat;
-    return sceIoGetstat(name, &stat) == SCE_OK;
-}
-
-void File::MakeDirs(const char *path, SceIoMode mode)
-{
-    if (!(path && *path) || Exist(path))
+    bool Exist(const char *name)
     {
-        return;
+        SceIoStat stat;
+        return sceIoGetstat(name, &stat) == SCE_OK;
     }
 
-    char *_path = new char[strlen(path) + 1];
-    strcpy(_path, path);
-    char *p = _path;
-    do
+    void MakeDirs(const char *path, SceIoMode mode)
     {
-        p = strchr(p, '/');
-        if (p)
+        if (!(path && *path) || Exist(path))
         {
-            *p = '\0';
+            return;
         }
 
-        if (!Exist(_path))
+        char *_path = new char[strlen(path) + 1];
+        strcpy(_path, path);
+        char *p = _path;
+        do
         {
-            sceIoMkdir(_path, mode);
-        }
+            p = strchr(p, '/');
+            if (p)
+            {
+                *p = '\0';
+            }
 
-        if (p)
-        {
-            *p = '/';
-            p++;
-        }
-        else
-        {
-            break;
-        }
-    } while (true);
+            if (!Exist(_path))
+            {
+                sceIoMkdir(_path, mode);
+            }
 
-    delete[] _path;
-}
+            if (p)
+            {
+                *p = '/';
+                p++;
+            }
+            else
+            {
+                break;
+            }
+        } while (true);
 
-bool File::Remove(const char *path)
-{
-    return sceIoRemove(path) == SCE_OK;
+        delete[] _path;
+    }
+
+    bool Remove(const char *path)
+    {
+        return sceIoRemove(path) == SCE_OK;
+    }
+
+    File::File(const char *name)
+    {
+    }
+
+    File::~File()
+    {
+    }
 }

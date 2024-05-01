@@ -2,15 +2,19 @@
 #include "log.h"
 #include "global.h"
 
-TabBrowser::TabBrowser(const char *path) : TabSeletable(TAB_BROWSER)
+TabBrowser::TabBrowser(const char *path)
+    : TabSeletable(TAB_BROWSER),
+      _texture(nullptr)
 {
     LogFunctionName;
     _directory = new Directory(path, gEmulator->GetValidExtensions());
+    sceKernelCreateLwMutex(&_mutex, "browser_mutex", 0, 0, NULL);
 }
 
 TabBrowser::~TabBrowser()
 {
     LogFunctionName;
+    sceKernelDeleteLwMutex(&_mutex);
     delete _directory;
 }
 
@@ -28,23 +32,26 @@ void TabBrowser::UnsetInputHooks(Input *input)
 
 void TabBrowser::Show(bool selected)
 {
-    if (ImGui::BeginTabItem(TEXT(TAB_BROWSER), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
+    // sceKernelLockLwMutex(&_mutex, 1, NULL);
+    if (ImGui::BeginTabItem(TEXT(_title_id), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
     {
-        ImGui::Text(_directory->GetCurrentPath().c_str());
-        auto size = ImGui::GetContentRegionAvail();
-        ImGui::ListBoxHeader("", {size.x * 0.5f, size.y});
+        ImGui::BeginChild(TEXT(_title_id));
+        ImGui::Columns(2, NULL, false);
 
+        ImGui::Text(_directory->GetCurrentPath().c_str());
+        ImGui::ListBoxHeader("", ImGui::GetContentRegionAvail());
         for (size_t i = 0; i < _directory->GetSize(); i++)
         {
-            const auto item = _directory->GetItem(i);
+            const DirItem &item = _directory->GetItem(i);
 
-            if (item.isDir)
+            if (!item.isDir)
             {
                 ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
             }
 
             ImGui::Selectable(item.name.c_str(), i == _index);
-            if (item.isDir)
+
+            if (!item.isDir)
             {
                 ImGui::PopStyleColor();
             }
@@ -55,10 +62,24 @@ void TabBrowser::Show(bool selected)
             }
         }
 
-        // LogDebug("GetScrollY %f %f", ImGui::GetScrollY(), ImGui::GetScrollMaxY());
         ImGui::ListBoxFooter();
+        ImGui::NextColumn();
+
+        if (_texture != nullptr)
+        {
+            float width = vita2d_texture_get_width(_texture);
+            float height = vita2d_texture_get_height(_texture);
+            ImGui::Image(_texture, {width, height});
+        }
+
+        ImGui::NextColumn();
+
+        ImGui::Columns(1);
+        ImGui::EndChild();
+
         ImGui::EndTabItem();
     }
+    // sceKernelUnlockLwMutex(&_mutex, 1);
 }
 
 void TabBrowser::_OnActive(Input *input)
@@ -96,4 +117,63 @@ void TabBrowser::_OnKeyCross(Input *input)
         LogDebug(path.c_str());
         _directory->SetCurrentPath(path);
     }
+}
+
+void TabBrowser::_OnKeyUp(Input *input)
+{
+    TabSeletable::_OnKeyUp(input);
+    _UpdateTexture();
+}
+
+void TabBrowser::_OnKeyDown(Input *input)
+{
+    TabSeletable::_OnKeyDown(input);
+    _UpdateTexture();
+}
+
+void TabBrowser::_UpdateTexture()
+{
+    LogFunctionName;
+    // sceKernelLockLwMutex(&_mutex, 1, NULL);
+    size_t node_pos;
+    std::string path;
+
+    if (_texture != nullptr)
+    {
+        // gVideo->Lock();
+        vita2d_wait_rendering_done();
+        vita2d_free_texture(_texture);
+        _texture = nullptr;
+        // gVideo->Unlock();
+    }
+
+    const DirItem &item = _directory->GetItem(_index);
+    if (item.isDir)
+    {
+        goto UPDATE_TEXTURE_END;
+    }
+
+    node_pos = item.name.rfind('.');
+    if (node_pos == std::string::npos)
+    {
+        goto UPDATE_TEXTURE_END;
+    }
+
+    path = _directory->GetCurrentPath() + "/" PREVIEW_DIR_NAME "/" + item.name.substr(0, node_pos);
+    _texture = vita2d_load_PNG_file((path + ".png").c_str());
+    if (_texture == nullptr)
+    {
+        _texture = vita2d_load_JPEG_file((path + ".jpg").c_str());
+    }
+
+    if (_texture)
+    {
+        LogDebug("u %08x %08x %08x %08x", _texture, _texture->palette_UID, _texture->data_UID, _texture->gxm_rtgt);
+        _texture->gxm_rtgt = 0;
+    }
+    LogDebug("_texture %08x", _texture);
+
+UPDATE_TEXTURE_END:
+    LogDebug("_UpdateTexture end");
+    // sceKernelUnlockLwMutex(&_mutex, 1);
 }

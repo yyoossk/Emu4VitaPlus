@@ -1,22 +1,12 @@
 cmake_minimum_required(VERSION 3.12)
 
-set(CMAKE_TOOLCHAIN_FILE "$ENV{VITASDK}/share/vita.toolchain.cmake" CACHE PATH "toolchain file")
+set(CMAKE_TOOLCHAIN_FILE
+    "$ENV{VITASDK}/share/vita.toolchain.cmake"
+    CACHE PATH "toolchain file")
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
-# add_custom_target(build_libretro ALL
-# COMMAND make -f Makefile.libretro_comm
-# )
-
-# add_library(libretro_comm STATIC IMPORTED)
-# set_target_properties(build_libretro
-# IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/deps/libretro_comm/libretro_comm.a # Make sure to use absolute path here
-# INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/deps/libretro_comm/
-# #INTERFACE_COMPILE_DEFINITIONS "USING_THELIB;THELIB_STATIC"
-# )
-# add_dependencies(libretro_comm build_libretro)
-
-
-set(SRC "libretro-common/string/stdstring.c"
+set(RETRO_SRC
+    "libretro-common/string/stdstring.c"
     "libretro-common/encodings/encoding_utf.c"
     "libretro-common/encodings/encoding_crc32.c"
     "libretro-common/compat/fopen_utf8.c"
@@ -46,10 +36,43 @@ set(SRC "libretro-common/string/stdstring.c"
     "libretro-common/file/config_file.c"
     "libretro-common/file/config_file_userdata.c"
     "libretro-common/rthreads/rthreads.c"
-    "libretro-common/utils/md5.c"
-)
+    "libretro-common/utils/md5.c")
 
 include_directories("libretro-common/include")
 
-add_compile_definitions(HAVE_NEON HAVE_THREADS HAVE_COMPRESSION HAVE_ZLIB HAVE_7ZIP)
-add_library(retro_comm STATIC ${SRC})
+add_compile_definitions(HAVE_NEON HAVE_THREADS HAVE_COMPRESSION HAVE_ZLIB
+                        HAVE_7ZIP)
+add_library(retro_comm STATIC ${RETRO_SRC})
+
+# ----------------------
+set(VITA2D_PATH ${CMAKE_CURRENT_SOURCE_DIR}/libvita2d/libvita2d)
+set(VITA2D_SOURCE_PATH ${VITA2D_PATH}/source)
+set(VITA2D_SHADER_PATH ${VITA2D_PATH}/shader/compiled)
+set(VITA2D_SRC
+    ${VITA2D_SOURCE_PATH}/font_atlas.c
+    ${VITA2D_SOURCE_PATH}/int_htab.c
+    ${VITA2D_SOURCE_PATH}/texture_atlas.c
+    ${VITA2D_SOURCE_PATH}/utils.c
+    ${VITA2D_SOURCE_PATH}/vita2d.c
+    ${VITA2D_SOURCE_PATH}/vita2d_draw.c
+    ${VITA2D_SOURCE_PATH}/vita2d_font.c
+    ${VITA2D_SOURCE_PATH}/vita2d_image_bmp.c
+    ${VITA2D_SOURCE_PATH}/vita2d_image_jpeg.c
+    ${VITA2D_SOURCE_PATH}/vita2d_image_png.c
+    ${VITA2D_SOURCE_PATH}/vita2d_pgf.c
+    ${VITA2D_SOURCE_PATH}/vita2d_pvf.c
+    ${VITA2D_SOURCE_PATH}/vita2d_texture.c)
+
+set(VITA2D_OBJ
+    ${VITA2D_SHADER_PATH}/clear_v_gxp.o
+    ${VITA2D_SHADER_PATH}/clear_f_gxp.o
+    ${VITA2D_SHADER_PATH}/color_v_gxp.o
+    ${VITA2D_SHADER_PATH}/color_f_gxp.o
+    ${VITA2D_SHADER_PATH}/texture_v_gxp.o
+    ${VITA2D_SHADER_PATH}/texture_f_gxp.o
+    ${VITA2D_SHADER_PATH}/texture_tint_f_gxp.o)
+
+include_directories("libvita2d/libvita2d/include"
+                    $ENV{VITASDK}/arm-vita-eabi/include/freetype2)
+add_library(vita2d STATIC ${VITA2D_SRC})
+target_link_libraries(vita2d ${VITA2D_OBJ})

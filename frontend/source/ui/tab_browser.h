@@ -13,10 +13,15 @@ public:
     void Show(bool selected);
 
 private:
-    size_t _GetItemCount() { return _directory->GetSize(); };
+    size_t _GetItemCount() override { return _directory->GetSize(); };
+    void _OnActive(Input *input) override;
+    bool _ItemVisable(size_t index) override { return true; };
+    void _OnKeyUp(Input *input) override;
+    void _OnKeyDown(Input *input) override;
     void _OnKeyCross(Input *input);
-    void _OnActive(Input *input);
-    bool _ItemVisable(size_t index) { return true; };
+    void _UpdateTexture();
 
     Directory *_directory;
+    vita2d_texture *_texture;
+    SceKernelLwMutexWork _mutex;
 };
