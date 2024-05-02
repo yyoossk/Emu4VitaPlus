@@ -202,5 +202,13 @@ bool Config::Load(const char *path)
         }
     }
 
+    const auto &keys = tbl["KEYS"];
+    for (auto &k : control_maps)
+    {
+        const auto &t = keys[PSV_KEYS.at(k.psv)];
+        k.retro = *(t["retro"].value<uint8_t>());
+        k.turbo = *(t["turbo"].value<bool>());
+    }
+
     return true;
 }

@@ -5,9 +5,8 @@ set(CMAKE_TOOLCHAIN_FILE
     CACHE PATH "toolchain file")
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
-set(MAJOR_VER "00")
-set(MINOR_VER "01")
-set(SFO_APP_VER "${MAJOR_VER}.${MINOR_VER}")
+set(APP_VER "0.1")
+set(SFO_APP_VER "00.01")
 set(PUBLIC_PKG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pkg)
 
 file(GLOB_RECURSE PKG_FILES ${PUBLIC_PKG_DIR}/*)
@@ -16,7 +15,7 @@ set(PUBLIC_PKG_FILES "")
 foreach(file ${PKG_FILES})
     file(RELATIVE_PATH rel ${PUBLIC_PKG_DIR} ${file})
     list(APPEND PUBLIC_PKG_FILES FILE ${file} ${rel})
-endforeach(PKG_FILES)
+endforeach()
 
 include_directories(
     source source/ui
@@ -49,13 +48,12 @@ add_compile_definitions(
 set(CMAKE_EXE_LINKER_FLAGS "-Wl,-q")
 add_executable(${APP_NAME}.elf ${SRC})
 
-add_custom_target(
-    LANGUAGE
+add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/source/language_define.cpp
     COMMAND python export.py
     COMMAND mv language_define.h ${CMAKE_CURRENT_SOURCE_DIR}/source
     COMMAND mv language_define.cpp ${CMAKE_CURRENT_SOURCE_DIR}/source
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../script
-    SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/../script/language.json)
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/../script/language.json)
 
 target_link_libraries(
     ${APP_NAME}.elf
@@ -87,14 +85,13 @@ target_link_libraries(
     SceHid_stub
     SceFiber_stub)
 
-add_dependencies(${APP_NAME}.elf LANGUAGE)
-
 set(VITA_MAKE_FSELF_FLAGS "-a 0x2800000000000001")
-vita_create_self(eboot.bin ${APP_NAME}.elf UNSAFE)
+vita_create_self(eboot.bin ${APP_NAME}.elf UNSAFE STRIPPED REL_OPTIMIZE)
 
+set(VPK_NAME ${APP_NAME}.vpk)
 set(VITA_MKSFOEX_FLAGS -d ATTRIBUTE2=12)
 vita_create_vpk(
-    ${APP_NAME}.vpk
+    ${VPK_NAME}
     ${SFO_TITLE_ID}
     eboot.bin
     VERSION
@@ -103,3 +100,12 @@ vita_create_vpk(
     "${SFO_TITLE_NAME}"
     ${PRIVATE_PKG_FILES}
     ${PUBLIC_PKG_FILES})
+
+add_custom_target(VPK ALL
+    COMMAND ${CMAKE_COMMAND} -E rename ${VPK_NAME} ${CMAKE_BINARY_DIR}/${VPK_NAME})
+
+if(${CMAKE_VERSION} VERSION_LESS "3.20.0")
+    add_dependencies(VPK ${VPK_NAME})
+else()
+    add_dependencies(VPK ${VPK_NAME}-vpk)
+endif()

@@ -23,5 +23,6 @@ private:
 
     Directory *_directory;
     vita2d_texture *_texture;
-    SceKernelLwMutexWork _mutex;
+    float _texture_width;
+    float _texture_height;
 };

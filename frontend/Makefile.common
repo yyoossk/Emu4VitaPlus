@@ -1,5 +1,5 @@
-MAJOR_VER := 0
-MINOR_VER := 1
+MAJOR_VER := 1
+MINOR_VER := 0
 
 PADDED_MAJOR_VER  := $(shell printf "%02d" $(MAJOR_VER))
 PADDED_MINOR_VER  := $(shell printf "%02d" $(MINOR_VER))
@@ -70,7 +70,8 @@ INCDIRS += -I$(SRC_DIR) \
            -I$(LIBTOMLPP_INCLUDE_DIR) \
 		   -I$(LIBVITA2D_INCLUDE_DIR)
 
-ARCHFLAGS := -marm -mcpu=cortex-a9 -mfloat-abi=hard -DVITA -D__vita__
+#ARCHFLAGS := -marm -mcpu=cortex-a9 -mfloat-abi=hard -DVITA -D__vita__
+ARCHFLAGS := -march=armv7-a -mfpu=neon -mfloat-abi=hard -DVITA -D__vita__
 CFLAGS    := $(ARCHFLAGS) -mword-relocations -fno-optimize-sibling-calls
 CFLAGS    += -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables 
 CFLAGS    += -ffast-math -ftree-vectorize
@@ -79,10 +80,9 @@ ASFLAGS   := $(CFLAGS) $(INCDIRS)
 
 WARNINGS := -Wall -Wno-format-truncation
 CFLAGS    += $(WARNINGS) $(INCDIRS) $(DEFINES)
-CXXFLAGS  := $(CFLAGS) -fno-rtti -fno-exceptions -std=c++17
+CXXFLAGS  := $(CFLAGS) -std=c++17
+#-fno-rtti -fno-exceptions -std=c++17
 LDFLAGS   := -Wl,-q -L$(LIB_DIR) -L$(LIBVITA2D_LIB_DIR)
-
-SCE_LIBC_SIZE  := 4194304
 
 CORE_ARGS += platform=vita EXTERNAL_ZLIB=1
 
@@ -120,7 +120,7 @@ LIBS    := $(CORE_MAKEFILE_DIR)/$(CORE_FILE_NAME)_libretro_vita.a \
 	-lSceHid_stub \
 	-lSceFiber_stub
 
-all: create_dirs build-core build-deps gen-language build-app
+all: clean_files create_dirs build-core build-deps gen-language build-app
 
 debug: CXXFLAGS += -DDEBUG -g
 debug: CFLAGS += -DDEBUG -g
@@ -130,6 +130,9 @@ gen-language:
 	cd $(SCRIPT_DIR) && python export.py \
 	&& mv language_define.h $(SRC_DIR) \
 	&& mv language_define.cpp $(SRC_DIR)
+
+clean_files:
+	@rm -rf $(TARGET_PATH) $(EBOOT_PATH) $(SFO_PATH) $(BUILD_DIR)/$(TARGET).velf $(BUILD_DIR)/$(TARGET).elf
 
 create_dirs:
 	@mkdir -p $(BUILD_DIR)
@@ -142,7 +145,6 @@ build-deps:
 	cd $(DEPS_DIR) && make -f Makefile.libvita2d
 
 build-app: $(EBOOT_PATH) $(SFO_PATH)
-	@rm -rf $(TARGET_PATH)
 	@mkdir -p $(RELEASES_DIR)
 	cd $(PUBLIC_PKG_DIR) && zip -r $(TARGET_PATH) ./*
 	cd $(PRIVATE_PKG_DIR) && zip -r $(TARGET_PATH) ./*
@@ -159,7 +161,7 @@ $(EBOOT_PATH): $(BUILD_DIR)/$(TARGET).velf
 
 $(BUILD_DIR)/$(TARGET).velf: $(BUILD_DIR)/$(TARGET).elf
 	@mkdir -p $(dir $@)
-	# $(STRIP) -g $<
+	$(STRIP) -g $<
 	vita-elf-create $< $@
 
 $(BUILD_DIR)/$(TARGET).elf: $(OBJS)

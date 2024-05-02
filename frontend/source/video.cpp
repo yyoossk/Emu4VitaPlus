@@ -29,7 +29,7 @@ int Video::_DrawThread(SceSize args, void *argp)
     CLASS_POINTER(Video, video, argp);
     while (video->IsRunning())
     {
-        video->Lock();
+        // video->Lock();
         // LogDebug("video %08x", video);
         vita2d_pool_reset();
         vita2d_start_drawing_advanced(NULL, 0);
@@ -56,7 +56,7 @@ int Video::_DrawThread(SceSize args, void *argp)
 
         vita2d_end_drawing();
         vita2d_swap_buffers();
-        video->Unlock();
+        // video->Unlock();
         // sceDisplayWaitVblankStart();
         // LogDebug("Unlock %08x", video);
     }

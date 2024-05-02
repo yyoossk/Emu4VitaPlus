@@ -69,7 +69,8 @@ DEFINES := \
 WARNINGS := \
 	-Wall
 
-CFLAGS    += -DVITA -D__vita__ -O3 -marm -mcpu=cortex-a9 -mfloat-abi=hard
+CFLAGS    += -DVITA -D__vita__ -O3 
+# -marm -mcpu=cortex-a9 -mfloat-abi=hard
 ASFLAGS   := $(CFLAGS) $(WARNINGS) $(INCDIRS)
 
 CFLAGS    += $(WARNINGS) $(INCDIRS) $(DEFINES)

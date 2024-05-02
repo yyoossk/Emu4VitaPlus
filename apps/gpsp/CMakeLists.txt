@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_TOOLCHAIN_FILE
-    "$ENV{VITASDK}/share/vita.toolchain.cmake"
-    CACHE PATH "toolchain file")
+  "$ENV{VITASDK}/share/vita.toolchain.cmake"
+  CACHE PATH "toolchain file")
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -25,10 +25,11 @@ set(CORE_SOFTWARE, "Nintendo - Game Boy Advance")
 
 file(GLOB_RECURSE PKG_FILES ${PRIVATE_PKG_DIR}/*)
 set(PRIVATE_PKG_FILES "")
+
 foreach(file ${PKG_FILES})
   file(RELATIVE_PATH rel ${PRIVATE_PKG_DIR} ${file})
   list(APPEND PRIVATE_PKG_FILES FILE ${file} ${rel})
-endforeach(PKG_FILES)
+endforeach()
 
 project("gpSP")
 
@@ -45,7 +46,7 @@ set_property(
 
 set(LIBRETRO_LIBRARY ${CORE_DIR}/gpsp_libretro_vita.a)
 set_target_properties(gpSP PROPERTIES IMPORTED_LOCATION_NOCONFIG
-                                      "${LIBRETRO_LIBRARY}")
+  "${LIBRETRO_LIBRARY}")
 add_dependencies(gpSP gpSP_build)
 
 add_compile_definitions(GPSP_BUILD GBA_BUILD)
