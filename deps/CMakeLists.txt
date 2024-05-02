@@ -41,7 +41,7 @@ set(RETRO_SRC
 include_directories("libretro-common/include")
 
 add_compile_definitions(HAVE_NEON HAVE_THREADS HAVE_COMPRESSION HAVE_ZLIB
-                        HAVE_7ZIP)
+    HAVE_7ZIP)
 add_library(retro_comm STATIC ${RETRO_SRC})
 
 # ----------------------
@@ -49,7 +49,6 @@ set(VITA2D_PATH ${CMAKE_CURRENT_SOURCE_DIR}/libvita2d/libvita2d)
 set(VITA2D_SOURCE_PATH ${VITA2D_PATH}/source)
 set(VITA2D_SHADER_PATH ${VITA2D_PATH}/shader/compiled)
 set(VITA2D_SRC
-    ${VITA2D_SOURCE_PATH}/font_atlas.c
     ${VITA2D_SOURCE_PATH}/int_htab.c
     ${VITA2D_SOURCE_PATH}/texture_atlas.c
     ${VITA2D_SOURCE_PATH}/utils.c
@@ -72,7 +71,7 @@ set(VITA2D_OBJ
     ${VITA2D_SHADER_PATH}/texture_f_gxp.o
     ${VITA2D_SHADER_PATH}/texture_tint_f_gxp.o)
 
-include_directories("libvita2d/libvita2d/include"
-                    $ENV{VITASDK}/arm-vita-eabi/include/freetype2)
+include_directories(libvita2d/libvita2d/include
+    $ENV{VITASDK}/arm-vita-eabi/include/freetype2)
 add_library(vita2d STATIC ${VITA2D_SRC})
 target_link_libraries(vita2d ${VITA2D_OBJ})

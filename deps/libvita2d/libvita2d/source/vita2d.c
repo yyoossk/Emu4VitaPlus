@@ -137,9 +137,8 @@ struct {
 } _vita2d_fragmentPrograms;
 
 // Temporary memory pool
-static void *pool_addr[DISPLAY_BUFFER_COUNT];
-static SceUID poolUid[DISPLAY_BUFFER_COUNT];
-static unsigned int current_pool = 0;
+static void *pool_addr = NULL;
+static SceUID poolUid;
 static unsigned int pool_index = 0;
 static unsigned int pool_size = 0;
 
@@ -683,14 +682,13 @@ static int vita2d_init_internal(unsigned int temp_pool_size, SceGxmMultisampleMo
 
 	// Allocate memory for the memory pool
 	pool_size = temp_pool_size;
-	for (i = 0; i < DISPLAY_BUFFER_COUNT; i++) {
-		pool_addr[i] = gpu_alloc(
-			SCE_KERNEL_MEMBLOCK_TYPE_USER_RW,
-			pool_size,
-			sizeof(void *),
-			SCE_GXM_MEMORY_ATTRIB_READ,
-			&poolUid[i]);
-	}
+	pool_addr = gpu_alloc(
+		SCE_KERNEL_MEMBLOCK_TYPE_USER_RW,
+		pool_size,
+		sizeof(void *),
+		SCE_GXM_MEMORY_ATTRIB_READ,
+		&poolUid);
+		
 
 	matrix_init_orthographic(_vita2d_ortho_matrix, 0.0f, DISPLAY_WIDTH, DISPLAY_HEIGHT, 0.0f, 0.0f, 1.0f);
 
@@ -756,6 +754,7 @@ int vita2d_fini()
 	sceGxmDisplayQueueFinish();
 
 	// clean up display queue
+	gpu_free(depthBufferUid);
 	for (i = 0; i < DISPLAY_BUFFER_COUNT; i++) {
 		// clear the buffer then deallocate
 		memset(displayBufferData[i], 0, DISPLAY_HEIGHT*DISPLAY_STRIDE_IN_PIXELS*4);
@@ -794,9 +793,7 @@ int vita2d_fini()
 	gpu_free(vdmRingBufferUid);
 	free(contextParams.hostMem);
 
-	for (i = 0; i < DISPLAY_BUFFER_COUNT; i++) {
-		gpu_free(poolUid[i]);
-	}
+	gpu_free(poolUid);
 
 	// terminate libgxm
 	sceGxmTerminate();
@@ -857,6 +854,7 @@ void vita2d_start_drawing()
 
 void vita2d_start_drawing_advanced(vita2d_texture *target, unsigned int flags)
 {
+
 	if (target == NULL) {
 		if (system_app_mode) {
 			sceSharedFbBegin(shared_fb, &shared_fb_info);
@@ -1046,7 +1044,7 @@ void vita2d_set_region_clip(SceGxmRegionClipMode mode, unsigned int x_min, unsig
 void *vita2d_pool_malloc(unsigned int size)
 {
 	if ((pool_index + size) < pool_size) {
-		void *addr = (void *)((unsigned int)pool_addr[current_pool] + pool_index);
+		void *addr = (void *)((unsigned int)pool_addr + pool_index);
 		pool_index += size;
 		return addr;
 	}
@@ -1057,7 +1055,7 @@ void *vita2d_pool_memalign(unsigned int size, unsigned int alignment)
 {
 	unsigned int new_index = (pool_index + alignment - 1) & ~(alignment - 1);
 	if ((new_index + size) < pool_size) {
-		void *addr = (void *)((unsigned int)pool_addr[current_pool] + new_index);
+		void *addr = (void *)((unsigned int)pool_addr + new_index);
 		pool_index = new_index + size;
 		return addr;
 	}
@@ -1071,7 +1069,6 @@ unsigned int vita2d_pool_free_space()
 
 void vita2d_pool_reset()
 {
-    current_pool = (current_pool + 1) % DISPLAY_BUFFER_COUNT;
 	pool_index = 0;
 }
 

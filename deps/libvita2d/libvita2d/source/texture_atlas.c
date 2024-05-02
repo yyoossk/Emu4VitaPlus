@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 #include "texture_atlas.h"
 
 texture_atlas *texture_atlas_create(int width, int height, SceGxmTextureFormat format)
@@ -9,104 +8,51 @@ texture_atlas *texture_atlas_create(int width, int height, SceGxmTextureFormat f
 	if (!atlas)
 		return NULL;
 
-	atlas_texture_entry *tex_entry = malloc(sizeof(*tex_entry));
-	if (!tex_entry) {
-		free(atlas);
-		return NULL;
-	}
+	bp2d_rectangle rect;
+	rect.x = 0;
+	rect.y = 0;
+	rect.w = width;
+	rect.h = height;
 
-	tex_entry->prev = NULL;
-	tex_entry->tex = vita2d_create_empty_texture_format(width,
+	atlas->texture = vita2d_create_empty_texture_format(width,
 							    height,
 							    format);
-	if (!tex_entry->tex) {
-		free(tex_entry);
+	if (!atlas->texture) {
 		free(atlas);
 		return NULL;
 	}
 
-	vita2d_texture_set_filters(tex_entry->tex,
+	atlas->bp_root = bp2d_create(&rect);
+	atlas->htab = int_htab_create(256);
+
+	vita2d_texture_set_filters(atlas->texture,
 				   SCE_GXM_TEXTURE_FILTER_POINT,
 				   SCE_GXM_TEXTURE_FILTER_LINEAR);
-
-	atlas->texture_data.tex_entry = tex_entry;
-	atlas->texture_data.format= format;
-	atlas->texture_data.rect.x = 0;
-	atlas->texture_data.rect.y = 0;
-	atlas->texture_data.rect.w = width;
-	atlas->texture_data.rect.h = height;
-	atlas->texture_data.y_space = 0;
-
-	atlas->htab = int_htab_create(256);
 
 	return atlas;
 }
 
 void texture_atlas_free(texture_atlas *atlas)
 {
-	atlas_texture_entry *tex_entry = atlas->texture_data.tex_entry;
-	while (tex_entry){
-		atlas_texture_entry *prev = tex_entry->prev;
-		// printf("atlas texture_atlas_free: free tex_entry, entry = %p, texture = %p\n", tex_entry, tex_entry->tex);
-		if (tex_entry->tex)
-			vita2d_free_texture(tex_entry->tex);
-		free(tex_entry);
-		tex_entry = prev;
-	}
-
+	vita2d_free_texture(atlas->texture);
+	bp2d_free(atlas->bp_root);
 	int_htab_free(atlas->htab);
 	free(atlas);
 }
 
 int texture_atlas_insert(texture_atlas *atlas, unsigned int character,
-			 const vita2d_size *size,
+			 const bp2d_size *size,
 			 const texture_atlas_entry_data *data,
-			 vita2d_texture **tex,
-			 vita2d_position *inserted_pos)
+			 bp2d_position *inserted_pos)
 {
-	atlas_htab_entry *entry = malloc(sizeof(*entry));
+	atlas_htab_entry *entry;
+	bp2d_node *new_node;
 
-	if (atlas->texture_data.rect.x + size->w > atlas->texture_data.rect.w)
-	{
-		atlas->texture_data.rect.x = 0;
-		atlas->texture_data.rect.y += atlas->texture_data.y_space;
-		atlas->texture_data.y_space = size->h;
-	}
+	if (!bp2d_insert(atlas->bp_root, size, inserted_pos, &new_node))
+		return 0;
 
-	if (atlas->texture_data.rect.y + size->h > atlas->texture_data.rect.h)
-	{
-		atlas_texture_entry *tex_entry = malloc(sizeof(*tex_entry));
-		if (!tex_entry) {
-			return 0;
-		}
+	entry = malloc(sizeof(*entry));
 
-		tex_entry->prev = atlas->texture_data.tex_entry;
-		tex_entry->tex = vita2d_create_empty_texture_format(atlas->texture_data.rect.w,
-									atlas->texture_data.rect.h,
-									atlas->texture_data.format);
-								
-		if (!tex_entry->tex) {
-			free(tex_entry);
-			return 0;
-		}
-
-		// printf("texture_atlas_insert: creat tex_entry, entry = %p, texture = %p\n", tex_entry, tex_entry->tex);
-
-		vita2d_texture_set_filters(tex_entry->tex,
-				   SCE_GXM_TEXTURE_FILTER_POINT,
-				   SCE_GXM_TEXTURE_FILTER_LINEAR);
-
-		atlas->texture_data.tex_entry = tex_entry;
-		atlas->texture_data.rect.x = 0;
-		atlas->texture_data.rect.y = 0;
-
-	}
-
-	*tex = atlas->texture_data.tex_entry->tex;
-	inserted_pos->x = atlas->texture_data.rect.x;
-	inserted_pos->y = atlas->texture_data.rect.y;
-
-	entry->tex = *tex;
 	entry->rect.x = inserted_pos->x;
 	entry->rect.y = inserted_pos->y;
 	entry->rect.w = size->w;
@@ -114,12 +60,9 @@ int texture_atlas_insert(texture_atlas *atlas, unsigned int character,
 	entry->data = *data;
 
 	if (!int_htab_insert(atlas->htab, character, entry)) {
+		bp2d_delete(atlas->bp_root, new_node);
 		return 0;
 	}
-
-	atlas->texture_data.rect.x += size->w;
-	if (size->h > atlas->texture_data.y_space)
-		atlas->texture_data.y_space = size->h;
 
 	return 1;
 }
@@ -129,14 +72,13 @@ int texture_atlas_exists(texture_atlas *atlas, unsigned int character)
 	return int_htab_find(atlas->htab, character) != NULL;
 }
 
-int texture_atlas_get(texture_atlas *atlas, unsigned int character, vita2d_texture **tex, 
-		      vita2d_rectangle *rect, texture_atlas_entry_data *data)
+int texture_atlas_get(texture_atlas *atlas, unsigned int character,
+		      bp2d_rectangle *rect, texture_atlas_entry_data *data)
 {
 	atlas_htab_entry *entry = int_htab_find(atlas->htab, character);
 	if (!entry)
 		return 0;
 
-	*tex = entry->tex;
 	*rect = entry->rect;
 	*data = entry->data;
 

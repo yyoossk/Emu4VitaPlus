@@ -1,3 +1,5 @@
 mkdir build
 cd build
-cmake ../ -DCMAKE_DEPENDS_USE_COMPILER=false
+cmake ../
+或者
+cmake ../ -DCMAKE_BUILD_TYPE=Debug

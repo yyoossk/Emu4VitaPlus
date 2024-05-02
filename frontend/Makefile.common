@@ -7,7 +7,7 @@ APP_VER           := $(MAJOR_VER).$(PADDED_MINOR_VER)
 
 SFO_APP_VER       := $(PADDED_MAJOR_VER).$(PADDED_MINOR_VER)
 PRIVATE_PKG_DIR            := $(APP_DIR)/pkg
-PUBLIC_PKG_DIR             := $(FRONTEND_DIR)/pkgs/vita
+PUBLIC_PKG_DIR             := $(FRONTEND_DIR)/pkg
 BUILD_DIR                  := $(ROOT_DIR)/build/$(CORE_FILE_NAME)
 DEPS_DIR                   := $(ROOT_DIR)/deps
 SRC_DIR                    := $(FRONTEND_DIR)/source
@@ -17,6 +17,9 @@ LIBRETRO_COMM_INCLUDE_DIR  := $(LIBRETRO_COMM_DIR)/include
 LIB_DIR                    := $(ROOT_DIR)/build/libretro_comm
 LIBTOMLPP_DIR              := $(DEPS_DIR)/tomlplusplus
 LIBTOMLPP_INCLUDE_DIR      := $(LIBTOMLPP_DIR)/include
+LIBVITA2D_DIR              := $(DEPS_DIR)/libvita2d
+LIBVITA2D_INCLUDE_DIR      := $(LIBVITA2D_DIR)/libvita2d/include
+LIBVITA2D_LIB_DIR          := $(ROOT_DIR)/build/libvita2d
 SCRIPT_DIR                 := $(ROOT_DIR)/script
 
 EBOOT_PATH         := $(PRIVATE_PKG_DIR)/eboot.bin
@@ -64,7 +67,8 @@ INCDIRS += -I$(SRC_DIR) \
            -I$(SRC_DIR)/ui \
 		   -I$(SRC_DIR)/audio \
            -I$(LIBRETRO_COMM_INCLUDE_DIR) \
-           -I$(LIBTOMLPP_INCLUDE_DIR)
+           -I$(LIBTOMLPP_INCLUDE_DIR) \
+		   -I$(LIBVITA2D_INCLUDE_DIR)
 
 ARCHFLAGS := -marm -mcpu=cortex-a9 -mfloat-abi=hard -DVITA -D__vita__
 CFLAGS    := $(ARCHFLAGS) -mword-relocations -fno-optimize-sibling-calls
@@ -76,7 +80,7 @@ ASFLAGS   := $(CFLAGS) $(INCDIRS)
 WARNINGS := -Wall -Wno-format-truncation
 CFLAGS    += $(WARNINGS) $(INCDIRS) $(DEFINES)
 CXXFLAGS  := $(CFLAGS) -fno-rtti -fno-exceptions -std=c++17
-LDFLAGS   := -Wl,-q -L$(LIB_DIR)
+LDFLAGS   := -Wl,-q -L$(LIB_DIR) -L$(LIBVITA2D_LIB_DIR)
 
 SCE_LIBC_SIZE  := 4194304
 
@@ -135,6 +139,7 @@ build-core:
 
 build-deps:
 	cd $(DEPS_DIR) && make -f Makefile.libretro_comm
+	cd $(DEPS_DIR) && make -f Makefile.libvita2d
 
 build-app: $(EBOOT_PATH) $(SFO_PATH)
 	@rm -rf $(TARGET_PATH)
@@ -154,7 +159,7 @@ $(EBOOT_PATH): $(BUILD_DIR)/$(TARGET).velf
 
 $(BUILD_DIR)/$(TARGET).velf: $(BUILD_DIR)/$(TARGET).elf
 	@mkdir -p $(dir $@)
-	$(STRIP) -g $<
+	# $(STRIP) -g $<
 	vita-elf-create $< $@
 
 $(BUILD_DIR)/$(TARGET).elf: $(OBJS)

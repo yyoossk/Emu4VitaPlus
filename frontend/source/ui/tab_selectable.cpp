@@ -2,9 +2,9 @@
 
 TabSeletable::TabSeletable(TEXT_ENUM title_id, std::vector<ItemBase *> items)
     : TabBase(title_id),
-      _items(std::move(items)) {}
+      _items(std::move(items)), _index(0) {}
 
-TabSeletable::TabSeletable(TEXT_ENUM title_id) : TabBase(title_id) {}
+TabSeletable::TabSeletable(TEXT_ENUM title_id) : TabBase(title_id), _index(0) {}
 
 TabSeletable::~TabSeletable()
 {
@@ -53,6 +53,8 @@ void TabSeletable::Show(bool selected)
 
 void TabSeletable::_OnKeyUp(Input *input)
 {
+    LogFunctionName;
+    LogDebug("%d", _GetItemCount());
     if (_GetItemCount() == 0)
     {
         return;
@@ -60,12 +62,15 @@ void TabSeletable::_OnKeyUp(Input *input)
 
     do
     {
-        _index = (_index == 0 ? _GetItemCount() - 1 : _index - 1);
+        _index = ((_index == 0 ? (_GetItemCount() - 1) : (_index - 1)));
+        LogDebug("_ItemVisable(_index) %d", _ItemVisable(_index));
     } while (!_ItemVisable(_index));
 }
 
 void TabSeletable::_OnKeyDown(Input *input)
 {
+    LogFunctionName;
+    LogDebug("%d", _GetItemCount());
     if (_GetItemCount() == 0)
     {
         return;
@@ -73,7 +78,8 @@ void TabSeletable::_OnKeyDown(Input *input)
 
     do
     {
-        _index = (_index + 1 == _GetItemCount() ? 0 : _index + 1);
+        _index = (((_index + 1) == _GetItemCount() ? 0 : (_index + 1)));
+        LogDebug("_ItemVisable(_index) %d %d", _index, _ItemVisable(_index));
     } while (!_ItemVisable(_index));
 }
 

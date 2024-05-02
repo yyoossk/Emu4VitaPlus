@@ -116,10 +116,7 @@ int int_htab_erase(const int_htab *htab, unsigned int key)
 
 	/* Found the key */
 	if (htab->entries[idx].key == key) {
-		if (htab->entries[idx].value != NULL) {
-			free(htab->entries[idx].value);
-			htab->entries[idx].value = NULL;
-		}
+		htab->entries[idx].value = NULL;
 		return 1;
 	}
 

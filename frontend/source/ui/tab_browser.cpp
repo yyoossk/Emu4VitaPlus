@@ -140,11 +140,11 @@ void TabBrowser::_UpdateTexture()
 
     if (_texture != nullptr)
     {
-        // gVideo->Lock();
+        gVideo->Lock();
         vita2d_wait_rendering_done();
         vita2d_free_texture(_texture);
         _texture = nullptr;
-        // gVideo->Unlock();
+        gVideo->Unlock();
     }
 
     const DirItem &item = _directory->GetItem(_index);
