@@ -81,7 +81,7 @@ void ItemHotkey::Show(bool selected)
                 ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(100, 100, 100, 255));
             }
 
-            ImGui::Selectable(TEXT(ControlTextMap[PsvKeys[i]]), i == _index);
+            ImGui::Selectable(TEXT(Config::ControlTextMap[PsvKeys[i]]), i == _index);
             if (i == _index)
             {
                 if (ImGui::GetScrollMaxY() > 0.f)
@@ -125,11 +125,11 @@ const char *ItemHotkey::_GetPreviewText()
         {
             if (s.size() == 0)
             {
-                s = TEXT(ControlTextMap[key]);
+                s = TEXT(Config::ControlTextMap[key]);
             }
             else
             {
-                s += std::string(" + ") + TEXT(ControlTextMap[key]);
+                s += std::string(" + ") + TEXT(Config::ControlTextMap[key]);
             }
         }
     }

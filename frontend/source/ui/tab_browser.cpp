@@ -67,22 +67,7 @@ void TabBrowser::Show(bool selected)
 
         if (_texture != nullptr)
         {
-            float width = vita2d_texture_get_width(_texture);
-            float height = vita2d_texture_get_height(_texture);
-            ImVec2 size = ImGui::GetContentRegionAvail();
-            LogDebug("%f %f", size.x, size.y);
-            float zoom = 1.0;
-            if (width > size.x)
-            {
-                zoom = size.x / width;
-            }
-
-            if (height * zoom > size.y)
-            {
-                zoom = size.y / height;
-            }
-
-            ImGui::Image(_texture, {width * zoom, height * zoom});
+            ImGui::Image(_texture, {_texture_width, _texture_height});
         }
 
         ImGui::NextColumn();

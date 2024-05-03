@@ -5,13 +5,15 @@
 
 Video::Video() : ThreadBase(_DrawThread)
 {
+    LogFunctionName;
     vita2d_init();
-    vita2d_set_vblank_wait(1);
+    // vita2d_set_vblank_wait(1);
     _InitImgui();
 }
 
 Video::~Video()
 {
+    LogFunctionName;
     if (IsRunning())
     {
         Stop();
@@ -56,8 +58,8 @@ int Video::_DrawThread(SceSize args, void *argp)
 
         vita2d_end_drawing();
         vita2d_swap_buffers();
+        sceDisplayWaitVblankStart();
         // video->Unlock();
-        // sceDisplayWaitVblankStart();
         // LogDebug("Unlock %08x", video);
     }
 
@@ -76,6 +78,9 @@ void Video::_InitImgui()
     ImGui_ImplVita2D_UseIndirectFrontTouch(false);
     ImGui_ImplVita2D_UseRearTouch(false);
     ImGui_ImplVita2D_GamepadUsage(false);
+
+    ImGuiStyle *style = &ImGui::GetStyle();
+    style->Colors[ImGuiCol_TitleBg] = style->Colors[ImGuiCol_TitleBgActive];
 }
 
 void Video::_DeinitImgui()

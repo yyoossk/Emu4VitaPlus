@@ -70,8 +70,7 @@ INCDIRS += -I$(SRC_DIR) \
            -I$(LIBTOMLPP_INCLUDE_DIR) \
 		   -I$(LIBVITA2D_INCLUDE_DIR)
 
-#ARCHFLAGS := -marm -mcpu=cortex-a9 -mfloat-abi=hard -DVITA -D__vita__
-ARCHFLAGS := -march=armv7-a -mfpu=neon -mfloat-abi=hard -DVITA -D__vita__
+ARCHFLAGS := -marm -mcpu=cortex-a9 -mfloat-abi=hard -DVITA -D__vita__
 CFLAGS    := $(ARCHFLAGS) -mword-relocations -fno-optimize-sibling-calls
 CFLAGS    += -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables 
 CFLAGS    += -ffast-math -ftree-vectorize
@@ -80,8 +79,7 @@ ASFLAGS   := $(CFLAGS) $(INCDIRS)
 
 WARNINGS := -Wall -Wno-format-truncation
 CFLAGS    += $(WARNINGS) $(INCDIRS) $(DEFINES)
-CXXFLAGS  := $(CFLAGS) -std=c++17
-#-fno-rtti -fno-exceptions -std=c++17
+CXXFLAGS  := $(CFLAGS) -fno-rtti -fno-exceptions -std=c++17
 LDFLAGS   := -Wl,-q -L$(LIB_DIR) -L$(LIBVITA2D_LIB_DIR)
 
 CORE_ARGS += platform=vita EXTERNAL_ZLIB=1

@@ -21,7 +21,7 @@ static uint8_t RetroKeys[] = {
 #define RETRO_KEYS_SIZE (sizeof(RetroKeys) / sizeof(RetroKeys[0]))
 
 ItemControl::ItemControl(ControlMapConfig *control_map)
-    : ItemBase(ControlTextMap[control_map->psv]),
+    : ItemBase(Config::ControlTextMap[control_map->psv]),
       _control_map(control_map),
       _actived(false)
 {
@@ -60,7 +60,7 @@ void ItemControl::Show(bool selected)
         ImGui::OpenPopup(text);
     }
 
-    if (MyBeginCombo(text, TEXT(RetroTextMap[_control_map->retro]), ImGuiComboFlags_NoArrowButton))
+    if (MyBeginCombo(text, TEXT(Config::RetroTextMap[_control_map->retro]), ImGuiComboFlags_NoArrowButton))
     {
         if (!_actived && is_popup)
         {
@@ -68,7 +68,7 @@ void ItemControl::Show(bool selected)
         }
         for (size_t i = 0; i < RETRO_KEYS_SIZE; i++)
         {
-            ImGui::Selectable(TEXT(RetroTextMap[RetroKeys[i]]), _control_map->retro == RetroKeys[i]);
+            ImGui::Selectable(TEXT(Config::RetroTextMap[RetroKeys[i]]), _control_map->retro == RetroKeys[i]);
             if (_control_map->retro == RetroKeys[i])
             {
                 if (ImGui::GetScrollMaxY() > 0.f)
