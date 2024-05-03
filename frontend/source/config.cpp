@@ -9,10 +9,10 @@
 #include "file.h"
 #include "log.h"
 
-// #ifndef TOML_EXCEPTIONS
-// #define TOML_EXCEPTIONS 0
-// #endif
-// #include <toml++/toml.hpp>
+#ifndef TOML_EXCEPTIONS
+#define TOML_EXCEPTIONS 0
+#endif
+#include <toml++/toml.hpp>
 
 #define KEY_PAIR(K) \
     {               \
@@ -160,52 +160,58 @@ void Config::Default()
 
 bool Config::Save(const char *path)
 {
-    // LogFunctionName;
-    // toml::table keys;
-    // for (const auto &k : control_maps)
-    // {
-    //     toml::table t{{"psv", k.psv},
-    //                   {"retro", k.retro},
-    //                   {"turbo", k.turbo}};
-    //     keys.insert(PSV_KEYS.at(k.psv).c_str(), t);
-    // }
+    LogFunctionName;
+    toml::table keys;
+    for (const auto &k : control_maps)
+    {
+        toml::table t{{"psv", k.psv},
+                      {"retro", k.retro},
+                      {"turbo", k.turbo}};
+        keys.insert(PSV_KEYS.at(k.psv).c_str(), t);
+    }
 
-    // toml::table main{
-    //     {"language", gLanguageNames[language]},
-    // };
+    toml::table main{
+        {"language", gLanguageNames[language]},
+    };
 
-    // auto tbl = toml::table{{"MAIN", main}, {"KEYS", keys}};
-    // std::stringstream s;
-    // s << tbl;
+    auto tbl = toml::table{{"MAIN", main}, {"KEYS", keys}};
+    std::stringstream s;
+    s << tbl;
 
-    // FILE *fp = fopen(path, "wb");
-    // if (fp)
-    // {
-    //     fputs(s.str().c_str(), fp);
-    //     fclose(fp);
-    // }
+    FILE *fp = fopen(path, "wb");
+    if (fp)
+    {
+        fputs(s.str().c_str(), fp);
+        fclose(fp);
+    }
     return true;
 }
 
 bool Config::Load(const char *path)
 {
     sceKernelDelayThread(100000);
-    // toml::parse_result result = toml::parse_file(path);
-    // if (!result)
-    // {
-    //     return false;
-    // }
+    toml::parse_result result = toml::parse_file(path);
+    if (!result)
+    {
+        return false;
+    }
 
-    // const toml::table tbl(std::move(result.table()));
-    // auto lang = tbl["MAIN"]["language"].ref<std::string>();
-    // for (size_t i = 0; i < LANGUAGE_COUNT; i++)
-    // {
-    //     if (lang == gLanguageNames[i])
-    //     {
-    //         language = (LANGUAGE)i;
-    //         break;
-    //     }
-    // }
+    const toml::table tbl(std::move(result.table()));
+    if (!tbl.contains("MAIN"))
+    {
+        return false;
+    }
+
+    const toml::table *main = tbl["MAIN"].as_table();
+    std::string_view lang = (*main)["language"].value_or("ENGLISH");
+    for (size_t i = 0; i < LANGUAGE_COUNT; i++)
+    {
+        if (lang == gLanguageNames[i])
+        {
+            language = (LANGUAGE)i;
+            break;
+        }
+    }
 
     // const auto &keys = tbl["KEYS"];
     // for (auto &k : control_maps)

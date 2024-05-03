@@ -19,6 +19,11 @@ App::App()
     scePowerSetGpuClockFrequency(222);
     scePowerSetGpuXbarClockFrequency(166);
 
+    sceShellUtilInitEvents(0);
+    SceAppUtilInitParam init_param{0};
+    SceAppUtilBootParam boot_param{0};
+    sceAppUtilInit(&init_param, &boot_param);
+
     sceCtrlSetSamplingModeExt(SCE_CTRL_MODE_ANALOG);
     sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
     sceTouchSetSamplingState(SCE_TOUCH_PORT_BACK, SCE_TOUCH_SAMPLING_STATE_START);

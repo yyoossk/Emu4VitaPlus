@@ -7,7 +7,8 @@ Video::Video() : ThreadBase(_DrawThread)
 {
     LogFunctionName;
     vita2d_init();
-    // vita2d_set_vblank_wait(1);
+    vita2d_set_vblank_wait(1);
+    vita2d_set_clear_color(0xFF362B00);
     _InitImgui();
 }
 
@@ -57,8 +58,9 @@ int Video::_DrawThread(SceSize args, void *argp)
         }
 
         vita2d_end_drawing();
+        vita2d_common_dialog_update();
         vita2d_swap_buffers();
-        sceDisplayWaitVblankStart();
+        // sceDisplayWaitVblankStart();
         // video->Unlock();
         // LogDebug("Unlock %08x", video);
     }
