@@ -97,9 +97,10 @@ std::unordered_map<uint8_t, TEXT_ENUM> Config::RetroTextMap = {
 Config::Config() : language(LANGUAGE_ENGLISH)
 {
     LogFunctionName;
-    Default();
+    DefaultControlMap();
     if (!Load())
     {
+        Default();
         Save();
     }
 }
@@ -111,6 +112,13 @@ Config::~Config()
 }
 
 void Config::Default()
+{
+    void DefaultControlMap();
+    void DefaultHotKey();
+    void DefaultGraphics();
+}
+
+void Config::DefaultControlMap()
 {
     control_maps = {
 #if defined(GBA_BUILD)
@@ -140,7 +148,10 @@ void Config::Default()
         {SCE_CTRL_RSTICK_LEFT},
         {SCE_CTRL_RSTICK_RIGHT},
     };
+}
 
+void Config::DefaultHotKey()
+{
     hotkeys[SAVE_STATE] = SCE_CTRL_PSBUTTON | SCE_CTRL_SQUARE;
     hotkeys[LOAD_STATE] = SCE_CTRL_PSBUTTON | SCE_CTRL_TRIANGLE;
     hotkeys[GAME_SPEED_UP] = SCE_CTRL_PSBUTTON | SCE_CTRL_R1;
@@ -149,7 +160,10 @@ void Config::Default()
     hotkeys[CONTROLLER_PORT_UP] = SCE_CTRL_PSBUTTON | SCE_CTRL_RSTICK_UP;
     hotkeys[CONTROLLER_PORT_DOWN] = SCE_CTRL_PSBUTTON | SCE_CTRL_RSTICK_DOWN;
     hotkeys[EXIT_GAME] = SCE_CTRL_PSBUTTON | SCE_CTRL_CROSS;
+}
 
+void Config::DefaultGraphics()
+{
     graphics_config.size = CONFIG_DISPLAY_SIZE_FULL;
     graphics_config.ratio = CONFIG_DISPLAY_RATIO_BY_GAME_RESOLUTION;
     graphics_config.rotate = CONFIG_DISPLAY_ROTATE_DEFAULT;

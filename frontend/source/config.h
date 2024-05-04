@@ -20,6 +20,9 @@ public:
     bool Save(const char *path = APP_CONFIG_PATH);
 
     void Default();
+    void DefaultControlMap();
+    void DefaultHotKey();
+    void DefaultGraphics();
 
     LANGUAGE language;
     std::vector<ControlMapConfig> control_maps;

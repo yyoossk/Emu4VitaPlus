@@ -129,10 +129,6 @@ void Ui::Run()
 {
     // LogFunctionName;
 
-    // while (!_input.Poll())
-    // {
-    //     sceKernelDelayThread(10000);
-    // }
     _input.Poll();
     // sceKernelSignalSema(_update_sema, 1);
 }

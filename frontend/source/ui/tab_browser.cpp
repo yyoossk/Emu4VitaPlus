@@ -93,7 +93,7 @@ void TabBrowser::_OnActive(Input *input)
         if (gEmulator->LoadGame((_directory->GetCurrentPath() + "/" + item.name).c_str()))
         {
             gStatus = APP_STATUS_RUN_GAME;
-            sceShellUtilLock(SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN);
+            sceShellUtilLock((SceShellUtilLockType)(SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN | SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN_2));
         }
     }
 }
@@ -134,11 +134,11 @@ void TabBrowser::_UpdateTexture()
 
     if (_texture != nullptr)
     {
-        // gVideo->Lock();
+        gVideo->Lock();
         vita2d_wait_rendering_done();
         vita2d_free_texture(_texture);
         _texture = nullptr;
-        // gVideo->Unlock();
+        gVideo->Unlock();
     }
 
     const DirItem &item = _directory->GetItem(_index);

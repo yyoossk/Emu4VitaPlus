@@ -64,7 +64,7 @@ namespace
     constexpr auto ImguiVertexSize = 20;
 }
 
-static void My_Imgui_Create_Font(LANGUAGE language)
+void My_Imgui_Create_Font(LANGUAGE language)
 {
     // Build texture atlas
     ImGuiIO &io = ImGui::GetIO();
@@ -114,13 +114,14 @@ static void My_Imgui_Create_Font(LANGUAGE language)
     return;
 }
 
-static void My_Imgui_Destroy_Font()
+void My_Imgui_Destroy_Font()
 {
     if (gFontTexture)
     {
         vita2d_free_texture(gFontTexture);
         gFontTexture = nullptr;
         ImGui::GetIO().Fonts->TexID = nullptr;
+        ImGui::GetIO().Fonts->Clear();
     }
 }
 
