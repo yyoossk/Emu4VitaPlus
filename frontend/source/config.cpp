@@ -14,6 +14,10 @@
 #endif
 #include <toml++/toml.hpp>
 
+#define MAIN_SECTION "MAIN"
+#define CONTROL_SECTION "KEYS"
+#define HOTKEY_SECTION "HOTKEY"
+
 #define KEY_PAIR(K) \
     {               \
         K, #K       \
@@ -175,22 +179,28 @@ void Config::DefaultGraphics()
 bool Config::Save(const char *path)
 {
     LogFunctionName;
-    toml::table keys;
+
+    toml::table _main{
+        {"language", gLanguageNames[language]},
+    };
+
+    toml::table _keys;
     for (const auto &k : control_maps)
     {
         toml::table t{{"psv", k.psv},
                       {"retro", k.retro},
                       {"turbo", k.turbo}};
-        keys.insert(PSV_KEYS.at(k.psv).c_str(), t);
+        _keys.insert(PSV_KEYS.at(k.psv).c_str(), t);
     }
 
-    toml::table main{
-        {"language", gLanguageNames[language]},
-    };
+    toml::array _hotkeys;
+    for (size_t i = 0; i < HOT_KEY_COUNT; i++)
+    {
+        _hotkeys.emplace_back(hotkeys[i]);
+    }
 
-    auto tbl = toml::table{{"MAIN", main}, {"KEYS", keys}};
     std::stringstream s;
-    s << tbl;
+    s << toml::table{{MAIN_SECTION, _main}, {CONTROL_SECTION, _keys}, {HOTKEY_SECTION, _hotkeys}};
 
     FILE *fp = fopen(path, "wb");
     if (fp)
@@ -211,13 +221,13 @@ bool Config::Load(const char *path)
     }
 
     const toml::table tbl(std::move(result.table()));
-    if (!tbl.contains("MAIN"))
+    if (!(tbl.contains(MAIN_SECTION) && tbl.contains(CONTROL_SECTION) && tbl.contains(HOTKEY_SECTION)))
     {
         return false;
     }
 
-    const toml::table *main = tbl["MAIN"].as_table();
-    std::string_view lang = (*main)["language"].value_or("ENGLISH");
+    const auto &_main = tbl[MAIN_SECTION];
+    std::string_view lang = _main["language"].value_or("ENGLISH");
     for (size_t i = 0; i < LANGUAGE_COUNT; i++)
     {
         if (lang == gLanguageNames[i])
@@ -227,13 +237,22 @@ bool Config::Load(const char *path)
         }
     }
 
-    // const auto &keys = tbl["KEYS"];
-    // for (auto &k : control_maps)
-    // {
-    //     const auto &t = keys[PSV_KEYS.at(k.psv)];
-    //     k.retro = *(t["retro"].value<uint8_t>());
-    //     k.turbo = *(t["turbo"].value<bool>());
-    // }
+    auto _keys = tbl[CONTROL_SECTION].as_table();
+    if (_keys)
+    {
+        for (const auto &key : *_keys)
+        {
+            const auto t = key.second.as_table();
+            if (t->contains("psv"))
+            {
+                control_maps.emplace_back(ControlMapConfig{(*t)["psv"].value<uint32_t>().value(),
+                                                           (uint8_t)(*t)["retro"].value_or(0),
+                                                           (*t)["turbo"].value_or(false)});
+            }
+        }
+    }
+
+    const auto &_hotkeys = tbl[HOTKEY_SECTION].as_array();
 
     return true;
 }

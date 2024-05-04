@@ -8,7 +8,10 @@ template <typename T>
 class ItemConfig : public virtual ItemBase
 {
 public:
-    ItemConfig(size_t text_id, T *config, std::vector<LanguageString> texts);
+    ItemConfig(size_t text_id, T *config,
+               std::vector<LanguageString> texts,
+               CallbackFunc active_callback = nullptr,
+               CallbackFunc option_callback = nullptr);
     ItemConfig(size_t text_id, T *config, TEXT_ENUM start, size_t count);
     virtual ~ItemConfig();
 

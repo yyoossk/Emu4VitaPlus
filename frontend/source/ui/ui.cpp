@@ -11,59 +11,96 @@
 #include "tab_about.h"
 #include "global.h"
 
-void ResumeGame()
+static void ResumeGame()
 {
+    LogFunctionName;
 }
 
-void ExitApp()
+static void ExitApp()
 {
     LogFunctionName;
     gStatus = APP_STATUS_EXIT;
 }
 
-Ui::Ui(const char *path)
-    : _tab_index(TAB_ITEM_BROWSER)
+static void ChangeLanguage()
+{
+    LogFunctionName;
+    gVideo->Lock();
+    My_Imgui_Destroy_Font();
+    My_Imgui_Create_Font(gConfig->language);
+    gVideo->Unlock();
+    gConfig->Save();
+}
+
+static void ResetGraphics()
+{
+    LogFunctionName;
+    gConfig->DefaultGraphics();
+    gConfig->Save();
+}
+
+static void ResetControl()
+{
+    LogFunctionName;
+    gConfig->DefaultControlMap();
+    gConfig->Save();
+}
+
+static void ResetHotkey()
+{
+    LogFunctionName;
+    gConfig->DefaultHotKey();
+    gConfig->Save();
+}
+
+Ui::Ui(const char *path) : _tab_index(TAB_ITEM_BROWSER)
 {
     LogFunctionName;
 
-    _tabs[TAB_ITEM_SYSTEM] = new TabSeletable(TAB_SYSTEM, {new ItemConfig(SYSTEM_MENU_LANGUAGE,
-                                                                          &gConfig->language,
-                                                                          {LanguageString(gLanguageNames[LANGUAGE_ENGLISH]),
-                                                                           LanguageString(gLanguageNames[LANGUAGE_CHINESE])}),
-                                                           new ItemBase(SYSTEM_MENU_EXIT, ExitApp)});
+    _tabs[TAB_ITEM_SYSTEM] = new TabSeletable(TAB_SYSTEM,
+                                              {new ItemConfig(SYSTEM_MENU_LANGUAGE,
+                                                              &gConfig->language,
+                                                              {LanguageString(gLanguageNames[LANGUAGE_ENGLISH]),
+                                                               LanguageString(gLanguageNames[LANGUAGE_CHINESE])},
+                                                              ChangeLanguage),
+                                               new ItemBase(SYSTEM_MENU_EXIT, ExitApp)});
+
     _tabs[TAB_ITEM_BROWSER] = new TabBrowser(path);
-    _tabs[TAB_ITEM_GRAPHICS] = new TabSeletable(TAB_GRAPHICS, {new ItemConfig(GRAPHICS_MENU_DISPLAY_SIZE,
-                                                                              &gConfig->graphics_config.size,
-                                                                              DISPLAY_SIZE_1X,
-                                                                              CONFIG_DISPLAY_SIZE_COUNT),
-                                                               new ItemConfig(GRAPHICS_MENU_ASPECT_RATIO,
-                                                                              &gConfig->graphics_config.ratio,
-                                                                              ASPECT_RATIO_BY_GAME_RESOLUTION,
-                                                                              CONFIG_DISPLAY_RATIO_COUNT),
+
+    _tabs[TAB_ITEM_GRAPHICS] = new TabSeletable(TAB_GRAPHICS,
+                                                {new ItemConfig(GRAPHICS_MENU_DISPLAY_SIZE,
+                                                                &gConfig->graphics_config.size,
+                                                                DISPLAY_SIZE_1X,
+                                                                CONFIG_DISPLAY_SIZE_COUNT),
+                                                 new ItemConfig(GRAPHICS_MENU_ASPECT_RATIO,
+                                                                &gConfig->graphics_config.ratio,
+                                                                ASPECT_RATIO_BY_GAME_RESOLUTION,
+                                                                CONFIG_DISPLAY_RATIO_COUNT),
 #ifdef WANT_DISPLAY_ROTATE
-                                                               new ItemConfig(GRAPHICS_MENU_DISPLAY_ROTATE, (size_t *)&gConfig->graphics_config.rotate,
-                                                                              sizeof(gConfig->graphics_config.rotate),
-                                                                              DISPLAY_ROTATE_DISABLE,
-                                                                              CONFIG_DISPLAY_ROTATE_COUNT),
+                                                 new ItemConfig(GRAPHICS_MENU_DISPLAY_ROTATE, (size_t *)&gConfig->graphics_config.rotate,
+                                                                sizeof(gConfig->graphics_config.rotate),
+                                                                DISPLAY_ROTATE_DISABLE,
+                                                                CONFIG_DISPLAY_ROTATE_COUNT),
 #endif
-                                                               new ItemConfig(GRAPHICS_MENU_GRAPHICS_SHADER,
-                                                                              &gConfig->graphics_config.shader,
-                                                                              SHADER_DEFAULT,
-                                                                              CONFIG_GRAPHICS_SHADER_COUNT),
-                                                               new ItemConfig(GRAPHICS_MENU_GRAPHICS_SMOOTH,
-                                                                              &gConfig->graphics_config.smooth,
-                                                                              NO,
-                                                                              CONFIG_GRAPHICS_SMOOTHER_COUNT),
-                                                               new ItemConfig(GRAPHICS_MENU_OVERLAY_MODE,
-                                                                              &gConfig->graphics_config.overlay_mode,
-                                                                              OVERLAY_MODE_OVERLAY,
-                                                                              CONFIG_GRAPHICS_OVERLAY_MODE_COUNT)});
+                                                 new ItemConfig(GRAPHICS_MENU_GRAPHICS_SHADER,
+                                                                &gConfig->graphics_config.shader,
+                                                                SHADER_DEFAULT,
+                                                                CONFIG_GRAPHICS_SHADER_COUNT),
+                                                 new ItemConfig(GRAPHICS_MENU_GRAPHICS_SMOOTH,
+                                                                &gConfig->graphics_config.smooth,
+                                                                NO,
+                                                                CONFIG_GRAPHICS_SMOOTHER_COUNT),
+                                                 new ItemConfig(GRAPHICS_MENU_OVERLAY_MODE,
+                                                                &gConfig->graphics_config.overlay_mode,
+                                                                OVERLAY_MODE_OVERLAY,
+                                                                CONFIG_GRAPHICS_OVERLAY_MODE_COUNT),
+                                                 new ItemBase(RESET_CONFIGS, ResetGraphics)});
     std::vector<ItemBase *> controls;
     for (ControlMapConfig &cmap : gConfig->control_maps)
     {
         controls.emplace_back(new ItemControl(&cmap));
     }
-
+    controls.emplace_back(new ItemBase(RESET_CONFIGS, ResetControl));
     _tabs[TAB_ITME_CONTROL] = new TabSeletable(TAB_CONTROL, controls);
 
     std::vector<ItemBase *> hotkeys;
@@ -71,9 +108,11 @@ Ui::Ui(const char *path)
     {
         hotkeys.emplace_back(new ItemHotkey((HotKeyConfig)i, &gConfig->hotkeys[i]));
     }
-
+    hotkeys.emplace_back(new ItemBase(RESET_CONFIGS, ResetHotkey));
     _tabs[TAB_ITEM_HOTKEY] = new TabSeletable(TAB_HOTKEY, hotkeys);
+
     _tabs[TAB_ITEM_CORE] = new TabCore();
+
     _tabs[TAB_ITEM_ABOUT] = new TabAbout();
 
     _tabs[_tab_index]->SetInputHooks(&_input);

@@ -3,8 +3,10 @@
 #include "my_imgui.h"
 
 template <typename T>
-ItemConfig<T>::ItemConfig(size_t text_id, T *config, std::vector<LanguageString> texts)
-    : ItemBase(text_id),
+ItemConfig<T>::ItemConfig(size_t text_id, T *config,
+                          std::vector<LanguageString> texts,
+                          CallbackFunc active_callback, CallbackFunc option_callback)
+    : ItemBase(text_id, active_callback, option_callback),
       _config(config),
       _config_texts(std::move(texts)),
       _actived(false)
@@ -66,6 +68,7 @@ void ItemConfig<T>::OnActive(Input *input)
     _old_config = GetConfig();
     input->PushCallbacks();
     SetInputHooks(input);
+    ItemBase::OnActive(input);
 }
 
 template <typename T>
@@ -104,7 +107,7 @@ void ItemConfig<T>::_OnClick(Input *input)
     LogFunctionName;
     _actived = false;
     input->PopCallbacks();
-    gConfig->Save(APP_CONFIG_PATH);
+    gConfig->Save();
 }
 
 template <typename T>
@@ -121,6 +124,8 @@ void ItemConfig<T>::SetInputHooks(Input *input)
 {
     input->SetKeyDownCallback(SCE_CTRL_UP, std::bind(&ItemConfig::_OnKeyUp, this, input), true);
     input->SetKeyDownCallback(SCE_CTRL_DOWN, std::bind(&ItemConfig::_OnKeyDown, this, input), true);
+    input->SetKeyDownCallback(SCE_CTRL_LSTICK_UP, std::bind(&ItemConfig::_OnKeyUp, this, input), true);
+    input->SetKeyDownCallback(SCE_CTRL_LSTICK_DOWN, std::bind(&ItemConfig::_OnKeyDown, this, input), true);
     input->SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&ItemConfig::_OnClick, this, input));
     input->SetKeyUpCallback(SCE_CTRL_CROSS, std::bind(&ItemConfig::_OnCancel, this, input));
 }
@@ -130,6 +135,8 @@ void ItemConfig<T>::UnsetInputHooks(Input *input)
 {
     input->UnsetKeyDownCallback(SCE_CTRL_UP);
     input->UnsetKeyDownCallback(SCE_CTRL_DOWN);
+    input->UnsetKeyDownCallback(SCE_CTRL_LSTICK_UP);
+    input->UnsetKeyDownCallback(SCE_CTRL_LSTICK_DOWN);
     input->UnsetKeyUpCallback(SCE_CTRL_CIRCLE);
     input->UnsetKeyUpCallback(SCE_CTRL_CROSS);
 }

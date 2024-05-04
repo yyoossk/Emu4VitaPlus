@@ -607,5 +607,12 @@
         "English": "Exit game",
         "Chinese": "退出游戏",
         "Comments": ""
+    },
+    {
+        "No.": "75",
+        "Tag": "RESET_CONFIGS",
+        "English": "Reset configs",
+        "Chinese": "恢复默认设置",
+        "Comments": ""
     }
 ]
