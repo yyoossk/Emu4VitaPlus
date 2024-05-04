@@ -237,7 +237,7 @@ bool Config::Load(const char *path)
         }
     }
 
-    auto _keys = tbl[CONTROL_SECTION].as_table();
+    const auto _keys = tbl[CONTROL_SECTION].as_table();
     if (_keys)
     {
         for (const auto &key : *_keys)
@@ -252,7 +252,15 @@ bool Config::Load(const char *path)
         }
     }
 
-    const auto &_hotkeys = tbl[HOTKEY_SECTION].as_array();
+    const auto _hotkeys = tbl[HOTKEY_SECTION].as_array();
+    if (_hotkeys)
+    {
+        size_t count = 0;
+        for (const auto &key : *_hotkeys)
+        {
+            hotkeys[count] = key.value<uint32_t>().value();
+        }
+    }
 
     return true;
 }

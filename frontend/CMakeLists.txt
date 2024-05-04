@@ -88,7 +88,7 @@ target_link_libraries(
 set(VITA_MAKE_FSELF_FLAGS "-a 0x2800000000000001")
 vita_create_self(eboot.bin ${APP_NAME}.elf UNSAFE STRIPPED REL_OPTIMIZE)
 
-set(VPK_NAME ${APP_NAME}.vpk)
+set(VPK_NAME ${APP_NAME}_${APP_VER}.vpk)
 set(VITA_MKSFOEX_FLAGS -d ATTRIBUTE2=12)
 vita_create_vpk(
     ${VPK_NAME}
