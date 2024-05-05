@@ -15,10 +15,12 @@
 
 const char LogLevelChars[] = "TDIWEFO";
 
+#ifndef LOG_LEVEL
 #ifdef DEBUG
 #define LOG_LEVEL LOG_LEVEL_DEBUG
 #else
 #define LOG_LEVEL LOG_LEVEL_INFO
+#endif
 #endif
 
 #if LOG_LEVEL <= LOG_LEVEL_TRACE

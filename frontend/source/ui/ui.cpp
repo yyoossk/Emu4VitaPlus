@@ -201,7 +201,7 @@ void Ui::Run()
 void Ui::Show()
 {
     LogFunctionNameLimited;
-
+    vita2d_set_clip_rectangle(0, 0, VITA_WIDTH, VITA_HEIGHT);
     // sceKernelWaitSema(_update_sema, 1, NULL);
 
     ImGui_ImplVita2D_NewFrame();

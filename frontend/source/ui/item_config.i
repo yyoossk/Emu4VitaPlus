@@ -68,7 +68,6 @@ void ItemConfig<T>::OnActive(Input *input)
     _old_config = GetConfig();
     input->PushCallbacks();
     SetInputHooks(input);
-    ItemBase::OnActive(input);
 }
 
 template <typename T>
@@ -108,6 +107,10 @@ void ItemConfig<T>::_OnClick(Input *input)
     _actived = false;
     input->PopCallbacks();
     gConfig->Save();
+    if (_active_callback != nullptr)
+    {
+        _active_callback();
+    }
 }
 
 template <typename T>

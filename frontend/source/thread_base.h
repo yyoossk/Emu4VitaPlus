@@ -10,7 +10,7 @@ public:
     virtual ~ThreadBase();
     bool Start(); // the point of class will be sent
     bool Start(void *data, SceSize size);
-    void Stop();
+    void Stop(bool force = false);
     bool IsRunning() { return _keep_running; };
     void Lock();
     void Unlock();

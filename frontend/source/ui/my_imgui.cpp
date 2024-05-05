@@ -67,6 +67,7 @@ namespace
 void My_Imgui_Create_Font(LANGUAGE language)
 {
     // Build texture atlas
+    LogDebug("language: %d", language);
     ImGuiIO &io = ImGui::GetIO();
     // Build and load the texture atlas into a texture
     uint32_t *pixels = NULL;
@@ -210,15 +211,15 @@ IMGUI_API void My_ImGui_ImplVita2D_Init(LANGUAGE language)
 
     matrix_init_orthographic(ortho_proj_matrix, 0.0f, VITA_WIDTH, VITA_HEIGHT, 0.0f, 0.0f, 1.0f);
 
-    sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
-    sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG_WIDE);
+    // sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
+    // sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG_WIDE);
 
     // Setup back-end capabilities flags
-    ImGuiIO &io = ImGui::GetIO();
-    io.MouseDrawCursor = true;
-    io.ClipboardUserData = NULL;
+    // ImGuiIO &io = ImGui::GetIO();
+    // io.MouseDrawCursor = true;
+    // io.ClipboardUserData = NULL;
 
-    ImGui_ImplVita2D_InitTouch();
+    // ImGui_ImplVita2D_InitTouch();
 }
 
 IMGUI_API void My_ImGui_ImplVita2D_Shutdown()

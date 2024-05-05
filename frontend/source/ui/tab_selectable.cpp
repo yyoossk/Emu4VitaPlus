@@ -2,12 +2,22 @@
 
 TabSeletable::TabSeletable(TEXT_ENUM title_id, std::vector<ItemBase *> items)
     : TabBase(title_id),
-      _items(std::move(items)), _index(0) {}
+      _items(std::move(items)),
+      _index(0)
+{
+    LogFunctionName;
+}
 
-TabSeletable::TabSeletable(TEXT_ENUM title_id) : TabBase(title_id), _index(0) {}
+TabSeletable::TabSeletable(TEXT_ENUM title_id)
+    : TabBase(title_id),
+      _index(0)
+{
+    LogFunctionName;
+}
 
 TabSeletable::~TabSeletable()
 {
+    LogFunctionName;
     for (auto &item : _items)
     {
         delete item;
@@ -62,7 +72,6 @@ void TabSeletable::Show(bool selected)
 void TabSeletable::_OnKeyUp(Input *input)
 {
     LogFunctionName;
-    LogDebug("%d", _GetItemCount());
     if (_GetItemCount() == 0)
     {
         return;
@@ -78,7 +87,6 @@ void TabSeletable::_OnKeyUp(Input *input)
 void TabSeletable::_OnKeyDown(Input *input)
 {
     LogFunctionName;
-    LogDebug("%d", _GetItemCount());
     if (_GetItemCount() == 0)
     {
         return;

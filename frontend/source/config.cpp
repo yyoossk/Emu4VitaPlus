@@ -98,7 +98,7 @@ std::unordered_map<uint8_t, TEXT_ENUM> Config::RetroTextMap = {
     {RETRO_DEVICE_ID_NONE, NONE},
 };
 
-Config::Config() : language(LANGUAGE_ENGLISH)
+Config::Config() : language(LANGUAGE_ENGLISH), hotkeys{0}
 {
     LogFunctionName;
     DefaultControlMap();
@@ -117,13 +117,15 @@ Config::~Config()
 
 void Config::Default()
 {
-    void DefaultControlMap();
-    void DefaultHotKey();
-    void DefaultGraphics();
+    LogFunctionName;
+    DefaultControlMap();
+    DefaultHotKey();
+    DefaultGraphics();
 }
 
 void Config::DefaultControlMap()
 {
+    LogFunctionName;
     control_maps = {
 #if defined(GBA_BUILD)
         {SCE_CTRL_UP, RETRO_DEVICE_ID_JOYPAD_UP},
@@ -156,6 +158,7 @@ void Config::DefaultControlMap()
 
 void Config::DefaultHotKey()
 {
+    LogFunctionName;
     hotkeys[SAVE_STATE] = SCE_CTRL_PSBUTTON | SCE_CTRL_SQUARE;
     hotkeys[LOAD_STATE] = SCE_CTRL_PSBUTTON | SCE_CTRL_TRIANGLE;
     hotkeys[GAME_SPEED_UP] = SCE_CTRL_PSBUTTON | SCE_CTRL_R1;
@@ -168,6 +171,7 @@ void Config::DefaultHotKey()
 
 void Config::DefaultGraphics()
 {
+    LogFunctionName;
     graphics_config.size = CONFIG_DISPLAY_SIZE_FULL;
     graphics_config.ratio = CONFIG_DISPLAY_RATIO_BY_GAME_RESOLUTION;
     graphics_config.rotate = CONFIG_DISPLAY_ROTATE_DEFAULT;
@@ -196,7 +200,7 @@ bool Config::Save(const char *path)
     toml::array _hotkeys;
     for (size_t i = 0; i < HOT_KEY_COUNT; i++)
     {
-        _hotkeys.emplace_back(hotkeys[i]);
+        _hotkeys.push_back(hotkeys[i]);
     }
 
     std::stringstream s;
@@ -213,18 +217,26 @@ bool Config::Save(const char *path)
 
 bool Config::Load(const char *path)
 {
-    sceKernelDelayThread(100000);
+    LogFunctionName;
+    if (!File::Exist(path))
+    {
+        return false;
+    }
+
     toml::parse_result result = toml::parse_file(path);
     if (!result)
     {
         return false;
     }
+    LogDebug("parse_file");
 
     const toml::table tbl(std::move(result.table()));
     if (!(tbl.contains(MAIN_SECTION) && tbl.contains(CONTROL_SECTION) && tbl.contains(HOTKEY_SECTION)))
     {
         return false;
     }
+
+    LogDebug("load " MAIN_SECTION);
 
     const auto &_main = tbl[MAIN_SECTION];
     std::string_view lang = _main["language"].value_or("ENGLISH");
@@ -237,6 +249,7 @@ bool Config::Load(const char *path)
         }
     }
 
+    LogDebug("load " CONTROL_SECTION);
     const auto _keys = tbl[CONTROL_SECTION].as_table();
     if (_keys)
     {
@@ -252,6 +265,7 @@ bool Config::Load(const char *path)
         }
     }
 
+    LogDebug("load " HOTKEY_SECTION);
     const auto _hotkeys = tbl[HOTKEY_SECTION].as_array();
     if (_hotkeys)
     {
@@ -259,8 +273,10 @@ bool Config::Load(const char *path)
         for (const auto &key : *_hotkeys)
         {
             hotkeys[count] = key.value<uint32_t>().value();
+            count++;
         }
     }
 
+    LogDebug("load end");
     return true;
 }

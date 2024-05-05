@@ -123,7 +123,6 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
 size_t AudioSampleBatchCallback(const int16_t *data, size_t frames)
 {
     LogFunctionNameLimited;
-
     return gEmulator->_audio->SendAudioSample(data, frames);
 }
 
