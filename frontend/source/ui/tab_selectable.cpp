@@ -49,6 +49,10 @@ void TabSeletable::Show(bool selected)
             }
         }
         ImGui::Columns(1);
+        if (_status_text.size() > 0)
+        {
+            ImGui::Text(_status_text.c_str());
+        }
         ImGui::EndChild();
 
         ImGui::EndTabItem();
@@ -121,4 +125,9 @@ void TabSeletable::_OnOption(Input *input)
 bool TabSeletable::_ItemVisable(size_t index)
 {
     return _items[_index]->Visable();
+}
+
+void TabSeletable::SetStatusText(std::string &text)
+{
+    _status_text = text;
 }

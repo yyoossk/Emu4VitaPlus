@@ -53,9 +53,33 @@ static void ResetHotkey()
     gConfig->Save();
 }
 
+void Ui::_InitImgui()
+{
+    LogFunctionName;
+
+    ImGui::CreateContext();
+    My_ImGui_ImplVita2D_Init(gConfig->language);
+    ImGui_ImplVita2D_TouchUsage(false);
+    ImGui_ImplVita2D_UseIndirectFrontTouch(false);
+    ImGui_ImplVita2D_UseRearTouch(false);
+    ImGui_ImplVita2D_GamepadUsage(false);
+
+    ImGuiStyle *style = &ImGui::GetStyle();
+    style->Colors[ImGuiCol_TitleBg] = style->Colors[ImGuiCol_TitleBgActive];
+}
+
+void Ui::_DeinitImgui()
+{
+    LogFunctionName;
+
+    My_ImGui_ImplVita2D_Shutdown();
+    ImGui::DestroyContext();
+}
+
 Ui::Ui(const char *path) : _tab_index(TAB_ITEM_BROWSER)
 {
     LogFunctionName;
+    _InitImgui();
 
     _tabs[TAB_ITEM_SYSTEM] = new TabSeletable(TAB_SYSTEM,
                                               {new ItemConfig(SYSTEM_MENU_LANGUAGE,
@@ -129,6 +153,8 @@ Ui::~Ui()
     {
         delete tab;
     }
+
+    _DeinitImgui();
     // sceKernelDeleteSema(_update_sema);
 }
 

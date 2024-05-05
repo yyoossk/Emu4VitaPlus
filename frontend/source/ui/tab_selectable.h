@@ -13,6 +13,7 @@ public:
     virtual void SetInputHooks(Input *input);
     virtual void UnsetInputHooks(Input *input);
     virtual void Show(bool selected);
+    void SetStatusText(std::string &text);
 
 protected:
     virtual void _OnKeyUp(Input *input);
@@ -25,4 +26,5 @@ protected:
 
     std::vector<ItemBase *> _items;
     size_t _index;
+    std::string _status_text;
 };

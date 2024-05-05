@@ -27,6 +27,9 @@ public:
     void Run();
 
 private:
+    void _InitImgui();
+    void _DeinitImgui();
+
     void _SetKeyHooks();
     void _OnKeyL2(Input *input);
     void _OnKeyR2(Input *input);

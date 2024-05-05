@@ -30,16 +30,16 @@ App::App()
 
     gConfig = new Config();
     gVideo = new Video();
-    gEmulator = new Emulator();
     gUi = new Ui("ux0:");
+    gEmulator = new Emulator();
 }
 
 App::~App()
 {
     LogFunctionName;
 
-    delete gUi;
     delete gEmulator;
+    delete gUi;
     delete gVideo;
     delete gConfig;
 
@@ -67,4 +67,9 @@ void App::Run()
             break;
         }
     }
+}
+
+bool App::_IsSaveMode()
+{
+    return sceIoDevctl("ux0:", 0x3001, NULL, 0, NULL, 0) == 0x80010030;
 }

@@ -371,5 +371,7 @@ void Emulator::_SetVideoSize(uint32_t width, uint32_t height)
 void Emulator::_OnPsButton(Input *input)
 {
     LogFunctionName;
+    gVideo->Lock();
     gStatus = APP_STATUS_SHOW_UI_IN_GAME;
+    gVideo->Unlock();
 }

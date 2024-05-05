@@ -26,7 +26,7 @@ bool Overlays::Load(const char *path)
     for (auto const &overlay : tbl)
     {
         const auto t = overlay.second.as_table();
-        if (t)
+        if (t && t->contains("image_name"))
         {
             _overlays.emplace_back(Overlay{
                 std::string{overlay.first.str()},

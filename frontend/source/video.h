@@ -10,6 +10,4 @@ public:
 
 private:
     static int _DrawThread(SceSize args, void *argp);
-    void _InitImgui();
-    void _DeinitImgui();
 };

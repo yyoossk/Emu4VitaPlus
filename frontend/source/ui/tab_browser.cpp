@@ -73,6 +73,10 @@ void TabBrowser::Show(bool selected)
         ImGui::NextColumn();
 
         ImGui::Columns(1);
+        if (_status_text.size() > 0)
+        {
+            ImGui::Text(_status_text.c_str());
+        }
         ImGui::EndChild();
 
         ImGui::EndTabItem();

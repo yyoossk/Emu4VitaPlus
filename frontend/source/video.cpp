@@ -1,7 +1,6 @@
 #include "global.h"
 #include "video.h"
 #include "log.h"
-#include "my_imgui.h"
 
 Video::Video() : ThreadBase(_DrawThread)
 {
@@ -9,7 +8,6 @@ Video::Video() : ThreadBase(_DrawThread)
     vita2d_init();
     vita2d_set_vblank_wait(1);
     vita2d_set_clear_color(0xFF362B00);
-    _InitImgui();
 }
 
 Video::~Video()
@@ -21,7 +19,6 @@ Video::~Video()
     }
 
     vita2d_wait_rendering_done();
-    _DeinitImgui();
     vita2d_fini();
 }
 
@@ -66,27 +63,4 @@ int Video::_DrawThread(SceSize args, void *argp)
     LogDebug("_DrawThread exit");
     sceKernelExitThread(0);
     return 0;
-}
-
-void Video::_InitImgui()
-{
-    LogFunctionName;
-
-    ImGui::CreateContext();
-    My_ImGui_ImplVita2D_Init(gConfig->language);
-    ImGui_ImplVita2D_TouchUsage(false);
-    ImGui_ImplVita2D_UseIndirectFrontTouch(false);
-    ImGui_ImplVita2D_UseRearTouch(false);
-    ImGui_ImplVita2D_GamepadUsage(false);
-
-    ImGuiStyle *style = &ImGui::GetStyle();
-    style->Colors[ImGuiCol_TitleBg] = style->Colors[ImGuiCol_TitleBgActive];
-}
-
-void Video::_DeinitImgui()
-{
-    LogFunctionName;
-
-    My_ImGui_ImplVita2D_Shutdown();
-    ImGui::DestroyContext();
 }

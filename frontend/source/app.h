@@ -10,4 +10,5 @@ public:
     void Run();
 
 private:
+    bool _IsSaveMode();
 };
