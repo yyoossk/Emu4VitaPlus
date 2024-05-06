@@ -39,7 +39,10 @@ App::App()
     sceTouchSetSamplingState(SCE_TOUCH_PORT_BACK, SCE_TOUCH_SAMPLING_STATE_START);
 
     _IsSaveMode();
+
     gConfig = new Config();
+    gEmulator = new Emulator();
+
     gVideo = new Video();
     gUi = new Ui("ux0:");
     gVideo->Start();
@@ -50,8 +53,6 @@ App::App()
     {
         gConfig->Save();
     }
-    gUi->AppendLog("Initialize the emulator");
-    gEmulator = new Emulator();
 
     gUi->AppendLog("Load font");
     ChangeFont();

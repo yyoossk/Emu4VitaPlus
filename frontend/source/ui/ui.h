@@ -9,15 +9,15 @@
 
 enum
 {
-    TAB_ITEM_SYSTEM = 0,
-    TAB_ITEM_BROWSER,
-    // TAB_ITEM_FAVORITE,
-    TAB_ITEM_GRAPHICS,
-    TAB_ITME_CONTROL,
-    TAB_ITEM_HOTKEY,
-    TAB_ITEM_CORE,
-    TAB_ITEM_ABOUT,
-    TAB_ITEM_COUNT
+    TAB_INDEX_SYSTEM = 0,
+    TAB_INDEX_BROWSER,
+    // TAB_INDEX_FAVORITE,
+    TAB_INDEX_GRAPHICS,
+    TAB_INDEX_CONTROL,
+    TAB_INDEX_HOTKEY,
+    TAB_INDEX_CORE,
+    TAB_INDEX_ABOUT,
+    TAB_INDEX_COUNT
 };
 
 class Ui
@@ -27,7 +27,7 @@ public:
     virtual ~Ui();
     void Show();
     void Run();
-    void AppendLog(const char *log) { _logs.emplace_back(log); };
+    void AppendLog(const char *log);
 
 private:
     void _InitImgui();
@@ -40,7 +40,7 @@ private:
     Input _input;
     size_t _tab_index;
 
-    std::array<TabBase *, TAB_ITEM_COUNT> _tabs;
+    std::array<TabBase *, TAB_INDEX_COUNT> _tabs;
     std::vector<std::string> _logs;
 
     // SceUID _update_sema;

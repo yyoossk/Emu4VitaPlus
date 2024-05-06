@@ -139,3 +139,11 @@ void TabSeletable::SetStatusText(std::string &text)
 {
     _status_text = text;
 }
+
+void TabSeletable::SetItemVisable(size_t index, bool visable)
+{
+    if (index < _items.size())
+    {
+        _items[index]->SetVisable(visable);
+    }
+}

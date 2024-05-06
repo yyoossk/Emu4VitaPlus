@@ -14,6 +14,7 @@ public:
     virtual void UnsetInputHooks(Input *input);
     virtual void Show(bool selected);
     void SetStatusText(std::string &text);
+    void SetItemVisable(size_t index, bool visable);
 
 protected:
     virtual void _OnKeyUp(Input *input);

@@ -14,6 +14,7 @@
 static void ResumeGame()
 {
     LogFunctionName;
+    gStatus = APP_STATUS_RUN_GAME;
 }
 
 static void ExitApp()
@@ -76,56 +77,55 @@ void Ui::_DeinitImgui()
     ImGui::DestroyContext();
 }
 
-Ui::Ui(const char *path) : _tab_index(TAB_ITEM_BROWSER)
+Ui::Ui(const char *path) : _tab_index(TAB_INDEX_BROWSER)
 {
     LogFunctionName;
     _InitImgui();
 
-    _tabs[TAB_ITEM_SYSTEM] = new TabSeletable(TAB_SYSTEM,
-                                              {new ItemConfig(SYSTEM_MENU_LANGUAGE,
-                                                              &gConfig->language,
-                                                              {LanguageString(gLanguageNames[LANGUAGE_ENGLISH]),
-                                                               LanguageString(gLanguageNames[LANGUAGE_CHINESE])},
-                                                              ChangeLanguage),
-                                               new ItemBase(SYSTEM_MENU_EXIT, ExitApp)});
+    _tabs[TAB_INDEX_SYSTEM] = new TabSeletable(TAB_SYSTEM,
+                                               {new ItemBase(SYSTEM_RESUME_GAME, ResumeGame, NULL, false),
+                                                new ItemBase(SYSTEM_RESET_GAME, ResumeGame, NULL, false),
+                                                new ItemConfig(SYSTEM_MENU_LANGUAGE, &gConfig->language, {LanguageString(gLanguageNames[LANGUAGE_ENGLISH]), LanguageString(gLanguageNames[LANGUAGE_CHINESE])}, ChangeLanguage),
 
-    _tabs[TAB_ITEM_BROWSER] = new TabBrowser(path);
+                                                new ItemBase(SYSTEM_MENU_EXIT, ExitApp)});
 
-    _tabs[TAB_ITEM_GRAPHICS] = new TabSeletable(TAB_GRAPHICS,
-                                                {new ItemConfig(GRAPHICS_MENU_DISPLAY_SIZE,
-                                                                &gConfig->graphics_config.size,
-                                                                DISPLAY_SIZE_1X,
-                                                                CONFIG_DISPLAY_SIZE_COUNT),
-                                                 new ItemConfig(GRAPHICS_MENU_ASPECT_RATIO,
-                                                                &gConfig->graphics_config.ratio,
-                                                                ASPECT_RATIO_BY_GAME_RESOLUTION,
-                                                                CONFIG_DISPLAY_RATIO_COUNT),
+    _tabs[TAB_INDEX_BROWSER] = new TabBrowser(path);
+
+    _tabs[TAB_INDEX_GRAPHICS] = new TabSeletable(TAB_GRAPHICS,
+                                                 {new ItemConfig(GRAPHICS_MENU_DISPLAY_SIZE,
+                                                                 &gConfig->graphics_config.size,
+                                                                 DISPLAY_SIZE_1X,
+                                                                 CONFIG_DISPLAY_SIZE_COUNT),
+                                                  new ItemConfig(GRAPHICS_MENU_ASPECT_RATIO,
+                                                                 &gConfig->graphics_config.ratio,
+                                                                 ASPECT_RATIO_BY_GAME_RESOLUTION,
+                                                                 CONFIG_DISPLAY_RATIO_COUNT),
 #ifdef WANT_DISPLAY_ROTATE
-                                                 new ItemConfig(GRAPHICS_MENU_DISPLAY_ROTATE, (size_t *)&gConfig->graphics_config.rotate,
-                                                                sizeof(gConfig->graphics_config.rotate),
-                                                                DISPLAY_ROTATE_DISABLE,
-                                                                CONFIG_DISPLAY_ROTATE_COUNT),
+                                                  new ItemConfig(GRAPHICS_MENU_DISPLAY_ROTATE, (size_t *)&gConfig->graphics_config.rotate,
+                                                                 sizeof(gConfig->graphics_config.rotate),
+                                                                 DISPLAY_ROTATE_DISABLE,
+                                                                 CONFIG_DISPLAY_ROTATE_COUNT),
 #endif
-                                                 new ItemConfig(GRAPHICS_MENU_GRAPHICS_SHADER,
-                                                                &gConfig->graphics_config.shader,
-                                                                SHADER_DEFAULT,
-                                                                CONFIG_GRAPHICS_SHADER_COUNT),
-                                                 new ItemConfig(GRAPHICS_MENU_GRAPHICS_SMOOTH,
-                                                                &gConfig->graphics_config.smooth,
-                                                                NO,
-                                                                CONFIG_GRAPHICS_SMOOTHER_COUNT),
-                                                 new ItemConfig(GRAPHICS_MENU_OVERLAY_MODE,
-                                                                &gConfig->graphics_config.overlay_mode,
-                                                                OVERLAY_MODE_OVERLAY,
-                                                                CONFIG_GRAPHICS_OVERLAY_MODE_COUNT),
-                                                 new ItemBase(RESET_CONFIGS, ResetGraphics)});
+                                                  new ItemConfig(GRAPHICS_MENU_GRAPHICS_SHADER,
+                                                                 &gConfig->graphics_config.shader,
+                                                                 SHADER_DEFAULT,
+                                                                 CONFIG_GRAPHICS_SHADER_COUNT),
+                                                  new ItemConfig(GRAPHICS_MENU_GRAPHICS_SMOOTH,
+                                                                 &gConfig->graphics_config.smooth,
+                                                                 NO,
+                                                                 CONFIG_GRAPHICS_SMOOTHER_COUNT),
+                                                  new ItemConfig(GRAPHICS_MENU_OVERLAY_MODE,
+                                                                 &gConfig->graphics_config.overlay_mode,
+                                                                 OVERLAY_MODE_OVERLAY,
+                                                                 CONFIG_GRAPHICS_OVERLAY_MODE_COUNT),
+                                                  new ItemBase(RESET_CONFIGS, ResetGraphics)});
     std::vector<ItemBase *> controls;
     for (ControlMapConfig &cmap : gConfig->control_maps)
     {
         controls.emplace_back(new ItemControl(&cmap));
     }
     controls.emplace_back(new ItemBase(RESET_CONFIGS, ResetControl));
-    _tabs[TAB_ITME_CONTROL] = new TabSeletable(TAB_CONTROL, controls);
+    _tabs[TAB_INDEX_CONTROL] = new TabSeletable(TAB_CONTROL, controls);
 
     std::vector<ItemBase *> hotkeys;
     for (size_t i = 0; i < HOT_KEY_COUNT; i++)
@@ -133,11 +133,11 @@ Ui::Ui(const char *path) : _tab_index(TAB_ITEM_BROWSER)
         hotkeys.emplace_back(new ItemHotkey((HotKeyConfig)i, &gConfig->hotkeys[i]));
     }
     hotkeys.emplace_back(new ItemBase(RESET_CONFIGS, ResetHotkey));
-    _tabs[TAB_ITEM_HOTKEY] = new TabSeletable(TAB_HOTKEY, hotkeys);
+    _tabs[TAB_INDEX_HOTKEY] = new TabSeletable(TAB_HOTKEY, hotkeys);
 
-    _tabs[TAB_ITEM_CORE] = new TabCore();
+    _tabs[TAB_INDEX_CORE] = new TabCore();
 
-    _tabs[TAB_ITEM_ABOUT] = new TabAbout();
+    _tabs[TAB_INDEX_ABOUT] = new TabAbout();
 
     _tabs[_tab_index]->SetInputHooks(&_input);
 
@@ -171,7 +171,7 @@ void Ui::_OnKeyL2(Input *input)
 
     do
     {
-        _tab_index = (_tab_index == 0 ? TAB_ITEM_COUNT - 1 : _tab_index - 1);
+        _tab_index = (_tab_index == 0 ? TAB_INDEX_COUNT - 1 : _tab_index - 1);
     } while (!_tabs[_tab_index]->Visable());
 
     _tabs[_tab_index]->SetInputHooks(&_input);
@@ -184,7 +184,7 @@ void Ui::_OnKeyR2(Input *input)
 
     do
     {
-        _tab_index = (_tab_index + 1 == TAB_ITEM_COUNT ? 0 : _tab_index + 1);
+        _tab_index = (_tab_index + 1 == TAB_INDEX_COUNT ? 0 : _tab_index + 1);
     } while (!_tabs[_tab_index]->Visable());
 
     _tabs[_tab_index]->SetInputHooks(&_input);
@@ -193,8 +193,19 @@ void Ui::_OnKeyR2(Input *input)
 void Ui::Run()
 {
     // LogFunctionName;
-
     _input.Poll();
+    static APP_STATUS last_status = APP_STATUS_SHOW_UI;
+    if (gStatus != last_status)
+    {
+        _tabs[TAB_INDEX_BROWSER]->SetVisable(gStatus == APP_STATUS_SHOW_UI);
+
+        TabSeletable *system_tab = (TabSeletable *)(_tabs[TAB_INDEX_SYSTEM]);
+        system_tab->SetItemVisable(0, gStatus == APP_STATUS_SHOW_UI_IN_GAME);
+        system_tab->SetItemVisable(1, gStatus == APP_STATUS_SHOW_UI_IN_GAME);
+
+        last_status = gStatus;
+    }
+
     // sceKernelSignalSema(_update_sema, 1);
 }
 
@@ -238,3 +249,9 @@ void Ui::Show()
 
     return;
 }
+
+void Ui::AppendLog(const char *log)
+{
+    LogDebug(log);
+    _logs.emplace_back(log);
+};
