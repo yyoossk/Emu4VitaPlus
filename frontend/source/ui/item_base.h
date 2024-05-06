@@ -1,6 +1,6 @@
 #pragma once
+#include <imgui_vita2d/imgui_vita.h>
 #include "input.h"
-#include "my_imgui.h"
 #include "global.h"
 
 typedef std::function<void()> CallbackFunc;

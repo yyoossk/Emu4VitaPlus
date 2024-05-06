@@ -58,7 +58,7 @@ void Ui::_InitImgui()
     LogFunctionName;
 
     ImGui::CreateContext();
-    My_ImGui_ImplVita2D_Init(gConfig->language);
+    ImGui_ImplVita2D_Init();
     ImGui_ImplVita2D_TouchUsage(false);
     ImGui_ImplVita2D_UseIndirectFrontTouch(false);
     ImGui_ImplVita2D_UseRearTouch(false);
@@ -72,7 +72,7 @@ void Ui::_DeinitImgui()
 {
     LogFunctionName;
 
-    My_ImGui_ImplVita2D_Shutdown();
+    ImGui_ImplVita2D_Shutdown();
     ImGui::DestroyContext();
 }
 
@@ -211,7 +211,16 @@ void Ui::Show()
 
     ImGui::Begin("Emu4Vita++ (" APP_DIR_NAME ")", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs);
 
-    if (ImGui::BeginTabBar("MyTabBar", ImGuiTabBarFlags_None))
+    if (gStatus == APP_STATUS_BOOT)
+    {
+        ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
+        for (const auto &log : _logs)
+        {
+            ImGui::Text(log.c_str());
+        }
+        ImGui::PopStyleColor();
+    }
+    else if (ImGui::BeginTabBar("MyTabBar", ImGuiTabBarFlags_None)) // APP_STATUS_SHOW_UI or APP_STATUS_SHOW_UI_IN_GAME
     {
         for (size_t i = 0; i < _tabs.size(); i++)
         {
@@ -225,7 +234,7 @@ void Ui::Show()
 
     ImGui::End();
     ImGui::Render();
-    My_ImGui_ImplVita2D_RenderDrawData(ImGui::GetDrawData());
+    ImGui_ImplVita2D_RenderDrawData(ImGui::GetDrawData());
 
     return;
 }

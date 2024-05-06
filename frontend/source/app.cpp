@@ -4,11 +4,21 @@
 #include <psp2/apputil.h>
 #include <psp2/display.h>
 #include <vita2d.h>
-#include <imgui_vita2d/imgui_vita.h>
+#include "my_imgui.h"
 #include "app.h"
 #include "global.h"
 #include "file.h"
 #include "log.h"
+
+static void ChangeFont()
+{
+    LogFunctionName;
+    gVideo->Lock();
+    ImGui_ImplVita2D_InvalidateDeviceObjects();
+    ImGui::GetIO().Fonts->Clear();
+    My_Imgui_Create_Font(gConfig->language);
+    gVideo->Unlock();
+}
 
 App::App()
 {
@@ -31,16 +41,31 @@ App::App()
     _IsSaveMode();
     gConfig = new Config();
     gVideo = new Video();
-    gEmulator = new Emulator();
     gUi = new Ui("ux0:");
+    gVideo->Start();
+
+    gUi->AppendLog("Booting");
+    gUi->AppendLog("Load config");
+    if (!gConfig->Load())
+    {
+        gConfig->Save();
+    }
+    gUi->AppendLog("Initialize the emulator");
+    gEmulator = new Emulator();
+
+    gUi->AppendLog("Load font");
+    ChangeFont();
+
+    // sceKernelDelayThread(3000000);
 }
 
 App::~App()
 {
     LogFunctionName;
 
-    delete gUi;
+    gVideo->Stop();
     delete gEmulator;
+    delete gUi;
     delete gVideo;
     delete gConfig;
 
@@ -50,9 +75,7 @@ App::~App()
 void App::Run()
 {
     LogFunctionName;
-
-    gVideo->Start();
-
+    gStatus = APP_STATUS_SHOW_UI;
     while (gStatus != APP_STATUS_EXIT)
     {
         switch (gStatus)
@@ -61,9 +84,12 @@ void App::Run()
         case APP_STATUS_SHOW_UI_IN_GAME:
             gUi->Run();
             break;
+
         case APP_STATUS_RUN_GAME:
             gEmulator->Run();
             break;
+
+        case APP_STATUS_BOOT:
         default:
             break;
         }

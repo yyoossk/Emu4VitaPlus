@@ -1,6 +1,8 @@
 #pragma once
 #include <psp2/kernel/threadmgr.h>
 #include <array>
+#include <vector>
+#include <string>
 #include "emulator.h"
 #include "input.h"
 #include "tab_base.h"
@@ -25,6 +27,7 @@ public:
     virtual ~Ui();
     void Show();
     void Run();
+    void AppendLog(const char *log) { _logs.emplace_back(log); };
 
 private:
     void _InitImgui();
@@ -38,6 +41,7 @@ private:
     size_t _tab_index;
 
     std::array<TabBase *, TAB_ITEM_COUNT> _tabs;
+    std::vector<std::string> _logs;
 
     // SceUID _update_sema;
 };

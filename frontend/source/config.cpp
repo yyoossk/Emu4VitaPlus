@@ -101,12 +101,7 @@ std::unordered_map<uint8_t, TEXT_ENUM> Config::RetroTextMap = {
 Config::Config() : language(LANGUAGE_ENGLISH), hotkeys{0}
 {
     LogFunctionName;
-    DefaultControlMap();
-    if (!Load())
-    {
-        Default();
-        Save();
-    }
+    Default();
 }
 
 Config::~Config()

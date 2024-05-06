@@ -1,6 +1,7 @@
 #include <psp2/ctrl.h>
 #include <unordered_map>
 #include <stdint.h>
+#include "my_imgui.h"
 #include "item_control.h"
 #include "config.h"
 
