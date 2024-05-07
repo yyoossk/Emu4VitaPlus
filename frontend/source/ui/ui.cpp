@@ -72,8 +72,8 @@ void Ui::_InitImgui()
 void Ui::_DeinitImgui()
 {
     LogFunctionName;
-
-    ImGui_ImplVita2D_Shutdown();
+    My_Imgui_Destroy_Font();
+    // ImGui_ImplVita2D_Shutdown();
     ImGui::DestroyContext();
 }
 
@@ -212,7 +212,7 @@ void Ui::Run()
 void Ui::Show()
 {
     LogFunctionNameLimited;
-    vita2d_set_clip_rectangle(0, 0, VITA_WIDTH, VITA_HEIGHT);
+    // vita2d_set_clip_rectangle(0, 0, VITA_WIDTH, VITA_HEIGHT);
     // sceKernelWaitSema(_update_sema, 1, NULL);
 
     ImGui_ImplVita2D_NewFrame();

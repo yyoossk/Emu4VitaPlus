@@ -30,20 +30,26 @@ App::App()
     scePowerSetGpuXbarClockFrequency(166);
 
     sceShellUtilInitEvents(0);
+
     SceAppUtilInitParam init_param{0};
     SceAppUtilBootParam boot_param{0};
     sceAppUtilInit(&init_param, &boot_param);
+
+    SceCommonDialogConfigParam config;
+    sceCommonDialogConfigParamInit(&config);
+    sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, (int *)&config.language);
+    sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_ENTER_BUTTON, (int *)&config.enterButtonAssign);
+    sceCommonDialogSetConfigParam(&config);
 
     sceCtrlSetSamplingModeExt(SCE_CTRL_MODE_ANALOG);
     sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
     sceTouchSetSamplingState(SCE_TOUCH_PORT_BACK, SCE_TOUCH_SAMPLING_STATE_START);
 
     _IsSaveMode();
+    gVideo = new Video();
 
     gConfig = new Config();
     gEmulator = new Emulator();
-
-    gVideo = new Video();
     gUi = new Ui("ux0:");
     gVideo->Start();
 
@@ -66,7 +72,9 @@ App::~App()
 
     gVideo->Stop();
     delete gEmulator;
+    gVideo->Lock();
     delete gUi;
+    gVideo->Unlock();
     delete gVideo;
     delete gConfig;
 

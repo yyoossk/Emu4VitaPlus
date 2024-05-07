@@ -17,5 +17,7 @@ int main(int argc, char *const argv[])
     LogDebug("Exit");
 
     delete gLog;
+
+    sceKernelExitProcess(0);
     return 0;
 }

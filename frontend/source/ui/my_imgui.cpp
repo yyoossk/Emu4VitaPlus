@@ -20,8 +20,10 @@ const static ImWchar GamePadCharset[] = {0x219c, 0x21a1,
 
 void My_Imgui_Create_Font(LANGUAGE language)
 {
-    // Build texture atlas
+    LogFunctionName;
     LogDebug("language: %d", language);
+
+    // Build texture atlas
     ImGuiIO &io = ImGui::GetIO();
     // Build and load the texture atlas into a texture
     uint32_t *pixels = NULL;
@@ -71,6 +73,7 @@ void My_Imgui_Create_Font(LANGUAGE language)
 
 void My_Imgui_Destroy_Font()
 {
+    LogFunctionName;
     if (gFontTexture)
     {
         vita2d_free_texture(gFontTexture);

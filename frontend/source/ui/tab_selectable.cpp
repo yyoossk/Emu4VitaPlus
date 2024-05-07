@@ -52,10 +52,13 @@ void TabSeletable::Show(bool selected)
         ImGui::Columns(2, NULL, false);
         for (size_t i = 0; i < _GetItemCount(); i++)
         {
-            _ShowItem(i, i == _index);
-            if (i == _index && ImGui::GetScrollMaxY() > 0.f)
+            if (ItemVisable(i))
             {
-                ImGui::SetScrollHereY((float)_index / (float)_GetItemCount());
+                _ShowItem(i, i == _index);
+                if (i == _index && ImGui::GetScrollMaxY() > 0.f)
+                {
+                    ImGui::SetScrollHereY((float)_index / (float)_GetItemCount());
+                }
             }
         }
         ImGui::Columns(1);
@@ -145,5 +148,17 @@ void TabSeletable::SetItemVisable(size_t index, bool visable)
     if (index < _items.size())
     {
         _items[index]->SetVisable(visable);
+    }
+}
+
+bool TabSeletable::ItemVisable(size_t index)
+{
+    if (index < _items.size())
+    {
+        return _items[index]->Visable();
+    }
+    else
+    {
+        return false;
     }
 }
