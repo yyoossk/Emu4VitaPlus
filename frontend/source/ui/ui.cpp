@@ -7,6 +7,7 @@
 #include "item_control.h"
 #include "item_hotkey.h"
 #include "tab_browser.h"
+#include "tab_state.h"
 #include "tab_core.h"
 #include "tab_about.h"
 #include "global.h"
@@ -95,6 +96,8 @@ Ui::Ui(const char *path) : _tab_index(TAB_INDEX_BROWSER)
                                                 new ItemConfig(SYSTEM_MENU_LANGUAGE, &gConfig->language, {LanguageString(gLanguageNames[LANGUAGE_ENGLISH]), LanguageString(gLanguageNames[LANGUAGE_CHINESE])}, ChangeLanguage),
 
                                                 new ItemBase(SYSTEM_MENU_EXIT, ExitApp)});
+
+    _tabs[TAB_STATE] = new TabState();
 
     _tabs[TAB_INDEX_BROWSER] = new TabBrowser(path);
 
@@ -228,23 +231,27 @@ void Ui::_ShowBoot()
                                    "..."};
     static size_t count = 0;
     static uint64_t next_ms = 0;
-    uint64_t current_ms = sceKernelGetProcessTimeWide();
-    if (next_ms <= current_ms)
-    {
-        count++;
-        if (count >= sizeof(frames) / sizeof(*frames))
-        {
-            count = 0;
-        }
-        next_ms = current_ms + 200000;
-    }
 
     ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
     for (const auto &log : _logs)
     {
         ImGui::Text(log.c_str());
     }
-    ImGui::Text(frames[count]);
+
+    if (_logs.size() > 0 && _logs.back() != "Done")
+    {
+        uint64_t current_ms = sceKernelGetProcessTimeWide();
+        if (next_ms <= current_ms)
+        {
+            count++;
+            if (count >= sizeof(frames) / sizeof(*frames))
+            {
+                count = 0;
+            }
+            next_ms = current_ms + 200000;
+        }
+        ImGui::Text(frames[count]);
+    }
     ImGui::PopStyleColor();
 }
 

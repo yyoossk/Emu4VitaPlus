@@ -107,7 +107,7 @@ vita_create_vpk(
     ${PUBLIC_PKG_FILES})
 
 add_custom_target(VPK ALL
-    COMMAND ${CMAKE_COMMAND} -E rename ${VPK_NAME} ${CMAKE_BINARY_DIR}/${VPK_NAME})
+    COMMAND ${CMAKE_COMMAND} -E rename ${VPK_NAME} ${OUT_PATH}/${VPK_NAME})
 
 if(${CMAKE_VERSION} VERSION_LESS "3.20.0")
     add_dependencies(VPK ${VPK_NAME})

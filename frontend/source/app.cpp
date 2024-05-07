@@ -64,6 +64,7 @@ App::App()
 
     gUi->AppendLog("Load font");
     ChangeFont();
+    gUi->AppendLog("Done");
 }
 
 App::~App()

@@ -24,5 +24,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fno-rtti -fno-exceptions -std=c++17")
 set(CMAKE_CXX_FLAGS_DEBUG_INIT "-DDEBUG -g")
 set(LDFLAGS "-Wl,-q")
 
+set(OUT_PATH "${CMAKE_BINARY_DIR}/out")
+file(MAKE_DIRECTORY ${OUT_PATH})
+
 add_subdirectory(deps)
 add_subdirectory(apps/gpsp)
