@@ -10,7 +10,7 @@ Directory::Directory(const char *path, const char *ext_filters, char split)
 
     if (ext_filters)
     {
-        _SetExtensionFilter(ext_filters, split);
+        SetExtensionFilter(ext_filters, split);
     }
 
     if (path)
@@ -24,7 +24,7 @@ Directory::~Directory()
     LogFunctionName;
 }
 
-void Directory::_SetExtensionFilter(const char *exts, char split)
+void Directory::SetExtensionFilter(const char *exts, char split)
 {
     LogFunctionName;
 

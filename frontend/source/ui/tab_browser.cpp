@@ -85,6 +85,7 @@ void TabBrowser::Show(bool selected)
 
 void TabBrowser::_OnActive(Input *input)
 {
+    LogFunctionName;
     auto item = _directory->GetItem(_index);
 
     if (item.isDir)
@@ -98,6 +99,7 @@ void TabBrowser::_OnActive(Input *input)
         {
             gStatus = APP_STATUS_RUN_GAME;
             sceShellUtilLock((SceShellUtilLockType)(SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN_2));
+            UnsetInputHooks(input);
         }
     }
 }

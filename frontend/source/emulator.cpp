@@ -216,6 +216,11 @@ void Emulator::Run()
     retro_run();
 }
 
+void Emulator::Reset()
+{
+    retro_reset();
+}
+
 void Emulator::Show()
 {
     if (_texture_buf == nullptr)

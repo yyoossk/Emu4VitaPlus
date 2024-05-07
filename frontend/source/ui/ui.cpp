@@ -17,6 +17,13 @@ static void ResumeGame()
     gStatus = APP_STATUS_RUN_GAME;
 }
 
+static void ResetGame()
+{
+    LogFunctionName;
+    gEmulator->Reset();
+    gStatus = APP_STATUS_RUN_GAME;
+}
+
 static void ExitApp()
 {
     LogFunctionName;
@@ -84,7 +91,7 @@ Ui::Ui(const char *path) : _tab_index(TAB_INDEX_BROWSER)
 
     _tabs[TAB_INDEX_SYSTEM] = new TabSeletable(TAB_SYSTEM,
                                                {new ItemBase(SYSTEM_RESUME_GAME, ResumeGame, NULL, false),
-                                                new ItemBase(SYSTEM_RESET_GAME, ResumeGame, NULL, false),
+                                                new ItemBase(SYSTEM_RESET_GAME, ResetGame, NULL, false),
                                                 new ItemConfig(SYSTEM_MENU_LANGUAGE, &gConfig->language, {LanguageString(gLanguageNames[LANGUAGE_ENGLISH]), LanguageString(gLanguageNames[LANGUAGE_CHINESE])}, ChangeLanguage),
 
                                                 new ItemBase(SYSTEM_MENU_EXIT, ExitApp)});
@@ -139,9 +146,7 @@ Ui::Ui(const char *path) : _tab_index(TAB_INDEX_BROWSER)
 
     _tabs[TAB_INDEX_ABOUT] = new TabAbout();
 
-    _tabs[_tab_index]->SetInputHooks(&_input);
-
-    _SetKeyHooks();
+    SetInputHooks();
 
     // _update_sema = sceKernelCreateSema("ui", 0, 1, 1, NULL);
 }
@@ -158,10 +163,16 @@ Ui::~Ui()
     // sceKernelDeleteSema(_update_sema);
 }
 
-void Ui::_SetKeyHooks()
+void Ui::SetInputHooks()
 {
     _input.SetKeyUpCallback(SCE_CTRL_L1, std::bind(&Ui::_OnKeyL2, this, &_input));
     _input.SetKeyUpCallback(SCE_CTRL_R1, std::bind(&Ui::_OnKeyR2, this, &_input));
+
+    _tabs[_tab_index]->SetInputHooks(&_input);
+    while (!_tabs[_tab_index]->Visable())
+    {
+        _OnKeyL2(&_input);
+    }
 }
 
 void Ui::_OnKeyL2(Input *input)
@@ -192,7 +203,6 @@ void Ui::_OnKeyR2(Input *input)
 
 void Ui::Run()
 {
-    // LogFunctionName;
     _input.Poll();
     static APP_STATUS last_status = APP_STATUS_SHOW_UI;
     if (gStatus != last_status)
@@ -203,10 +213,54 @@ void Ui::Run()
         system_tab->SetItemVisable(0, gStatus == APP_STATUS_SHOW_UI_IN_GAME);
         system_tab->SetItemVisable(1, gStatus == APP_STATUS_SHOW_UI_IN_GAME);
 
+        SetInputHooks();
+
         last_status = gStatus;
     }
 
     // sceKernelSignalSema(_update_sema, 1);
+}
+
+void Ui::_ShowBoot()
+{
+    static const char *frames[] = {".  ",
+                                   ".. ",
+                                   "..."};
+    static size_t count = 0;
+    static uint64_t next_ms = 0;
+    uint64_t current_ms = sceKernelGetProcessTimeWide();
+    if (next_ms <= current_ms)
+    {
+        count++;
+        if (count >= sizeof(frames) / sizeof(*frames))
+        {
+            count = 0;
+        }
+        next_ms = current_ms + 200000;
+    }
+
+    ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
+    for (const auto &log : _logs)
+    {
+        ImGui::Text(log.c_str());
+    }
+    ImGui::Text(frames[count]);
+    ImGui::PopStyleColor();
+}
+
+void Ui::_ShowNormal()
+{
+    if (ImGui::BeginTabBar("MyTabBar", ImGuiTabBarFlags_None))
+    {
+        for (size_t i = 0; i < _tabs.size(); i++)
+        {
+            if (_tabs[i]->Visable())
+            {
+                _tabs[i]->Show(_tab_index == i);
+            }
+        }
+        ImGui::EndTabBar();
+    }
 }
 
 void Ui::Show()
@@ -222,26 +276,7 @@ void Ui::Show()
 
     ImGui::Begin("Emu4Vita++ (" APP_DIR_NAME ")", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs);
 
-    if (gStatus == APP_STATUS_BOOT)
-    {
-        ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
-        for (const auto &log : _logs)
-        {
-            ImGui::Text(log.c_str());
-        }
-        ImGui::PopStyleColor();
-    }
-    else if (ImGui::BeginTabBar("MyTabBar", ImGuiTabBarFlags_None)) // APP_STATUS_SHOW_UI or APP_STATUS_SHOW_UI_IN_GAME
-    {
-        for (size_t i = 0; i < _tabs.size(); i++)
-        {
-            if (_tabs[i]->Visable())
-            {
-                _tabs[i]->Show(_tab_index == i);
-            }
-        }
-        ImGui::EndTabBar();
-    }
+    gStatus == APP_STATUS_BOOT ? _ShowBoot() : _ShowNormal();
 
     ImGui::End();
     ImGui::Render();

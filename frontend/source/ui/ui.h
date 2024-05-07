@@ -22,20 +22,25 @@ enum
 
 class Ui
 {
+    friend class App;
+
 public:
     Ui(const char *path);
     virtual ~Ui();
     void Show();
     void Run();
     void AppendLog(const char *log);
+    void SetInputHooks();
 
 private:
     void _InitImgui();
     void _DeinitImgui();
 
-    void _SetKeyHooks();
     void _OnKeyL2(Input *input);
     void _OnKeyR2(Input *input);
+
+    void _ShowBoot();
+    void _ShowNormal();
 
     Input _input;
     size_t _tab_index;

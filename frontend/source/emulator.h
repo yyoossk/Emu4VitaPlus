@@ -23,6 +23,7 @@ public:
 
     bool LoadGame(const char *path);
     void UnloadGame();
+    void Reset();
     void Run();
     void Show();
     void SetSpeed(double speed);

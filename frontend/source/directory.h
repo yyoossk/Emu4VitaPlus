@@ -17,6 +17,7 @@ public:
               char split = '|');
     virtual ~Directory();
 
+    void SetExtensionFilter(const char *exts, char split);
     bool SetCurrentPath(const std::string &path);
     const std::string &GetCurrentPath() const { return _current_path; };
     const DirItem &GetItem(int index) const { return _items[index]; };
@@ -29,6 +30,5 @@ private:
     std::unordered_set<std::string> _ext_filters;
     std::string _current_path;
 
-    void _SetExtensionFilter(const char *exts, char split);
     bool _LeagleTest(const char *name);
 };

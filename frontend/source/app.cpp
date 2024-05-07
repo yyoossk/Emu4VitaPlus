@@ -46,14 +46,16 @@ App::App()
     sceTouchSetSamplingState(SCE_TOUCH_PORT_BACK, SCE_TOUCH_SAMPLING_STATE_START);
 
     _IsSaveMode();
-    gVideo = new Video();
 
     gConfig = new Config();
     gEmulator = new Emulator();
+    gVideo = new Video();
     gUi = new Ui("ux0:");
     gVideo->Start();
 
     gUi->AppendLog("Booting");
+    gUi->AppendLog("Initialize video");
+    gUi->AppendLog("Initialize emulator");
     gUi->AppendLog("Load config");
     if (!gConfig->Load())
     {
@@ -62,8 +64,6 @@ App::App()
 
     gUi->AppendLog("Load font");
     ChangeFont();
-
-    // sceKernelDelayThread(3000000);
 }
 
 App::~App()
@@ -72,9 +72,11 @@ App::~App()
 
     gVideo->Stop();
     delete gEmulator;
+
     gVideo->Lock();
     delete gUi;
     gVideo->Unlock();
+
     delete gVideo;
     delete gConfig;
 
