@@ -17,6 +17,8 @@ public:
     CoreOptions();
     virtual ~CoreOptions();
 
+    bool Save(const char *path);
+
     void Load(retro_core_options_intl *options);
 
 private:

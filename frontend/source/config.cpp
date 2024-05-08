@@ -3,16 +3,17 @@
 #include <stdio.h>
 #include <unordered_map>
 #include <string>
-#include "global.h"
-#include "config.h"
-#include "input.h"
-#include "file.h"
-#include "log.h"
 
 #ifndef TOML_EXCEPTIONS
 #define TOML_EXCEPTIONS 0
 #endif
 #include <toml++/toml.hpp>
+
+#include "global.h"
+#include "config.h"
+#include "input.h"
+#include "file.h"
+#include "log.h"
 
 #define MAIN_SECTION "MAIN"
 #define CONTROL_SECTION "KEYS"
@@ -207,8 +208,10 @@ bool Config::Save(const char *path)
     {
         fputs(s.str().c_str(), fp);
         fclose(fp);
+        return true;
     }
-    return true;
+
+    return false;
 }
 
 bool Config::Load(const char *path)
