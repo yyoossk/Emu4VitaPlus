@@ -3,17 +3,16 @@
 #include <stdio.h>
 #include <unordered_map>
 #include <string>
-
-#ifndef TOML_EXCEPTIONS
-#define TOML_EXCEPTIONS 0
-#endif
-#include <toml++/toml.hpp>
-
 #include "global.h"
 #include "config.h"
 #include "input.h"
 #include "file.h"
 #include "log.h"
+
+#ifndef TOML_EXCEPTIONS
+#define TOML_EXCEPTIONS 0
+#endif
+#include <toml++/toml.hpp>
 
 #define MAIN_SECTION "MAIN"
 #define CONTROL_SECTION "KEYS"
@@ -51,33 +50,32 @@ std::unordered_map<uint32_t, std::string> Config::PSV_KEYS = {
     KEY_PAIR(SCE_CTRL_RSTICK_RIGHT),
 };
 
-std::unordered_map<uint32_t, TEXT_ENUM>
-    Config::ControlTextMap = {
-        {SCE_CTRL_CROSS, BUTTON_CROSS},
-        {SCE_CTRL_TRIANGLE, BUTTON_TRIANGLE},
-        {SCE_CTRL_CIRCLE, BUTTON_CIRCLE},
-        {SCE_CTRL_SQUARE, BUTTON_SQUARE},
-        {SCE_CTRL_SELECT, BUTTON_SELECT},
-        {SCE_CTRL_START, BUTTON_START},
-        {SCE_CTRL_UP, BUTTON_UP},
-        {SCE_CTRL_DOWN, BUTTON_DOWN},
-        {SCE_CTRL_LEFT, BUTTON_LEFT},
-        {SCE_CTRL_RIGHT, BUTTON_RIGHT},
-        {SCE_CTRL_L1, BUTTON_L1},
-        {SCE_CTRL_R1, BUTTON_R1},
-        {SCE_CTRL_L2, BUTTON_L2},
-        {SCE_CTRL_R2, BUTTON_R2},
-        {SCE_CTRL_L3, BUTTON_L3},
-        {SCE_CTRL_R3, BUTTON_R3},
-        {SCE_CTRL_LSTICK_UP, BUTTON_LEFT_ANALOG_UP},
-        {SCE_CTRL_LSTICK_DOWN, BUTTON_LEFT_ANALOG_DOWN},
-        {SCE_CTRL_LSTICK_LEFT, BUTTON_LEFT_ANALOG_LEFT},
-        {SCE_CTRL_LSTICK_RIGHT, BUTTON_LEFT_ANALOG_RIGHT},
-        {SCE_CTRL_RSTICK_UP, BUTTON_RIGHT_ANALOG_UP},
-        {SCE_CTRL_RSTICK_DOWN, BUTTON_RIGHT_ANALOG_DOWN},
-        {SCE_CTRL_RSTICK_LEFT, BUTTON_RIGHT_ANALOG_LEFT},
-        {SCE_CTRL_RSTICK_RIGHT, BUTTON_RIGHT_ANALOG_RIGHT},
-        {SCE_CTRL_PSBUTTON, BUTTON_HOME},
+std::unordered_map<uint32_t, TEXT_ENUM> Config::ControlTextMap = {
+    {SCE_CTRL_CROSS, BUTTON_CROSS},
+    {SCE_CTRL_TRIANGLE, BUTTON_TRIANGLE},
+    {SCE_CTRL_CIRCLE, BUTTON_CIRCLE},
+    {SCE_CTRL_SQUARE, BUTTON_SQUARE},
+    {SCE_CTRL_SELECT, BUTTON_SELECT},
+    {SCE_CTRL_START, BUTTON_START},
+    {SCE_CTRL_UP, BUTTON_UP},
+    {SCE_CTRL_DOWN, BUTTON_DOWN},
+    {SCE_CTRL_LEFT, BUTTON_LEFT},
+    {SCE_CTRL_RIGHT, BUTTON_RIGHT},
+    {SCE_CTRL_L1, BUTTON_L1},
+    {SCE_CTRL_R1, BUTTON_R1},
+    {SCE_CTRL_L2, BUTTON_L2},
+    {SCE_CTRL_R2, BUTTON_R2},
+    {SCE_CTRL_L3, BUTTON_L3},
+    {SCE_CTRL_R3, BUTTON_R3},
+    {SCE_CTRL_LSTICK_UP, BUTTON_LEFT_ANALOG_UP},
+    {SCE_CTRL_LSTICK_DOWN, BUTTON_LEFT_ANALOG_DOWN},
+    {SCE_CTRL_LSTICK_LEFT, BUTTON_LEFT_ANALOG_LEFT},
+    {SCE_CTRL_LSTICK_RIGHT, BUTTON_LEFT_ANALOG_RIGHT},
+    {SCE_CTRL_RSTICK_UP, BUTTON_RIGHT_ANALOG_UP},
+    {SCE_CTRL_RSTICK_DOWN, BUTTON_RIGHT_ANALOG_DOWN},
+    {SCE_CTRL_RSTICK_LEFT, BUTTON_RIGHT_ANALOG_LEFT},
+    {SCE_CTRL_RSTICK_RIGHT, BUTTON_RIGHT_ANALOG_RIGHT},
+    {SCE_CTRL_PSBUTTON, BUTTON_HOME},
 };
 
 std::unordered_map<uint8_t, TEXT_ENUM> Config::RetroTextMap = {
@@ -180,11 +178,11 @@ void Config::DefaultGraphics()
 bool Config::Save(const char *path)
 {
     LogFunctionName;
+    LogDebug("path: %s", path);
 
-    toml::table _main{
-        {"language", gLanguageNames[language]},
-    };
+    toml::table _main{{"language", gLanguageNames[language]}};
 
+    LogDebug("process control_maps");
     toml::table _keys;
     for (const auto &k : control_maps)
     {
@@ -194,12 +192,14 @@ bool Config::Save(const char *path)
         _keys.insert(PSV_KEYS.at(k.psv).c_str(), t);
     }
 
+    LogDebug("process hotkeys");
     toml::array _hotkeys;
     for (size_t i = 0; i < HOT_KEY_COUNT; i++)
     {
         _hotkeys.push_back(hotkeys[i]);
     }
 
+    LogDebug("generate toml string");
     std::stringstream s;
     s << toml::table{{MAIN_SECTION, _main}, {CONTROL_SECTION, _keys}, {HOTKEY_SECTION, _hotkeys}};
 
@@ -208,15 +208,19 @@ bool Config::Save(const char *path)
     {
         fputs(s.str().c_str(), fp);
         fclose(fp);
+        LogDebug("Save end");
         return true;
     }
 
+    LogError("failed to open %s", path);
     return false;
 }
 
 bool Config::Load(const char *path)
 {
     LogFunctionName;
+    LogDebug("path: %s", path);
+
     if (!File::Exist(path))
     {
         return false;
@@ -249,6 +253,7 @@ bool Config::Load(const char *path)
     }
 
     LogDebug("load " CONTROL_SECTION);
+    control_maps.clear();
     const auto _keys = tbl[CONTROL_SECTION].as_table();
     if (_keys)
     {

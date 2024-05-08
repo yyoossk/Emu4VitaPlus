@@ -28,6 +28,11 @@ Log::~Log()
 
 void Log::log(int log_level, const char *format, ...)
 {
+	if (!format)
+	{
+		return;
+	}
+
 	sceKernelLockLwMutex(&_mutex, 1, NULL);
 	FILE *fp = fopen(_name.c_str(), "a");
 	if (fp)

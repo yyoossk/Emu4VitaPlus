@@ -10,7 +10,7 @@ TabState::~TabState()
 
 void TabState::Show(bool selected)
 {
-    if (ImGui::BeginTabItem(TEXT(TAB_CORE), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
+    if (ImGui::BeginTabItem(TEXT(_title_id), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
     {
         ImGui::EndTabItem();
     }

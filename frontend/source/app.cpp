@@ -75,11 +75,7 @@ App::~App()
 
     gVideo->Stop();
     delete gEmulator;
-
-    gVideo->Lock();
     delete gUi;
-    gVideo->Unlock();
-
     delete gVideo;
     delete gConfig;
 

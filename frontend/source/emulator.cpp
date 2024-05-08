@@ -401,10 +401,6 @@ void Emulator::_LoadCoreOptions(retro_core_options_intl *options)
         LogDebug(us->key);
         LogDebug(us->desc);
         LogDebug(us->info);
-        if (local)
-        {
-            LogDebug(local->key);
-        }
         us++;
         local++;
     }

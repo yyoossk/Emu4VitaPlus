@@ -113,7 +113,7 @@ void Ui::CreateTables(const char *path)
 
                                                 new ItemBase(SYSTEM_MENU_EXIT, ExitApp)});
 
-    _tabs[TAB_STATE] = new TabState();
+    _tabs[TAB_INDEX_STATE] = new TabState();
 
     _tabs[TAB_INDEX_BROWSER] = new TabBrowser(path);
 
@@ -212,11 +212,15 @@ void Ui::Run()
     static APP_STATUS last_status = APP_STATUS_SHOW_UI;
     if (gStatus != last_status)
     {
+        gVideo->Lock();
+
         _tabs[TAB_INDEX_BROWSER]->SetVisable(gStatus == APP_STATUS_SHOW_UI);
 
         TabSeletable *system_tab = (TabSeletable *)(_tabs[TAB_INDEX_SYSTEM]);
         system_tab->SetItemVisable(0, gStatus == APP_STATUS_SHOW_UI_IN_GAME);
         system_tab->SetItemVisable(1, gStatus == APP_STATUS_SHOW_UI_IN_GAME);
+
+        gVideo->Unlock();
 
         SetInputHooks();
 
@@ -277,7 +281,6 @@ void Ui::Show()
 {
     LogFunctionNameLimited;
     // vita2d_set_clip_rectangle(0, 0, VITA_WIDTH, VITA_HEIGHT);
-    // sceKernelWaitSema(_update_sema, 1, NULL);
 
     ImGui_ImplVita2D_NewFrame();
     ImGui::SetMouseCursor(ImGuiMouseCursor_None);
