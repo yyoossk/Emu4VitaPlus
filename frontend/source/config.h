@@ -3,6 +3,7 @@
 #include <vector>
 #include <unordered_map>
 #include <string>
+#include "libretro.h"
 #include "config_types.h"
 #include "language_define.h"
 #include "global.h"
@@ -23,6 +24,7 @@ public:
     void DefaultControlMap();
     void DefaultHotKey();
     void DefaultGraphics();
+    retro_language GetRetroLanguage();
 
     LANGUAGE language;
     std::vector<ControlMapConfig> control_maps;

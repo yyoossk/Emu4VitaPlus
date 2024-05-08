@@ -60,6 +60,13 @@ bool EnvironmentCallback(unsigned cmd, void *data)
     }
     break;
 
+    case RETRO_ENVIRONMENT_GET_LANGUAGE:
+        if (data)
+        {
+            *(retro_language *)data = gConfig->GetRetroLanguage();
+        }
+        break;
+
     case RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION:
     {
         if (data)
@@ -72,6 +79,10 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         {
             *(int *)data = 3;
         }
+        break;
+
+    case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_INTL:
+        gEmulator->_LoadCoreOptions((retro_core_options_intl *)data);
         break;
 
     default:
@@ -378,4 +389,23 @@ void Emulator::_OnPsButton(Input *input)
     gVideo->Lock();
     gStatus = APP_STATUS_SHOW_UI_IN_GAME;
     gVideo->Unlock();
+}
+
+void Emulator::_LoadCoreOptions(retro_core_options_intl *options)
+{
+    LogFunctionName;
+    const retro_core_option_definition *us = options->us;
+    const retro_core_option_definition *local = options->local;
+    while (us->key)
+    {
+        LogDebug(us->key);
+        LogDebug(us->desc);
+        LogDebug(us->info);
+        if (local)
+        {
+            LogDebug(local->key);
+        }
+        us++;
+        local++;
+    }
 }

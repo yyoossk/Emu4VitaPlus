@@ -55,4 +55,5 @@ private:
     void _SetVideoSize(uint32_t width, uint32_t height);
     void _SetupKeys();
     void _OnPsButton(Input *input);
+    void _LoadCoreOptions(retro_core_options_intl *options);
 };

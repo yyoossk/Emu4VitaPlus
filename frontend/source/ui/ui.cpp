@@ -67,7 +67,7 @@ void Ui::_InitImgui()
     LogFunctionName;
 
     ImGui::CreateContext();
-    ImGui_ImplVita2D_Init();
+    My_ImGui_ImplVita2D_Init(LANGUAGE::LANGUAGE_ENGLISH);
     ImGui_ImplVita2D_TouchUsage(false);
     ImGui_ImplVita2D_UseIndirectFrontTouch(false);
     ImGui_ImplVita2D_UseRearTouch(false);
@@ -80,16 +80,32 @@ void Ui::_InitImgui()
 void Ui::_DeinitImgui()
 {
     LogFunctionName;
-    My_Imgui_Destroy_Font();
-    // ImGui_ImplVita2D_Shutdown();
+    My_ImGui_ImplVita2D_Shutdown();
     ImGui::DestroyContext();
 }
 
-Ui::Ui(const char *path) : _tab_index(TAB_INDEX_BROWSER)
+Ui::Ui() : _tab_index(TAB_INDEX_BROWSER)
 {
     LogFunctionName;
     _InitImgui();
+}
 
+Ui::~Ui()
+{
+    LogFunctionName;
+    for (auto &tab : _tabs)
+    {
+        if (tab != nullptr)
+        {
+            delete tab;
+        }
+    }
+
+    _DeinitImgui();
+}
+
+void Ui::CreateTables(const char *path)
+{
     _tabs[TAB_INDEX_SYSTEM] = new TabSeletable(TAB_SYSTEM,
                                                {new ItemBase(SYSTEM_RESUME_GAME, ResumeGame, NULL, false),
                                                 new ItemBase(SYSTEM_RESET_GAME, ResetGame, NULL, false),
@@ -150,20 +166,6 @@ Ui::Ui(const char *path) : _tab_index(TAB_INDEX_BROWSER)
     _tabs[TAB_INDEX_ABOUT] = new TabAbout();
 
     SetInputHooks();
-
-    // _update_sema = sceKernelCreateSema("ui", 0, 1, 1, NULL);
-}
-
-Ui::~Ui()
-{
-    LogFunctionName;
-    for (auto &tab : _tabs)
-    {
-        delete tab;
-    }
-
-    _DeinitImgui();
-    // sceKernelDeleteSema(_update_sema);
 }
 
 void Ui::SetInputHooks()
@@ -226,9 +228,10 @@ void Ui::Run()
 
 void Ui::_ShowBoot()
 {
-    static const char *frames[] = {".  ",
-                                   ".. ",
-                                   "..."};
+    static const char *frames[] = {"-",
+                                   "\\",
+                                   "|",
+                                   "/"};
     static size_t count = 0;
     static uint64_t next_ms = 0;
 
@@ -287,13 +290,13 @@ void Ui::Show()
 
     ImGui::End();
     ImGui::Render();
-    ImGui_ImplVita2D_RenderDrawData(ImGui::GetDrawData());
+    My_ImGui_ImplVita2D_RenderDrawData(ImGui::GetDrawData());
 
     return;
 }
 
 void Ui::AppendLog(const char *log)
 {
-    LogDebug(log);
+    LogDebug("boot log: %s", log);
     _logs.emplace_back(log);
 };

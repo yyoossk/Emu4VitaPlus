@@ -10,16 +10,6 @@
 #include "file.h"
 #include "log.h"
 
-static void ChangeFont()
-{
-    LogFunctionName;
-    gVideo->Lock();
-    ImGui_ImplVita2D_InvalidateDeviceObjects();
-    ImGui::GetIO().Fonts->Clear();
-    My_Imgui_Create_Font(gConfig->language);
-    gVideo->Unlock();
-}
-
 App::App()
 {
     LogFunctionName;
@@ -48,22 +38,34 @@ App::App()
     _IsSaveMode();
 
     gConfig = new Config();
-    gEmulator = new Emulator();
+
     gVideo = new Video();
-    gUi = new Ui("ux0:");
+    gUi = new Ui();
     gVideo->Start();
 
     gUi->AppendLog("Booting");
     gUi->AppendLog("Initialize video");
-    gUi->AppendLog("Initialize emulator");
     gUi->AppendLog("Load config");
     if (!gConfig->Load())
     {
         gConfig->Save();
     }
 
-    gUi->AppendLog("Load font");
-    ChangeFont();
+    gUi->AppendLog("Initialize emulator");
+    gEmulator = new Emulator();
+
+    gUi->AppendLog("Create tables of UI");
+    gUi->CreateTables("ux0:");
+
+    if (gConfig->language != LANGUAGE::LANGUAGE_ENGLISH)
+    {
+        gUi->AppendLog("Load font");
+        gVideo->Lock();
+        My_Imgui_Destroy_Font();
+        My_Imgui_Create_Font(gConfig->language);
+        gVideo->Unlock();
+    }
+
     gUi->AppendLog("Done");
 }
 

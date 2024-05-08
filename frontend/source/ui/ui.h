@@ -26,8 +26,10 @@ class Ui
     friend class App;
 
 public:
-    Ui(const char *path);
+    Ui();
     virtual ~Ui();
+
+    void CreateTables(const char *path);
     void Show();
     void Run();
     void AppendLog(const char *log);
@@ -48,6 +50,4 @@ private:
 
     std::array<TabBase *, TAB_INDEX_COUNT> _tabs;
     std::vector<std::string> _logs;
-
-    // SceUID _update_sema;
 };
