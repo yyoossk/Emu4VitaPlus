@@ -1,4 +1,5 @@
 #include "tab_about.h"
+#include "language_string.h"
 
 void TabAbout::Show(bool selected)
 {

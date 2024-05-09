@@ -1,15 +1,16 @@
 #pragma once
 #include <imgui_vita2d/imgui_vita.h>
 #include "input.h"
-#include "global.h"
+#include "language_string.h"
 
 typedef std::function<void()> CallbackFunc;
 
 class ItemBase
 {
 public:
-    ItemBase(size_t text_id, CallbackFunc active_callback = nullptr, CallbackFunc option_callback = nullptr, bool visable = true)
-        : _text_id(text_id),
+    ItemBase(LanguageString text, LanguageString info = "", CallbackFunc active_callback = nullptr, CallbackFunc option_callback = nullptr, bool visable = true)
+        : _text(text),
+          _info(info),
           _active_callback(active_callback),
           _option_callback(option_callback),
           _visable(visable){};
@@ -39,12 +40,14 @@ public:
         }
     }
 
-    const char *GetText() { return TEXT(_text_id); };
+    const char *GetText() { return _text.Get(); };
+    const char *GetInfo() { return _info.Get(); };
     void SetVisable(bool visable) { _visable = visable; };
     bool Visable() { return _visable; };
 
 protected:
-    size_t _text_id;
+    LanguageString _text;
+    LanguageString _info;
     CallbackFunc _active_callback;
     CallbackFunc _option_callback;
 

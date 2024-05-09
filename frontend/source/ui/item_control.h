@@ -1,7 +1,6 @@
 #pragma once
 #include <stdint.h>
 #include "item_base.h"
-#include "global.h"
 
 class ItemControl : public virtual ItemBase
 {

@@ -8,6 +8,20 @@
 
 #define CORE_SECTION "CORE"
 
+CoreOptions *gCoreOptions = nullptr;
+
+std::vector<LanguageString> CoreOption::GetValues()
+{
+    std::vector<LanguageString> _values;
+    const retro_core_option_value *v = values;
+    while (v->value)
+    {
+        _values.emplace_back(v->label ? v->label : v->value);
+        v++;
+    }
+    return _values;
+}
+
 CoreOptions::CoreOptions()
 {
     LogFunctionName;
@@ -16,6 +30,7 @@ CoreOptions::CoreOptions()
 CoreOptions::~CoreOptions()
 {
     LogFunctionName;
+    Save();
 }
 
 bool CoreOptions::Save(const char *path)
@@ -23,7 +38,7 @@ bool CoreOptions::Save(const char *path)
     LogFunctionName;
     toml::table options;
 
-    for (auto const &option : _options)
+    for (auto const &option : Options)
     {
         options.insert(option.first, option.second.value);
     }
@@ -49,14 +64,14 @@ void CoreOptions::Load(retro_core_options_intl *options)
     const retro_core_option_definition *local = options->local;
     while (us->key)
     {
-        const auto &iter = _options.find(us->key);
+        const auto &iter = Options.find(us->key);
         CoreOption *option;
-        if (iter == _options.end())
+        if (iter == Options.end())
         {
-            option = &(_options[us->key] = CoreOption{us->desc,
-                                                      us->info,
-                                                      us->default_value,
-                                                      us->values});
+            option = &(Options[us->key] = CoreOption{us->desc,
+                                                     us->info,
+                                                     us->default_value,
+                                                     us->values});
         }
         else
         {

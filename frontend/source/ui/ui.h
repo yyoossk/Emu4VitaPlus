@@ -29,11 +29,12 @@ public:
     Ui();
     virtual ~Ui();
 
-    void CreateTables(const char *path);
+    void CreateTables(const char *path); // don't call it before gEmulator initialized
     void Show();
     void Run();
-    void AppendLog(const char *log);
     void SetInputHooks();
+    void AppendLog(const char *log);
+    void ClearLogs();
 
 private:
     void _InitImgui();
@@ -51,3 +52,5 @@ private:
     std::array<TabBase *, TAB_INDEX_COUNT> _tabs;
     std::vector<std::string> _logs;
 };
+
+extern Ui *gUi;

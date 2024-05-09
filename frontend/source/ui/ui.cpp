@@ -1,16 +1,22 @@
 #include <imgui_vita2d/imgui_vita.h>
 #include "my_imgui.h"
 #include "ui.h"
+#include "app.h"
+#include "video.h"
 #include "log.h"
 #include "tab_selectable.h"
 #include "item_config.h"
 #include "item_control.h"
 #include "item_hotkey.h"
+#include "item_core.h"
 #include "tab_browser.h"
 #include "tab_state.h"
 #include "tab_core.h"
 #include "tab_about.h"
-#include "global.h"
+
+#define MAIN_WINDOW_PADDING 10
+
+Ui *gUi = nullptr;
 
 static void ResumeGame()
 {
@@ -106,12 +112,23 @@ Ui::~Ui()
 
 void Ui::CreateTables(const char *path)
 {
-    _tabs[TAB_INDEX_SYSTEM] = new TabSeletable(TAB_SYSTEM,
-                                               {new ItemBase(SYSTEM_RESUME_GAME, ResumeGame, NULL, false),
-                                                new ItemBase(SYSTEM_RESET_GAME, ResetGame, NULL, false),
-                                                new ItemConfig(SYSTEM_MENU_LANGUAGE, &gConfig->language, {LanguageString(gLanguageNames[LANGUAGE_ENGLISH]), LanguageString(gLanguageNames[LANGUAGE_CHINESE])}, ChangeLanguage),
+    if (gEmulator == nullptr)
+    {
+        LogError("gEmulator has not been initialized yet.");
+        return;
+    }
 
-                                                new ItemBase(SYSTEM_MENU_EXIT, ExitApp)});
+    _tabs[TAB_INDEX_SYSTEM] = new TabSeletable(TAB_SYSTEM,
+                                               {new ItemBase(SYSTEM_RESUME_GAME, "", ResumeGame, NULL, false),
+                                                new ItemBase(SYSTEM_RESET_GAME, "", ResetGame, NULL, false),
+                                                new ItemConfig(SYSTEM_MENU_LANGUAGE,
+                                                               "",
+                                                               &gConfig->language,
+                                                               {LanguageString(gLanguageNames[LANGUAGE_ENGLISH]),
+                                                                LanguageString(gLanguageNames[LANGUAGE_CHINESE])},
+                                                               ChangeLanguage),
+
+                                                new ItemBase(SYSTEM_MENU_EXIT, "", ExitApp)});
 
     _tabs[TAB_INDEX_STATE] = new TabState();
 
@@ -119,38 +136,45 @@ void Ui::CreateTables(const char *path)
 
     _tabs[TAB_INDEX_GRAPHICS] = new TabSeletable(TAB_GRAPHICS,
                                                  {new ItemConfig(GRAPHICS_MENU_DISPLAY_SIZE,
+                                                                 "",
                                                                  &gConfig->graphics_config.size,
                                                                  DISPLAY_SIZE_1X,
                                                                  CONFIG_DISPLAY_SIZE_COUNT),
                                                   new ItemConfig(GRAPHICS_MENU_ASPECT_RATIO,
+                                                                 "",
                                                                  &gConfig->graphics_config.ratio,
                                                                  ASPECT_RATIO_BY_GAME_RESOLUTION,
                                                                  CONFIG_DISPLAY_RATIO_COUNT),
 #ifdef WANT_DISPLAY_ROTATE
-                                                  new ItemConfig(GRAPHICS_MENU_DISPLAY_ROTATE, (size_t *)&gConfig->graphics_config.rotate,
+                                                  new ItemConfig(GRAPHICS_MENU_DISPLAY_ROTATE,
+                                                                 "",
+                                                                 &gConfig->graphics_config.rotate,
                                                                  sizeof(gConfig->graphics_config.rotate),
                                                                  DISPLAY_ROTATE_DISABLE,
                                                                  CONFIG_DISPLAY_ROTATE_COUNT),
 #endif
                                                   new ItemConfig(GRAPHICS_MENU_GRAPHICS_SHADER,
+                                                                 "",
                                                                  &gConfig->graphics_config.shader,
                                                                  SHADER_DEFAULT,
                                                                  CONFIG_GRAPHICS_SHADER_COUNT),
                                                   new ItemConfig(GRAPHICS_MENU_GRAPHICS_SMOOTH,
+                                                                 "",
                                                                  &gConfig->graphics_config.smooth,
                                                                  NO,
                                                                  CONFIG_GRAPHICS_SMOOTHER_COUNT),
                                                   new ItemConfig(GRAPHICS_MENU_OVERLAY_MODE,
+                                                                 "",
                                                                  &gConfig->graphics_config.overlay_mode,
                                                                  OVERLAY_MODE_OVERLAY,
                                                                  CONFIG_GRAPHICS_OVERLAY_MODE_COUNT),
-                                                  new ItemBase(RESET_CONFIGS, ResetGraphics)});
+                                                  new ItemBase(RESET_CONFIGS, "", ResetGraphics)});
     std::vector<ItemBase *> controls;
     for (ControlMapConfig &cmap : gConfig->control_maps)
     {
         controls.emplace_back(new ItemControl(&cmap));
     }
-    controls.emplace_back(new ItemBase(RESET_CONFIGS, ResetControl));
+    controls.emplace_back(new ItemBase(RESET_CONFIGS, "", ResetControl));
     _tabs[TAB_INDEX_CONTROL] = new TabSeletable(TAB_CONTROL, controls);
 
     std::vector<ItemBase *> hotkeys;
@@ -158,10 +182,17 @@ void Ui::CreateTables(const char *path)
     {
         hotkeys.emplace_back(new ItemHotkey((HotKeyConfig)i, &gConfig->hotkeys[i]));
     }
-    hotkeys.emplace_back(new ItemBase(RESET_CONFIGS, ResetHotkey));
+    hotkeys.emplace_back(new ItemBase(RESET_CONFIGS, "", ResetHotkey));
     _tabs[TAB_INDEX_HOTKEY] = new TabSeletable(TAB_HOTKEY, hotkeys);
 
-    _tabs[TAB_INDEX_CORE] = new TabCore();
+    std::vector<ItemBase *> options;
+    for (const auto &o : gCoreOptions->Options)
+    {
+        // CoreOption
+
+        // options.emplace_back(new ItemConfig(o.second.desc, o.second.info, ));
+    }
+    _tabs[TAB_INDEX_CORE] = new TabSeletable(TAB_CORE, options);
 
     _tabs[TAB_INDEX_ABOUT] = new TabAbout();
 
@@ -187,7 +218,7 @@ void Ui::_OnKeyL2(Input *input)
 
     do
     {
-        _tab_index = (_tab_index == 0 ? TAB_INDEX_COUNT - 1 : _tab_index - 1);
+        LOOP_MINUS_ONE(_tab_index, TAB_INDEX_COUNT);
     } while (!_tabs[_tab_index]->Visable());
 
     _tabs[_tab_index]->SetInputHooks(&_input);
@@ -200,7 +231,7 @@ void Ui::_OnKeyR2(Input *input)
 
     do
     {
-        _tab_index = (_tab_index + 1 == TAB_INDEX_COUNT ? 0 : _tab_index + 1);
+        LOOP_PLUS_ONE(_tab_index, TAB_INDEX_COUNT);
     } while (!_tabs[_tab_index]->Visable());
 
     _tabs[_tab_index]->SetInputHooks(&_input);
@@ -302,4 +333,10 @@ void Ui::AppendLog(const char *log)
 {
     LogDebug("boot log: %s", log);
     _logs.emplace_back(log);
-};
+}
+
+void Ui::ClearLogs()
+{
+    LogFunctionName;
+    _logs.clear();
+}

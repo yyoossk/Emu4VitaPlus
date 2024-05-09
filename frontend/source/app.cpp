@@ -6,9 +6,16 @@
 #include <vita2d.h>
 #include "my_imgui.h"
 #include "app.h"
-#include "global.h"
+#include "video.h"
+#include "emulator.h"
+#include "config.h"
+#include "ui.h"
+#include "core_options.h"
 #include "file.h"
 #include "log.h"
+#include "defines.h"
+
+APP_STATUS gStatus = APP_STATUS_BOOT;
 
 App::App()
 {
@@ -51,6 +58,9 @@ App::App()
         gConfig->Save();
     }
 
+    gUi->AppendLog("Initialize core options");
+    gCoreOptions = new CoreOptions();
+
     gUi->AppendLog("Initialize emulator");
     gEmulator = new Emulator();
 
@@ -66,7 +76,7 @@ App::App()
         gVideo->Unlock();
     }
 
-    gUi->AppendLog("Done");
+    gUi->ClearLogs();
 }
 
 App::~App()
@@ -75,6 +85,7 @@ App::~App()
 
     gVideo->Stop();
     delete gEmulator;
+    delete gCoreOptions;
     delete gUi;
     delete gVideo;
     delete gConfig;

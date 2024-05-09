@@ -3,11 +3,11 @@
 #include <stdio.h>
 #include <unordered_map>
 #include <string>
-#include "global.h"
 #include "config.h"
 #include "input.h"
 #include "file.h"
 #include "log.h"
+#include "defines.h"
 
 #ifndef TOML_EXCEPTIONS
 #define TOML_EXCEPTIONS 0
@@ -18,12 +18,14 @@
 #define CONTROL_SECTION "KEYS"
 #define HOTKEY_SECTION "HOTKEY"
 
+Config *gConfig = nullptr;
+
 #define KEY_PAIR(K) \
     {               \
         K, #K       \
     }
 
-std::unordered_map<uint32_t, std::string> Config::PSV_KEYS = {
+std::unordered_map<uint32_t, std::string> Config::PsvKeys = {
     KEY_PAIR(SCE_CTRL_CROSS),
     KEY_PAIR(SCE_CTRL_TRIANGLE),
     KEY_PAIR(SCE_CTRL_CIRCLE),
@@ -189,7 +191,7 @@ bool Config::Save(const char *path)
         toml::table t{{"psv", k.psv},
                       {"retro", k.retro},
                       {"turbo", k.turbo}};
-        _keys.insert(PSV_KEYS.at(k.psv).c_str(), t);
+        _keys.insert(PsvKeys.at(k.psv).c_str(), t);
     }
 
     LogDebug("process hotkeys");

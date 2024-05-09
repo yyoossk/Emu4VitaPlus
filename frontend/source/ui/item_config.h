@@ -2,17 +2,24 @@
 #include <vector>
 #include "language_string.h"
 #include "item_base.h"
-#include "global.h"
 
 template <typename T>
 class ItemConfig : public virtual ItemBase
 {
 public:
-    ItemConfig(size_t text_id, T *config,
+    ItemConfig(LanguageString text,
+               LanguageString info,
+               T *config,
                std::vector<LanguageString> texts,
                CallbackFunc active_callback = nullptr,
                CallbackFunc option_callback = nullptr);
-    ItemConfig(size_t text_id, T *config, TEXT_ENUM start, size_t count);
+
+    ItemConfig(LanguageString text,
+               LanguageString info,
+               T *config,
+               TEXT_ENUM start,
+               size_t count);
+
     virtual ~ItemConfig();
 
     virtual void SetInputHooks(Input *input);

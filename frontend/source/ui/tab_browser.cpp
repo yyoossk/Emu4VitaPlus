@@ -1,6 +1,9 @@
+#include <vita2d.h>
 #include "tab_browser.h"
+#include "emulator.h"
+#include "video.h"
+#include "app.h"
 #include "log.h"
-#include "global.h"
 
 #define TEXTURE_MAX_WIDTH 446
 #define TEXTURE_MAX_HEIGHT 442

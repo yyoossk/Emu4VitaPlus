@@ -1,7 +1,6 @@
 #pragma once
 #include "tab_selectable.h"
 #include "directory.h"
-#include "global.h"
 
 class TabBrowser : public TabSeletable
 {

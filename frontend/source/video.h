@@ -11,3 +11,5 @@ public:
 
 private:
 };
+
+extern Video *gVideo;

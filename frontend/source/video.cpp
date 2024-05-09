@@ -1,6 +1,10 @@
-#include "global.h"
+#include <vita2d.h>
 #include "video.h"
+#include "app.h"
+#include "ui.h"
 #include "log.h"
+
+Video *gVideo = nullptr;
 
 Video::Video() : ThreadBase(_DrawThread)
 {

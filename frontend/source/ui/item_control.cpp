@@ -4,6 +4,7 @@
 #include "my_imgui.h"
 #include "item_control.h"
 #include "config.h"
+#include "log.h"
 
 static uint8_t RetroKeys[] = {
     RETRO_DEVICE_ID_NONE,
@@ -118,27 +119,15 @@ uint8_t ItemControl::_GetCurrentRetroIndex()
 void ItemControl::_OnKeyUp(Input *input)
 {
     uint8_t current = _GetCurrentRetroIndex();
-    if (current == 0)
-    {
-        _control_map->retro = RetroKeys[RETRO_KEYS_SIZE - 1];
-    }
-    else
-    {
-        _control_map->retro = RetroKeys[current - 1];
-    }
+    LOOP_MINUS_ONE(current, RETRO_KEYS_SIZE);
+    _control_map->retro = RetroKeys[current];
 }
 
 void ItemControl::_OnKeyDown(Input *input)
 {
     uint8_t current = _GetCurrentRetroIndex();
-    if (current == RETRO_KEYS_SIZE - 1)
-    {
-        _control_map->retro = RetroKeys[0];
-    }
-    else
-    {
-        _control_map->retro = RetroKeys[current + 1];
-    }
+    LOOP_PLUS_ONE(current, RETRO_KEYS_SIZE);
+    _control_map->retro = RetroKeys[current];
 }
 
 void ItemControl::_OnClick(Input *input)

@@ -1,12 +1,17 @@
 #include <imgui_vita2d/imgui_vita.h>
 #include "item_config.h"
 #include "my_imgui.h"
+#include "config.h"
+#include "log.h"
 
 template <typename T>
-ItemConfig<T>::ItemConfig(size_t text_id, T *config,
+ItemConfig<T>::ItemConfig(LanguageString text,
+                          LanguageString info,
+                          T *config,
                           std::vector<LanguageString> texts,
-                          CallbackFunc active_callback, CallbackFunc option_callback)
-    : ItemBase(text_id, active_callback, option_callback),
+                          CallbackFunc active_callback,
+                          CallbackFunc option_callback)
+    : ItemBase(text, info, active_callback, option_callback),
       _config(config),
       _config_texts(std::move(texts)),
       _actived(false)
@@ -14,8 +19,12 @@ ItemConfig<T>::ItemConfig(size_t text_id, T *config,
 }
 
 template <typename T>
-ItemConfig<T>::ItemConfig(size_t text_id, T *config, TEXT_ENUM start, size_t count)
-    : ItemBase(text_id),
+ItemConfig<T>::ItemConfig(LanguageString text,
+                          LanguageString info,
+                          T *config,
+                          TEXT_ENUM start,
+                          size_t count)
+    : ItemBase(text, info),
       _config(config),
       _actived(false)
 {

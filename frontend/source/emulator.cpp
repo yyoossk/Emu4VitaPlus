@@ -2,11 +2,18 @@
 #include <string>
 #include <string.h>
 #include <stdint.h>
+#include <imgui_vita2d/imgui_impl_vita2d.h>
 #include "emulator.h"
+#include "video.h"
+#include "app.h"
+#include "defines.h"
+#include "core_options.h"
+#include "config.h"
 #include "log.h"
-#include "global.h"
 
 #define CORE_OPTIONS_VERSION 2
+
+Emulator *gEmulator = nullptr;
 
 bool EnvironmentCallback(unsigned cmd, void *data)
 {
@@ -82,6 +89,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         break;
 
     case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_INTL:
+        gCoreOptions->Load((retro_core_options_intl *)data);
         gEmulator->_LoadCoreOptions((retro_core_options_intl *)data);
         break;
 

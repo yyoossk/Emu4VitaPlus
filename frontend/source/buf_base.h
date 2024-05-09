@@ -1,6 +1,7 @@
 #pragma once
 #include <array>
 #include <psp2/kernel/threadmgr.h>
+#include "defines.h"
 
 template <typename T, size_t S>
 class BufBase
@@ -18,11 +19,7 @@ public:
 
     T Next()
     {
-        _index++;
-        if (_index >= S)
-        {
-            _index = 0;
-        }
+        LOOP_PLUS_ONE(_index, S);
         return _buf[_index];
     };
 

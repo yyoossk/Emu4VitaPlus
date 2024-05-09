@@ -1,7 +1,7 @@
 #include "file.h"
-#include "global.h"
 #include "app.h"
 #include "log.h"
+#include "defines.h"
 
 int main(int argc, char *const argv[])
 {

@@ -55,9 +55,14 @@ void TabSeletable::Show(bool selected)
             if (ItemVisable(i))
             {
                 _ShowItem(i, i == _index);
-                if (i == _index && ImGui::GetScrollMaxY() > 0.f)
+                if (i == _index)
                 {
-                    ImGui::SetScrollHereY((float)_index / (float)_GetItemCount());
+                    _status_text = _items[i]->GetInfo();
+
+                    if (ImGui::GetScrollMaxY() > 0.f)
+                    {
+                        ImGui::SetScrollHereY((float)_index / (float)_GetItemCount());
+                    }
                 }
             }
         }
@@ -82,8 +87,8 @@ void TabSeletable::_OnKeyUp(Input *input)
 
     do
     {
-        _index = ((_index == 0 ? (_GetItemCount() - 1) : (_index - 1)));
-        LogDebug("_ItemVisable(_index) %d", _ItemVisable(_index));
+        LOOP_MINUS_ONE(_index, _GetItemCount());
+        // LogDebug("_ItemVisable(_index) %d", _ItemVisable(_index));
     } while (!_ItemVisable(_index));
 }
 
@@ -97,8 +102,8 @@ void TabSeletable::_OnKeyDown(Input *input)
 
     do
     {
-        _index = (((_index + 1) == _GetItemCount() ? 0 : (_index + 1)));
-        LogDebug("_ItemVisable(_index) %d %d", _index, _ItemVisable(_index));
+        LOOP_PLUS_ONE(_index, _GetItemCount());
+        // LogDebug("_ItemVisable(_index) %d %d", _index, _ItemVisable(_index));
     } while (!_ItemVisable(_index));
 }
 

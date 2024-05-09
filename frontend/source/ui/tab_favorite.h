@@ -1,5 +1,4 @@
 #pragma once
-#include "global.h"
 #include "tab_base.h"
 
 class TabFavorite : virtual public TabBase

@@ -6,7 +6,7 @@
 #include "libretro.h"
 #include "config_types.h"
 #include "language_define.h"
-#include "global.h"
+#include "defines.h"
 
 extern std::unordered_map<uint32_t, TEXT_ENUM> ControlTextMap;
 extern std::unordered_map<uint8_t, TEXT_ENUM> RetroTextMap;
@@ -33,7 +33,9 @@ public:
 
     static std::unordered_map<uint32_t, TEXT_ENUM> ControlTextMap;
     static std::unordered_map<uint8_t, TEXT_ENUM> RetroTextMap;
-    static std::unordered_map<uint32_t, std::string> PSV_KEYS;
+    static std::unordered_map<uint32_t, std::string> PsvKeys;
 
 private:
 };
+
+extern Config *gConfig;

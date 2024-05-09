@@ -4,8 +4,9 @@
 #include "my_imgui.h"
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include <imgui_vita2d/imgui_internal.h>
+#include "defines.h"
+#include "log.h"
 #include "gb2312.i"
-#include "global.h"
 
 extern SceGxmProgram _binary_assets_imgui_v_cg_gxp_start;
 extern SceGxmProgram _binary_assets_imgui_f_cg_gxp_start;
