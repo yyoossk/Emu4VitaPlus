@@ -186,11 +186,9 @@ void Ui::CreateTables(const char *path)
     _tabs[TAB_INDEX_HOTKEY] = new TabSeletable(TAB_HOTKEY, hotkeys);
 
     std::vector<ItemBase *> options;
-    for (const auto &o : gCoreOptions->Options)
+    for (auto &o : gCoreOptions->Options)
     {
-        // CoreOption
-
-        // options.emplace_back(new ItemConfig(o.second.desc, o.second.info, ));
+        options.emplace_back(new ItemCore(&o.second));
     }
     _tabs[TAB_INDEX_CORE] = new TabSeletable(TAB_CORE, options);
 

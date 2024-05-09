@@ -67,11 +67,12 @@ void TabSeletable::Show(bool selected)
             }
         }
         ImGui::Columns(1);
+        ImGui::EndChild();
+
         if (_status_text.size() > 0)
         {
             ImGui::Text(_status_text.c_str());
         }
-        ImGui::EndChild();
 
         ImGui::EndTabItem();
     }
