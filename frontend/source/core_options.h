@@ -13,6 +13,8 @@ struct CoreOption
     std::string value;
     const retro_core_option_value *values;
     std::vector<LanguageString> GetValues();
+    size_t GetValueIndex();
+    void SetValueIndex(size_t index);
 };
 
 class CoreOptions

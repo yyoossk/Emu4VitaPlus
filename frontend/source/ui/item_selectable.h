@@ -19,10 +19,10 @@ protected:
     virtual void _OnClick(Input *input);
     virtual void _OnCancel(Input *input);
 
-    size_t _GetTotalCount() { return 0; };
-    const char *_GetOptionString(size_t index) { return ""; };
-    size_t _GetIndex() { return _index; };
-    void _SetIndex(size_t index) { _index = index; };
+    virtual size_t _GetTotalCount() { return 0; };
+    virtual const char *_GetOptionString(size_t index) { return ""; };
+    virtual size_t _GetIndex() { return _index; };
+    virtual void _SetIndex(size_t index) { _index = index; };
 
     bool _actived;
     size_t _index;

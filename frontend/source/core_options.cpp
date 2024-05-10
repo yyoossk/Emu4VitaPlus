@@ -22,6 +22,28 @@ std::vector<LanguageString> CoreOption::GetValues()
     return _values;
 }
 
+size_t CoreOption::GetValueIndex()
+{
+    const retro_core_option_value *v = values;
+    size_t count = 0;
+    while (v->value)
+    {
+        if (value == (v->label ? v->label : v->value))
+        {
+            return count;
+        }
+        count++;
+        v++;
+    }
+
+    return 0;
+}
+
+void CoreOption::SetValueIndex(size_t index)
+{
+    value = values[index].value;
+}
+
 CoreOptions::CoreOptions()
 {
     LogFunctionName;
