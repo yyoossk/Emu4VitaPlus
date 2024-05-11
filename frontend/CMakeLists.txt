@@ -45,14 +45,23 @@ add_compile_definitions(
     CORE_SOFTWARE=${CORE_SOFTWARE})
 
 set(CMAKE_EXE_LINKER_FLAGS "-Wl,-q")
-add_executable(${APP_NAME}.elf ${SRC})
 
-add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/source/language_define.cpp
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/source/language_define.cpp
     COMMAND python export.py
     COMMAND mv language_define.h ${CMAKE_CURRENT_SOURCE_DIR}/source
     COMMAND mv language_define.cpp ${CMAKE_CURRENT_SOURCE_DIR}/source
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../script
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/../script/language.json)
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/../script/language.json
+    ${CMAKE_CURRENT_SOURCE_DIR}/../script/translation.json
+    ${CMAKE_CURRENT_SOURCE_DIR}/../script/export.py
+)
+
+if(NOT ${CMAKE_CURRENT_SOURCE_DIR}/source/language_define.cpp IN_LIST SRC)
+    list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/source/language_define.cpp)
+endif()
+
+add_executable(${APP_NAME}.elf ${SRC})
 
 target_link_libraries(
     ${APP_NAME}.elf

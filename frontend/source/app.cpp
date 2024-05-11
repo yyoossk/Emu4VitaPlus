@@ -83,11 +83,10 @@ App::~App()
 {
     LogFunctionName;
 
-    gVideo->Stop();
+    delete gVideo;
+    delete gUi;
     delete gEmulator;
     delete gCoreOptions;
-    delete gUi;
-    delete gVideo;
     delete gConfig;
 
     sceAppUtilShutdown();

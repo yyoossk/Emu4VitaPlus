@@ -17,7 +17,25 @@ public:
 
     const char *const Get() const
     {
-        return _text_id == INVALID_TEXT_ENUM ? _string.c_str() : TEXT(_text_id);
+        if (_text_id != INVALID_TEXT_ENUM)
+        {
+            return TEXT(_text_id);
+        }
+
+        if (gConfig->language == LANGUAGE_ENGLISH)
+        {
+            return _string.c_str();
+        }
+
+        auto iter = gTrans.find(_string);
+        if (iter == gTrans.end())
+        {
+            return _string.c_str();
+        }
+        else
+        {
+            return iter->second[gConfig->language - 1];
+        }
     };
 
 private:

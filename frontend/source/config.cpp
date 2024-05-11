@@ -12,6 +12,7 @@
 
 #define MAIN_SECTION "MAIN"
 #define HOTKEY_SECTION "HOTKEY"
+#define GRAPHICS_SECCTION "GRAPHICS"
 
 Config *gConfig = nullptr;
 

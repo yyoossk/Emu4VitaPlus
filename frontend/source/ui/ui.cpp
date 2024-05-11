@@ -11,7 +11,6 @@
 #include "item_core.h"
 #include "tab_browser.h"
 #include "tab_state.h"
-#include "tab_core.h"
 #include "tab_about.h"
 
 #define MAIN_WINDOW_PADDING 10

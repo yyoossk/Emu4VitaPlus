@@ -22,5 +22,155 @@
         "English": "Original BIOS",
         "Chinese": "官方BIOS",
         "Comments": ""
+    },
+    {
+        "No.": "5",
+        "English": "Boot mode",
+        "Chinese": "引导模式",
+        "Comments": ""
+    },
+    {
+        "No.": "6",
+        "English": "Choose whether to boot the BIOS before the game or not. There's not much difference in either modes.",
+        "Chinese": "选择是否在游戏前启动BIOS。两种模式都没有太大区别。",
+        "Comments": ""
+    },
+    {
+        "No.": "7",
+        "English": "Boot to game",
+        "Chinese": "引导到游戏",
+        "Comments": ""
+    },
+    {
+        "No.": "8",
+        "English": "Boot to BIOS",
+        "Chinese": "引导到BIOS",
+        "Comments": ""
+    },
+    {
+        "No.": "9",
+        "English": "Frameskip",
+        "Chinese": "跳帧",
+        "Comments": ""
+    },
+    {
+        "No.": "10",
+        "English": "Skip frames to avoid audio buffer under-run (crackling). Improves performance at the expense of visual smoothness. 'Auto' skips frames when advised by the frontend. 'Auto (Threshold)' utilises the 'Frameskip Threshold (%)' setting. 'Fixed Interval' utilises the 'Frameskip Interval' setting.",
+        "Chinese": "跳过帧以避免音频缓冲区不足(爆裂)。以牺牲视觉平滑度为代价提高性能。当前端建议时，‘自动’跳过帧。‘自动(阈值)’使用‘跳帧阈值(%)’设置。‘固定间隔’利用‘跳帧间隔’设置。",
+        "Comments": ""
+    },
+    {
+        "No.": "11",
+        "English": "disabled",
+        "Chinese": "禁用",
+        "Comments": ""
+    },
+    {
+        "No.": "12",
+        "English": "Auto",
+        "Chinese": "自动",
+        "Comments": ""
+    },
+    {
+        "No.": "13",
+        "English": "Auto (Threshold)",
+        "Chinese": "自动(阈值)",
+        "Comments": ""
+    },
+    {
+        "No.": "14",
+        "English": "Fixed Interval",
+        "Chinese": "固定间隔",
+        "Comments": ""
+    },
+    {
+        "No.": "15",
+        "English": "Frameskip Threshold (%)",
+        "Chinese": "跳帧阈值(%)",
+        "Comments": ""
+    },
+    {
+        "No.": "16",
+        "English": "When 'Frameskip' is set to 'Auto (Threshold)', specifies the audio buffer occupancy threshold (percentage) below which frames will be skipped. Higher values reduce the risk of crackling by causing frames to be dropped more frequently.",
+        "Chinese": "当‘跳帧’设置为‘自动(阈值)’时，指定音频缓冲区占用阈值(百分比)，低于该阈值将跳过帧。更高的值会导致更频繁地丢弃帧，从而降低破裂的风险。",
+        "Comments": ""
+    },
+    {
+        "No.": "17",
+        "English": "Frameskip Interval",
+        "Chinese": "跳帧间隔",
+        "Comments": ""
+    },
+    {
+        "No.": "18",
+        "English": "When 'Frameskip' is set to 'Fixed Interval', the value set here is the number of frames omitted after a frame is rendered - i.e. '0' = 60fps, '1' = 30fps, '2' = 15fps, etc.",
+        "Chinese": "当‘跳帧’设置为‘固定间隔’时，此处设置的值是渲染帧后忽略的帧数，即‘0’=60fps，‘1’=30fps，’2’=15fps等。",
+        "Comments": ""
+    },
+    {
+        "No.": "19",
+        "English": "Color Correction",
+        "Chinese": "颜色校正",
+        "Comments": ""
+    },
+    {
+        "No.": "20",
+        "English": "Adjusts output colors to match the display of real GBA hardware.",
+        "Chinese": "调整输出颜色以匹配实际GBA硬件的显示。",
+        "Comments": ""
+    },
+    {
+        "No.": "21",
+        "English": "enabled",
+        "Chinese": "启用",
+        "Comments": ""
+    },
+    {
+        "No.": "22",
+        "English": "Interframe Blending",
+        "Chinese": "帧间混合",
+        "Comments": ""
+    },
+    {
+        "No.": "23",
+        "English": "Simulates LCD ghosting effects by performing a 50:50 mix of the current and previous frames. Required for correct operation when playing games that exploit LCD ghosting for transparency effects (F-Zero, the Boktai series, etc.).",
+        "Chinese": "通过对当前帧和前一帧进行50:50的混合来模拟LCD重影效果。在玩利用LCD重影获得透明效果的游戏(F-Zero、Boktai系列等)时，需要正确操作。",
+        "Comments": ""
+    },
+    {
+        "No.": "24",
+        "English": "Backup Save Method (Restart)",
+        "Chinese": "备份保存方法(需重启)",
+        "Comments": ""
+    },
+    {
+        "No.": "25",
+        "English": "Choose the data format used for cartridge save files. 'gpSP' can be used for compatibility with the stand-alone version of gpSP. 'libretro' provides better integration with the frontend.",
+        "Chinese": "选择用于盒式磁带保存文件的数据格式。‘gpSP’可用于与独立版本的gpSP兼容。‘libretro’提供了与前端的更好集成。",
+        "Comments": ""
+    },
+    {
+        "No.": "26",
+        "English": "Dynamic Recompiler",
+        "Chinese": "动态重编译器",
+        "Comments": ""
+    },
+    {
+        "No.": "27",
+        "English": "Dynamically recompile CPU instructions to native instructions. Greatly improves performance, but may reduce accuracy.",
+        "Chinese": "动态地将CPU指令重新编译为本机指令。极大地提高了性能，但可能会降低准确性。",
+        "Comments": ""
+    },
+    {
+        "No.": "28",
+        "English": "Turbo Button Period",
+        "Chinese": "连发按键间隔",
+        "Comments": ""
+    },
+    {
+        "No.": "29",
+        "English": "Specify the repeat interval (in frames) when holding down the Turbo A/B buttons.",
+        "Chinese": "指定按下连发A/B按钮时的重复间隔(以帧为单位)。",
+        "Comments": ""
     }
 ]

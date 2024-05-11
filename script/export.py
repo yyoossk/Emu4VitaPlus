@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 from trans import Translation
 
-trans = Translation('language.json').get_trans(index='Tag')
+lang_trans = Translation('language.json').get_trans(index='Tag')
+trans_trans = Translation('translation.json').get_trans(index='English')
 
 # Generate language_define.h
 languages = None
@@ -9,7 +10,7 @@ languages = None
 TEXT_ENUM = []
 LANGUAGE_ENUM = []
 
-for i, (k, v) in enumerate(trans.items()):
+for k, v in lang_trans.items():
     attr = f'{k},'
     TEXT_ENUM.append(f'    {attr:20s} // "{v["English"]}"')
     if languages is None:
@@ -25,10 +26,12 @@ LANGUAGE_ENUM = '\n'.join(LANGUAGE_ENUM)
 
 with open('language_define.h', 'w') as fp:
     fp.write(
-        f'''#pragma once
-
-#ifndef LANGUAGE_DEFINE
+        f'''#ifndef LANGUAGE_DEFINE
 #define LANGUAGE_DEFINE
+
+#include <unordered_map>
+#include <array>
+#include <string>
 
 enum TEXT_ENUM{{
 {TEXT_ENUM}
@@ -42,6 +45,8 @@ enum LANGUAGE{{
 
 extern const char *gTexts[][TEXT_ENUM::TEXT_COUNT];
 extern const char *gLanguageNames[];
+typedef std::array<const char *, LANGUAGE::LANGUAGE_COUNT - 1> TRANS;
+extern std::unordered_map<std::string, TRANS> gTrans;
 '''
     )
 
@@ -50,7 +55,7 @@ extern const char *gLanguageNames[];
 TEXTS = []
 for language in languages:
     T = []
-    for k, v in trans.items():
+    for k, v in lang_trans.items():
         s = f'"{v[language]}",'
         T.append(f'    {s:30s} // {k}')
     T = '\n'.join(T)
@@ -69,6 +74,15 @@ for language in languages:
     NAMES.append(f'    "{language}", ')
 NAMES = '\n'.join(NAMES)
 
+TRANS = []
+for k, v in trans_trans.items():
+    t = []
+    for language in languages[1:]:
+        t.append(f'"{v[language]}"')
+    t = ',\n'.join(t)
+    TRANS.append(f'    {{"{k}", {{{t}}},}}')
+TRANS = ',\n'.join(TRANS)
+
 with open('language_define.cpp', 'w') as fp:
     fp.write(
         f'''#include "language_define.h"
@@ -79,5 +93,10 @@ const char *gTexts[][TEXT_ENUM::TEXT_COUNT] = {{
 
 const char *gLanguageNames[] = {{
 {NAMES}
-}};'''
+}};
+
+std::unordered_map<std::string, TRANS> gTrans = {{
+{TRANS}
+}};
+'''
     )

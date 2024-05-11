@@ -407,3 +407,12 @@ bool MyBeginCombo(const char *label, const char *preview_value, ImGuiComboFlags 
     }
     return true;
 }
+
+IMGUI_API void MyCenteredText(const char *text)
+{
+    float win_width = ImGui::GetWindowSize().x;
+    float text_width = ImGui::CalcTextSize(text).x;
+
+    ImGui::SetCursorPosX((win_width - text_width) * 0.5);
+    ImGui::Text(text);
+}
