@@ -1,8 +1,4 @@
-#ifndef TOML_EXCEPTIONS
-#define TOML_EXCEPTIONS 0
-#endif
-#include <toml++/toml.hpp>
-
+#include "string.h"
 #include "core_options.h"
 #include "log.h"
 
@@ -58,23 +54,23 @@ CoreOptions::~CoreOptions()
 bool CoreOptions::Save(const char *path)
 {
     LogFunctionName;
-    toml::table options;
+    // toml::table options;
 
-    for (auto const &option : Options)
-    {
-        options.insert(option.first, option.second.value);
-    }
+    // for (auto const &option : Options)
+    // {
+    //     options.insert(option.first, option.second.value);
+    // }
 
-    std::stringstream s;
-    s << toml::table{{CORE_SECTION, options}};
+    // std::stringstream s;
+    // s << toml::table{{CORE_SECTION, options}};
 
-    FILE *fp = fopen(path, "wb");
-    if (fp)
-    {
-        fputs(s.str().c_str(), fp);
-        fclose(fp);
-        return true;
-    }
+    // FILE *fp = fopen(path, "wb");
+    // if (fp)
+    // {
+    //     fputs(s.str().c_str(), fp);
+    //     fclose(fp);
+    //     return true;
+    // }
 
     return false;
 }
@@ -92,6 +88,7 @@ void CoreOptions::Load(retro_core_options_intl *options)
         {
             option = &(Options[us->key] = CoreOption{us->desc,
                                                      us->info,
+                                                     us->default_value,
                                                      us->default_value,
                                                      us->values});
         }
@@ -132,5 +129,13 @@ void CoreOptions::Load(retro_core_options_intl *options)
         }
 
         us++;
+    }
+}
+
+void CoreOptions::Default()
+{
+    for (auto &iter : Options)
+    {
+        iter.second.Default();
     }
 }

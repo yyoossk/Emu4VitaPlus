@@ -33,7 +33,6 @@ public:
 
     static std::unordered_map<uint32_t, TEXT_ENUM> ControlTextMap;
     static std::unordered_map<uint8_t, TEXT_ENUM> RetroTextMap;
-    static std::unordered_map<uint32_t, std::string> PsvKeys;
 
 private:
 };

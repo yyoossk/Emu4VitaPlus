@@ -3,19 +3,14 @@
 #include <stdio.h>
 #include <unordered_map>
 #include <string>
+#include "SimpleIni.h"
 #include "config.h"
 #include "input.h"
 #include "file.h"
 #include "log.h"
 #include "defines.h"
 
-#ifndef TOML_EXCEPTIONS
-#define TOML_EXCEPTIONS 0
-#endif
-#include <toml++/toml.hpp>
-
 #define MAIN_SECTION "MAIN"
-#define CONTROL_SECTION "KEYS"
 #define HOTKEY_SECTION "HOTKEY"
 
 Config *gConfig = nullptr;
@@ -25,7 +20,7 @@ Config *gConfig = nullptr;
         K, #K       \
     }
 
-std::unordered_map<uint32_t, std::string> Config::PsvKeys = {
+static const std::unordered_map<uint32_t, const char *> PsvKeyStr = {
     KEY_PAIR(SCE_CTRL_CROSS),
     KEY_PAIR(SCE_CTRL_TRIANGLE),
     KEY_PAIR(SCE_CTRL_CIRCLE),
@@ -50,6 +45,17 @@ std::unordered_map<uint32_t, std::string> Config::PsvKeys = {
     KEY_PAIR(SCE_CTRL_RSTICK_DOWN),
     KEY_PAIR(SCE_CTRL_RSTICK_LEFT),
     KEY_PAIR(SCE_CTRL_RSTICK_RIGHT),
+};
+
+static const std::unordered_map<uint32_t, const char *> HotkeyStr = {
+    KEY_PAIR(SAVE_STATE),
+    KEY_PAIR(LOAD_STATE),
+    KEY_PAIR(GAME_SPEED_UP),
+    KEY_PAIR(GAME_SPEED_DOWN),
+    KEY_PAIR(GAME_REWIND),
+    KEY_PAIR(CONTROLLER_PORT_UP),
+    KEY_PAIR(CONTROLLER_PORT_DOWN),
+    KEY_PAIR(EXIT_GAME),
 };
 
 std::unordered_map<uint32_t, TEXT_ENUM> Config::ControlTextMap = {
@@ -182,39 +188,21 @@ bool Config::Save(const char *path)
     LogFunctionName;
     LogDebug("path: %s", path);
 
-    toml::table _main{{"language", gLanguageNames[language]}};
-
-    LogDebug("process control_maps");
-    toml::table _keys;
-    for (const auto &k : control_maps)
+    CSimpleIniA ini;
+    ini.SetValue(MAIN_SECTION, "language", gLanguageNames[language]);
+    for (const auto &control : control_maps)
     {
-        toml::table t{{"psv", k.psv},
-                      {"retro", k.retro},
-                      {"turbo", k.turbo}};
-        _keys.insert(PsvKeys.at(k.psv).c_str(), t);
+        ini.SetLongValue(PsvKeyStr.at(control.psv), "retro", control.retro);
+        ini.SetBoolValue(PsvKeyStr.at(control.psv), "turbo", control.turbo);
     }
 
-    LogDebug("process hotkeys");
-    toml::array _hotkeys;
     for (size_t i = 0; i < HOT_KEY_COUNT; i++)
     {
-        _hotkeys.push_back(hotkeys[i]);
+        ini.SetLongValue(HOTKEY_SECTION, HotkeyStr.at(i), hotkeys[i], nullptr, true);
     }
 
-    LogDebug("generate toml string");
-    std::stringstream s;
-    s << toml::table{{MAIN_SECTION, _main}, {CONTROL_SECTION, _keys}, {HOTKEY_SECTION, _hotkeys}};
+    return ini.SaveFile(path) == SI_OK;
 
-    FILE *fp = fopen(path, "wb");
-    if (fp)
-    {
-        fputs(s.str().c_str(), fp);
-        fclose(fp);
-        LogDebug("Save end");
-        return true;
-    }
-
-    LogError("failed to open %s", path);
     return false;
 }
 
@@ -228,59 +216,31 @@ bool Config::Load(const char *path)
         return false;
     }
 
-    toml::parse_result result = toml::parse_file(path);
-    if (!result)
-    {
-        return false;
-    }
-    LogDebug("parse_file");
-
-    const toml::table tbl(std::move(result.table()));
-    if (!(tbl.contains(MAIN_SECTION) && tbl.contains(CONTROL_SECTION) && tbl.contains(HOTKEY_SECTION)))
+    CSimpleIniA ini;
+    if (ini.LoadFile(path) != SI_OK)
     {
         return false;
     }
 
-    LogDebug("load " MAIN_SECTION);
-
-    const auto &_main = tbl[MAIN_SECTION];
-    std::string_view lang = _main["language"].value_or("ENGLISH");
+    const char *lang = ini.GetValue(MAIN_SECTION, "language", "ENGLISH");
     for (size_t i = 0; i < LANGUAGE_COUNT; i++)
     {
-        if (lang == gLanguageNames[i])
+        if (strcmp(lang, gLanguageNames[i]) == 0)
         {
             language = (LANGUAGE)i;
             break;
         }
     }
 
-    LogDebug("load " CONTROL_SECTION);
-    control_maps.clear();
-    const auto _keys = tbl[CONTROL_SECTION].as_table();
-    if (_keys)
+    for (auto &control : control_maps)
     {
-        for (const auto &key : *_keys)
-        {
-            const auto t = key.second.as_table();
-            if (t->contains("psv"))
-            {
-                control_maps.emplace_back(ControlMapConfig{(*t)["psv"].value<uint32_t>().value(),
-                                                           (uint8_t)(*t)["retro"].value_or(0),
-                                                           (*t)["turbo"].value_or(false)});
-            }
-        }
+        control.retro = ini.GetLongValue(PsvKeyStr.at(control.psv), "retro");
+        control.turbo = ini.GetBoolValue(PsvKeyStr.at(control.psv), "turbo");
     }
 
-    LogDebug("load " HOTKEY_SECTION);
-    const auto _hotkeys = tbl[HOTKEY_SECTION].as_array();
-    if (_hotkeys)
+    for (size_t i = 0; i < HOT_KEY_COUNT; i++)
     {
-        size_t count = 0;
-        for (const auto &key : *_hotkeys)
-        {
-            hotkeys[count] = key.value<uint32_t>().value();
-            count++;
-        }
+        hotkeys[i] = ini.GetLongValue(HOTKEY_SECTION, HotkeyStr.at(i));
     }
 
     LogDebug("load end");

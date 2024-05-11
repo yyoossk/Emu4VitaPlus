@@ -75,3 +75,5 @@ include_directories(libvita2d/libvita2d/include
     $ENV{VITASDK}/arm-vita-eabi/include/freetype2)
 add_library(vita2d STATIC ${VITA2D_SRC})
 target_link_libraries(vita2d ${VITA2D_OBJ})
+
+add_subdirectory(simpleini)

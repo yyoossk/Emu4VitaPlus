@@ -22,7 +22,7 @@ include_directories(
     source/audio
     ../deps/libretro-common/include
     ../deps/libvita2d/libvita2d/include
-    ../deps/tomlplusplus/include)
+    ../deps/simpleini)
 
 file(GLOB SRC
     source/*.c
@@ -42,8 +42,7 @@ add_compile_definitions(
     APP_VER_STR=${APP_VER}
     APP_TITLEID=${SFO_TITLE_ID}
     APP_DIR_NAME="${APP_DIR_NAME}"
-    CORE_SOFTWARE=${CORE_SOFTWARE}
-    TOML_EXCEPTIONS=0)
+    CORE_SOFTWARE=${CORE_SOFTWARE})
 
 set(CMAKE_EXE_LINKER_FLAGS "-Wl,-q")
 add_executable(${APP_NAME}.elf ${SRC})
@@ -58,6 +57,7 @@ add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/source/language_define.cpp
 target_link_libraries(
     ${APP_NAME}.elf
     ${LIBRETRO_LIBRARY}
+    SimpleIni
     retro_comm
     vita2d
     imgui_vita2d
