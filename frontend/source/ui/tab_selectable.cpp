@@ -48,21 +48,27 @@ void TabSeletable::Show(bool selected)
 {
     if (ImGui::BeginTabItem(TEXT(_title_id), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
     {
-        ImGui::BeginChild(TEXT(_title_id));
+        ImVec2 size = {0.f, 0.f};
+        if (ItemVisable(_index))
+        {
+            _status_text = _items[_index]->GetInfo();
+            if (_status_text.size() > 0)
+            {
+                ImVec2 s = ImGui::CalcTextSize(_status_text.c_str());
+                size.y = -s.y * (s.x / ImGui::GetContentRegionAvailWidth() + 1);
+            }
+        }
+
+        ImGui::BeginChild(TEXT(_title_id), size);
         ImGui::Columns(2, NULL, false);
         for (size_t i = 0; i < _GetItemCount(); i++)
         {
             if (ItemVisable(i))
             {
                 _ShowItem(i, i == _index);
-                if (i == _index)
+                if (i == _index && ImGui::GetScrollMaxY() > 0.f)
                 {
-                    _status_text = _items[i]->GetInfo();
-
-                    if (ImGui::GetScrollMaxY() > 0.f)
-                    {
-                        ImGui::SetScrollHereY((float)_index / (float)_GetItemCount());
-                    }
+                    ImGui::SetScrollHereY((float)_index / (float)_GetItemCount());
                 }
             }
         }
@@ -71,7 +77,9 @@ void TabSeletable::Show(bool selected)
 
         if (_status_text.size() > 0)
         {
-            ImGui::Text(_status_text.c_str());
+            ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
+            ImGui::TextWrapped(_status_text.c_str());
+            ImGui::PopStyleColor();
         }
 
         ImGui::EndTabItem();

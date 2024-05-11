@@ -202,19 +202,12 @@ bool Config::Save(const char *path)
     }
 
     return ini.SaveFile(path) == SI_OK;
-
-    return false;
 }
 
 bool Config::Load(const char *path)
 {
     LogFunctionName;
     LogDebug("path: %s", path);
-
-    if (!File::Exist(path))
-    {
-        return false;
-    }
 
     CSimpleIniA ini;
     if (ini.LoadFile(path) != SI_OK)

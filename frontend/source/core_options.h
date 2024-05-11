@@ -8,11 +8,12 @@
 
 struct CoreOption
 {
-    const char *desc;
-    const char *info;
-    const char *default_value;
+    const char *desc = nullptr;
+    const char *info = nullptr;
+    const char *default_value = nullptr;
     std::string value;
-    const retro_core_option_value *values;
+    const retro_core_option_value *values = nullptr;
+
     std::vector<LanguageString> GetValues();
     size_t GetValueIndex();
     void SetValueIndex(size_t index);

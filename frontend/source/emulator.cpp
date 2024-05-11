@@ -15,6 +15,34 @@
 
 Emulator *gEmulator = nullptr;
 
+void RetroLog(retro_log_level level, const char *fmt, ...)
+{
+    LogFunctionName;
+
+    va_list list;
+    char str[512];
+
+    va_start(list, fmt);
+    vsprintf(str, fmt, list);
+    va_end(list);
+
+    switch (level)
+    {
+    case RETRO_LOG_DEBUG:
+        LogDebug(str);
+        break;
+    case RETRO_LOG_INFO:
+        LogInfo(str);
+        break;
+    case RETRO_LOG_WARN:
+        LogWarn(str);
+        break;
+    case RETRO_LOG_ERROR:
+        LogWarn(str);
+        break;
+    }
+}
+
 bool EnvironmentCallback(unsigned cmd, void *data)
 {
     LogFunctionNameLimited;
@@ -53,6 +81,13 @@ bool EnvironmentCallback(unsigned cmd, void *data)
 
     case RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE:
         *(bool *)data = false;
+        break;
+
+    case RETRO_ENVIRONMENT_GET_LOG_INTERFACE:
+        if (data)
+        {
+            ((retro_log_callback *)data)->log = RetroLog;
+        }
         break;
 
     case RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO:

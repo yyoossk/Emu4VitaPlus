@@ -1,0 +1,26 @@
+[
+    {
+        "No.": "1",
+        "English": "Choose the BIOS image to use. The official BIOS must be provided by the user. Using a non-official (or builtin) BIOS might result in incompatibility problems with some games. Best results are to be achieved with the official Nintendo BIOS.",
+        "Chinese": "选择要使用的BIOS映像。官方BIOS必须由用户提供。使用非官方(或内置)BIOS可能会导致某些游戏出现不兼容问题。最好的结果是通过官方的任天堂BIOS来实现。",
+        "Comments": ""
+    },
+    {
+        "No.": "2",
+        "English": "Auto select",
+        "Chinese": "自动选择",
+        "Comments": ""
+    },
+    {
+        "No.": "3",
+        "English": "Builtin BIOS",
+        "Chinese": "内置BIOS",
+        "Comments": ""
+    },
+    {
+        "No.": "4",
+        "English": "Original BIOS",
+        "Chinese": "官方BIOS",
+        "Comments": ""
+    }
+]

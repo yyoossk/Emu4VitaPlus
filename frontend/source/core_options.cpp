@@ -1,4 +1,5 @@
 #include "string.h"
+#include "SimpleIni.h"
 #include "core_options.h"
 #include "log.h"
 
@@ -43,6 +44,7 @@ void CoreOption::SetValueIndex(size_t index)
 CoreOptions::CoreOptions()
 {
     LogFunctionName;
+    Load();
 }
 
 CoreOptions::~CoreOptions()
@@ -54,25 +56,36 @@ CoreOptions::~CoreOptions()
 bool CoreOptions::Save(const char *path)
 {
     LogFunctionName;
-    // toml::table options;
 
-    // for (auto const &option : Options)
-    // {
-    //     options.insert(option.first, option.second.value);
-    // }
+    CSimpleIniA ini;
 
-    // std::stringstream s;
-    // s << toml::table{{CORE_SECTION, options}};
+    for (auto const &option : Options)
+    {
+        ini.SetValue(CORE_SECTION, option.first.c_str(), option.second.value.c_str());
+    }
 
-    // FILE *fp = fopen(path, "wb");
-    // if (fp)
-    // {
-    //     fputs(s.str().c_str(), fp);
-    //     fclose(fp);
-    //     return true;
-    // }
+    return ini.SaveFile(path) == SI_OK;
+}
 
-    return false;
+bool CoreOptions::Load(const char *path)
+{
+    LogFunctionName;
+
+    CSimpleIniA ini;
+    if (ini.LoadFile(path) != SI_OK)
+    {
+        return false;
+    }
+
+    CSimpleIniA::TNamesDepend keys;
+    ini.GetAllKeys(CORE_SECTION, keys);
+    for (const auto &iter : keys)
+    {
+        Options[iter.pItem] = CoreOption();
+        Options[iter.pItem].value = ini.GetValue(CORE_SECTION, iter.pItem);
+    }
+
+    return true;
 }
 
 void CoreOptions::Load(retro_core_options_intl *options)
