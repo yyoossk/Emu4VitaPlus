@@ -1,5 +1,6 @@
 #include "my_imgui.h"
 #include "item_selectable.h"
+#include "defines.h"
 
 ItemSelectable::ItemSelectable(LanguageString text, LanguageString info)
     : ItemBase(text, info),
@@ -25,7 +26,7 @@ void ItemSelectable::Show(bool selected)
         ImGui::OpenPopup(text);
     }
 
-    if (My_Imgui_BeginCombo(text, _GetOptionString(_GetIndex()), ImGuiComboFlags_NoArrowButton))
+    if (My_Imgui_BeginCombo(text, _GetPreviewText(), ImGuiComboFlags_NoArrowButton))
     {
         if (!_actived && is_popup)
         {
@@ -34,11 +35,13 @@ void ItemSelectable::Show(bool selected)
         for (size_t i = 0; i < _GetTotalCount(); i++)
         {
             ImGui::Selectable(_GetOptionString(i), i == _GetIndex());
+            if (i == _GetIndex() && ImGui::GetScrollMaxY() > 0.f)
+            {
+                ImGui::SetScrollHereY((float)i / (float)_GetTotalCount());
+            }
         }
         ImGui::EndCombo();
     }
-
-    ImGui::NextColumn();
 }
 
 void ItemSelectable::SetInputHooks(Input *input)

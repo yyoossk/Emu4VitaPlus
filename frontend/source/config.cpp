@@ -12,8 +12,8 @@
 
 #define MAIN_SECTION "MAIN"
 #define HOTKEY_SECTION "HOTKEY"
-#define GRAPHICS_SECCTION "GRAPHICS"
-// #define CORE_SECTION "CORE"
+#define GRAPHICS_SECTION "GRAPHICS"
+#define CORE_SECTION "CORE"
 
 Config *gConfig = nullptr;
 
@@ -60,32 +60,42 @@ static const std::unordered_map<uint32_t, const char *> HotkeyStr = {
     KEY_PAIR(EXIT_GAME),
 };
 
-std::unordered_map<uint32_t, TEXT_ENUM> Config::ControlTextMap = {
-    {SCE_CTRL_CROSS, BUTTON_CROSS},
-    {SCE_CTRL_TRIANGLE, BUTTON_TRIANGLE},
-    {SCE_CTRL_CIRCLE, BUTTON_CIRCLE},
-    {SCE_CTRL_SQUARE, BUTTON_SQUARE},
-    {SCE_CTRL_SELECT, BUTTON_SELECT},
-    {SCE_CTRL_START, BUTTON_START},
-    {SCE_CTRL_UP, BUTTON_UP},
-    {SCE_CTRL_DOWN, BUTTON_DOWN},
-    {SCE_CTRL_LEFT, BUTTON_LEFT},
-    {SCE_CTRL_RIGHT, BUTTON_RIGHT},
-    {SCE_CTRL_L1, BUTTON_L1},
-    {SCE_CTRL_R1, BUTTON_R1},
-    {SCE_CTRL_L2, BUTTON_L2},
-    {SCE_CTRL_R2, BUTTON_R2},
-    {SCE_CTRL_L3, BUTTON_L3},
-    {SCE_CTRL_R3, BUTTON_R3},
-    {SCE_CTRL_LSTICK_UP, BUTTON_LEFT_ANALOG_UP},
-    {SCE_CTRL_LSTICK_DOWN, BUTTON_LEFT_ANALOG_DOWN},
-    {SCE_CTRL_LSTICK_LEFT, BUTTON_LEFT_ANALOG_LEFT},
-    {SCE_CTRL_LSTICK_RIGHT, BUTTON_LEFT_ANALOG_RIGHT},
-    {SCE_CTRL_RSTICK_UP, BUTTON_RIGHT_ANALOG_UP},
-    {SCE_CTRL_RSTICK_DOWN, BUTTON_RIGHT_ANALOG_DOWN},
-    {SCE_CTRL_RSTICK_LEFT, BUTTON_RIGHT_ANALOG_LEFT},
-    {SCE_CTRL_RSTICK_RIGHT, BUTTON_RIGHT_ANALOG_RIGHT},
-    {SCE_CTRL_PSBUTTON, BUTTON_HOME},
+static const std::unordered_map<uint32_t, const char *> GraphicsStr = {
+    KEY_PAIR(DISPLAY_SIZE),
+    KEY_PAIR(DISPLAY_RATIO),
+    KEY_PAIR(DISPLAY_ROTATE),
+    KEY_PAIR(GRAPHICS_SHADER),
+    KEY_PAIR(GRAPHICS_SMOOTH),
+    KEY_PAIR(GRAPHICS_OVERLAY),
+};
+
+std::unordered_map<uint32_t, TEXT_ENUM>
+    Config::ControlTextMap = {
+        {SCE_CTRL_CROSS, BUTTON_CROSS},
+        {SCE_CTRL_TRIANGLE, BUTTON_TRIANGLE},
+        {SCE_CTRL_CIRCLE, BUTTON_CIRCLE},
+        {SCE_CTRL_SQUARE, BUTTON_SQUARE},
+        {SCE_CTRL_SELECT, BUTTON_SELECT},
+        {SCE_CTRL_START, BUTTON_START},
+        {SCE_CTRL_UP, BUTTON_UP},
+        {SCE_CTRL_DOWN, BUTTON_DOWN},
+        {SCE_CTRL_LEFT, BUTTON_LEFT},
+        {SCE_CTRL_RIGHT, BUTTON_RIGHT},
+        {SCE_CTRL_L1, BUTTON_L1},
+        {SCE_CTRL_R1, BUTTON_R1},
+        {SCE_CTRL_L2, BUTTON_L2},
+        {SCE_CTRL_R2, BUTTON_R2},
+        {SCE_CTRL_L3, BUTTON_L3},
+        {SCE_CTRL_R3, BUTTON_R3},
+        {SCE_CTRL_LSTICK_UP, BUTTON_LEFT_ANALOG_UP},
+        {SCE_CTRL_LSTICK_DOWN, BUTTON_LEFT_ANALOG_DOWN},
+        {SCE_CTRL_LSTICK_LEFT, BUTTON_LEFT_ANALOG_LEFT},
+        {SCE_CTRL_LSTICK_RIGHT, BUTTON_LEFT_ANALOG_RIGHT},
+        {SCE_CTRL_RSTICK_UP, BUTTON_RIGHT_ANALOG_UP},
+        {SCE_CTRL_RSTICK_DOWN, BUTTON_RIGHT_ANALOG_DOWN},
+        {SCE_CTRL_RSTICK_LEFT, BUTTON_RIGHT_ANALOG_LEFT},
+        {SCE_CTRL_RSTICK_RIGHT, BUTTON_RIGHT_ANALOG_RIGHT},
+        {SCE_CTRL_PSBUTTON, BUTTON_HOME},
 };
 
 std::unordered_map<uint8_t, TEXT_ENUM> Config::RetroTextMap = {
@@ -177,12 +187,12 @@ void Config::DefaultHotKey()
 void Config::DefaultGraphics()
 {
     LogFunctionName;
-    graphics_config[DISPLAY_SIZE] = CONFIG_DISPLAY_SIZE_FULL;
-    graphics_config[DISPLAY_RATIO] = CONFIG_DISPLAY_RATIO_BY_GAME_RESOLUTION;
-    graphics_config[DISPLAY_ROTATE] = CONFIG_DISPLAY_ROTATE_DEFAULT;
-    graphics_config[GRAPHICS_SHADER] = CONFIG_GRAPHICS_SHADER_DEFAULT;
-    graphics_config[GRAPHICS_SMOOTH] = CONFIG_GRAPHICS_SMOOTHER_NO;
-    graphics_config[GRAPHICS_OVERLAY] = CONFIG_GRAPHICS_OVERLAY_MODE_OVERLAY;
+    graphics[DISPLAY_SIZE] = CONFIG_DISPLAY_SIZE_FULL;
+    graphics[DISPLAY_RATIO] = CONFIG_DISPLAY_RATIO_BY_GAME_RESOLUTION;
+    graphics[DISPLAY_ROTATE] = CONFIG_DISPLAY_ROTATE_DEFAULT;
+    graphics[GRAPHICS_SHADER] = CONFIG_GRAPHICS_SHADER_DEFAULT;
+    graphics[GRAPHICS_SMOOTH] = CONFIG_GRAPHICS_SMOOTHER_NO;
+    graphics[GRAPHICS_OVERLAY] = CONFIG_GRAPHICS_OVERLAY_MODE_OVERLAY;
 }
 
 bool Config::Save(const char *path)
@@ -191,6 +201,7 @@ bool Config::Save(const char *path)
     LogDebug("path: %s", path);
 
     CSimpleIniA ini;
+
     ini.SetValue(MAIN_SECTION, "language", gLanguageNames[language]);
     for (const auto &control : control_maps)
     {
@@ -201,6 +212,16 @@ bool Config::Save(const char *path)
     for (size_t i = 0; i < HOT_KEY_COUNT; i++)
     {
         ini.SetLongValue(HOTKEY_SECTION, HotkeyStr.at(i), hotkeys[i], nullptr, true);
+    }
+
+    for (size_t i = 0; i < GRAPHICS_CONFIG_COUNT; i++)
+    {
+        ini.SetLongValue(GRAPHICS_SECTION, GraphicsStr.at(i), graphics[i]);
+    }
+
+    for (auto const &option : core_options)
+    {
+        ini.SetValue(CORE_SECTION, option.first.c_str(), option.second.value.c_str());
     }
 
     return ini.SaveFile(path) == SI_OK;
@@ -236,6 +257,19 @@ bool Config::Load(const char *path)
     for (size_t i = 0; i < HOT_KEY_COUNT; i++)
     {
         hotkeys[i] = ini.GetLongValue(HOTKEY_SECTION, HotkeyStr.at(i));
+    }
+
+    for (size_t i = 0; i < GRAPHICS_CONFIG_COUNT; i++)
+    {
+        graphics[i] = ini.GetLongValue(GRAPHICS_SECTION, GraphicsStr.at(i));
+    }
+
+    CSimpleIniA::TNamesDepend keys;
+    ini.GetAllKeys(CORE_SECTION, keys);
+    for (const auto &iter : keys)
+    {
+        core_options[iter.pItem] = CoreOption();
+        core_options[iter.pItem].value = ini.GetValue(CORE_SECTION, iter.pItem);
     }
 
     LogDebug("load end");

@@ -62,8 +62,6 @@ void ItemConfig::Show(bool selected)
         }
         ImGui::EndCombo();
     }
-
-    ImGui::NextColumn();
 }
 
 void ItemConfig::OnActive(Input *input)

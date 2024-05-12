@@ -136,34 +136,34 @@ void Ui::CreateTables(const char *path)
     _tabs[TAB_INDEX_GRAPHICS] = new TabSeletable(TAB_GRAPHICS,
                                                  {new ItemConfig(GRAPHICS_MENU_DISPLAY_SIZE,
                                                                  "",
-                                                                 &gConfig->graphics_config[DISPLAY_SIZE],
+                                                                 &gConfig->graphics[DISPLAY_SIZE],
                                                                  DISPLAY_SIZE_1X,
                                                                  CONFIG_DISPLAY_SIZE_COUNT),
                                                   new ItemConfig(GRAPHICS_MENU_ASPECT_RATIO,
                                                                  "",
-                                                                 &gConfig->graphics_config[DISPLAY_RATIO],
+                                                                 &gConfig->graphics[DISPLAY_RATIO],
                                                                  ASPECT_RATIO_BY_GAME_RESOLUTION,
                                                                  CONFIG_DISPLAY_RATIO_COUNT),
 #ifdef WANT_DISPLAY_ROTATE
                                                   new ItemConfig(GRAPHICS_MENU_DISPLAY_ROTATE,
                                                                  "",
-                                                                 &gConfig->graphics_config[DISPLAY_ROTATE],
+                                                                 &gConfig->graphics[DISPLAY_ROTATE],
                                                                  DISPLAY_ROTATE_DISABLE,
                                                                  CONFIG_DISPLAY_ROTATE_COUNT),
 #endif
                                                   new ItemConfig(GRAPHICS_MENU_GRAPHICS_SHADER,
                                                                  "",
-                                                                 &gConfig->graphics_config[GRAPHICS_SHADER],
+                                                                 &gConfig->graphics[GRAPHICS_SHADER],
                                                                  SHADER_DEFAULT,
                                                                  CONFIG_GRAPHICS_SHADER_COUNT),
                                                   new ItemConfig(GRAPHICS_MENU_GRAPHICS_SMOOTH,
                                                                  "",
-                                                                 &gConfig->graphics_config[GRAPHICS_SMOOTH],
+                                                                 &gConfig->graphics[GRAPHICS_SMOOTH],
                                                                  NO,
                                                                  CONFIG_GRAPHICS_SMOOTHER_COUNT),
                                                   new ItemConfig(GRAPHICS_MENU_OVERLAY_MODE,
                                                                  "",
-                                                                 &gConfig->graphics_config[GRAPHICS_OVERLAY],
+                                                                 &gConfig->graphics[GRAPHICS_OVERLAY],
                                                                  OVERLAY_MODE_OVERLAY,
                                                                  CONFIG_GRAPHICS_OVERLAY_MODE_COUNT),
                                                   new ItemBase(RESET_CONFIGS, "", ResetGraphics)});
@@ -184,7 +184,7 @@ void Ui::CreateTables(const char *path)
     _tabs[TAB_INDEX_HOTKEY] = new TabSeletable(TAB_HOTKEY, hotkeys);
 
     std::vector<ItemBase *> options;
-    for (auto &iter : gCoreOptions->Options)
+    for (auto &iter : gConfig->core_options)
     {
         options.emplace_back(new ItemCore(&iter.second));
     }
@@ -241,6 +241,7 @@ void Ui::Run()
     {
         gVideo->Lock();
 
+        _tabs[TAB_INDEX_STATE]->SetVisable(gStatus == APP_STATUS_SHOW_UI_IN_GAME);
         _tabs[TAB_INDEX_BROWSER]->SetVisable(gStatus == APP_STATUS_SHOW_UI);
 
         TabSeletable *system_tab = (TabSeletable *)(_tabs[TAB_INDEX_SYSTEM]);

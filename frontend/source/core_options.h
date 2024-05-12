@@ -20,18 +20,10 @@ struct CoreOption
     void Default() { value = default_value; };
 };
 
-class CoreOptions
+class CoreOptions : public std::map<std::string, CoreOption>
 {
 public:
-    CoreOptions();
-    virtual ~CoreOptions();
-    bool Load(const char *path = APP_CORE_PATH);
-    bool Save(const char *path = APP_CORE_PATH);
-
     void Load(retro_core_options_intl *options);
+    void Get(retro_variable *var);
     void Default();
-
-    std::map<std::string, CoreOption> Options;
 };
-
-extern CoreOptions *gCoreOptions;

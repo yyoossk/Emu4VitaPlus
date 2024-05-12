@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <string>
 #include "libretro.h"
+#include "core_options.h"
 #include "config_types.h"
 #include "language_define.h"
 #include "defines.h"
@@ -28,8 +29,9 @@ public:
 
     uint32_t language;
     std::vector<ControlMapConfig> control_maps;
-    uint32_t graphics_config[GRAPHICS_CONFIG_COUNT];
+    uint32_t graphics[GRAPHICS_CONFIG_COUNT];
     uint32_t hotkeys[HOT_KEY_COUNT];
+    CoreOptions core_options;
 
     static std::unordered_map<uint32_t, TEXT_ENUM> ControlTextMap;
     static std::unordered_map<uint8_t, TEXT_ENUM> RetroTextMap;

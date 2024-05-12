@@ -68,8 +68,10 @@ bool EnvironmentCallback(unsigned cmd, void *data)
 
     case RETRO_ENVIRONMENT_GET_VARIABLE:
     {
-        // retro_variable *var = (retro_variable *)data;
-        LogDebug("RETRO_ENVIRONMENT_GET_VARIABLE: %s", ((retro_variable *)data)->key);
+        if (data)
+        {
+            gConfig->core_options.Get((retro_variable *)data);
+        }
     }
     break;
 
@@ -124,7 +126,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         break;
 
     case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_INTL:
-        gCoreOptions->Load((retro_core_options_intl *)data);
+        gConfig->core_options.Load((retro_core_options_intl *)data);
         gEmulator->_LoadCoreOptions((retro_core_options_intl *)data);
         break;
 
@@ -364,7 +366,7 @@ void Emulator::_SetVideoSize(uint32_t width, uint32_t height)
 {
     float aspect_ratio = .0f;
 
-    switch (gConfig->graphics_config[DISPLAY_RATIO])
+    switch (gConfig->graphics[DISPLAY_RATIO])
     {
     case CONFIG_DISPLAY_RATIO_BY_DEVICE_SCREEN:
         aspect_ratio = (float)VITA_WIDTH / (float)VITA_HEIGHT;
@@ -400,7 +402,7 @@ void Emulator::_SetVideoSize(uint32_t width, uint32_t height)
         aspect_ratio = (float)width / (float)height;
     }
 
-    switch (gConfig->graphics_config[DISPLAY_SIZE])
+    switch (gConfig->graphics[DISPLAY_SIZE])
     {
     case CONFIG_DISPLAY_SIZE_2X:
         width *= 2;

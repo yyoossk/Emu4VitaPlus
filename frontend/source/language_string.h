@@ -1,11 +1,10 @@
 #pragma once
 #include <string>
 #include "language_define.h"
-#include "config.h"
 
 #define INVALID_TEXT_ENUM TEXT_ENUM(-1)
 
-#define TEXT(I) ((I) < TEXT_COUNT ? gTexts[gConfig->language][I] : "Unknown")
+extern const char *TEXT(size_t index);
 
 class LanguageString
 {
@@ -15,28 +14,7 @@ public:
     LanguageString(size_t id) : _text_id(TEXT_ENUM(id)){};
     LanguageString(const LanguageString &ls) : _text_id(ls._text_id), _string(ls._string){};
 
-    const char *const Get() const
-    {
-        if (_text_id != INVALID_TEXT_ENUM)
-        {
-            return TEXT(_text_id);
-        }
-
-        if (gConfig->language == LANGUAGE_ENGLISH)
-        {
-            return _string.c_str();
-        }
-
-        auto iter = gTrans.find(_string);
-        if (iter == gTrans.end())
-        {
-            return _string.c_str();
-        }
-        else
-        {
-            return iter->second[gConfig->language - 1];
-        }
-    };
+    const char *const Get() const;
 
 private:
     TEXT_ENUM _text_id;

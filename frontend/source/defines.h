@@ -4,7 +4,6 @@
 #define APP_DATA_DIR "ux0:data/EMU4VITAPLUS/" APP_DIR_NAME
 #define APP_LOG_PATH APP_DATA_DIR "/Emu4Vita++.log"
 #define APP_CONFIG_PATH APP_DATA_DIR "/config.ini"
-#define APP_CORE_PATH APP_DATA_DIR "/core.ini"
 #define CORE_DIR APP_DATA_DIR "/system"
 #define TEXT_FONT_NAME "wqy-microhei.ttf"
 #define GAMEPAD_FONT_NAME "promptfont.ttf"

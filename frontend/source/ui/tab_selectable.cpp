@@ -1,4 +1,5 @@
 #include "tab_selectable.h"
+#include "defines.h"
 
 TabSeletable::TabSeletable(TEXT_ENUM title_id, std::vector<ItemBase *> items)
     : TabBase(title_id),
@@ -61,15 +62,21 @@ void TabSeletable::Show(bool selected)
 
         ImGui::BeginChild(TEXT(_title_id), size);
         ImGui::Columns(2, NULL, false);
-        for (size_t i = 0; i < _GetItemCount(); i++)
+        size_t total = _GetItemCount();
+        for (size_t i = 0; i < total; i++)
         {
             if (ItemVisable(i))
             {
                 _ShowItem(i, i == _index);
                 if (i == _index && ImGui::GetScrollMaxY() > 0.f)
                 {
-                    ImGui::SetScrollHereY((float)_index / (float)_GetItemCount());
+                    ImGui::SetScrollHereY((float)_index / (float)total);
                 }
+                ImGui::NextColumn();
+            }
+            else if (i == _index)
+            {
+                LOOP_PLUS_ONE(_index, total);
             }
         }
         ImGui::Columns(1);

@@ -21,7 +21,6 @@ public:
     {
         ImGui::Selectable(GetText(), selected);
         ImGui::NextColumn();
-        ImGui::NextColumn();
     };
 
     virtual void OnActive(Input *input)

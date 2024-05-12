@@ -3,10 +3,6 @@
 #include "core_options.h"
 #include "log.h"
 
-#define CORE_SECTION "CORE"
-
-CoreOptions *gCoreOptions = nullptr;
-
 std::vector<LanguageString> CoreOption::GetValues()
 {
     std::vector<LanguageString> _values;
@@ -41,53 +37,6 @@ void CoreOption::SetValueIndex(size_t index)
     value = values[index].value;
 }
 
-CoreOptions::CoreOptions()
-{
-    LogFunctionName;
-    Load();
-}
-
-CoreOptions::~CoreOptions()
-{
-    LogFunctionName;
-    Save();
-}
-
-bool CoreOptions::Save(const char *path)
-{
-    LogFunctionName;
-
-    CSimpleIniA ini;
-
-    for (auto const &option : Options)
-    {
-        ini.SetValue(CORE_SECTION, option.first.c_str(), option.second.value.c_str());
-    }
-
-    return ini.SaveFile(path) == SI_OK;
-}
-
-bool CoreOptions::Load(const char *path)
-{
-    LogFunctionName;
-
-    CSimpleIniA ini;
-    if (ini.LoadFile(path) != SI_OK)
-    {
-        return false;
-    }
-
-    CSimpleIniA::TNamesDepend keys;
-    ini.GetAllKeys(CORE_SECTION, keys);
-    for (const auto &iter : keys)
-    {
-        Options[iter.pItem] = CoreOption();
-        Options[iter.pItem].value = ini.GetValue(CORE_SECTION, iter.pItem);
-    }
-
-    return true;
-}
-
 void CoreOptions::Load(retro_core_options_intl *options)
 {
     LogFunctionName;
@@ -95,11 +44,11 @@ void CoreOptions::Load(retro_core_options_intl *options)
     const retro_core_option_definition *local = options->local;
     while (us->key)
     {
-        const auto &iter = Options.find(us->key);
+        const auto &iter = this->find(us->key);
         CoreOption *option;
-        if (iter == Options.end())
+        if (iter == this->end())
         {
-            option = &(Options[us->key] = CoreOption{us->desc,
+            option = &((*this)[us->key] = CoreOption{us->desc,
                                                      us->info,
                                                      us->default_value,
                                                      us->default_value,
@@ -147,8 +96,21 @@ void CoreOptions::Load(retro_core_options_intl *options)
 
 void CoreOptions::Default()
 {
-    for (auto &iter : Options)
+    LogFunctionName;
+    for (auto &iter : *this)
     {
         iter.second.Default();
+    }
+}
+
+void CoreOptions::Get(retro_variable *var)
+{
+    LogFunctionName;
+    LogDebug("  key: %s", var->key);
+    auto iter = this->find(var->key);
+    if (iter != this->end())
+    {
+        var->value = iter->second.value.c_str();
+        LogDebug("  value: %s", var->value);
     }
 }
