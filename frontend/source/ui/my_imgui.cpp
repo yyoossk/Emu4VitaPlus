@@ -65,7 +65,7 @@ namespace
     constexpr auto ImguiVertexSize = 20;
 }
 
-void My_Imgui_Create_Font(LANGUAGE language)
+void My_Imgui_Create_Font(uint32_t language)
 {
     LogFunctionName;
     LogDebug("language: %d", language);
@@ -130,7 +130,7 @@ void My_Imgui_Destroy_Font()
     }
 }
 
-IMGUI_API void My_ImGui_ImplVita2D_Init(LANGUAGE language)
+IMGUI_API void My_ImGui_ImplVita2D_Init(uint32_t language)
 {
     LogFunctionName;
     My_Imgui_Create_Font(language);
@@ -297,7 +297,7 @@ static float CalcMaxPopupHeightFromItemCount(int items_count)
     return (g.FontSize + g.Style.ItemSpacing.y) * items_count - g.Style.ItemSpacing.y + (g.Style.WindowPadding.y * 2);
 }
 
-bool MyBeginCombo(const char *label, const char *preview_value, ImGuiComboFlags flags)
+bool My_Imgui_BeginCombo(const char *label, const char *preview_value, ImGuiComboFlags flags)
 {
     // Always consume the SetNextWindowSizeConstraint() call in our early return paths
     ImGuiContext *g = ImGui::GetCurrentContext();
@@ -408,11 +408,18 @@ bool MyBeginCombo(const char *label, const char *preview_value, ImGuiComboFlags 
     return true;
 }
 
-IMGUI_API void MyCenteredText(const char *text)
+IMGUI_API void My_Imgui_CenteredText(const char *text, ...)
 {
+    char buf[0x100];
+
+    va_list args;
+    va_start(args, text);
+    vsnprintf(buf, 0x100, text, args);
+    va_end(args);
+
     float win_width = ImGui::GetWindowSize().x;
-    float text_width = ImGui::CalcTextSize(text).x;
+    float text_width = ImGui::CalcTextSize(buf).x;
 
     ImGui::SetCursorPosX((win_width - text_width) * 0.5);
-    ImGui::Text(text);
+    ImGui::Text(buf);
 }

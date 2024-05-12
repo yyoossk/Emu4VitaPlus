@@ -25,7 +25,7 @@ void ItemSelectable::Show(bool selected)
         ImGui::OpenPopup(text);
     }
 
-    if (MyBeginCombo(text, _GetOptionString(_GetIndex()), ImGuiComboFlags_NoArrowButton))
+    if (My_Imgui_BeginCombo(text, _GetOptionString(_GetIndex()), ImGuiComboFlags_NoArrowButton))
     {
         if (!_actived && is_popup)
         {

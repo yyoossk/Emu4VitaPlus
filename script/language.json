@@ -621,5 +621,33 @@
         "English": "Reset configs",
         "Chinese": "恢复默认设置",
         "Comments": ""
+    },
+    {
+        "No.": "77",
+        "Tag": "COMPILED_ON",
+        "English": "Compiled on",
+        "Chinese": "编译于",
+        "Comments": ""
+    },
+    {
+        "No.": "78",
+        "Tag": "AUTHOR",
+        "English": "Author",
+        "Chinese": "作者",
+        "Comments": ""
+    },
+    {
+        "No.": "79",
+        "Tag": "SPECIAL_THANKS",
+        "English": "Special Thanks",
+        "Chinese": "特别感谢",
+        "Comments": ""
+    },
+    {
+        "No.": "80",
+        "Tag": "SITE",
+        "English": "Site",
+        "Chinese": "网址",
+        "Comments": ""
     }
 ]

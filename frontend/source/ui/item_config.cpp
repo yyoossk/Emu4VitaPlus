@@ -4,13 +4,12 @@
 #include "config.h"
 #include "log.h"
 
-template <typename T>
-ItemConfig<T>::ItemConfig(LanguageString text,
-                          LanguageString info,
-                          T *config,
-                          std::vector<LanguageString> texts,
-                          CallbackFunc active_callback,
-                          CallbackFunc option_callback)
+ItemConfig::ItemConfig(LanguageString text,
+                       LanguageString info,
+                       uint32_t *config,
+                       std::vector<LanguageString> texts,
+                       CallbackFunc active_callback,
+                       CallbackFunc option_callback)
     : ItemBase(text, info, active_callback, option_callback),
       _config(config),
       _config_texts(std::move(texts)),
@@ -18,12 +17,11 @@ ItemConfig<T>::ItemConfig(LanguageString text,
 {
 }
 
-template <typename T>
-ItemConfig<T>::ItemConfig(LanguageString text,
-                          LanguageString info,
-                          T *config,
-                          TEXT_ENUM start,
-                          size_t count)
+ItemConfig::ItemConfig(LanguageString text,
+                       LanguageString info,
+                       uint32_t *config,
+                       TEXT_ENUM start,
+                       size_t count)
     : ItemBase(text, info),
       _config(config),
       _actived(false)
@@ -34,15 +32,14 @@ ItemConfig<T>::ItemConfig(LanguageString text,
     }
 }
 
-template <typename T>
-ItemConfig<T>::~ItemConfig()
+ItemConfig::~ItemConfig()
 {
 }
 
-template <typename T>
-void ItemConfig<T>::Show(bool selected)
+void ItemConfig::Show(bool selected)
 {
     const char *text = GetText();
+
     ImGui::Selectable(text, selected);
     ImGui::NextColumn();
 
@@ -53,7 +50,7 @@ void ItemConfig<T>::Show(bool selected)
         ImGui::OpenPopup(text);
     }
 
-    if (MyBeginCombo(text, _config_texts[GetConfig()].Get(), ImGuiComboFlags_NoArrowButton))
+    if (My_Imgui_BeginCombo(text, _config_texts[GetConfig()].Get(), ImGuiComboFlags_NoArrowButton))
     {
         if (!_actived && is_popup)
         {
@@ -69,8 +66,7 @@ void ItemConfig<T>::Show(bool selected)
     ImGui::NextColumn();
 }
 
-template <typename T>
-void ItemConfig<T>::OnActive(Input *input)
+void ItemConfig::OnActive(Input *input)
 {
     LogFunctionName;
     _actived = true;
@@ -79,11 +75,10 @@ void ItemConfig<T>::OnActive(Input *input)
     SetInputHooks(input);
 }
 
-template <typename T>
-void ItemConfig<T>::_OnKeyUp(Input *input)
+void ItemConfig::_OnKeyUp(Input *input)
 {
     // LogDebug("_OnKeyUp %d %d", GetConfig(), _config_count);
-    T config = GetConfig();
+    uint32_t config = GetConfig();
     if (config == 0)
     {
         SetConfig(_config_texts.size() - 1);
@@ -94,11 +89,10 @@ void ItemConfig<T>::_OnKeyUp(Input *input)
     }
 }
 
-template <typename T>
-void ItemConfig<T>::_OnKeyDown(Input *input)
+void ItemConfig::_OnKeyDown(Input *input)
 {
     // LogDebug("_OnKeyDown %d %d", *_config, _config_count);
-    T config = GetConfig();
+    uint32_t config = GetConfig();
     if (config == _config_texts.size() - 1)
     {
         SetConfig(0);
@@ -109,8 +103,7 @@ void ItemConfig<T>::_OnKeyDown(Input *input)
     }
 }
 
-template <typename T>
-void ItemConfig<T>::_OnClick(Input *input)
+void ItemConfig::_OnClick(Input *input)
 {
     LogFunctionName;
     _actived = false;
@@ -122,8 +115,7 @@ void ItemConfig<T>::_OnClick(Input *input)
     }
 }
 
-template <typename T>
-void ItemConfig<T>::_OnCancel(Input *input)
+void ItemConfig::_OnCancel(Input *input)
 {
     LogFunctionName;
     _actived = false;
@@ -131,8 +123,7 @@ void ItemConfig<T>::_OnCancel(Input *input)
     SetConfig(_old_config);
 }
 
-template <typename T>
-void ItemConfig<T>::SetInputHooks(Input *input)
+void ItemConfig::SetInputHooks(Input *input)
 {
     input->SetKeyDownCallback(SCE_CTRL_UP, std::bind(&ItemConfig::_OnKeyUp, this, input), true);
     input->SetKeyDownCallback(SCE_CTRL_DOWN, std::bind(&ItemConfig::_OnKeyDown, this, input), true);
@@ -142,8 +133,7 @@ void ItemConfig<T>::SetInputHooks(Input *input)
     input->SetKeyUpCallback(SCE_CTRL_CROSS, std::bind(&ItemConfig::_OnCancel, this, input));
 }
 
-template <typename T>
-void ItemConfig<T>::UnsetInputHooks(Input *input)
+void ItemConfig::UnsetInputHooks(Input *input)
 {
     input->UnsetKeyDownCallback(SCE_CTRL_UP);
     input->UnsetKeyDownCallback(SCE_CTRL_DOWN);

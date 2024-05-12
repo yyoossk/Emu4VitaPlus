@@ -13,6 +13,7 @@
 #define MAIN_SECTION "MAIN"
 #define HOTKEY_SECTION "HOTKEY"
 #define GRAPHICS_SECCTION "GRAPHICS"
+// #define CORE_SECTION "CORE"
 
 Config *gConfig = nullptr;
 
@@ -176,12 +177,12 @@ void Config::DefaultHotKey()
 void Config::DefaultGraphics()
 {
     LogFunctionName;
-    graphics_config.size = CONFIG_DISPLAY_SIZE_FULL;
-    graphics_config.ratio = CONFIG_DISPLAY_RATIO_BY_GAME_RESOLUTION;
-    graphics_config.rotate = CONFIG_DISPLAY_ROTATE_DEFAULT;
-    graphics_config.shader = CONFIG_GRAPHICS_SHADER_DEFAULT;
-    graphics_config.smooth = CONFIG_GRAPHICS_SMOOTHER_NO;
-    graphics_config.overlay_mode = CONFIG_GRAPHICS_OVERLAY_MODE_OVERLAY;
+    graphics_config[DISPLAY_SIZE] = CONFIG_DISPLAY_SIZE_FULL;
+    graphics_config[DISPLAY_RATIO] = CONFIG_DISPLAY_RATIO_BY_GAME_RESOLUTION;
+    graphics_config[DISPLAY_ROTATE] = CONFIG_DISPLAY_ROTATE_DEFAULT;
+    graphics_config[GRAPHICS_SHADER] = CONFIG_GRAPHICS_SHADER_DEFAULT;
+    graphics_config[GRAPHICS_SMOOTH] = CONFIG_GRAPHICS_SMOOTHER_NO;
+    graphics_config[GRAPHICS_OVERLAY] = CONFIG_GRAPHICS_OVERLAY_MODE_OVERLAY;
 }
 
 bool Config::Save(const char *path)

@@ -1,22 +1,22 @@
 #pragma once
 #include <vector>
+#include <stdint.h>
 #include "language_string.h"
 #include "item_base.h"
 
-template <typename T>
 class ItemConfig : public virtual ItemBase
 {
 public:
     ItemConfig(LanguageString text,
                LanguageString info,
-               T *config,
+               uint32_t *config,
                std::vector<LanguageString> texts,
                CallbackFunc active_callback = nullptr,
                CallbackFunc option_callback = nullptr);
 
     ItemConfig(LanguageString text,
                LanguageString info,
-               T *config,
+               uint32_t *config,
                TEXT_ENUM start,
                size_t count);
 
@@ -26,9 +26,8 @@ public:
     virtual void UnsetInputHooks(Input *input);
     virtual void Show(bool selected);
     virtual void OnActive(Input *input);
-    T GetConfig() { return *_config; };
-    void SetConfig(T value) { *_config = value; };
-    void SetConfig(size_t value) { *_config = T(value); };
+    uint32_t GetConfig() { return *_config; };
+    void SetConfig(uint32_t value) { *_config = value; };
 
 private:
     void _OnKeyUp(Input *input);
@@ -36,11 +35,9 @@ private:
     void _OnClick(Input *input);
     void _OnCancel(Input *input);
 
-    T *_config;
+    uint32_t *_config;
     std::vector<LanguageString> _config_texts;
-    T _old_config;
+    uint32_t _old_config;
 
     bool _actived;
 };
-
-#include "item_config.i"

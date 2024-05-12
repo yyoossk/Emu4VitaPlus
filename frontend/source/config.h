@@ -26,9 +26,9 @@ public:
     void DefaultGraphics();
     retro_language GetRetroLanguage();
 
-    LANGUAGE language;
+    uint32_t language;
     std::vector<ControlMapConfig> control_maps;
-    GraphicsConfig graphics_config;
+    uint32_t graphics_config[GRAPHICS_CONFIG_COUNT];
     uint32_t hotkeys[HOT_KEY_COUNT];
 
     static std::unordered_map<uint32_t, TEXT_ENUM> ControlTextMap;

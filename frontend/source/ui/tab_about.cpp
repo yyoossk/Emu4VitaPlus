@@ -2,21 +2,14 @@
 #include "language_string.h"
 #include "my_imgui.h"
 
-static const char *AboutTexts[] = {
-    "Emu4Vita++ (" APP_DIR_NAME ")",
-    "Compiled on " __DATE__ " " __TIME__,
-    "Author: noword   Special Thanks: yizhigai",
-    "Site: https://github.com/noword/Emu4VitaPlus"};
-
 void TabAbout::Show(bool selected)
 {
     if (ImGui::BeginTabItem(TEXT(TAB_ABOUT), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
     {
-        for (size_t i = 0; i < sizeof(AboutTexts) / sizeof(*AboutTexts); i++)
-        {
-            MyCenteredText(AboutTexts[i]);
-        }
-
+        My_Imgui_CenteredText("Emu4Vita++ (" APP_DIR_NAME ")");
+        My_Imgui_CenteredText("%s " __DATE__ " " __TIME__, TEXT(COMPILED_ON));
+        My_Imgui_CenteredText("%s: noword   %s: yizhigai", TEXT(AUTHOR), TEXT(SPECIAL_THANKS));
+        My_Imgui_CenteredText("%s: https://github.com/noword/Emu4VitaPlus", TEXT(SITE));
         ImGui::EndTabItem();
     }
 }

@@ -68,7 +68,7 @@ void ItemHotkey::Show(bool selected)
         ImGui::OpenPopup(text);
     }
 
-    if (MyBeginCombo(text, _GetPreviewText(), ImGuiComboFlags_NoArrowButton))
+    if (My_Imgui_BeginCombo(text, _GetPreviewText(), ImGuiComboFlags_NoArrowButton))
     {
         if (!_actived && is_popup)
         {

@@ -62,7 +62,7 @@ void ItemControl::Show(bool selected)
         ImGui::OpenPopup(text);
     }
 
-    if (MyBeginCombo(text, TEXT(Config::RetroTextMap[_control_map->retro]), ImGuiComboFlags_NoArrowButton))
+    if (My_Imgui_BeginCombo(text, TEXT(Config::RetroTextMap[_control_map->retro]), ImGuiComboFlags_NoArrowButton))
     {
         if (!_actived && is_popup)
         {
