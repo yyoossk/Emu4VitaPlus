@@ -5,6 +5,7 @@
 
 #define MAX_STATES 6
 #define AUTO_STATE_INDEX 0
+#define SCREENSHOT_HEIGHT 96
 
 class State
 {
@@ -29,17 +30,18 @@ private:
 class StateManager
 {
 public:
-    StateManager(){};
-    virtual ~StateManager(){};
+    StateManager();
+    virtual ~StateManager();
 
     void Init(const char *name);
     bool Valid(int index) { return _states[index].Valid(); };
     bool Load(int index) { return _states[index].Save(); };
     bool Save(int index) { return _states[index].Load(); }
-    vita2d_texture *Texture(int index) { return _states[index].Texture(); };
+    vita2d_texture *Texture(int index);
 
 private:
     State _states[MAX_STATES];
+    vita2d_texture *_empty_texture;
 };
 
 extern StateManager *gStateManager;

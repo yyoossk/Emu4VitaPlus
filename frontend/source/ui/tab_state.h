@@ -1,9 +1,9 @@
 #pragma once
 #include "vita2d.h"
-#include "tab_base.h"
+#include "tab_selectable.h"
 #include "state_manager.h"
 
-class TabState : virtual public TabBase
+class TabState : public TabSeletable
 {
 public:
     TabState();
@@ -11,7 +11,5 @@ public:
     void Show(bool selected);
 
 private:
-    size_t _GetItemCount() { return 0; };
-
-    vita2d_texture *_empty_texture;
+    size_t _GetItemCount() { return MAX_STATES; };
 };

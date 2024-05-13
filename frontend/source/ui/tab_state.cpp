@@ -1,13 +1,13 @@
 #include "tab_state.h"
+#include "state_manager.h"
 
-TabState::TabState() : TabBase(TAB_STATE, false)
+TabState::TabState()
+    : TabSeletable(TAB_STATE)
 {
-    _empty_texture = vita2d_create_empty_texture(100, 100);
 }
 
 TabState::~TabState()
 {
-    vita2d_free_texture(_empty_texture);
 }
 
 void TabState::Show(bool selected)
@@ -15,11 +15,25 @@ void TabState::Show(bool selected)
     if (ImGui::BeginTabItem(TEXT(_title_id), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
     {
         ImGui::BeginChild(TEXT(_title_id));
-        for (size_t i = 0; i < 5; i++)
+        for (size_t i = 0; i < MAX_STATES; i++)
         {
-            ImGui::Image(_empty_texture, {100, 100});
+            char text[32];
+            if (i == AUTO_STATE_INDEX)
+            {
+                snprintf(text, 32, "%16s", "Auto Save");
+            }
+            else
+            {
+                snprintf(text, 32, "%16.2d", i);
+            }
+            ImGui::Selectable("", i == _index);
             ImGui::SameLine();
-            ImGui::Text("Auto Save");
+            vita2d_texture *texture = gStateManager->Texture(i);
+            float w = vita2d_texture_get_width(texture);
+            float h = vita2d_texture_get_height(texture);
+            ImGui::Image(gStateManager->Texture(i), {w, h});
+            ImGui::SameLine();
+            ImGui::Text(text);
         }
 
         ImGui::EndChild();

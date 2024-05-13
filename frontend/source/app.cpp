@@ -86,6 +86,7 @@ App::~App()
     delete gVideo;
     delete gUi;
     delete gEmulator;
+    delete gStateManager;
     delete gConfig;
 
     sceAppUtilShutdown();

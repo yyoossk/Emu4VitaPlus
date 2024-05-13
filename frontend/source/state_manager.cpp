@@ -3,6 +3,7 @@
 #include "state_manager.h"
 #include "defines.h"
 #include "log.h"
+#include "emulator.h"
 
 StateManager *gStateManager = nullptr;
 
@@ -89,10 +90,36 @@ END:
     return result;
 }
 
+StateManager::StateManager()
+{
+    uint32_t height = SCREENSHOT_HEIGHT;
+    uint32_t width = height * gEmulator->GetAspectRatio();
+    _empty_texture = vita2d_create_empty_texture(width, height);
+    const auto stride = vita2d_texture_get_stride(_empty_texture) / 4;
+    auto texture_data = (uint32_t *)vita2d_texture_get_datap(_empty_texture);
+    for (auto y = 0; y < height; ++y)
+        for (auto x = 0; x < width; ++x)
+            texture_data[y * stride + x] = 0xff00cc00;
+}
+
+StateManager::~StateManager()
+{
+    if (_empty_texture)
+    {
+        vita2d_free_texture(_empty_texture);
+    }
+}
+
 void StateManager::Init(const char *name)
 {
     for (int i = 0; i < MAX_STATES; i++)
     {
         _states->Init(name, i);
     }
+}
+
+vita2d_texture *StateManager::Texture(int index)
+{
+    vita2d_texture *tex = _states[index].Texture();
+    return tex ? tex : _empty_texture;
 }
