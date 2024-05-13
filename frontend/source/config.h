@@ -9,9 +9,6 @@
 #include "language_define.h"
 #include "defines.h"
 
-extern std::unordered_map<uint32_t, TEXT_ENUM> ControlTextMap;
-extern std::unordered_map<uint8_t, TEXT_ENUM> RetroTextMap;
-
 class Config
 {
 public:

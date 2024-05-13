@@ -17,8 +17,12 @@ set(CMAKE_C_FLAGS
     -ffast-math -ftree-vectorize -O3")
 
 if(WITH_LOG)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLOG_LEVEL=LOG_LEVEL_DEBUG")
+    set(LOG_LEVEL LOG_LEVEL_DEBUG)
+else()
+    set(LOG_LEVEL LOG_LEVEL_INFO)
 endif()
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLOG_LEVEL=${LOG_LEVEL}")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fno-rtti -fno-exceptions -std=c++17")
 set(CMAKE_CXX_FLAGS_DEBUG_INIT "-DDEBUG -g")

@@ -10,7 +10,20 @@ namespace File
         return sceIoGetstat(name, &stat) == SCE_OK;
     }
 
-    void MakeDirs(const char *path, SceIoMode mode)
+    bool GetCreateTime(const char *name, SceDateTime *time)
+    {
+        SceIoStat stat;
+        if (sceIoGetstat(name, &stat) != SCE_OK)
+        {
+            return false;
+        }
+
+        memcpy(time, &stat.st_ctime, sizeof(SceDateTime));
+        return true;
+    }
+
+    void
+    MakeDirs(const char *path, SceIoMode mode)
     {
         if (!(path && *path) || Exist(path))
         {
@@ -52,11 +65,29 @@ namespace File
         return sceIoRemove(path) == SCE_OK;
     }
 
-    File::File(const char *name)
+    std::string GetStem(const char *path)
     {
-    }
+        const char *start = strrchr(path, '/');
+        if (start == NULL)
+        {
+            start = strrchr(path, ':');
+        }
 
-    File::~File()
-    {
+        if (start == NULL)
+        {
+            start = path;
+        }
+        else
+        {
+            start++;
+        }
+
+        const char *end = strrchr(path, '.');
+        if (end == NULL)
+        {
+            end = path + strlen(path);
+        }
+
+        return std::string(start, end - start);
     }
 }

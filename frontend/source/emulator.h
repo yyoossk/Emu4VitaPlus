@@ -1,5 +1,5 @@
 #pragma once
-#include <vector>
+#include <string>
 #include <libretro.h>
 #include <stdint.h>
 #include "texture_buf.h"
@@ -27,6 +27,7 @@ public:
     void Run();
     void Show();
     void SetSpeed(double speed);
+    const char *CurrentName() { return _current_name.c_str(); };
 
     const char *GetValidExtensions() const { return _info.valid_extensions; };
     double GetSampleRate() const { return _av_info.timing.sample_rate; };
@@ -38,6 +39,7 @@ public:
     friend int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsigned id);
 
 private:
+    std::string _current_name;
     retro_system_info _info;
     retro_system_av_info _av_info;
 

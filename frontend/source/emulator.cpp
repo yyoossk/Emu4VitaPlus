@@ -8,8 +8,10 @@
 #include "app.h"
 #include "defines.h"
 #include "core_options.h"
+#include "state_manager.h"
 #include "config.h"
 #include "log.h"
+#include "file.h"
 
 #define CORE_OPTIONS_VERSION 2
 
@@ -52,7 +54,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
     case RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY:
         if (data)
         {
-            *(const char **)data = CORE_DIR;
+            *(const char **)data = CORE_SYSTEM_DIR;
         }
         break;
 
@@ -249,6 +251,9 @@ Emulator::~Emulator()
 bool Emulator::LoadGame(const char *path)
 {
     LogFunctionName;
+
+    _current_name = File::GetStem(path);
+    gStateManager->Init(_current_name.c_str());
 
     retro_game_info game_info;
     game_info.path = path;

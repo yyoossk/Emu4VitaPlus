@@ -10,7 +10,8 @@
 #include "emulator.h"
 #include "config.h"
 #include "ui.h"
-#include "file.h"
+#include "state_manager.h"
+// #include "file.h"
 #include "log.h"
 #include "defines.h"
 
@@ -59,6 +60,9 @@ App::App()
 
     gUi->AppendLog("Initialize emulator");
     gEmulator = new Emulator();
+
+    gUi->AppendLog("Initialize state manager");
+    gStateManager = new StateManager();
 
     gUi->AppendLog("Create tables of UI");
     gUi->CreateTables("ux0:");

@@ -1,6 +1,7 @@
 #pragma once
 #include "vita2d.h"
 #include "tab_base.h"
+#include "state_manager.h"
 
 class TabState : virtual public TabBase
 {
