@@ -8,8 +8,9 @@ class TabState : public TabSeletable
 public:
     TabState();
     virtual ~TabState();
-    void Show(bool selected);
+    void Show(bool selected) override;
 
 private:
-    size_t _GetItemCount() { return MAX_STATES; };
+    size_t _GetItemCount() override { return MAX_STATES; };
+    bool _ItemVisable(size_t index) override { return true; };
 };
