@@ -3,6 +3,15 @@
 #include "defines.h"
 #include "log.h"
 
+enum
+{
+    POPUP_SAVE = 0,
+    POPUP_LOAD,
+    POPUP_DELETE,
+    POPUP_CANCEL,
+    POPUP_COUNT,
+};
+
 TabState::TabState()
     : TabSeletable(TAB_STATE),
       _actived(false),
@@ -87,17 +96,27 @@ void TabState::_ShowPopup()
         ImGui::OpenPopup("popup_menu");
     }
 
-    ImVec2 pos = ImGui::GetCursorPos();
-    ImGui::SetNextWindowPos({300.f, pos.y});
+    ImVec2 pos = ImGui::GetCursorScreenPos();
+    ImGui::SetNextWindowPos({250.f, pos.y - 50.f});
     if (ImGui::BeginPopup("popup_menu"))
     {
-        ImGui::Button(TEXT(STATE_SAVE));
-        ImGui::SameLine();
-        ImGui::Button(TEXT(STATE_LOAD));
-        ImGui::SameLine();
-        ImGui::Button(TEXT(STATE_DELETE));
-        ImGui::SameLine();
-        ImGui::Button(TEXT(STATE_CANCEL));
+        if (!_actived && is_popup)
+        {
+            ImGui::CloseCurrentPopup();
+        }
+        for (size_t i = 0; i < POPUP_COUNT; i++)
+        {
+            if (i == _popup_index)
+            {
+                ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_ButtonHovered));
+            }
+            ImGui::Button(TEXT(STATE_SAVE + i));
+            if (i == _popup_index)
+            {
+                ImGui::PopStyleColor();
+            }
+            ImGui::SameLine();
+        }
         ImGui::EndPopup();
     }
 }
@@ -126,6 +145,7 @@ void TabState::_OnActive(Input *input)
 {
     _actived = true;
     input->PushCallbacks();
+    input->Reset();
     _SetInputHooks(input);
 }
 
@@ -141,6 +161,22 @@ void TabState::_OnKeyRight(Input *input)
 
 void TabState::_OnClick(Input *input)
 {
+    switch (_popup_index)
+    {
+    case POPUP_SAVE:
+        break;
+
+    case POPUP_LOAD:
+        break;
+
+    case POPUP_DELETE:
+        break;
+
+    case POPUP_CANCEL:
+    default:
+        _OnCancel(input);
+        break;
+    }
 }
 
 void TabState::_OnCancel(Input *input)
