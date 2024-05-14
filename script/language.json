@@ -649,5 +649,47 @@
         "English": "Site",
         "Chinese": "网址",
         "Comments": ""
+    },
+    {
+        "No.": "81",
+        "Tag": "STATE_AUTO",
+        "English": "Auto Save",
+        "Chinese": "自动存档",
+        "Comments": ""
+    },
+    {
+        "No.": "82",
+        "Tag": "STATE_EMPTY",
+        "English": "Empty",
+        "Chinese": "空",
+        "Comments": ""
+    },
+    {
+        "No.": "82",
+        "Tag": "STATE_SAVE",
+        "English": "Save",
+        "Chinese": "保存",
+        "Comments": ""
+    },
+    {
+        "No.": "83",
+        "Tag": "STATE_LOAD",
+        "English": "Load",
+        "Chinese": "读取",
+        "Comments": ""
+    },
+    {
+        "No.": "84",
+        "Tag": "STATE_DELETE",
+        "English": "Delete",
+        "Chinese": "删除",
+        "Comments": ""
+    },
+    {
+        "No.": "85",
+        "Tag": "STATE_CANCEL",
+        "English": "Cancel",
+        "Chinese": "取消",
+        "Comments": ""
     }
 ]

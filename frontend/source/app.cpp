@@ -11,7 +11,6 @@
 #include "config.h"
 #include "ui.h"
 #include "state_manager.h"
-// #include "file.h"
 #include "log.h"
 #include "defines.h"
 

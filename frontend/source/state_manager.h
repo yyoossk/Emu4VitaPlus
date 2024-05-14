@@ -17,6 +17,7 @@ public:
     bool Save();
     bool Load();
     bool Valid() { return _valid; };
+    SceDateTime CreateTime() { return _create_time; };
     vita2d_texture *Texture() { return _texture; };
 
 private:
@@ -37,6 +38,7 @@ public:
     bool Valid(int index) { return _states[index].Valid(); };
     bool Load(int index) { return _states[index].Save(); };
     bool Save(int index) { return _states[index].Load(); }
+    SceDateTime CreateTime(int index) { return _states[index].CreateTime(); };
     vita2d_texture *Texture(int index);
 
 private:
