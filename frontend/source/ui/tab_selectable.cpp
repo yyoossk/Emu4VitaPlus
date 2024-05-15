@@ -1,17 +1,19 @@
 #include "tab_selectable.h"
 #include "defines.h"
 
-TabSeletable::TabSeletable(TEXT_ENUM title_id, std::vector<ItemBase *> items)
+TabSeletable::TabSeletable(TEXT_ENUM title_id, std::vector<ItemBase *> items, int columns)
     : TabBase(title_id),
       _items(std::move(items)),
-      _index(0)
+      _index(0),
+      _columns(columns)
 {
     LogFunctionName;
 }
 
-TabSeletable::TabSeletable(TEXT_ENUM title_id)
+TabSeletable::TabSeletable(TEXT_ENUM title_id, int columns)
     : TabBase(title_id),
-      _index(0)
+      _index(0),
+      _columns(columns)
 {
     LogFunctionName;
 }
@@ -61,7 +63,7 @@ void TabSeletable::Show(bool selected)
         }
 
         ImGui::BeginChild(TEXT(_title_id), size);
-        ImGui::Columns(2, NULL, false);
+        ImGui::Columns(_columns, NULL, false);
         size_t total = _GetItemCount();
         for (size_t i = 0; i < total; i++)
         {
@@ -182,4 +184,9 @@ bool TabSeletable::ItemVisable(size_t index)
     {
         return false;
     }
+}
+
+void TabSeletable::SetColumns(int columns)
+{
+    _columns = columns;
 }

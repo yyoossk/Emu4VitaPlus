@@ -6,9 +6,11 @@
 #include "emulator.h"
 
 StateManager *gStateManager = nullptr;
+vita2d_texture *State::_empty_texture = nullptr;
 
-State::State()
-    : _valid(false),
+State::State(const char *slot_name)
+    : _slot_name(slot_name),
+      _valid(false),
       _texture(nullptr)
 {
 }
@@ -22,19 +24,12 @@ State::~State()
     }
 }
 
-void State::Init(const char *name, int index)
+void State::Init(const char *game_name)
 {
     LogFunctionName;
-    char path[SCE_FIOS_PATH_MAX];
 
-    if (index == AUTO_STATE_INDEX)
-    {
-        snprintf(path, SCE_FIOS_PATH_MAX, CORE_SAVESTATES_DIR "/%s/state_auto.bin", name);
-    }
-    else
-    {
-        snprintf(path, SCE_FIOS_PATH_MAX, CORE_SAVESTATES_DIR "/%s/state_%02d.bin", name, index);
-    }
+    char path[SCE_FIOS_PATH_MAX];
+    snprintf(path, SCE_FIOS_PATH_MAX, CORE_SAVESTATES_DIR "/%s/state_%s.bin", game_name, _slot_name.c_str());
 
     _state_path = path;
     _valid = File::Exist(path);
@@ -43,15 +38,7 @@ void State::Init(const char *name, int index)
         File::GetCreateTime(path, &_create_time);
     }
 
-    if (index == AUTO_STATE_INDEX)
-    {
-        snprintf(path, SCE_FIOS_PATH_MAX, CORE_SAVESTATES_DIR "/%s/state_auto.jpg", name);
-    }
-    else
-    {
-        snprintf(path, SCE_FIOS_PATH_MAX, CORE_SAVESTATES_DIR "/%s/state_%02d.jpg", name, index);
-    }
-
+    snprintf(path, SCE_FIOS_PATH_MAX, CORE_SAVESTATES_DIR "/%s/state_%s.jpg", game_name, _slot_name.c_str());
     _image_path = path;
     if (_texture)
     {
@@ -92,34 +79,44 @@ END:
 
 StateManager::StateManager()
 {
-    uint32_t height = SCREENSHOT_HEIGHT;
-    uint32_t width = height * gEmulator->GetAspectRatio();
-    _empty_texture = vita2d_create_empty_texture(width, height);
-    const auto stride = vita2d_texture_get_stride(_empty_texture) / 4;
-    auto texture_data = (uint32_t *)vita2d_texture_get_datap(_empty_texture);
-    for (auto y = 0; y < height; ++y)
-        for (auto x = 0; x < width; ++x)
-            texture_data[y * stride + x] = 0xff00cc00;
+    states[0] = new State("auto");
+    for (int i = 1; i < MAX_STATES; i++)
+    {
+        char buf[3];
+        snprintf(buf, 3, "%02d", i);
+        states[i] = new State(buf);
+    }
+
+    if (State::_empty_texture == nullptr)
+    {
+        uint32_t height = SCREENSHOT_HEIGHT;
+        uint32_t width = height * gEmulator->GetAspectRatio();
+        State::_empty_texture = vita2d_create_empty_texture(width, height);
+        const auto stride = vita2d_texture_get_stride(State::_empty_texture) / 4;
+        auto texture_data = (uint32_t *)vita2d_texture_get_datap(State::_empty_texture);
+        for (auto y = 0; y < height; ++y)
+            for (auto x = 0; x < width; ++x)
+                texture_data[y * stride + x] = 0xff00cc00;
+    }
 }
 
 StateManager::~StateManager()
 {
-    if (_empty_texture)
+    if (State::_empty_texture != nullptr)
     {
-        vita2d_free_texture(_empty_texture);
+        vita2d_free_texture(State::_empty_texture);
+    }
+    for (size_t i = 0; i < MAX_STATES; i++)
+    {
+        delete states[i];
     }
 }
 
 void StateManager::Init(const char *name)
 {
-    for (int i = 0; i < MAX_STATES; i++)
+    states[0]->Init(name);
+    for (int i = 1; i < MAX_STATES; i++)
     {
-        _states->Init(name, i);
+        states[i]->Init(name);
     }
-}
-
-vita2d_texture *StateManager::Texture(int index)
-{
-    vita2d_texture *tex = _states[index].Texture();
-    return tex ? tex : _empty_texture;
 }

@@ -4,13 +4,14 @@
 #include "app.h"
 #include "video.h"
 #include "log.h"
+#include "state_manager.h"
 #include "tab_selectable.h"
 #include "item_config.h"
 #include "item_control.h"
 #include "item_hotkey.h"
 #include "item_core.h"
+#include "item_state.h"
 #include "tab_browser.h"
-#include "tab_state.h"
 #include "tab_about.h"
 
 #define MAIN_WINDOW_PADDING 10
@@ -129,7 +130,13 @@ void Ui::CreateTables(const char *path)
 
                                                 new ItemBase(SYSTEM_MENU_EXIT, "", ExitApp)});
 
-    _tabs[TAB_INDEX_STATE] = new TabState();
+    std::vector<ItemBase *> states;
+    for (size_t i = 0; i < MAX_STATES; i++)
+    {
+        states.emplace_back(new ItemState(gStateManager->states[i]));
+    }
+    _tabs[TAB_INDEX_STATE] = new TabSeletable(TAB_STATE, states, 1);
+    _tabs[TAB_INDEX_STATE]->SetVisable(false);
 
     _tabs[TAB_INDEX_BROWSER] = new TabBrowser(path);
 

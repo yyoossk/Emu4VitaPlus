@@ -1,6 +1,5 @@
 #pragma once
 #include "item_base.h"
-#include "input.h"
 
 class ItemSelectable : public ItemBase
 {

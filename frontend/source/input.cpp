@@ -184,10 +184,14 @@ void Input::PushCallbacks()
 {
     _callback_stack.push(_key_up_callbacks);
     _callback_stack.push(_key_down_callbacks);
+    _key_down_callbacks.clear();
+    _key_up_callbacks.clear();
 }
 
 void Input::PopCallbacks()
 {
+    _key_down_callbacks.clear();
+    _key_up_callbacks.clear();
     _key_down_callbacks = _callback_stack.top();
     _callback_stack.pop();
     _key_up_callbacks = _callback_stack.top();

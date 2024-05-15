@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "vita2d.h"
+#include <vita2d.h>
 #include "file.h"
 
 #define MAX_STATES 6
@@ -10,40 +10,35 @@
 class State
 {
 public:
-    State();
+    State(const char *slot_name);
     virtual ~State();
 
-    void Init(const char *name, int index);
+    void Init(const char *game_name);
+    const char *SlotName() const { return _slot_name.c_str(); };
     bool Save();
     bool Load();
     bool Valid() { return _valid; };
     SceDateTime CreateTime() { return _create_time; };
-    vita2d_texture *Texture() { return _texture; };
+    vita2d_texture *Texture() { return _texture == nullptr ? _empty_texture : _texture; };
+
+    friend class StateManager;
 
 private:
     bool _valid;
+    std::string _slot_name;
     std::string _state_path;
     std::string _image_path;
     SceDateTime _create_time;
     vita2d_texture *_texture;
+    static vita2d_texture *_empty_texture;
 };
 
-class StateManager
+struct StateManager
 {
-public:
     StateManager();
     virtual ~StateManager();
-
     void Init(const char *name);
-    bool Valid(int index) { return _states[index].Valid(); };
-    bool Load(int index) { return _states[index].Save(); };
-    bool Save(int index) { return _states[index].Load(); }
-    SceDateTime CreateTime(int index) { return _states[index].CreateTime(); };
-    vita2d_texture *Texture(int index);
-
-private:
-    State _states[MAX_STATES];
-    vita2d_texture *_empty_texture;
+    State *states[MAX_STATES];
 };
 
 extern StateManager *gStateManager;
