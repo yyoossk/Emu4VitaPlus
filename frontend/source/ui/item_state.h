@@ -23,7 +23,7 @@ public:
 
 private:
     void _ShowPopup();
-    void _ShowDialog();
+    // void _ShowDialog();
 
     size_t _GetTotalCount() override { return POPUP_COUNT; };
     void _OnKeyLeft(Input *input);
@@ -33,7 +33,5 @@ private:
     void _OnRun(Input *input, int index);
 
     State *_state;
-    bool _dialog_actived;
-    size_t _dialog_index;
     Dialog *_dialog;
 };
