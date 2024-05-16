@@ -1,6 +1,7 @@
 #pragma once
 #include "item_selectable.h"
 #include "state_manager.h"
+#include "dialog.h"
 
 enum
 {
@@ -29,8 +30,10 @@ private:
     void _OnKeyRight(Input *input);
     void _OnClick(Input *input) override;
     void _OnCancel(Input *input) override;
+    void _OnRun(Input *input, int index);
 
     State *_state;
     bool _dialog_actived;
     size_t _dialog_index;
+    Dialog *_dialog;
 };

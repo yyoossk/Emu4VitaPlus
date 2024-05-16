@@ -4,7 +4,7 @@
 #include "language_string.h"
 #include "input.h"
 
-typedef std::function<void(int)> DialogCallbackFunc;
+typedef std::function<void(Input *, int)> DialogCallbackFunc;
 
 class Dialog
 {

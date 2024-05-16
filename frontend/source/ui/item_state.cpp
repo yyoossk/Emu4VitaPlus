@@ -16,10 +16,13 @@ ItemState::ItemState(State *state)
   {
     _text = LanguageString(state->SlotName());
   }
+
+  _dialog = new Dialog{"", {DIALOG_OK, DIALOG_CANCEL}, std::bind(&ItemState::_OnRun, this, std::placeholders::_1, std::placeholders::_2)};
 }
 
 ItemState::~ItemState()
 {
+  delete _dialog;
 }
 
 void ItemState::Show(bool selected)
@@ -186,5 +189,26 @@ void ItemState::_OnCancel(Input *input)
   {
     _actived = false;
     input->PopCallbacks();
+  }
+}
+
+void ItemState::_OnRun(Input *input, int index)
+{
+  LogFunctionName;
+  LogDebug("%d  ", _index);
+
+  switch (_index)
+  {
+  case 0:
+  case 1:
+  case POPUP_DELETE:
+    _dialog_actived = true;
+    _dialog_index = 0;
+    break;
+
+  case POPUP_CANCEL:
+  default:
+    _OnCancel(input);
+    break;
   }
 }

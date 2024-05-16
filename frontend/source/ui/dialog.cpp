@@ -103,7 +103,7 @@ void Dialog::_OnClick(Input *input)
     input->PopCallbacks();
     if (_callback)
     {
-        _callback(_index);
+        _callback(input, _index);
     }
 }
 
