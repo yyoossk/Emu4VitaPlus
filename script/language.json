@@ -691,5 +691,19 @@
         "English": "Cancel",
         "Chinese": "取消",
         "Comments": ""
+    },
+    {
+        "No.": "86",
+        "Tag": "DIALOG_OK",
+        "English": "OK",
+        "Chinese": "确认",
+        "Comments": ""
+    },
+    {
+        "No.": "87",
+        "Tag": "DIALOG_CANCEL",
+        "English": "Cancel",
+        "Chinese": "取消",
+        "Comments": ""
     }
 ]

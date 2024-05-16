@@ -242,7 +242,7 @@ void Ui::_OnKeyR2(Input *input)
 
 void Ui::Run()
 {
-    _input.Poll();
+    _input.Poll(true);
     static APP_STATUS last_status = APP_STATUS_SHOW_UI;
     if (gStatus != last_status)
     {

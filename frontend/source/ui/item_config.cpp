@@ -7,12 +7,12 @@
 ItemConfig::ItemConfig(LanguageString text,
                        LanguageString info,
                        uint32_t *config,
-                       std::vector<LanguageString> texts,
+                       std::vector<LanguageString> config_texts,
                        CallbackFunc active_callback,
                        CallbackFunc option_callback)
     : ItemBase(text, info, active_callback, option_callback),
       _config(config),
-      _config_texts(std::move(texts)),
+      _config_texts(std::move(config_texts)),
       _actived(false)
 {
 }
@@ -77,28 +77,16 @@ void ItemConfig::_OnKeyUp(Input *input)
 {
     // LogDebug("_OnKeyUp %d %d", GetConfig(), _config_count);
     uint32_t config = GetConfig();
-    if (config == 0)
-    {
-        SetConfig(_config_texts.size() - 1);
-    }
-    else
-    {
-        SetConfig(config - 1);
-    }
+    LOOP_MINUS_ONE(config, _config_texts.size());
+    SetConfig(config);
 }
 
 void ItemConfig::_OnKeyDown(Input *input)
 {
     // LogDebug("_OnKeyDown %d %d", *_config, _config_count);
     uint32_t config = GetConfig();
-    if (config == _config_texts.size() - 1)
-    {
-        SetConfig(0);
-    }
-    else
-    {
-        SetConfig(config + 1);
-    }
+    LOOP_PLUS_ONE(config, _config_texts.size());
+    SetConfig(config);
 }
 
 void ItemConfig::_OnClick(Input *input)

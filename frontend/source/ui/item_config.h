@@ -10,7 +10,7 @@ public:
     ItemConfig(LanguageString text,
                LanguageString info,
                uint32_t *config,
-               std::vector<LanguageString> texts,
+               std::vector<LanguageString> config_texts,
                CallbackFunc active_callback = nullptr,
                CallbackFunc option_callback = nullptr);
 

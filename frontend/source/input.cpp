@@ -59,12 +59,13 @@ void Input::UnsetKeyDownCallback(uint32_t key)
     _turbo_key &= ~key;
 }
 
-bool Input::Poll()
+bool Input::Poll(bool waiting)
 {
     SceCtrlData ctrl_data;
 
     memset(&ctrl_data, 0, sizeof(SceCtrlData));
-    if (sceCtrlPeekBufferPositiveExt2(0, &ctrl_data, 1) < 0)
+    int result = waiting ? sceCtrlReadBufferPositiveExt2(0, &ctrl_data, 1) : sceCtrlPeekBufferPositiveExt2(0, &ctrl_data, 1);
+    if (result < 0)
         return false;
 
     uint64_t key = ctrl_data.buttons;

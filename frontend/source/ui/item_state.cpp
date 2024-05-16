@@ -1,10 +1,12 @@
 #include "item_state.h"
+#include "defines.h"
 #include "log.h"
 
 ItemState::ItemState(State *state)
     : ItemSelectable(""),
       _state(state),
-      _dialog_actived(false)
+      _dialog_actived(false),
+      _dialog_index(0)
 {
   if (strcmp(state->SlotName(), "auto") == 0)
   {
@@ -64,7 +66,7 @@ void ItemState::_ShowPopup()
 
   ImVec2 pos = ImGui::GetCursorScreenPos();
   ImGui::SetNextWindowPos({250.f, pos.y - 50.f});
-  if (ImGui::BeginPopup("popup_menu"))
+  if (ImGui::BeginPopupModal("popup_menu", NULL, ImGuiWindowFlags_NoTitleBar))
   {
     if (!_actived && is_popup)
     {
@@ -83,24 +85,87 @@ void ItemState::_ShowPopup()
       }
       ImGui::SameLine();
     }
+
+    _ShowDialog();
     ImGui::EndPopup();
+  }
+}
+
+void ItemState::_ShowDialog()
+{
+  bool is_popup = ImGui::IsPopupOpen("popup_dialog");
+  if (_dialog_actived && !is_popup)
+  {
+    ImGui::OpenPopup("popup_dialog");
+    LogDebug("popup dialog");
+  }
+
+  if (ImGui::BeginPopupModal("popup_dialog", NULL, ImGuiWindowFlags_NoTitleBar))
+  {
+
+    ImGui::Text("xxx?");
+    ImGui::Button("OK");
+    ImGui::SameLine();
+    ImGui::Button("Cancel");
+    ImGui::EndPopup();
+  }
+}
+
+void ItemState::SetInputHooks(Input *input)
+{
+  input->SetKeyDownCallback(SCE_CTRL_LEFT, std::bind(&ItemState::_OnKeyLeft, this, input), true);
+  input->SetKeyDownCallback(SCE_CTRL_RIGHT, std::bind(&ItemState::_OnKeyRight, this, input), true);
+  input->SetKeyDownCallback(SCE_CTRL_LSTICK_LEFT, std::bind(&ItemState::_OnKeyLeft, this, input), true);
+  input->SetKeyDownCallback(SCE_CTRL_LSTICK_RIGHT, std::bind(&ItemState::_OnKeyRight, this, input), true);
+  input->SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&ItemState::_OnClick, this, input));
+  input->SetKeyUpCallback(SCE_CTRL_CROSS, std::bind(&ItemState::_OnCancel, this, input));
+}
+
+void ItemState::UnsetInputHooks(Input *input)
+{
+  input->UnsetKeyDownCallback(SCE_CTRL_LEFT);
+  input->UnsetKeyDownCallback(SCE_CTRL_RIGHT);
+  input->UnsetKeyDownCallback(SCE_CTRL_LSTICK_LEFT);
+  input->UnsetKeyDownCallback(SCE_CTRL_LSTICK_RIGHT);
+  input->UnsetKeyUpCallback(SCE_CTRL_CIRCLE);
+  input->UnsetKeyUpCallback(SCE_CTRL_CROSS);
+}
+
+void ItemState::_OnKeyLeft(Input *input)
+{
+  if (_dialog_actived)
+  {
+    LOOP_MINUS_ONE(_dialog_index, 2);
+  }
+  else
+  {
+    _OnKeyUp(input);
+  }
+}
+
+void ItemState::_OnKeyRight(Input *input)
+{
+  if (_dialog_actived)
+  {
+    LOOP_PLUS_ONE(_dialog_index, 2);
+  }
+  else
+  {
+    _OnKeyDown(input);
   }
 }
 
 void ItemState::_OnClick(Input *input)
 {
-  // _actived = false;
-  // input->PopCallbacks();
-  // _dialog_actived = true;
+  LogDebug("%d %d", _index, _dialog_actived);
+
   switch (_index)
   {
   case POPUP_SAVE:
-    break;
-
   case POPUP_LOAD:
-    break;
-
   case POPUP_DELETE:
+    _dialog_actived = true;
+    _dialog_index = 0;
     break;
 
   case POPUP_CANCEL:
@@ -108,10 +173,18 @@ void ItemState::_OnClick(Input *input)
     _OnCancel(input);
     break;
   }
+  LogDebug("  %d %d", _index, _dialog_actived);
 }
 
 void ItemState::_OnCancel(Input *input)
 {
-  _actived = false;
-  input->PopCallbacks();
+  if (_dialog_actived)
+  {
+    _dialog_actived = false;
+  }
+  else
+  {
+    _actived = false;
+    input->PopCallbacks();
+  }
 }
