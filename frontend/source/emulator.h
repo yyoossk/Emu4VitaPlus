@@ -39,6 +39,7 @@ public:
     friend size_t AudioSampleBatchCallback(const int16_t *data, size_t frames);
     friend void InputPollCallback();
     friend int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsigned id);
+    bool SaveScreenShot(const char *name);
 
 private:
     std::string _current_name;

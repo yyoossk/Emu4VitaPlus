@@ -31,8 +31,6 @@ private:
     SceDateTime _create_time;
     vita2d_texture *_texture;
     static vita2d_texture *_empty_texture;
-
-    bool _SaveTexture(vita2d_texture *texture, const char *name);
 };
 
 struct StateManager

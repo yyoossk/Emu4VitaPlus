@@ -1,6 +1,5 @@
 #include <libretro.h>
 #include <stdio.h>
-#include <jpeglib.h>
 #include "state_manager.h"
 #include "defines.h"
 #include "log.h"
@@ -75,23 +74,8 @@ bool State::Save()
 
 END:
     delete[] buf;
-    return result;
-}
 
-bool _SaveTexture(vita2d_texture *texture, const char *name)
-{
-    FILE *fp = fopen(name, "wb");
-    if (!fp)
-    {
-        return false;
-    }
-
-    struct jpeg_compress_struct cinfo;
-    jpeg_create_compress(&cinfo);
-    // jpeg_stdio_dest(&cinfo, fp);
-    jpeg_destroy_compress(&cinfo);
-    fclose(fp);
-    return true;
+    return result && gEmulator->SaveScreenShot(_image_path.c_str());
 }
 
 StateManager::StateManager()

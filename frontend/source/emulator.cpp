@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <imgui_vita2d/imgui_impl_vita2d.h>
+#include <jpeglib.h>
 #include "emulator.h"
 #include "video.h"
 #include "app.h"
@@ -454,4 +455,67 @@ void Emulator::_LoadCoreOptions(retro_core_options_intl *options)
         us++;
         local++;
     }
+}
+
+bool Emulator::SaveScreenShot(const char *name)
+{
+    LogFunctionName;
+
+    FILE *fp = fopen(name, "wb");
+    if (!fp)
+    {
+        return false;
+    }
+
+    jpeg_compress_struct cinfo;
+    jpeg_error_mgr jerr;
+
+    cinfo.err = jpeg_std_error(&jerr);
+    jpeg_create_compress(&cinfo);
+    jpeg_stdio_dest(&cinfo, fp);
+
+    cinfo.image_width = _texture_buf->GetWidth();
+    cinfo.image_height = _texture_buf->GetHeight();
+
+    switch (_video_pixel_format)
+    {
+    case SCE_GXM_TEXTURE_FORMAT_X1U5U5U5_1RGB:
+        cinfo.in_color_space = JCS_EXT_XRGB;
+        break;
+
+    case SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1RGB:
+        cinfo.in_color_space = JCS_EXT_XRGB;
+        break;
+    case SCE_GXM_TEXTURE_FORMAT_U5U6U5_RGB:
+        cinfo.in_color_space = JCS_RGB565;
+        break;
+    default:
+        LogWarn("unknown sce gxm format: %d", _video_pixel_format);
+        break;
+    }
+    cinfo.in_color_space = JCS_RGB;
+    LogDebug("in_color_space: %d", cinfo.in_color_space);
+    cinfo.input_components = 3;
+    LogDebug("000");
+    jpeg_set_defaults(&cinfo);
+    LogDebug("111");
+    jpeg_set_quality(&cinfo, 90, TRUE);
+    LogDebug("xxx");
+    jpeg_start_compress(&cinfo, TRUE);
+    LogDebug("yyy");
+    const vita2d_texture *texture = _texture_buf->Current();
+    LogDebug("texture %08x", texture);
+    unsigned pitch = vita2d_texture_get_stride(texture);
+    uint8_t *data = (uint8_t *)vita2d_texture_get_datap(texture);
+    for (size_t i = 0; i < cinfo.image_height; i++)
+    {
+        LogDebug("%d %08x %x", i, data, pitch);
+        jpeg_write_scanlines(&cinfo, (JSAMPARRAY)data, 1);
+        data += pitch;
+    }
+
+    jpeg_finish_compress(&cinfo);
+    fclose(fp);
+    jpeg_destroy_compress(&cinfo);
+    return true;
 }
