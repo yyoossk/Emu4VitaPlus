@@ -20,6 +20,7 @@ public:
     void SetInputHooks(Input *input) override;
     void UnsetInputHooks(Input *input) override;
     void Show(bool selected) override;
+    void OnActive(Input *input) override;
 
 private:
     void _ShowPopup();

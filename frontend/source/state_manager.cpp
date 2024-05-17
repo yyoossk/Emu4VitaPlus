@@ -1,5 +1,6 @@
 #include <libretro.h>
 #include <stdio.h>
+#include <jpeglib.h>
 #include "state_manager.h"
 #include "defines.h"
 #include "log.h"
@@ -77,6 +78,22 @@ END:
     return result;
 }
 
+bool _SaveTexture(vita2d_texture *texture, const char *name)
+{
+    FILE *fp = fopen(name, "wb");
+    if (!fp)
+    {
+        return false;
+    }
+
+    struct jpeg_compress_struct cinfo;
+    jpeg_create_compress(&cinfo);
+    // jpeg_stdio_dest(&cinfo, fp);
+    jpeg_destroy_compress(&cinfo);
+    fclose(fp);
+    return true;
+}
+
 StateManager::StateManager()
 {
     states[0] = new State("auto");
@@ -105,6 +122,7 @@ StateManager::~StateManager()
     if (State::_empty_texture != nullptr)
     {
         vita2d_free_texture(State::_empty_texture);
+        State::_empty_texture = nullptr;
     }
     for (size_t i = 0; i < MAX_STATES; i++)
     {
