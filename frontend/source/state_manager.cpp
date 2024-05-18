@@ -72,10 +72,45 @@ bool State::Save()
     fwrite(buf, size, 1, fp);
     fclose(fp);
 
+    _valid = true;
+    File::GetCreateTime(_state_path.c_str(), &_create_time);
+
 END:
     delete[] buf;
 
-    return result && gEmulator->SaveScreenShot(_image_path.c_str());
+    result &= gEmulator->SaveScreenShot(_image_path.c_str());
+
+    if (result)
+    {
+        _valid = true;
+        File::GetCreateTime(_state_path.c_str(), &_create_time);
+    }
+
+    return result;
+}
+
+bool State::Load()
+{
+    FILE *fp = fopen(_state_path.c_str(), "rb");
+    if (!fp)
+    {
+        LogError("failed to open file %s for reading", _state_path.c_str());
+        return false;
+    }
+
+    fseek(fp, 0, SEEK_END);
+    size_t size = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
+
+    char *buf = new char[size];
+    fread(buf, size, 1, fp);
+    fclose(fp);
+
+    bool result = retro_unserialize(buf, size);
+
+    delete[] buf;
+
+    return result;
 }
 
 StateManager::StateManager()

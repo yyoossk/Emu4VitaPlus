@@ -59,8 +59,7 @@ void ItemState::Show(bool selected)
 
 void ItemState::_ShowPopup()
 {
-  static const TEXT_ENUM MENU_TEXT_0[] = {STATE_SAVE, STATE_CANCEL};
-  static const TEXT_ENUM MENU_TEXT_1[] = {STATE_SAVE, STATE_LOAD, STATE_DELETE, STATE_CANCEL};
+  static const TEXT_ENUM MENU_TEXT[] = {STATE_SAVE, STATE_LOAD, STATE_DELETE, STATE_CANCEL};
 
   bool is_popup = ImGui::IsPopupOpen("popup_menu");
 
@@ -78,26 +77,13 @@ void ItemState::_ShowPopup()
       ImGui::CloseCurrentPopup();
     }
 
-    const TEXT_ENUM *menu_texts;
-    size_t menu_count;
-    if (_state->Valid())
-    {
-      menu_texts = MENU_TEXT_1;
-      menu_count = sizeof(MENU_TEXT_1) / sizeof(TEXT_ENUM);
-    }
-    else
-    {
-      menu_texts = MENU_TEXT_0;
-      menu_count = sizeof(MENU_TEXT_0) / sizeof(TEXT_ENUM);
-    }
-
-    for (size_t i = 0; i < menu_count; i++)
+    for (size_t i = 0; i < sizeof(MENU_TEXT) / sizeof(TEXT_ENUM); i++)
     {
       if (i == _index)
       {
         ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_ButtonHovered));
       }
-      ImGui::Button(TEXT(menu_texts[i]));
+      ImGui::Button(TEXT(MENU_TEXT[i]));
       if (i == _index)
       {
         ImGui::PopStyleColor();
@@ -116,7 +102,7 @@ void ItemState::OnActive(Input *input)
   {
     ItemSelectable::OnActive(input);
   }
-  else
+  else if (_index != 0)
   {
     _state->Save();
   }
