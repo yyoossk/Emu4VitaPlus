@@ -17,21 +17,21 @@ class ItemState : public ItemSelectable
 public:
     ItemState(State *state);
     virtual ~ItemState();
-    void SetInputHooks(Input *input) override;
-    void UnsetInputHooks(Input *input) override;
-    void Show(bool selected) override;
-    void OnActive(Input *input) override;
+    virtual void SetInputHooks(Input *input) override;
+    virtual void UnsetInputHooks(Input *input) override;
+    virtual void Show(bool selected) override;
+    virtual void OnActive(Input *input) override;
 
 private:
     void _ShowPopup();
     // void _ShowDialog();
 
-    size_t _GetTotalCount() override { return POPUP_COUNT; };
+    virtual size_t _GetTotalCount() override { return POPUP_COUNT; };
     void _OnKeyLeft(Input *input);
     void _OnKeyRight(Input *input);
-    void _OnClick(Input *input) override;
-    void _OnCancel(Input *input) override;
-    void _OnRun(Input *input, int index);
+    virtual void _OnClick(Input *input) override;
+    virtual void _OnCancel(Input *input) override;
+    virtual void _OnRun(Input *input, int index);
 
     State *_state;
     Dialog *_dialog;

@@ -476,46 +476,75 @@ bool Emulator::SaveScreenShot(const char *name)
 
     cinfo.image_width = _texture_buf->GetWidth();
     cinfo.image_height = _texture_buf->GetHeight();
-
-    switch (_video_pixel_format)
-    {
-    case SCE_GXM_TEXTURE_FORMAT_X1U5U5U5_1RGB:
-        cinfo.in_color_space = JCS_EXT_XRGB;
-        break;
-
-    case SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1RGB:
-        cinfo.in_color_space = JCS_EXT_XRGB;
-        break;
-    case SCE_GXM_TEXTURE_FORMAT_U5U6U5_RGB:
-        cinfo.in_color_space = JCS_RGB565;
-        break;
-    default:
-        LogWarn("unknown sce gxm format: %d", _video_pixel_format);
-        break;
-    }
     cinfo.in_color_space = JCS_RGB;
-    LogDebug("in_color_space: %d", cinfo.in_color_space);
     cinfo.input_components = 3;
-    LogDebug("000");
-    jpeg_set_defaults(&cinfo);
-    LogDebug("111");
-    jpeg_set_quality(&cinfo, 90, TRUE);
-    LogDebug("xxx");
-    jpeg_start_compress(&cinfo, TRUE);
-    LogDebug("yyy");
-    const vita2d_texture *texture = _texture_buf->Current();
-    LogDebug("texture %08x", texture);
-    unsigned pitch = vita2d_texture_get_stride(texture);
-    uint8_t *data = (uint8_t *)vita2d_texture_get_datap(texture);
-    for (size_t i = 0; i < cinfo.image_height; i++)
-    {
-        LogDebug("%d %08x %x", i, data, pitch);
-        jpeg_write_scanlines(&cinfo, (JSAMPARRAY)data, 1);
-        data += pitch;
-    }
 
+    jpeg_set_defaults(&cinfo);
+    jpeg_set_quality(&cinfo, 90, TRUE);
+    jpeg_start_compress(&cinfo, TRUE);
+    // const vita2d_texture *texture = _texture_buf->Current();
+
+    // LogDebug("texture %08x", texture);
+    // unsigned pitch = vita2d_texture_get_stride(texture);
+    // uint8_t *data = (uint8_t *)vita2d_texture_get_datap(texture);
+    // char *buf = new char[cinfo.image_width * cinfo.image_height * 3];
+
+    // SceGxmTransferFormat format;
+    // switch (vita2d_texture_get_format(texture))
+    // {
+    // case SCE_GXM_TEXTURE_FORMAT_X1U5U5U5_1RGB:
+    //     format = SCE_GXM_TRANSFER_FORMAT_U1U5U5U5_ABGR;
+    //     break;
+
+    // case SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1RGB:
+    //     format = SCE_GXM_TRANSFER_FORMAT_U8U8U8U8_ABGR;
+    //     break;
+    // case SCE_GXM_TEXTURE_FORMAT_U5U6U5_RGB:
+    //     format = SCE_GXM_TRANSFER_FORMAT_U5U6U5_BGR;
+    //     break;
+    // default:
+    //     LogWarn("unknown sce gxm format: %d", _video_pixel_format);
+    //     break;
+    // }
+    // sceGxmTransferCopy(cinfo.image_width, cinfo.image_height, 0, 0, SCE_GXM_TRANSFER_COLORKEY_NONE, format, SCE_GXM_TRANSFER_LINEAR, data,
+    //                    0, 0, pitch, SCE_GXM_TRANSFER_FORMAT_U8U8U8_BGR, SCE_GXM_TRANSFER_LINEAR, buf, 0, 0, cinfo.image_width * 3, NULL, 0, NULL);
+
+    // for (size_t i = 0; i < cinfo.image_height; i++)
+    // {
+    //     LogDebug("%d %08x %x", i, data, pitch);
+
+    vita2d_texture *texture = vita2d_create_empty_texture_rendertarget(_texture_buf->GetWidth(), _texture_buf->GetHeight(), SCE_GXM_TEXTURE_FORMAT_U8U8U8U8_ABGR);
+    gVideo->Lock();
+    vita2d_pool_reset();
+    vita2d_start_drawing_advanced(texture, 0);
+    vita2d_clear_screen();
+    vita2d_draw_texture(_texture_buf->Current(), 0, 0);
+    // vita2d_draw_texture_part_scale_rotate(_texture_buf->Current(),
+    //                                       _texture_buf->GetWidth() / 2, _texture_buf->GetHeight() / 2, 0, 0,
+    //                                       _texture_buf->GetWidth(), _texture_buf->GetHeight(),
+    //                                       1.f,
+    //                                       1.f,
+    //                                       0.f);
+    vita2d_end_drawing();
+    vita2d_wait_rendering_done();
+    vita2d_swap_buffers();
+    gVideo->Unlock();
+    uint8_t *data = (uint8_t *)vita2d_texture_get_datap(texture);
+    LogDebug("vita2d_texture_get_stride %d", vita2d_texture_get_stride(texture));
+    FILE *fptest = fopen("test.bin", "wb");
+    fwrite(data, cinfo.image_width * cinfo.image_height * 4, 1, fptest);
+    fclose(fptest);
+
+    LogDebug("0000");
+    jpeg_write_scanlines(&cinfo, (JSAMPARRAY)data, cinfo.image_height);
+    //     data += pitch;
+    // }
+    LogDebug("111");
     jpeg_finish_compress(&cinfo);
     fclose(fp);
     jpeg_destroy_compress(&cinfo);
+    vita2d_free_texture(texture);
+    // delete[] buf;
+    LogDebug("222");
     return true;
 }

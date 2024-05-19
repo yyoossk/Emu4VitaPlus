@@ -98,11 +98,12 @@ void ItemState::_ShowPopup()
 
 void ItemState::OnActive(Input *input)
 {
+  LogFunctionName;
   if (_state->Valid())
   {
     ItemSelectable::OnActive(input);
   }
-  else if (_index != 0)
+  else if (strcmp(_state->SlotName(), "auto") != 0)
   {
     _state->Save();
   }
