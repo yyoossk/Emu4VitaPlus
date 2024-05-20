@@ -525,10 +525,6 @@ bool Emulator::SaveScreenShot(const char *name)
     ConvertTextureToRGB888(_texture_buf->Current(), buf, width, SCREENSHOT_HEIGHT);
     int dst_stride = 3 * width;
 
-    FILE *FP = fopen(APP_DATA_DIR "/test.bin", "wb");
-    fwrite(buf, width * SCREENSHOT_HEIGHT * 3, 1, FP);
-    fclose(FP);
-
     jpeg_compress_struct cinfo;
     jpeg_error_mgr jerr;
     cinfo.err = jpeg_std_error(&jerr);
