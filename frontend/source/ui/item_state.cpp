@@ -40,7 +40,7 @@ void ItemState::Show(bool selected)
   char text[64];
   if (_state->Valid())
   {
-    SceDateTime time = _state->CreateTime();
+    const SceDateTime &time = _state->CreateTime();
     snprintf(text, 64, "%s (%04d/%02d/%02d %02d:%02d:%02d)", _text.Get(), time.year, time.month, time.day, time.hour, time.minute, time.second);
   }
   else

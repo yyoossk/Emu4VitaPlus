@@ -1,6 +1,8 @@
 #include <psp2/io/fcntl.h>
+#include <psp2/rtc.h>
 #include <string.h>
 #include "file.h"
+#include "log.h"
 
 namespace File
 {
@@ -15,10 +17,15 @@ namespace File
         SceIoStat stat;
         if (sceIoGetstat(name, &stat) != SCE_OK)
         {
+            LogWarn("failed to get stat: %s", name);
             return false;
         }
 
-        memcpy(time, &stat.st_ctime, sizeof(SceDateTime));
+        SceRtcTick tick;
+        sceRtcGetTick(&stat.st_mtime, &tick);
+        sceRtcConvertUtcToLocalTime(&tick, &tick);
+        sceRtcSetTick(time, &tick);
+
         return true;
     }
 

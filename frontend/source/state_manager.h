@@ -17,7 +17,7 @@ public:
     bool Save();
     bool Load();
     bool Valid() { return _valid; };
-    SceDateTime CreateTime() { return _create_time; };
+    const SceDateTime &CreateTime() { return _create_time; };
     vita2d_texture *Texture() { return _texture == nullptr ? _empty_texture : _texture; };
 
     friend class StateManager;
