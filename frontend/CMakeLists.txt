@@ -71,6 +71,7 @@ target_link_libraries(
     vita2d
     imgui_vita2d
     swresample
+    swscale
     avutil
     png
     jpeg

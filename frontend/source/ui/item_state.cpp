@@ -175,18 +175,21 @@ void ItemState::_OnCancel(Input *input)
 void ItemState::_OnRun(Input *input, int index)
 {
   LogFunctionName;
-  LogDebug("%d  ", _index);
 
-  switch (_index)
+  if (index == 0)
   {
-  case POPUP_SAVE:
-  case POPUP_LOAD:
-  case POPUP_DELETE:
-    break;
-
-  case POPUP_CANCEL:
-  default:
-    _OnCancel(input);
-    break;
+    switch (_index)
+    {
+    case POPUP_SAVE:
+      _state->Save();
+      break;
+    case POPUP_LOAD:
+      _state->Load();
+      break;
+    case POPUP_DELETE:
+      // TODO: delete it
+      break;
+    }
   }
+  _OnCancel(input);
 }

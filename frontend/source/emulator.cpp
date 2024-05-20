@@ -14,6 +14,11 @@
 #include "log.h"
 #include "file.h"
 
+extern "C"
+{
+#include <libswscale/swscale.h>
+}
+
 #define CORE_OPTIONS_VERSION 2
 
 Emulator *gEmulator = nullptr;
@@ -457,6 +462,53 @@ void Emulator::_LoadCoreOptions(retro_core_options_intl *options)
     }
 }
 
+static void ConvertTextureToRGB888(vita2d_texture *texture, uint8_t *dst, size_t width = 0, size_t height = 0)
+{
+    AVPixelFormat src_format = AV_PIX_FMT_NONE;
+    SceGxmTextureFormat tex_format = vita2d_texture_get_format(texture);
+    size_t src_width = vita2d_texture_get_width(texture);
+    size_t src_height = vita2d_texture_get_height(texture);
+    int src_stride = vita2d_texture_get_stride(texture);
+    uint8_t *src = (uint8_t *)vita2d_texture_get_datap(texture);
+
+    if (width == 0)
+    {
+        width = src_width;
+    }
+
+    if (height == 0)
+    {
+        height = src_height;
+    }
+
+    int dst_stride = width * 3;
+    LogDebug("texture format: %d", tex_format);
+    switch (tex_format)
+    {
+    case SCE_GXM_TEXTURE_FORMAT_X1U5U5U5_1RGB:
+        src_format = AV_PIX_FMT_RGB555LE;
+        break;
+
+    case SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1RGB:
+        src_format = AV_PIX_FMT_ARGB;
+        break;
+
+    case SCE_GXM_TEXTURE_FORMAT_U5U6U5_RGB:
+        src_format = AV_PIX_FMT_RGB565LE;
+        break;
+
+    default:
+        LogError("unknown sce gxm format: %d", tex_format);
+        return;
+    }
+
+    SwsContext *sws_ctx = sws_getContext(src_width, src_height, src_format,
+                                         width, height, AV_PIX_FMT_RGB24,
+                                         SWS_BILINEAR, NULL, NULL, NULL);
+    sws_scale(sws_ctx, &src, &src_stride, 0, src_height, &dst, &dst_stride);
+    sws_freeContext(sws_ctx);
+}
+
 bool Emulator::SaveScreenShot(const char *name)
 {
     LogFunctionName;
@@ -467,84 +519,41 @@ bool Emulator::SaveScreenShot(const char *name)
         return false;
     }
 
+    float scale = float(SCREENSHOT_HEIGHT) / _texture_buf->GetHeight();
+    size_t width = _texture_buf->GetWidth() * scale;
+    uint8_t *buf = new uint8_t[width * SCREENSHOT_HEIGHT * 3];
+    ConvertTextureToRGB888(_texture_buf->Current(), buf, width, SCREENSHOT_HEIGHT);
+    int dst_stride = 3 * width;
+
+    FILE *FP = fopen(APP_DATA_DIR "/test.bin", "wb");
+    fwrite(buf, width * SCREENSHOT_HEIGHT * 3, 1, FP);
+    fclose(FP);
+
     jpeg_compress_struct cinfo;
     jpeg_error_mgr jerr;
-
     cinfo.err = jpeg_std_error(&jerr);
     jpeg_create_compress(&cinfo);
     jpeg_stdio_dest(&cinfo, fp);
-
-    cinfo.image_width = _texture_buf->GetWidth();
-    cinfo.image_height = _texture_buf->GetHeight();
+    cinfo.image_width = width;
+    cinfo.image_height = SCREENSHOT_HEIGHT;
     cinfo.in_color_space = JCS_RGB;
     cinfo.input_components = 3;
-
     jpeg_set_defaults(&cinfo);
     jpeg_set_quality(&cinfo, 90, TRUE);
     jpeg_start_compress(&cinfo, TRUE);
-    // const vita2d_texture *texture = _texture_buf->Current();
 
-    // LogDebug("texture %08x", texture);
-    // unsigned pitch = vita2d_texture_get_stride(texture);
-    // uint8_t *data = (uint8_t *)vita2d_texture_get_datap(texture);
-    // char *buf = new char[cinfo.image_width * cinfo.image_height * 3];
+    uint8_t *p = buf;
+    for (size_t i = 0; i < SCREENSHOT_HEIGHT; i++)
+    {
+        jpeg_write_scanlines(&cinfo, (JSAMPARRAY)&p, 1);
+        p += dst_stride;
+    }
 
-    // SceGxmTransferFormat format;
-    // switch (vita2d_texture_get_format(texture))
-    // {
-    // case SCE_GXM_TEXTURE_FORMAT_X1U5U5U5_1RGB:
-    //     format = SCE_GXM_TRANSFER_FORMAT_U1U5U5U5_ABGR;
-    //     break;
-
-    // case SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1RGB:
-    //     format = SCE_GXM_TRANSFER_FORMAT_U8U8U8U8_ABGR;
-    //     break;
-    // case SCE_GXM_TEXTURE_FORMAT_U5U6U5_RGB:
-    //     format = SCE_GXM_TRANSFER_FORMAT_U5U6U5_BGR;
-    //     break;
-    // default:
-    //     LogWarn("unknown sce gxm format: %d", _video_pixel_format);
-    //     break;
-    // }
-    // sceGxmTransferCopy(cinfo.image_width, cinfo.image_height, 0, 0, SCE_GXM_TRANSFER_COLORKEY_NONE, format, SCE_GXM_TRANSFER_LINEAR, data,
-    //                    0, 0, pitch, SCE_GXM_TRANSFER_FORMAT_U8U8U8_BGR, SCE_GXM_TRANSFER_LINEAR, buf, 0, 0, cinfo.image_width * 3, NULL, 0, NULL);
-
-    // for (size_t i = 0; i < cinfo.image_height; i++)
-    // {
-    //     LogDebug("%d %08x %x", i, data, pitch);
-
-    vita2d_texture *texture = vita2d_create_empty_texture_rendertarget(_texture_buf->GetWidth(), _texture_buf->GetHeight(), SCE_GXM_TEXTURE_FORMAT_U8U8U8U8_ABGR);
-    gVideo->Lock();
-    vita2d_pool_reset();
-    vita2d_start_drawing_advanced(texture, 0);
-    vita2d_clear_screen();
-    vita2d_draw_texture(_texture_buf->Current(), 0, 0);
-    // vita2d_draw_texture_part_scale_rotate(_texture_buf->Current(),
-    //                                       _texture_buf->GetWidth() / 2, _texture_buf->GetHeight() / 2, 0, 0,
-    //                                       _texture_buf->GetWidth(), _texture_buf->GetHeight(),
-    //                                       1.f,
-    //                                       1.f,
-    //                                       0.f);
-    vita2d_end_drawing();
-    vita2d_wait_rendering_done();
-    vita2d_swap_buffers();
-    gVideo->Unlock();
-    uint8_t *data = (uint8_t *)vita2d_texture_get_datap(texture);
-    LogDebug("vita2d_texture_get_stride %d", vita2d_texture_get_stride(texture));
-    FILE *fptest = fopen("test.bin", "wb");
-    fwrite(data, cinfo.image_width * cinfo.image_height * 4, 1, fptest);
-    fclose(fptest);
-
-    LogDebug("0000");
-    jpeg_write_scanlines(&cinfo, (JSAMPARRAY)data, cinfo.image_height);
-    //     data += pitch;
-    // }
-    LogDebug("111");
     jpeg_finish_compress(&cinfo);
     fclose(fp);
     jpeg_destroy_compress(&cinfo);
-    vita2d_free_texture(texture);
-    // delete[] buf;
-    LogDebug("222");
+
+    delete[] buf;
+
     return true;
 }

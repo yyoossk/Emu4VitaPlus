@@ -15,4 +15,5 @@
 #define PREVIEW_DIR_NAME "images"
 
 #define LOOP_PLUS_ONE(VALUE, TOTAL) (VALUE = ((VALUE + 1 == (TOTAL)) ? 0 : VALUE + 1))
-#define LOOP_MINUS_ONE(VALUE, TOTAL) (VALUE = ((VALUE == 0) ? (TOTAL) - 1 : VALUE - 1));
+#define LOOP_MINUS_ONE(VALUE, TOTAL) (VALUE = ((VALUE == 0) ? (TOTAL) - 1 : VALUE - 1))
+#define SCREENSHOT_HEIGHT 96

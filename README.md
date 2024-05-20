@@ -4,13 +4,13 @@
 ## Windows
 * 安装 [msys2](https://www.msys2.org/) 或 [devkitPro](https://github.com/devkitPro/installer/releases)
 * 安装 [vitasdk](https://vitasdk.org/)
+* 安装 cmake, python
+  
+  `pacman -S cmake python python-pip`
+
 * 安装 [openpyxl](https://pypi.org/project/openpyxl/)
 
   `pip install openpyxl`
-
-* 安装 cmake 
-  
-  `pacman -S cmake`
 
 ## Linux
 
@@ -25,5 +25,8 @@ make
 ```
 编译带日志的版本
 ```bash
+mkdir build-debug
+cd build-debug
 cmake ../ -DWITH_LOG=ON
+make
 ```

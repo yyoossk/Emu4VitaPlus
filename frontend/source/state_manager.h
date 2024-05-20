@@ -5,7 +5,6 @@
 
 #define MAX_STATES 6
 #define AUTO_STATE_INDEX 0
-#define SCREENSHOT_HEIGHT 96
 
 class State
 {
