@@ -70,6 +70,7 @@ target_link_libraries(
     SimpleIni
     retro_comm
     vita2d
+    vita2d_ext
     imgui_vita2d
     swresample
     swscale
@@ -116,7 +117,7 @@ vita_create_vpk(
     "${SFO_TITLE_NAME}"
     ${PRIVATE_PKG_FILES}
     ${PUBLIC_PKG_FILES})
- 
+
 add_custom_target(VPK_${APP_NAME} ALL
     COMMAND ${CMAKE_COMMAND} -E rename ${VPK_NAME} ${OUT_PATH}/${VPK_NAME})
 
