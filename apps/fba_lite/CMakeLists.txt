@@ -8,14 +8,14 @@ include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 set(APP_NAME "FbaLite4vita")
 set(APP_DIR_NAME "fba_lite")
 set(CORE_FILE_NAME "fba_lite")
-set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/${CORE_FILE_NAME})
+set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/libretro-fba-lite)
 set(CORE_MAKEFILE_DIR ${CORE_DIR})
-set(CORE_MAKEFILE_NAME Makefile)
+set(CORE_MAKEFILE_NAME makefile.libretro)
 set(SFO_TITLE_NAME "Emu4Vita++ (${CORE_FILE_NAME})")
 set(SFO_TITLE_ID "FBAL4VITA")
 set(PRIVATE_PKG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pkg)
 
-set(CORE_ARGS platform=vita EXTERNAL_ZLIB=1)
+set(CORE_ARGS )
 
 set(CORE_SOFTWARE, "Arcade (CPS1 2 3, NEO GEO, PGM)")
 

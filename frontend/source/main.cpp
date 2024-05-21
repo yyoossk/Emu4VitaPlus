@@ -5,7 +5,7 @@
 
 int main(int argc, char *const argv[])
 {
-    File::MakeDirs(APP_DATA_DIR);
+    // File::MakeDirs(APP_DATA_DIR);
     gLog = new Log(APP_LOG_PATH);
     LogInfo("updated on " __DATE__ " " __TIME__);
     LogDebug("Start");

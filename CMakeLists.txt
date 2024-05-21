@@ -33,3 +33,4 @@ file(MAKE_DIRECTORY ${OUT_PATH})
 
 add_subdirectory(deps)
 add_subdirectory(apps/gpsp)
+add_subdirectory(apps/fba_lite)
