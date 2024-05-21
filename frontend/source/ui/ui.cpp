@@ -31,6 +31,13 @@ static void ResetGame()
     gStatus = APP_STATUS_RUN_GAME;
 }
 
+static void ExitGame()
+{
+    LogFunctionName;
+    gStateManager->states[0]->Save();
+    gStatus = APP_STATUS_SHOW_UI;
+}
+
 static void ExitApp()
 {
     LogFunctionName;
@@ -121,13 +128,7 @@ void Ui::CreateTables(const char *path)
     _tabs[TAB_INDEX_SYSTEM] = new TabSeletable(TAB_SYSTEM,
                                                {new ItemBase(SYSTEM_RESUME_GAME, "", ResumeGame, NULL, false),
                                                 new ItemBase(SYSTEM_RESET_GAME, "", ResetGame, NULL, false),
-                                                new ItemConfig(SYSTEM_MENU_LANGUAGE,
-                                                               "",
-                                                               (uint32_t *)&gConfig->language,
-                                                               {LanguageString(gLanguageNames[LANGUAGE_ENGLISH]),
-                                                                LanguageString(gLanguageNames[LANGUAGE_CHINESE])},
-                                                               ChangeLanguage),
-
+                                                new ItemBase(SYSTEM_EXIT_GAME, "", ExitGame, NULL, false),
                                                 new ItemBase(SYSTEM_MENU_EXIT, "", ExitApp)});
 
     std::vector<ItemBase *> states;
@@ -197,6 +198,13 @@ void Ui::CreateTables(const char *path)
     }
     _tabs[TAB_INDEX_CORE] = new TabSeletable(TAB_CORE, options);
 
+    _tabs[TAB_INDEX_OPTIONS] = new TabSeletable(TAB_OPTIONS, {new ItemConfig(SYSTEM_MENU_LANGUAGE,
+                                                                             "",
+                                                                             (uint32_t *)&gConfig->language,
+                                                                             {LanguageString(gLanguageNames[LANGUAGE_ENGLISH]),
+                                                                              LanguageString(gLanguageNames[LANGUAGE_CHINESE])},
+                                                                             ChangeLanguage)});
+
     _tabs[TAB_INDEX_ABOUT] = new TabAbout();
 
     SetInputHooks();
@@ -254,6 +262,7 @@ void Ui::Run()
         TabSeletable *system_tab = (TabSeletable *)(_tabs[TAB_INDEX_SYSTEM]);
         system_tab->SetItemVisable(0, gStatus == APP_STATUS_SHOW_UI_IN_GAME);
         system_tab->SetItemVisable(1, gStatus == APP_STATUS_SHOW_UI_IN_GAME);
+        system_tab->SetItemVisable(2, gStatus == APP_STATUS_SHOW_UI_IN_GAME);
 
         gVideo->Unlock();
 

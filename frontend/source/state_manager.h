@@ -16,6 +16,7 @@ public:
     const char *SlotName() const { return _slot_name.c_str(); };
     bool Save();
     bool Load();
+    bool Remove();
     bool Valid() { return _valid; };
     const SceDateTime &CreateTime() { return _create_time; };
     vita2d_texture *Texture() { return _texture == nullptr ? _empty_texture : _texture; };

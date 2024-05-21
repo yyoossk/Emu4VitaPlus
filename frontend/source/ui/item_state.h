@@ -26,7 +26,7 @@ private:
     void _ShowPopup();
     // void _ShowDialog();
 
-    virtual size_t _GetTotalCount() override { return POPUP_COUNT; };
+    virtual size_t _GetTotalCount() override { return _menu_count; };
     void _OnKeyLeft(Input *input);
     void _OnKeyRight(Input *input);
     virtual void _OnClick(Input *input) override;
@@ -35,4 +35,6 @@ private:
 
     State *_state;
     Dialog *_dialog;
+    const TEXT_ENUM *_menu_texts;
+    size_t _menu_count;
 };

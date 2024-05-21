@@ -1,6 +1,10 @@
 #include "item_state.h"
 #include "defines.h"
+#include "app.h"
 #include "log.h"
+
+static const TEXT_ENUM MENU_TEXT[] = {STATE_SAVE, STATE_LOAD, STATE_DELETE, STATE_CANCEL};
+static const TEXT_ENUM AUTO_MENU_TEXT[] = {STATE_LOAD, STATE_DELETE, STATE_CANCEL};
 
 ItemState::ItemState(State *state)
     : ItemSelectable(""),
@@ -9,10 +13,14 @@ ItemState::ItemState(State *state)
   if (strcmp(state->SlotName(), "auto") == 0)
   {
     _text = LanguageString(STATE_AUTO);
+    _menu_texts = AUTO_MENU_TEXT;
+    _menu_count = sizeof(AUTO_MENU_TEXT) / sizeof(TEXT_ENUM);
   }
   else
   {
     _text = LanguageString(state->SlotName());
+    _menu_texts = MENU_TEXT;
+    _menu_count = sizeof(MENU_TEXT) / sizeof(TEXT_ENUM);
   }
 
   _dialog = new Dialog{"", {DIALOG_OK, DIALOG_CANCEL}, std::bind(&ItemState::_OnRun, this, std::placeholders::_1, std::placeholders::_2)};
@@ -48,7 +56,7 @@ void ItemState::Show(bool selected)
     snprintf(text, 64, "%s (%s)", _text.Get(), TEXT(STATE_EMPTY));
   }
 
-  ImGui::Button(text, {size.x - w, SCREENSHOT_HEIGHT});
+  ImGui::Button(text, {size.x - w, h});
 
   if (selected)
   {
@@ -59,7 +67,6 @@ void ItemState::Show(bool selected)
 
 void ItemState::_ShowPopup()
 {
-  static const TEXT_ENUM MENU_TEXT[] = {STATE_SAVE, STATE_LOAD, STATE_DELETE, STATE_CANCEL};
 
   bool is_popup = ImGui::IsPopupOpen("popup_menu");
 
@@ -77,13 +84,13 @@ void ItemState::_ShowPopup()
       ImGui::CloseCurrentPopup();
     }
 
-    for (size_t i = 0; i < sizeof(MENU_TEXT) / sizeof(TEXT_ENUM); i++)
+    for (size_t i = 0; i < _menu_count; i++)
     {
       if (i == _index)
       {
         ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_ButtonHovered));
       }
-      ImGui::Button(TEXT(MENU_TEXT[i]));
+      ImGui::Button(TEXT(_menu_texts[i]));
       if (i == _index)
       {
         ImGui::PopStyleColor();
@@ -141,28 +148,39 @@ void ItemState::_OnKeyRight(Input *input)
 
 void ItemState::_OnClick(Input *input)
 {
-  switch (_index)
+  size_t index = _index;
+  if (_menu_count == sizeof(AUTO_MENU_TEXT) / sizeof(TEXT_ENUM))
+  {
+    index++;
+  }
+
+  if (index == POPUP_CANCEL)
+  {
+    _OnCancel(input);
+    return;
+  }
+
+  switch (index)
   {
   case POPUP_SAVE:
     _dialog->SetText(DIALOG_SAVE_CONFIRM);
-    _dialog->OnActive(input);
     break;
 
   case POPUP_LOAD:
     _dialog->SetText(DIALOG_LOAD_CONFIRM);
-    _dialog->OnActive(input);
     break;
 
   case POPUP_DELETE:
     _dialog->SetText(DIALOG_DELETE_CONFIRM);
-    _dialog->OnActive(input);
     break;
 
-  case POPUP_CANCEL:
   default:
+    LogError("unknown _index: %d", index);
     _OnCancel(input);
-    break;
+    return;
   }
+
+  _dialog->OnActive(input);
 }
 
 void ItemState::_OnCancel(Input *input)
@@ -176,20 +194,30 @@ void ItemState::_OnRun(Input *input, int index)
 {
   LogFunctionName;
 
-  if (index == 0)
+  if (index == 0) // press OK
   {
-    switch (_index)
+    index = _index;
+    if (_menu_count == sizeof(AUTO_MENU_TEXT) / sizeof(TEXT_ENUM))
+    {
+      index++;
+    }
+
+    switch (index)
     {
     case POPUP_SAVE:
       _state->Save();
       break;
     case POPUP_LOAD:
       _state->Load();
+      gStatus = APP_STATUS_RUN_GAME;
       break;
     case POPUP_DELETE:
-      // TODO: delete it
+      _state->Remove();
       break;
+    default:
+      LogError("Unknown index: %d", index);
     }
   }
+
   _OnCancel(input);
 }

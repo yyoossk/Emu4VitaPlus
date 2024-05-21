@@ -5,6 +5,8 @@
 #include "log.h"
 #include "emulator.h"
 
+#define STATE_SCREENSHOT_HEIGHT 96
+
 StateManager *gStateManager = nullptr;
 vita2d_texture *State::_empty_texture = nullptr;
 
@@ -78,7 +80,7 @@ bool State::Save()
 END:
     delete[] buf;
 
-    result &= gEmulator->SaveScreenShot(_image_path.c_str());
+    result &= gEmulator->SaveScreenShot(_image_path.c_str(), STATE_SCREENSHOT_HEIGHT);
 
     if (result)
     {
@@ -96,6 +98,7 @@ END:
 
 bool State::Load()
 {
+    LogFunctionName;
     FILE *fp = fopen(_state_path.c_str(), "rb");
     if (!fp)
     {
@@ -118,6 +121,19 @@ bool State::Load()
     return result;
 }
 
+bool State::Remove()
+{
+    LogFunctionName;
+    bool result = File::Remove(_state_path.c_str());
+    result &= File::Remove(_image_path.c_str());
+    if (_texture)
+    {
+        vita2d_free_texture(_texture);
+        _texture = nullptr;
+    }
+    return result;
+}
+
 StateManager::StateManager()
 {
     states[0] = new State("auto");
@@ -130,7 +146,7 @@ StateManager::StateManager()
 
     if (State::_empty_texture == nullptr)
     {
-        uint32_t height = SCREENSHOT_HEIGHT;
+        uint32_t height = STATE_SCREENSHOT_HEIGHT;
         uint32_t width = height * gEmulator->GetAspectRatio();
         State::_empty_texture = vita2d_create_empty_texture(width, height);
         const auto stride = vita2d_texture_get_stride(State::_empty_texture) / 4;

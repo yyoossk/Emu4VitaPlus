@@ -509,7 +509,7 @@ static void ConvertTextureToRGB888(vita2d_texture *texture, uint8_t *dst, size_t
     sws_freeContext(sws_ctx);
 }
 
-bool Emulator::SaveScreenShot(const char *name)
+bool Emulator::SaveScreenShot(const char *name, size_t height)
 {
     LogFunctionName;
 
@@ -519,10 +519,15 @@ bool Emulator::SaveScreenShot(const char *name)
         return false;
     }
 
-    float scale = float(SCREENSHOT_HEIGHT) / _texture_buf->GetHeight();
+    if (height == 0)
+    {
+        height = vita2d_texture_get_height(_texture_buf->Current());
+    }
+
+    float scale = float(height) / _texture_buf->GetHeight();
     size_t width = _texture_buf->GetWidth() * scale;
-    uint8_t *buf = new uint8_t[width * SCREENSHOT_HEIGHT * 3];
-    ConvertTextureToRGB888(_texture_buf->Current(), buf, width, SCREENSHOT_HEIGHT);
+    uint8_t *buf = new uint8_t[width * height * 3];
+    ConvertTextureToRGB888(_texture_buf->Current(), buf, width, height);
     int dst_stride = 3 * width;
 
     jpeg_compress_struct cinfo;
@@ -531,7 +536,7 @@ bool Emulator::SaveScreenShot(const char *name)
     jpeg_create_compress(&cinfo);
     jpeg_stdio_dest(&cinfo, fp);
     cinfo.image_width = width;
-    cinfo.image_height = SCREENSHOT_HEIGHT;
+    cinfo.image_height = height;
     cinfo.in_color_space = JCS_RGB;
     cinfo.input_components = 3;
     jpeg_set_defaults(&cinfo);
@@ -539,7 +544,7 @@ bool Emulator::SaveScreenShot(const char *name)
     jpeg_start_compress(&cinfo, TRUE);
 
     uint8_t *p = buf;
-    for (size_t i = 0; i < SCREENSHOT_HEIGHT; i++)
+    for (size_t i = 0; i < height; i++)
     {
         jpeg_write_scanlines(&cinfo, (JSAMPARRAY)&p, 1);
         p += dst_stride;

@@ -57,9 +57,9 @@
     },
     {
         "No.": "9",
-        "Tag": "TAB_MISC",
-        "English": "Misc",
-        "Chinese": "杂项",
+        "Tag": "TAB_OPTIONS",
+        "English": "Options",
+        "Chinese": "选项",
         "Comments": ""
     },
     {
