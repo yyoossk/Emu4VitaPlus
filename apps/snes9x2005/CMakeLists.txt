@@ -5,19 +5,19 @@ set(CMAKE_TOOLCHAIN_FILE
   CACHE PATH "toolchain file")
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
-set(APP_NAME "gpSP4vita")
-set(APP_DIR_NAME "gpSP")
-set(CORE_FILE_NAME "gpSP")
+set(APP_NAME "Snes9x2005_4vita")
+set(APP_DIR_NAME "Snes9x2005")
+set(CORE_FILE_NAME "Snes9x2005")
 set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/${CORE_FILE_NAME})
 set(CORE_MAKEFILE_DIR ${CORE_DIR})
 set(CORE_MAKEFILE_NAME Makefile)
 set(SFO_TITLE_NAME "Emu4Vita++ (${CORE_FILE_NAME})")
-set(SFO_TITLE_ID "GPSP4VITA")
+set(SFO_TITLE_ID "S9054VITA")
 set(PRIVATE_PKG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pkg)
 
 set(CORE_ARGS platform=vita EXTERNAL_ZLIB=1)
 
-set(CORE_SOFTWARE, "Nintendo - Game Boy Advance")
+set(CORE_SOFTWARE, "Nintendo - SNES / SFC")
 
 file(GLOB_RECURSE PKG_FILES ${PRIVATE_PKG_DIR}/*)
 set(PRIVATE_PKG_FILES "")
@@ -27,23 +27,23 @@ foreach(file ${PKG_FILES})
   list(APPEND PRIVATE_PKG_FILES FILE ${file} ${rel})
 endforeach()
 
-project("gpSP")
+project("Snes9x2005")
 
 add_custom_target(
-  gpSP_build ALL
+  Snes9x2005_build ALL
   COMMAND make -f ${CORE_MAKEFILE_NAME} -j ${CORE_ARGS}
   WORKING_DIRECTORY ${CORE_DIR})
 
-add_library(gpSP STATIC IMPORTED)
+add_library(Snes9x2005 STATIC IMPORTED)
 set_property(
-  TARGET gpSP
+  TARGET Snes9x2005
   APPEND
   PROPERTY IMPORTED_CONFIGURATIONS NOCONFIG)
 
-set(LIBRETRO_LIBRARY ${CORE_DIR}/gpsp_libretro_vita.a)
-set_target_properties(gpSP PROPERTIES IMPORTED_LOCATION_NOCONFIG
+set(LIBRETRO_LIBRARY ${CORE_DIR}/snes9x2005_libretro_vita.a)
+set_target_properties(Snes9x2005 PROPERTIES IMPORTED_LOCATION_NOCONFIG
   "${LIBRETRO_LIBRARY}")
-add_dependencies(gpSP gpSP_build)
+add_dependencies(Snes9x2005 Snes9x2005_build)
 
-add_compile_definitions(GPSP_BUILD GBA_BUILD)
+add_compile_definitions(SNES9X2005_BUILD SFC_BUILD)
 add_subdirectory(../../frontend ${CMAKE_CURRENT_BINARY_DIR}/frontend)

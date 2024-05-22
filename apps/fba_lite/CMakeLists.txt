@@ -10,7 +10,7 @@ set(APP_DIR_NAME "fba_lite")
 set(CORE_FILE_NAME "fba_lite")
 set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/libretro-fba-lite)
 set(CORE_MAKEFILE_DIR ${CORE_DIR})
-set(CORE_MAKEFILE_NAME makefile.libretro)
+set(CORE_MAKEFILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/makefile.libretro)
 set(SFO_TITLE_NAME "Emu4Vita++ (${CORE_FILE_NAME})")
 set(SFO_TITLE_ID "FBAL4VITA")
 set(PRIVATE_PKG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pkg)
@@ -31,7 +31,7 @@ project("fba_lite")
 
 add_custom_target(
   fba_lite_build ALL
-  COMMAND make -f ${CORE_MAKEFILE_NAME} ${CORE_ARGS}
+  COMMAND make -f ${CORE_MAKEFILE_NAME} -j ${CORE_ARGS}
   WORKING_DIRECTORY ${CORE_DIR})
 
 add_library(fba_lite STATIC IMPORTED)
