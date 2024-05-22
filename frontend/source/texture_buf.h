@@ -12,6 +12,9 @@ public:
         : _width(width), _height(height)
     {
         LogFunctionName;
+
+        LogDebug("%d x %d (%d)", width, height, format);
+
         for (auto &buf : _buf)
         {
             buf = vita2d_create_empty_texture_format(width, height, format);

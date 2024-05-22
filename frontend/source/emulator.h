@@ -21,6 +21,7 @@ public:
     Emulator();
     virtual ~Emulator();
 
+    void Init();
     bool LoadGame(const char *path);
     void UnloadGame();
     void Reset();

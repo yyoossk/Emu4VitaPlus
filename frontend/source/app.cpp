@@ -59,6 +59,7 @@ App::App()
 
     gUi->AppendLog("Initialize emulator");
     gEmulator = new Emulator();
+    gEmulator->Init();
 
     gUi->AppendLog("Initialize state manager");
     gStateManager = new StateManager();

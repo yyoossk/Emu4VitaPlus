@@ -55,6 +55,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
 {
     LogFunctionNameLimited;
     LogTrace("cmd: %u", cmd);
+
     switch (cmd)
     {
     case RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY:
@@ -132,6 +133,13 @@ bool EnvironmentCallback(unsigned cmd, void *data)
             *(int *)data = 3;
         }
         break;
+
+        // case RETRO_ENVIRONMENT_GET_INPUT_BITMASKS:
+        // {
+        //     // core_input_supports_bitmasks = 1;
+        //     // APP_LOG("[RETRO] RETRO_ENVIRONMENT_GET_INPUT_BITMASKS\n");
+        // }
+        // break;
 
     case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_INTL:
         gConfig->core_options.Load((retro_core_options_intl *)data);
@@ -217,6 +225,27 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
 Emulator::Emulator()
     : _texture_buf(nullptr), _keys{0}
 {
+}
+
+Emulator::~Emulator()
+{
+    LogFunctionName;
+
+    if (_texture_buf)
+    {
+        delete _texture_buf;
+    }
+
+    if (_audio)
+    {
+        delete _audio;
+    }
+
+    retro_deinit();
+}
+
+void Emulator::Init()
+{
     LogFunctionName;
 
     retro_set_environment(EnvironmentCallback);
@@ -235,23 +264,6 @@ Emulator::Emulator()
     _SetupKeys();
 
     _audio = new Audio(_av_info.timing.sample_rate);
-}
-
-Emulator::~Emulator()
-{
-    LogFunctionName;
-
-    if (_texture_buf)
-    {
-        delete _texture_buf;
-    }
-
-    if (_audio)
-    {
-        delete _audio;
-    }
-
-    retro_deinit();
 }
 
 bool Emulator::LoadGame(const char *path)
