@@ -134,12 +134,9 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         }
         break;
 
-        // case RETRO_ENVIRONMENT_GET_INPUT_BITMASKS:
-        // {
-        //     // core_input_supports_bitmasks = 1;
-        //     // APP_LOG("[RETRO] RETRO_ENVIRONMENT_GET_INPUT_BITMASKS\n");
-        // }
-        // break;
+    case RETRO_ENVIRONMENT_GET_INPUT_BITMASKS:
+        LogDebug("RETRO_ENVIRONMENT_GET_INPUT_BITMASKS");
+        break;
 
     case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_INTL:
         gConfig->core_options.Load((retro_core_options_intl *)data);
@@ -208,6 +205,20 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
     LogFunctionNameLimited;
     if (device == RETRO_DEVICE_JOYPAD)
     {
+        if (id == RETRO_DEVICE_ID_JOYPAD_MASK)
+        {
+            uint64_t keys = gEmulator->_input.GetKeyStates();
+            int16_t state = 0;
+            for (size_t i = 0; i < 16; i++)
+            {
+                if (keys & gEmulator->_keys[i])
+                {
+                    state |= (1 << i);
+                }
+            }
+            return state;
+        }
+
         if (id >= 16)
         {
             LogError("InputStateCallback, wrong id %d", id);
@@ -297,6 +308,7 @@ void Emulator::Run()
 
 void Emulator::Reset()
 {
+    LogFunctionName;
     retro_reset();
 }
 
@@ -308,14 +320,15 @@ void Emulator::Show()
     }
 
     _texture_buf->Lock();
+    // LogDebug("_texture_buf->Current() %08x", _texture_buf->Current());
     vita2d_draw_texture_part_scale_rotate(_texture_buf->Current(),
                                           VITA_WIDTH / 2, VITA_HEIGHT / 2, _video_rect.x, _video_rect.y,
                                           _texture_buf->GetWidth(), _texture_buf->GetHeight(),
                                           _video_rect.width / _texture_buf->GetWidth(),
                                           _video_rect.height / _texture_buf->GetHeight(),
                                           0.f);
-    // LogDebug("%f %f %f %f", _video_rect.x, _video_rect.y,
-    //          _video_rect.width, _video_rect.height);
+    // LogDebug("%f %f %f %f", _video_rect.x, _video_rect.y, _video_rect.width, _video_rect.height);
+    // LogDebug("%f %f", _video_rect.width / _texture_buf->GetWidth(), _video_rect.height / _texture_buf->GetHeight());
     _texture_buf->Unlock();
 }
 

@@ -45,9 +45,9 @@ add_compile_definitions(
     APP_TITLE_NAME="${SFO_TITLE_NAME}"
     CORE_SOFTWARE=${CORE_SOFTWARE})
 
-# set(CMAKE_EXE_LINKER_FLAGS "-Wl,-q")
-set(CMAKE_EXE_LINKER_FLAGS "-Wl,--exclude-libs,ALL ")
+set(CMAKE_EXE_LINKER_FLAGS "-Wl,-q")
 
+# set(CMAKE_EXE_LINKER_FLAGS "-Wl,--exclude-libs,ALL ")
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/source/language_define.cpp
     COMMAND python export.py
@@ -70,7 +70,6 @@ target_link_libraries(
     ${LIBRETRO_LIBRARY}
     retro_comm
     vita2d
-    vita2d_ext
     imgui_vita2d
     swresample
     swscale
