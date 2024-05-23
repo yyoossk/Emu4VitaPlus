@@ -2,7 +2,7 @@
 #include "item_selectable.h"
 #include "defines.h"
 
-ItemSelectable::ItemSelectable(LanguageString text, LanguageString info)
+ItemSelectable::ItemSelectable(const LanguageString text, LanguageString info)
     : ItemBase(text, info),
       _actived(false),
       _index(0)

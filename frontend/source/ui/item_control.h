@@ -41,7 +41,7 @@ class ItemControl : public virtual ItemSelectable
 {
 public:
     ItemControl(ControlMapConfig *control_map)
-        : ItemSelectable(Config::ControlTextMap[control_map->psv]),
+        : ItemSelectable(Config::ControlTextMap.at(control_map->psv)),
           _control_map(control_map){};
     virtual ~ItemControl(){};
 
@@ -65,7 +65,7 @@ private:
 
     const char *_GetOptionString(size_t index) override
     {
-        return TEXT(Config::RetroTextMap[RetroKeys[index]]);
+        return TEXT(Config::RetroTextMap.at(RetroKeys[index]));
     };
 
     size_t _GetIndex() override

@@ -109,11 +109,11 @@ private:
             {
                 if (s.size() == 0)
                 {
-                    s = TEXT(Config::ControlTextMap[key]);
+                    s = TEXT(Config::ControlTextMap.at(key));
                 }
                 else
                 {
-                    s += std::string(" + ") + TEXT(Config::ControlTextMap[key]);
+                    s += std::string(" + ") + TEXT(Config::ControlTextMap.at(key));
                 }
             }
         }
@@ -123,7 +123,7 @@ private:
 
     const char *_GetOptionString(size_t index) override
     {
-        return TEXT(Config::ControlTextMap[PsvKeys[index]]);
+        return TEXT(Config::ControlTextMap.at(PsvKeys[index]));
     };
 
     void _OnClick(Input *input) override

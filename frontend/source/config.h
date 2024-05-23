@@ -30,8 +30,11 @@ public:
     uint32_t hotkeys[HOT_KEY_COUNT];
     CoreOptions core_options;
 
-    static std::unordered_map<uint32_t, TEXT_ENUM> ControlTextMap;
-    static std::unordered_map<uint8_t, TEXT_ENUM> RetroTextMap;
+    static const std::unordered_map<uint32_t, const char *> PsvKeyStr;
+    static const std::unordered_map<uint32_t, const char *> HotkeyStr;
+    static const std::unordered_map<uint32_t, TEXT_ENUM> ControlTextMap;
+    static const std::unordered_map<uint32_t, const char *> GraphicsStr;
+    static const std::unordered_map<uint8_t, TEXT_ENUM> RetroTextMap;
 
 private:
 };

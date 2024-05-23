@@ -4,7 +4,7 @@
 class ItemSelectable : public ItemBase
 {
 public:
-    ItemSelectable(LanguageString text, LanguageString info = "");
+    ItemSelectable(const LanguageString text, LanguageString info = "");
     virtual ~ItemSelectable();
 
     virtual void SetInputHooks(Input *input);

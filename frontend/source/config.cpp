@@ -22,7 +22,7 @@ Config *gConfig = nullptr;
         K, #K       \
     }
 
-static const std::unordered_map<uint32_t, const char *> PsvKeyStr = {
+const std::unordered_map<uint32_t, const char *> Config::PsvKeyStr = {
     KEY_PAIR(SCE_CTRL_CROSS),
     KEY_PAIR(SCE_CTRL_TRIANGLE),
     KEY_PAIR(SCE_CTRL_CIRCLE),
@@ -49,7 +49,7 @@ static const std::unordered_map<uint32_t, const char *> PsvKeyStr = {
     KEY_PAIR(SCE_CTRL_RSTICK_RIGHT),
 };
 
-static const std::unordered_map<uint32_t, const char *> HotkeyStr = {
+const std::unordered_map<uint32_t, const char *> Config::HotkeyStr = {
     KEY_PAIR(SAVE_STATE),
     KEY_PAIR(LOAD_STATE),
     KEY_PAIR(GAME_SPEED_UP),
@@ -60,7 +60,7 @@ static const std::unordered_map<uint32_t, const char *> HotkeyStr = {
     KEY_PAIR(EXIT_GAME),
 };
 
-static const std::unordered_map<uint32_t, const char *> GraphicsStr = {
+const std::unordered_map<uint32_t, const char *> Config::GraphicsStr = {
     KEY_PAIR(DISPLAY_SIZE),
     KEY_PAIR(DISPLAY_RATIO),
     KEY_PAIR(DISPLAY_ROTATE),
@@ -69,36 +69,35 @@ static const std::unordered_map<uint32_t, const char *> GraphicsStr = {
     KEY_PAIR(GRAPHICS_OVERLAY),
 };
 
-std::unordered_map<uint32_t, TEXT_ENUM>
-    Config::ControlTextMap = {
-        {SCE_CTRL_CROSS, BUTTON_CROSS},
-        {SCE_CTRL_TRIANGLE, BUTTON_TRIANGLE},
-        {SCE_CTRL_CIRCLE, BUTTON_CIRCLE},
-        {SCE_CTRL_SQUARE, BUTTON_SQUARE},
-        {SCE_CTRL_SELECT, BUTTON_SELECT},
-        {SCE_CTRL_START, BUTTON_START},
-        {SCE_CTRL_UP, BUTTON_UP},
-        {SCE_CTRL_DOWN, BUTTON_DOWN},
-        {SCE_CTRL_LEFT, BUTTON_LEFT},
-        {SCE_CTRL_RIGHT, BUTTON_RIGHT},
-        {SCE_CTRL_L1, BUTTON_L1},
-        {SCE_CTRL_R1, BUTTON_R1},
-        {SCE_CTRL_L2, BUTTON_L2},
-        {SCE_CTRL_R2, BUTTON_R2},
-        {SCE_CTRL_L3, BUTTON_L3},
-        {SCE_CTRL_R3, BUTTON_R3},
-        {SCE_CTRL_LSTICK_UP, BUTTON_LEFT_ANALOG_UP},
-        {SCE_CTRL_LSTICK_DOWN, BUTTON_LEFT_ANALOG_DOWN},
-        {SCE_CTRL_LSTICK_LEFT, BUTTON_LEFT_ANALOG_LEFT},
-        {SCE_CTRL_LSTICK_RIGHT, BUTTON_LEFT_ANALOG_RIGHT},
-        {SCE_CTRL_RSTICK_UP, BUTTON_RIGHT_ANALOG_UP},
-        {SCE_CTRL_RSTICK_DOWN, BUTTON_RIGHT_ANALOG_DOWN},
-        {SCE_CTRL_RSTICK_LEFT, BUTTON_RIGHT_ANALOG_LEFT},
-        {SCE_CTRL_RSTICK_RIGHT, BUTTON_RIGHT_ANALOG_RIGHT},
-        {SCE_CTRL_PSBUTTON, BUTTON_HOME},
+const std::unordered_map<uint32_t, TEXT_ENUM> Config::ControlTextMap = {
+    {SCE_CTRL_CROSS, BUTTON_CROSS},
+    {SCE_CTRL_TRIANGLE, BUTTON_TRIANGLE},
+    {SCE_CTRL_CIRCLE, BUTTON_CIRCLE},
+    {SCE_CTRL_SQUARE, BUTTON_SQUARE},
+    {SCE_CTRL_SELECT, BUTTON_SELECT},
+    {SCE_CTRL_START, BUTTON_START},
+    {SCE_CTRL_UP, BUTTON_UP},
+    {SCE_CTRL_DOWN, BUTTON_DOWN},
+    {SCE_CTRL_LEFT, BUTTON_LEFT},
+    {SCE_CTRL_RIGHT, BUTTON_RIGHT},
+    {SCE_CTRL_L1, BUTTON_L1},
+    {SCE_CTRL_R1, BUTTON_R1},
+    {SCE_CTRL_L2, BUTTON_L2},
+    {SCE_CTRL_R2, BUTTON_R2},
+    {SCE_CTRL_L3, BUTTON_L3},
+    {SCE_CTRL_R3, BUTTON_R3},
+    {SCE_CTRL_LSTICK_UP, BUTTON_LEFT_ANALOG_UP},
+    {SCE_CTRL_LSTICK_DOWN, BUTTON_LEFT_ANALOG_DOWN},
+    {SCE_CTRL_LSTICK_LEFT, BUTTON_LEFT_ANALOG_LEFT},
+    {SCE_CTRL_LSTICK_RIGHT, BUTTON_LEFT_ANALOG_RIGHT},
+    {SCE_CTRL_RSTICK_UP, BUTTON_RIGHT_ANALOG_UP},
+    {SCE_CTRL_RSTICK_DOWN, BUTTON_RIGHT_ANALOG_DOWN},
+    {SCE_CTRL_RSTICK_LEFT, BUTTON_RIGHT_ANALOG_LEFT},
+    {SCE_CTRL_RSTICK_RIGHT, BUTTON_RIGHT_ANALOG_RIGHT},
+    {SCE_CTRL_PSBUTTON, BUTTON_HOME},
 };
 
-std::unordered_map<uint8_t, TEXT_ENUM> Config::RetroTextMap = {
+const std::unordered_map<uint8_t, TEXT_ENUM> Config::RetroTextMap = {
     {RETRO_DEVICE_ID_JOYPAD_B, BUTTON_B},
     {RETRO_DEVICE_ID_JOYPAD_Y, BUTTON_Y},
     {RETRO_DEVICE_ID_JOYPAD_SELECT, BUTTON_SELECT},

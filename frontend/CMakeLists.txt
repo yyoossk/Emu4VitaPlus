@@ -45,7 +45,8 @@ add_compile_definitions(
     APP_TITLE_NAME="${SFO_TITLE_NAME}"
     CORE_SOFTWARE=${CORE_SOFTWARE})
 
-set(CMAKE_EXE_LINKER_FLAGS "-Wl,-q")
+# set(CMAKE_EXE_LINKER_FLAGS "-Wl,-q")
+set(CMAKE_EXE_LINKER_FLAGS "-Wl,--exclude-libs,ALL ")
 
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/source/language_define.cpp
@@ -67,7 +68,6 @@ add_executable(${APP_NAME}.elf ${SRC})
 target_link_libraries(
     ${APP_NAME}.elf
     ${LIBRETRO_LIBRARY}
-    SimpleIni
     retro_comm
     vita2d
     vita2d_ext
@@ -75,6 +75,7 @@ target_link_libraries(
     swresample
     swscale
     avutil
+    SimpleIni
     png
     jpeg
     z

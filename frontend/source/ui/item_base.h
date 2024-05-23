@@ -8,7 +8,7 @@ typedef std::function<void()> CallbackFunc;
 class ItemBase
 {
 public:
-    ItemBase(LanguageString text, LanguageString info = "", CallbackFunc active_callback = nullptr, CallbackFunc option_callback = nullptr, bool visable = true)
+    ItemBase(const LanguageString text, LanguageString info = "", CallbackFunc active_callback = nullptr, CallbackFunc option_callback = nullptr, bool visable = true)
         : _text(text),
           _info(info),
           _active_callback(active_callback),
