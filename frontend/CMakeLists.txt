@@ -45,7 +45,7 @@ add_compile_definitions(
     APP_TITLE_NAME="${SFO_TITLE_NAME}"
     CORE_SOFTWARE=${CORE_SOFTWARE})
 
-set(CMAKE_EXE_LINKER_FLAGS "-Wl,-q")
+set(CMAKE_EXE_LINKER_FLAGS "-Wl,-q,--no-undefined,--as-needed,--hash-style=gnu")
 
 # set(CMAKE_EXE_LINKER_FLAGS "-Wl,--exclude-libs,ALL ")
 add_custom_command(
