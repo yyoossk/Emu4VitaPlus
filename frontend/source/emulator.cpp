@@ -220,10 +220,6 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
                     state |= (1 << i);
                 }
             }
-            if (state > 0)
-            {
-                LogDebug("state %08x", state);
-            }
             return state;
         }
 

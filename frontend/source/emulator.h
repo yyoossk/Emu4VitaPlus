@@ -29,18 +29,17 @@ public:
     void Show();
     void SetSpeed(double speed);
     const char *CurrentName() { return _current_name.c_str(); };
+    bool SaveScreenShot(const char *name, size_t height = 0);
 
     const char *GetValidExtensions() const { return _info.valid_extensions; };
     double GetSampleRate() const { return _av_info.timing.sample_rate; };
     float GetAspectRatio() { return _av_info.geometry.aspect_ratio; };
 
-    friend bool
-    EnvironmentCallback(unsigned cmd, void *data);
+    friend bool EnvironmentCallback(unsigned cmd, void *data);
     friend void VideoRefreshCallback(const void *data, unsigned width, unsigned height, size_t pitch);
     friend size_t AudioSampleBatchCallback(const int16_t *data, size_t frames);
     friend void InputPollCallback();
     friend int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsigned id);
-    bool SaveScreenShot(const char *name, size_t height = 0);
 
 private:
     std::string _current_name;

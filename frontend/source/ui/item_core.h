@@ -33,6 +33,12 @@ private:
         _option->SetValueIndex(index);
     };
 
+    void _OnClick(Input *input) override
+    {
+        ItemSelectable::_OnClick(input);
+        gConfig->Save();
+    };
+
     CoreOption *_option;
     std::vector<LanguageString> _values;
 };

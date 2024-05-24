@@ -1,7 +1,10 @@
+#include <stdlib.h>
 #include "file.h"
 #include "app.h"
 #include "log.h"
 #include "defines.h"
+
+unsigned int sceLibcHeapSize = 0x400000;
 
 int main(int argc, char *const argv[])
 {

@@ -41,7 +41,7 @@ static uint8_t RetroKeys[] = {
 
 #define RETRO_KEYS_SIZE (sizeof(RetroKeys) / sizeof(RetroKeys[0]))
 
-class ItemControl : public virtual ItemSelectable
+class ItemControl : public ItemSelectable
 {
 public:
     ItemControl(ControlMapConfig *control_map)
@@ -87,6 +87,12 @@ private:
     void _SetIndex(size_t index) override
     {
         _control_map->retro = RetroKeys[index];
+    };
+
+    void _OnClick(Input *input) override
+    {
+        ItemSelectable::_OnClick(input);
+        gConfig->Save();
     };
 
     ControlMapConfig *_control_map;
