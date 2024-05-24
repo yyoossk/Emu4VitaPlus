@@ -68,7 +68,7 @@ bool Input::Poll(bool waiting)
     if (result < 0)
         return false;
 
-    uint64_t key = ctrl_data.buttons;
+    uint32_t key = ctrl_data.buttons;
     if (ctrl_data.lx < ANALOG_CENTER - ANALOG_THRESHOLD)
         key |= SCE_CTRL_LSTICK_LEFT;
     else if (ctrl_data.lx > ANALOG_CENTER + ANALOG_THRESHOLD)

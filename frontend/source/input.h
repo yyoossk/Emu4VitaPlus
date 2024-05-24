@@ -43,7 +43,7 @@ public:
 
     void Reset();
 
-    uint64_t GetKeyStates() { return _last_key; };
+    uint32_t GetKeyStates() { return _last_key; };
 
     void PushCallbacks();
     void PopCallbacks();
@@ -52,8 +52,8 @@ private:
     std::unordered_map<uint32_t, InputFunc> _key_up_callbacks;
     std::unordered_map<uint32_t, InputFunc> _key_down_callbacks;
     std::unordered_map<uint32_t, uint64_t> _next_turbo_times;
-    uint64_t _last_key;
-    uint64_t _turbo_key;
+    uint32_t _last_key;
+    uint32_t _turbo_key;
     uint64_t _turbo_start_ms;
     uint64_t _turbo_interval_ms;
 

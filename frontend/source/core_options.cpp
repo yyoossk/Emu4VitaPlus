@@ -41,56 +41,48 @@ void CoreOptions::Load(retro_core_options_intl *options)
 {
     LogFunctionName;
     const retro_core_option_definition *us = options->us;
-    const retro_core_option_definition *local = options->local;
-    while (us->key)
+    while (us && us->key)
     {
-        const auto &iter = this->find(us->key);
-        CoreOption *option;
-        if (iter == this->end())
-        {
-            option = &((*this)[us->key] = CoreOption{us->desc,
-                                                     us->info,
-                                                     us->default_value,
-                                                     us->default_value,
-                                                     us->values});
-        }
-        else
-        {
-            option = &(iter->second);
-            option->desc = us->desc;
-            option->info = us->info;
-            option->values = us->values;
-        }
-        if (local)
-        {
-            const retro_core_option_definition *l = local;
-            while (l->key)
-            {
-                if (strcmp(l->key, us->key) == 0)
-                {
-                    if (l->desc)
-                    {
-                        option->desc = l->desc;
-                    }
-
-                    if (l->info)
-                    {
-                        option->info = l->info;
-                    }
-
-                    if (l->values)
-                    {
-                        option->values = l->values;
-                    }
-
-                    break;
-                }
-
-                l++;
-            }
-        }
-
+        _Load(us);
         us++;
+    }
+}
+
+void CoreOptions::Load(retro_core_options_v2_intl *options)
+{
+    LogFunctionName;
+    if (!options->us)
+    {
+        return;
+    }
+
+    const retro_core_option_v2_definition *us = options->us->definitions;
+    while (us && us->key)
+    {
+        _Load(us);
+        us++;
+    }
+}
+
+template <typename T>
+void CoreOptions::_Load(T *define)
+{
+    const auto &iter = this->find(define->key);
+    CoreOption *option;
+    if (iter == this->end())
+    {
+        option = &((*this)[define->key] = CoreOption{define->desc,
+                                                     define->info,
+                                                     define->default_value,
+                                                     define->default_value,
+                                                     define->values});
+    }
+    else
+    {
+        option = &(iter->second);
+        option->desc = define->desc;
+        option->info = define->info;
+        option->values = define->values;
     }
 }
 
@@ -108,7 +100,12 @@ void CoreOptions::Get(retro_variable *var)
     LogFunctionName;
     LogDebug("  key: %s", var->key);
     auto iter = this->find(var->key);
-    if (iter != this->end())
+    if (iter == this->end())
+    {
+        var->value = NULL;
+        LogWarn("  %s not found!", var->key);
+    }
+    else
     {
         var->value = iter->second.value.c_str();
         LogDebug("  value: %s", var->value);

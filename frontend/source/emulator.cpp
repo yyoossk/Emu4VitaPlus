@@ -54,7 +54,7 @@ void RetroLog(retro_log_level level, const char *fmt, ...)
 bool EnvironmentCallback(unsigned cmd, void *data)
 {
     LogFunctionNameLimited;
-    LogTrace("cmd: %u", cmd);
+    LogTrace("  cmd: %u", cmd);
 
     switch (cmd)
     {
@@ -69,10 +69,11 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         gEmulator->_SetPixelFormat(*(retro_pixel_format *)data);
         break;
 
-    case RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS:
-        break;
+        // case RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS:
+        //     break;
 
     case RETRO_ENVIRONMENT_SET_DISK_CONTROL_INTERFACE:
+        LogDebug("  RETRO_ENVIRONMENT_SET_DISK_CONTROL_INTERFACE");
         break;
 
     case RETRO_ENVIRONMENT_GET_VARIABLE:
@@ -86,7 +87,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
 
     case RETRO_ENVIRONMENT_SET_VARIABLES:
     {
-        LogDebug("RETRO_ENVIRONMENT_SET_VARIABLES: %s", ((retro_variable *)data)->key);
+        LogDebug("  RETRO_ENVIRONMENT_SET_VARIABLES: %s", ((retro_variable *)data)->key);
     }
     break;
 
@@ -135,16 +136,19 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         break;
 
     case RETRO_ENVIRONMENT_GET_INPUT_BITMASKS:
-        LogDebug("RETRO_ENVIRONMENT_GET_INPUT_BITMASKS");
+        LogDebug("  RETRO_ENVIRONMENT_GET_INPUT_BITMASKS");
         break;
 
     case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_INTL:
         gConfig->core_options.Load((retro_core_options_intl *)data);
-        gEmulator->_LoadCoreOptions((retro_core_options_intl *)data);
+        break;
+
+    case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_V2_INTL:
+        gConfig->core_options.Load((retro_core_options_v2_intl *)data);
         break;
 
     default:
-        LogDebug("UNSUPPORTED cmd:%d", cmd);
+        LogDebug("  unsupported cmd:%d", cmd);
         return false;
     }
 
@@ -216,12 +220,16 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
                     state |= (1 << i);
                 }
             }
-            return state;
+            if (state > 0)
+            {
+                LogDebug("state %08x", state);
+            }
+            return state ? 1 : 0;
         }
 
         if (id >= 16)
         {
-            LogError("InputStateCallback, wrong id %d", id);
+            LogError("  InputStateCallback, wrong id %d", id);
             return 0;
         }
 
@@ -356,11 +364,11 @@ void Emulator::_SetPixelFormat(retro_pixel_format format)
         _video_pixel_format = SCE_GXM_TEXTURE_FORMAT_U5U6U5_RGB;
         break;
     default:
-        LogWarn("unknown pixel format: %d", format);
+        LogWarn("  unknown pixel format: %d", format);
         break;
     }
 
-    LogDebug("_video_pixel_format: %d", _video_pixel_format);
+    LogDebug("  _video_pixel_format: %d", _video_pixel_format);
     if (_texture_buf != nullptr && old_format != _video_pixel_format)
     {
         delete _texture_buf;
@@ -381,7 +389,7 @@ void Emulator::_SetupKeys()
 
         if (k.retro >= 16)
         {
-            LogError("wrong key config: %d %08x", k.retro, k.psv);
+            LogError("  wrong key config: %d %08x", k.retro, k.psv);
             continue;
         }
         _keys[k.retro] |= k.psv;
@@ -472,21 +480,6 @@ void Emulator::_OnPsButton(Input *input)
     gVideo->Unlock();
 }
 
-void Emulator::_LoadCoreOptions(retro_core_options_intl *options)
-{
-    LogFunctionName;
-    const retro_core_option_definition *us = options->us;
-    const retro_core_option_definition *local = options->local;
-    while (us->key)
-    {
-        LogDebug(us->key);
-        LogDebug(us->desc);
-        LogDebug(us->info);
-        us++;
-        local++;
-    }
-}
-
 static void ConvertTextureToRGB888(vita2d_texture *texture, uint8_t *dst, size_t width = 0, size_t height = 0)
 {
     AVPixelFormat src_format = AV_PIX_FMT_NONE;
@@ -507,7 +500,7 @@ static void ConvertTextureToRGB888(vita2d_texture *texture, uint8_t *dst, size_t
     }
 
     int dst_stride = width * 3;
-    LogDebug("texture format: %d", tex_format);
+    LogDebug("  texture format: %d", tex_format);
     switch (tex_format)
     {
     case SCE_GXM_TEXTURE_FORMAT_X1U5U5U5_1RGB:
@@ -523,7 +516,7 @@ static void ConvertTextureToRGB888(vita2d_texture *texture, uint8_t *dst, size_t
         break;
 
     default:
-        LogError("unknown sce gxm format: %d", tex_format);
+        LogError("  unknown sce gxm format: %d", tex_format);
         return;
     }
 
