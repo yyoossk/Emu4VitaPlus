@@ -224,7 +224,7 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
             {
                 LogDebug("state %08x", state);
             }
-            return state ? 1 : 0;
+            return state;
         }
 
         if (id >= 16)
