@@ -31,7 +31,7 @@ project("fba_lite")
 
 add_custom_target(
   fba_lite_build ALL
-  COMMAND make -f ${CORE_MAKEFILE_NAME} -j ${CORE_ARGS}
+  COMMAND alias gcc="${CMAKE_C_COMPILER}" && make -f ${CORE_MAKEFILE_NAME} -j ${CORE_ARGS}
   WORKING_DIRECTORY ${CORE_DIR})
 
 add_library(fba_lite STATIC IMPORTED)
