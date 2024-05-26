@@ -115,6 +115,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
     break;
 
     case RETRO_ENVIRONMENT_GET_LANGUAGE:
+        LogDebug("  RETRO_ENVIRONMENT_GET_LANGUAGE");
         if (data)
         {
             *(retro_language *)data = gConfig->GetRetroLanguage();
@@ -158,6 +159,11 @@ bool EnvironmentCallback(unsigned cmd, void *data)
 void VideoRefreshCallback(const void *data, unsigned width, unsigned height, size_t pitch)
 {
     LogFunctionNameLimited;
+    if (!data)
+    {
+        LogDebug("video data is NULL");
+        return;
+    }
 
     if (gEmulator->_texture_buf == nullptr || gEmulator->_texture_buf->GetWidth() != width || gEmulator->_texture_buf->GetHeight() != height)
     {

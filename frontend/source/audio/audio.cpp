@@ -29,7 +29,8 @@ Audio::~Audio()
 void Audio::SetSampleRate(uint32_t sample_rate)
 {
     LogFunctionName;
-    if (_in_sample_rate == sample_rate)
+    LogDebug("  sample_rate: %d", sample_rate);
+    if (_in_sample_rate == sample_rate || sample_rate == 0)
     {
         return;
     }

@@ -136,7 +136,9 @@ bool State::Remove()
 
 StateManager::StateManager()
 {
+    LogFunctionName;
     states[0] = new State("auto");
+
     for (int i = 1; i < MAX_STATES; i++)
     {
         char buf[3];
@@ -148,6 +150,10 @@ StateManager::StateManager()
     {
         uint32_t height = STATE_SCREENSHOT_HEIGHT;
         uint32_t width = height * gEmulator->GetAspectRatio();
+        if (width == 0)
+        {
+            width = height * 4 / 3;
+        }
         State::_empty_texture = vita2d_create_empty_texture(width, height);
         const auto stride = vita2d_texture_get_stride(State::_empty_texture) / 4;
         auto texture_data = (uint32_t *)vita2d_texture_get_datap(State::_empty_texture);
