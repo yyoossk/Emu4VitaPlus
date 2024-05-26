@@ -45,9 +45,11 @@ add_compile_definitions(
     APP_TITLE_NAME="${SFO_TITLE_NAME}"
     CORE_SOFTWARE=${CORE_SOFTWARE})
 
-set(CMAKE_EXE_LINKER_FLAGS "-Wl,-q,--no-undefined,--as-needed,--hash-style=gnu")
+# set(CMAKE_EXE_LINKER_FLAGS "-Wl,-q,--no-undefined,--as-needed,--hash-style=gnu")
 
 # set(CMAKE_EXE_LINKER_FLAGS "-Wl,--exclude-libs,ALL ")
+
+
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/source/language_define.cpp
     COMMAND python export.py
@@ -98,7 +100,7 @@ target_link_libraries(
     SceFiber_stub)
 
 set(VITA_MAKE_FSELF_FLAGS "-a 0x2800000000000001")
-vita_create_self(eboot_${APP_NAME}.bin ${APP_NAME}.elf UNSAFE STRIPPED REL_OPTIMIZE)
+vita_create_self(eboot_${APP_NAME}.bin ${APP_NAME}.elf)# UNSAFE STRIPPED REL_OPTIMIZE)
 
 if(WITH_LOG)
     set(VPK_NAME ${APP_NAME}_${APP_VER}_log.vpk)

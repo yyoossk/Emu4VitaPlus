@@ -11,12 +11,17 @@ set(BUILD "ALL" CACHE STRING "ALL(default)|gpsp|fba_lite|snes9x2005")
 
 project("Emu4Vita++")
 
-set(CMAKE_C_FLAGS "-marm -mcpu=cortex-a9 -mfloat-abi=hard -DVITA -D__vita__ \
--mword-relocations -fno-optimize-sibling-calls \
--fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables \
--ffast-math -ftree-vectorize -O3")
+# set(CMAKE_C_FLAGS "-marm -mcpu=cortex-a9 -mfloat-abi=hard -DVITA -D__vita__ \
+# -mword-relocations -fno-optimize-sibling-calls \
+# -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables \
+# -ffast-math -ftree-vectorize -O3")
 
 # set(CMAKE_C_FLAGS "-march=armv7-a -mfpu=neon -mfloat-abi=hard -mword-relocations -fno-optimize-sibling-calls -O2")
+set(CMAKE_C_FLAGS "-march=armv7-a -mfpu=neon -mfloat-abi=hard -DVITA \
+-mword-relocations -fno-optimize-sibling-calls \
+-fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -ftree-vectorize \
+-O2 -ffast-math")
+
 if(WITH_LOG)
     set(LOG_LEVEL LOG_LEVEL_DEBUG)
 else()
@@ -26,7 +31,8 @@ endif()
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLOG_LEVEL=${LOG_LEVEL}")
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fno-rtti -fno-exceptions -std=c++17")
 
-set(LDFLAGS "-Wl,-q")
+set(CMAKE_EXE_LINKER_FLAGS "-Wl,-q -static-libgcc -static-libstdc++")
+# set(CMAKE_STATIC_LINKER_FLAGS "-rc")
 
 set(OUT_PATH "${CMAKE_BINARY_DIR}/out")
 file(MAKE_DIRECTORY ${OUT_PATH})
