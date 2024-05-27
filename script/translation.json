@@ -55,7 +55,7 @@
     },
     {
         "No.": "10",
-        "English": "Skip frames to avoid audio buffer under-run (crackling). Improves performance at the expense of visual smoothness. 'Auto' skips frames when advised by the frontend. 'Auto (Threshold)' utilises the 'Frameskip Threshold (%)' setting. 'Fixed Interval' utilises the 'Frameskip Interval' setting.",
+        "English": "Skip frames to avoid audio buffer under-run (crackling). Improves performance at the expense of visual smoothness. 'Auto' skips frames when advised by the frontend. 'Manual' utilises the 'Frameskip Threshold (%)' setting.",
         "Chinese": "跳过帧以避免音频缓冲区不足(爆裂)。以牺牲视觉平滑度为代价提高性能。当前端建议时，‘自动’跳过帧。‘自动(阈值)’使用‘跳帧阈值(%)’设置。‘固定间隔’利用‘跳帧间隔’设置。",
         "Comments": ""
     },
@@ -171,6 +171,30 @@
         "No.": "29",
         "English": "Specify the repeat interval (in frames) when holding down the Turbo A/B buttons.",
         "Chinese": "指定按下连发A/B按钮时的重复间隔(以帧为单位)。",
+        "Comments": ""
+    },
+    {
+        "No.": "30",
+        "English": "Emulation Hacks",
+        "Chinese": "仿真Hacks",
+        "Comments": ""
+    },
+    {
+        "No.": "31",
+        "English": "Configure processor overclocking and emulation accuracy parameters affecting low-level performance and compatibility.",
+        "Chinese": "配置影响低级别性能和兼容性的处理器超频和仿真精度参数。",
+        "Comments": ""
+    },
+    {
+        "No.": "32",
+        "English": "Console Region (Restart)",
+        "Chinese": "系统区域（需要重启）",
+        "Comments": ""
+    },
+    {
+        "No.": "33",
+        "English": "Specify which region the system is from. 'PAL' is 50hz, 'NTSC' is 60hz. Games will run faster or slower than normal if the incorrect region is selected.",
+        "Chinese": "指定系统来自哪个区域。'PAL制式为50赫兹，NTSC制式为60赫兹。如果选择了不正确的区域，游戏将比正常情况下运行得更快或更慢。",
         "Comments": ""
     }
 ]

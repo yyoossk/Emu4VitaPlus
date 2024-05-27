@@ -198,3 +198,8 @@ void Input::PopCallbacks()
     _key_up_callbacks = _callback_stack.top();
     _callback_stack.pop();
 }
+
+void Input::ClearKeyStates(uint32_t mask)
+{
+    _last_key &= ~mask;
+}

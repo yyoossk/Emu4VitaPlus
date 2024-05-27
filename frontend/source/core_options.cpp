@@ -67,6 +67,10 @@ void CoreOptions::Load(retro_core_options_v2_intl *options)
 template <typename T>
 void CoreOptions::_Load(T *define)
 {
+    LogDebug("  desc: %s", define->desc);
+    LogDebug("  info: %s", define->info);
+    LogDebug("  default_value: %s", define->default_value);
+
     const auto &iter = this->find(define->key);
     CoreOption *option;
     if (iter == this->end())

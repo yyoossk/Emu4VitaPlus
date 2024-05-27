@@ -30,7 +30,7 @@ public:
     void SetSpeed(double speed);
     const char *CurrentName() { return _current_name.c_str(); };
     bool SaveScreenShot(const char *name, size_t height = 0);
-
+    bool GetCurrentSoftwareFramebuffer(retro_framebuffer *fb);
     const char *GetValidExtensions() const { return _info.valid_extensions; };
     double GetSampleRate() const { return _av_info.timing.sample_rate; };
     float GetAspectRatio() { return _av_info.geometry.aspect_ratio; };
@@ -47,12 +47,14 @@ private:
     retro_system_av_info _av_info;
 
     SceGxmTextureFormat _video_pixel_format;
+    retro_pixel_format _retro_pixel_format;
     TextureBuf *_texture_buf;
     Rect _video_rect;
 
     Audio *_audio;
     Input _input;
     uint32_t _keys[16];
+    uint32_t _keys_mask;
     double _speed;
     Delay _delay;
 

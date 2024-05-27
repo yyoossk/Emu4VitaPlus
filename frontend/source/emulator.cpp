@@ -129,6 +129,18 @@ bool EnvironmentCallback(unsigned cmd, void *data)
     }
     break;
 
+    case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_INTL:
+        gConfig->core_options.Load((retro_core_options_intl *)data);
+        break;
+
+    case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_V2_INTL:
+        gConfig->core_options.Load((retro_core_options_v2_intl *)data);
+        break;
+
+    case RETRO_ENVIRONMENT_GET_CURRENT_SOFTWARE_FRAMEBUFFER:
+        return gEmulator->GetCurrentSoftwareFramebuffer((retro_framebuffer *)data);
+        // break;
+
     case RETRO_ENVIRONMENT_GET_AUDIO_VIDEO_ENABLE:
         if (data)
         {
@@ -138,14 +150,6 @@ bool EnvironmentCallback(unsigned cmd, void *data)
 
     case RETRO_ENVIRONMENT_GET_INPUT_BITMASKS:
         LogDebug("  RETRO_ENVIRONMENT_GET_INPUT_BITMASKS");
-        break;
-
-    case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_INTL:
-        gConfig->core_options.Load((retro_core_options_intl *)data);
-        break;
-
-    case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_V2_INTL:
-        gConfig->core_options.Load((retro_core_options_v2_intl *)data);
         break;
 
     default:
@@ -215,9 +219,12 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
     LogFunctionNameLimited;
     if (device == RETRO_DEVICE_JOYPAD)
     {
+        uint32_t key_states = gEmulator->_input.GetKeyStates();
+
         if (id == RETRO_DEVICE_ID_JOYPAD_MASK)
         {
-            uint64_t keys = gEmulator->_input.GetKeyStates();
+            gEmulator->_input.ClearKeyStates(gEmulator->_keys_mask);
+            uint64_t keys = key_states;
             int16_t state = 0;
             for (size_t i = 0; i < 16; i++)
             {
@@ -235,7 +242,8 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
             return 0;
         }
 
-        return gEmulator->_input.GetKeyStates() & gEmulator->_keys[id];
+        gEmulator->_input.ClearKeyStates(gEmulator->_keys[id]);
+        return key_states & gEmulator->_keys[id];
     }
     else
     {
@@ -349,10 +357,28 @@ void Emulator::SetSpeed(double speed)
     _delay.SetInterval(1000000ull / (uint64_t)(_av_info.timing.fps * speed));
 }
 
+bool Emulator::GetCurrentSoftwareFramebuffer(retro_framebuffer *fb)
+{
+    if (!fb)
+    {
+        return false;
+    }
+    vita2d_texture *texture = gEmulator->_texture_buf->Next();
+    fb->data = vita2d_texture_get_datap(texture);
+    fb->width = vita2d_texture_get_width(texture);
+    fb->height = vita2d_texture_get_height(texture);
+    fb->pitch = vita2d_texture_get_stride(texture);
+    fb->format = _retro_pixel_format;
+    fb->access_flags = RETRO_MEMORY_ACCESS_WRITE | RETRO_MEMORY_ACCESS_READ;
+    fb->memory_flags = RETRO_MEMORY_TYPE_CACHED;
+    return true;
+}
+
 void Emulator::_SetPixelFormat(retro_pixel_format format)
 {
     LogFunctionName;
 
+    _retro_pixel_format = format;
     SceGxmTextureFormat old_format = _video_pixel_format;
     switch (format)
     {
@@ -382,6 +408,7 @@ void Emulator::_SetupKeys()
 {
     LogFunctionName;
     memset(_keys, 0, sizeof(_keys));
+    _keys_mask = 0;
     for (const auto &k : gConfig->control_maps)
     {
         if (k.retro == 0xff)
@@ -395,6 +422,7 @@ void Emulator::_SetupKeys()
             continue;
         }
         _keys[k.retro] |= k.psv;
+        _keys_mask |= k.psv;
         if (k.turbo)
         {
             _input.SetTurbo(k.psv);
