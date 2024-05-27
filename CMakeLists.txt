@@ -7,7 +7,7 @@ set(CMAKE_TOOLCHAIN_FILE
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
 option(WITH_LOG "log ouputting" OFF)
-set(BUILD "ALL" CACHE STRING "ALL(default)|gpsp|fba_lite|snes9x2005")
+set(BUILD "ALL" CACHE STRING "ALL(default)|gpsp|fba_lite|snes9x2002|snes9x2005|snes9x2010")
 
 project("Emu4Vita++")
 
@@ -45,6 +45,14 @@ if(BUILD STREQUAL "ALL" OR BUILD STREQUAL "fba_lite")
     add_subdirectory(apps/fba_lite)
 endif()
 
+if(BUILD STREQUAL "ALL" OR BUILD STREQUAL "snes9x2002")
+    add_subdirectory(apps/snes9x2002)
+endif()
+
 if(BUILD STREQUAL "ALL" OR BUILD STREQUAL "snes9x2005")
     add_subdirectory(apps/snes9x2005)
+endif()
+
+if(BUILD STREQUAL "ALL" OR BUILD STREQUAL "snes9x2010")
+    add_subdirectory(apps/snes9x2010)
 endif()
