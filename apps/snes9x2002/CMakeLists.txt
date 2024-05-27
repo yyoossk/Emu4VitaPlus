@@ -5,14 +5,14 @@ set(CMAKE_TOOLCHAIN_FILE
   CACHE PATH "toolchain file")
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
-set(APP_NAME "Snes9x2005_4vita")
-set(APP_DIR_NAME "Snes9x2005")
-set(CORE_FILE_NAME "Snes9x2005")
+set(APP_NAME "Snes9x2002_4vita")
+set(APP_DIR_NAME "Snes9x2002")
+set(CORE_FILE_NAME "Snes9x2002")
 set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/${CORE_FILE_NAME})
 set(CORE_MAKEFILE_DIR ${CORE_DIR})
 set(CORE_MAKEFILE_NAME Makefile)
 set(SFO_TITLE_NAME "Emu4Vita++ (${CORE_FILE_NAME})")
-set(SFO_TITLE_ID "SNES054VT")
+set(SFO_TITLE_ID "SNES024VT")
 set(PRIVATE_PKG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pkg)
 
 set(CORE_ARGS platform=vita EXTERNAL_ZLIB=1)
@@ -27,23 +27,23 @@ foreach(file ${PKG_FILES})
   list(APPEND PRIVATE_PKG_FILES FILE ${file} ${rel})
 endforeach()
 
-project("Snes9x2005")
+project("Snes9x2002")
 
 add_custom_target(
-  Snes9x2005_build ALL
+  Snes9x2002_build ALL
   COMMAND make -f ${CORE_MAKEFILE_NAME} -j ${CORE_ARGS}
   WORKING_DIRECTORY ${CORE_DIR})
 
-add_library(Snes9x2005 STATIC IMPORTED)
+add_library(Snes9x2002 STATIC IMPORTED)
 set_property(
-  TARGET Snes9x2005
+  TARGET Snes9x2002
   APPEND
   PROPERTY IMPORTED_CONFIGURATIONS NOCONFIG)
 
-set(LIBRETRO_LIBRARY ${CORE_DIR}/snes9x2005_libretro_vita.a)
-set_target_properties(Snes9x2005 PROPERTIES IMPORTED_LOCATION_NOCONFIG
+set(LIBRETRO_LIBRARY ${CORE_DIR}/snes9x2002_libretro_vita.a)
+set_target_properties(Snes9x2002 PROPERTIES IMPORTED_LOCATION_NOCONFIG
   "${LIBRETRO_LIBRARY}")
-add_dependencies(Snes9x2005 Snes9x2005_build)
+add_dependencies(Snes9x2002 Snes9x2002_build)
 
-add_compile_definitions(SNES9X2005_BUILD SFC_BUILD)
+add_compile_definitions(SNES9X2002_BUILD SFC_BUILD)
 add_subdirectory(../../frontend ${CMAKE_CURRENT_BINARY_DIR}/frontend)
