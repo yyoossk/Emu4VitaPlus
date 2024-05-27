@@ -8,6 +8,7 @@ include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
 option(WITH_LOG "log ouputting" OFF)
 set(BUILD "ALL" CACHE STRING "ALL(default)|gpsp|fba_lite|snes9x2002|snes9x2005|snes9x2010")
+set_property(CACHE BUILD PROPERTY STRINGS "ALL" "gpsp" "fba_lite" "snes9x2002" "snes9x2005" "snes9x2010")
 
 project("Emu4Vita++")
 
