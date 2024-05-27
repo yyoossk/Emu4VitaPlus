@@ -91,8 +91,8 @@
     },
     {
         "No.": "16",
-        "English": "When 'Frameskip' is set to 'Auto (Threshold)', specifies the audio buffer occupancy threshold (percentage) below which frames will be skipped. Higher values reduce the risk of crackling by causing frames to be dropped more frequently.",
-        "Chinese": "当‘跳帧’设置为‘自动(阈值)’时，指定音频缓冲区占用阈值(百分比)，低于该阈值将跳过帧。更高的值会导致更频繁地丢弃帧，从而降低破裂的风险。",
+        "English": "When 'Frameskip' is set to 'Manual', specifies the audio buffer occupancy threshold (percentage) below which frames will be skipped. Higher values reduce the risk of crackling by causing frames to be dropped more frequently.",
+        "Chinese": "当“帧跳过”设置为“手动”时，指定音频缓冲区占用阈值（百分比），低于该阈值将跳过帧。较高的值会导致框架更频繁地掉落，从而降低破裂的风险。",
         "Comments": ""
     },
     {
@@ -195,6 +195,54 @@
         "No.": "33",
         "English": "Specify which region the system is from. 'PAL' is 50hz, 'NTSC' is 60hz. Games will run faster or slower than normal if the incorrect region is selected.",
         "Chinese": "指定系统来自哪个区域。'PAL制式为50赫兹，NTSC制式为60赫兹。如果选择了不正确的区域，游戏将比正常情况下运行得更快或更慢。",
+        "Comments": ""
+    },
+    {
+        "No.": "34",
+        "English": "Audio Filter",
+        "Chinese": "音频滤波器",
+        "Comments": ""
+    },
+    {
+        "No.": "35",
+        "English": "Enable a low pass audio filter to soften treble artifacts and mimic the 'bassy' sound of original SNES hardware.",
+        "Chinese": "启用低通音频滤波器以软化高音伪影，并模仿原始SNES硬件的“低音”声音。",
+        "Comments": ""
+    },
+    {
+        "No.": "36",
+        "English": "Audio Filter Level",
+        "Chinese": "音频滤波器电平",
+        "Comments": ""
+    },
+    {
+        "No.": "37",
+        "English": "Specify the cut-off frequency of the low pass audio filter. A higher value increases the perceived 'strength' of the filter, since a wider range of the high frequency spectrum is attenuated.",
+        "Chinese": "指定低通音频滤波器的截止频率。较高的值会增加滤波器的感知“强度”，因为高频频谱的较宽范围会衰减。",
+        "Comments": ""
+    },
+    {
+        "No.": "38",
+        "English": "Reduce Slowdown (Hack, Unsafe, Restart)",
+        "Chinese": "减少减速 (需要重启)",
+        "Comments": ""
+    },
+    {
+        "No.": "39",
+        "English": "Many games for the SNES suffered from slowdown due to the weak main CPU. This option helps allievate that at the cost of possible bugs. COMPATIBLE: Reduce slowdown but keep as much game compatibility as much as possible. MAX: Reduce slowdown as much as possible but will break more games.",
+        "Chinese": "SNES的许多游戏由于主CPU不足而速度减慢。这个选项有助于以可能的错误为代价来缓解这种情况。兼容：减少速度减慢，但尽可能保持游戏兼容性。极限：尽可能减少减速，但会破坏更多的游戏。",
+        "Comments": ""
+    },
+    {
+        "No.": "40",
+        "English": "Reduce Flickering (Hack, Unsafe)",
+        "Chinese": "减少闪烁",
+        "Comments": ""
+    },
+    {
+        "No.": "41",
+        "English": "Increases number of sprites that can be drawn simultaneously on screen. Reduces flickering in games.",
+        "Chinese": "增加可以在屏幕上同时绘制的精灵数量。减少游戏中的闪烁。",
         "Comments": ""
     }
 ]
