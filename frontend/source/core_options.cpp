@@ -64,9 +64,20 @@ void CoreOptions::Load(retro_core_options_v2_intl *options)
     }
 }
 
+void CoreOptions::Load(retro_core_option_definition *options)
+{
+    LogFunctionName;
+    while (options && options->key)
+    {
+        _Load(options);
+        options++;
+    }
+}
+
 template <typename T>
 void CoreOptions::_Load(T *define)
 {
+    LogDebug("  key: %s", define->key);
     LogDebug("  desc: %s", define->desc);
     LogDebug("  info: %s", define->info);
     LogDebug("  default_value: %s", define->default_value);

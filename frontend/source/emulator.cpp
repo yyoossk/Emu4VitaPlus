@@ -69,8 +69,11 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         gEmulator->_SetPixelFormat(*(retro_pixel_format *)data);
         break;
 
-        // case RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS:
-        //     break;
+    // case RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS:
+    //     break;
+    case RETRO_ENVIRONMENT_SET_CORE_OPTIONS:
+        gConfig->core_options.Load((retro_core_option_definition *)data);
+        break;
 
     case RETRO_ENVIRONMENT_SET_DISK_CONTROL_INTERFACE:
         LogDebug("  RETRO_ENVIRONMENT_SET_DISK_CONTROL_INTERFACE");
@@ -138,7 +141,8 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         break;
 
     case RETRO_ENVIRONMENT_GET_CURRENT_SOFTWARE_FRAMEBUFFER:
-        return gEmulator->GetCurrentSoftwareFramebuffer((retro_framebuffer *)data);
+        return false;
+        //     return gEmulator->GetCurrentSoftwareFramebuffer((retro_framebuffer *)data);
         // break;
 
     case RETRO_ENVIRONMENT_GET_AUDIO_VIDEO_ENABLE:
@@ -363,7 +367,11 @@ bool Emulator::GetCurrentSoftwareFramebuffer(retro_framebuffer *fb)
     {
         return false;
     }
-    vita2d_texture *texture = gEmulator->_texture_buf->Next();
+    gEmulator->_texture_buf->Lock();
+    gEmulator->_texture_buf->EndNext();
+    vita2d_texture *texture = gEmulator->_texture_buf->StartNext();
+    gEmulator->_texture_buf->Unlock();
+    // vita2d_texture *texture = gEmulator->_texture_buf->Next();
     fb->data = vita2d_texture_get_datap(texture);
     fb->width = vita2d_texture_get_width(texture);
     fb->height = vita2d_texture_get_height(texture);
@@ -371,6 +379,7 @@ bool Emulator::GetCurrentSoftwareFramebuffer(retro_framebuffer *fb)
     fb->format = _retro_pixel_format;
     fb->access_flags = RETRO_MEMORY_ACCESS_WRITE | RETRO_MEMORY_ACCESS_READ;
     fb->memory_flags = RETRO_MEMORY_TYPE_CACHED;
+
     return true;
 }
 

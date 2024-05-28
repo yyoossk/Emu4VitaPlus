@@ -25,6 +25,7 @@ class CoreOptions : public std::map<std::string, CoreOption>
 public:
     void Load(retro_core_options_intl *options);
     void Load(retro_core_options_v2_intl *options);
+    void Load(retro_core_option_definition *options);
     void Get(retro_variable *var);
     void Default();
 
