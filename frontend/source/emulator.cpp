@@ -141,8 +141,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         break;
 
     case RETRO_ENVIRONMENT_GET_CURRENT_SOFTWARE_FRAMEBUFFER:
-        gEmulator->GetCurrentSoftwareFramebuffer((retro_framebuffer *)data);
-        break;
+        return gEmulator->GetCurrentSoftwareFramebuffer((retro_framebuffer *)data);
 
     case RETRO_ENVIRONMENT_GET_AUDIO_VIDEO_ENABLE:
         if (data)
@@ -166,6 +165,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
 void VideoRefreshCallback(const void *data, unsigned width, unsigned height, size_t pitch)
 {
     LogFunctionNameLimited;
+
     if (!data)
     {
         LogDebug("video data is NULL");
@@ -180,6 +180,10 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
         }
         gEmulator->_texture_buf = new TextureBuf(gEmulator->_video_pixel_format, width, height);
         gEmulator->_SetVideoSize(width, height);
+    }
+    else if (gEmulator->_soft_frame_buf_render)
+    {
+        return;
     }
 
     gEmulator->_texture_buf->Lock();
@@ -220,11 +224,11 @@ void InputPollCallback()
 int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsigned id)
 {
     LogFunctionNameLimited;
-    if (device != RETRO_DEVICE_JOYPAD)
+    if (device != RETRO_DEVICE_JOYPAD || port != 0)
     {
         return 0;
     }
-
+    // LogDebug("%d %d %d %d", port, device, index, id);
     uint32_t key_states = gEmulator->_input.GetKeyStates();
 
     if (id == RETRO_DEVICE_ID_JOYPAD_MASK)
@@ -248,7 +252,7 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
     }
     else
     {
-        gEmulator->_input.ClearKeyStates(gEmulator->_keys[id]);
+        // gEmulator->_input.ClearKeyStates(gEmulator->_keys[id]);
         return key_states & gEmulator->_keys[id];
     }
 }
@@ -306,11 +310,10 @@ bool Emulator::LoadGame(const char *path)
     _current_name = File::GetStem(path);
     gStateManager->Init(_current_name.c_str());
 
-    retro_game_info game_info;
+    retro_game_info game_info = {0};
     game_info.path = path;
-    game_info.data = nullptr;
-    game_info.size = 0;
-    game_info.meta = nullptr;
+
+    _soft_frame_buf_render = false;
 
     return retro_load_game(&game_info);
 }
@@ -329,7 +332,7 @@ void Emulator::Run()
 
     if (_soft_frame_buf_render)
     {
-        gEmulator->_texture_buf->Unlock();
+        _texture_buf->Unlock();
     }
 }
 
@@ -368,14 +371,15 @@ void Emulator::SetSpeed(double speed)
 
 bool Emulator::GetCurrentSoftwareFramebuffer(retro_framebuffer *fb)
 {
-    if (!fb)
+    LogFunctionNameLimited;
+    if (!fb || _texture_buf == nullptr)
     {
         return false;
     }
 
-    gEmulator->_texture_buf->Lock();
+    _texture_buf->Lock();
     _soft_frame_buf_render = true;
-    vita2d_texture *texture = gEmulator->_texture_buf->Next();
+    vita2d_texture *texture = _texture_buf->Next();
 
     fb->data = vita2d_texture_get_datap(texture);
     fb->width = vita2d_texture_get_width(texture);
