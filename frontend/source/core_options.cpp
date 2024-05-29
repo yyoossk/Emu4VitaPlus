@@ -81,13 +81,16 @@ void CoreOptions::_Load(T *define)
     LogDebug("  desc: %s", define->desc);
     LogDebug("  info: %s", define->info);
     LogDebug("  default_value: %s", define->default_value);
+    LogDebug("");
+
+    static const char emptry_string[] = "";
 
     const auto &iter = this->find(define->key);
     CoreOption *option;
     if (iter == this->end())
     {
-        option = &((*this)[define->key] = CoreOption{define->desc,
-                                                     define->info,
+        option = &((*this)[define->key] = CoreOption{define->desc ? define->desc : emptry_string,
+                                                     define->info ? define->info : emptry_string,
                                                      define->default_value,
                                                      define->default_value,
                                                      define->values});
@@ -95,8 +98,8 @@ void CoreOptions::_Load(T *define)
     else
     {
         option = &(iter->second);
-        option->desc = define->desc;
-        option->info = define->info;
+        option->desc = define->desc ? define->desc : emptry_string;
+        option->info = define->info ? define->info : emptry_string;
         option->values = define->values;
     }
 }

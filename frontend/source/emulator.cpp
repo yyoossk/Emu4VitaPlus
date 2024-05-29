@@ -11,6 +11,7 @@
 #include "core_options.h"
 #include "state_manager.h"
 #include "config.h"
+#include "ui.h"
 #include "log.h"
 #include "file.h"
 
@@ -73,6 +74,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
     //     break;
     case RETRO_ENVIRONMENT_SET_CORE_OPTIONS:
         gConfig->core_options.Load((retro_core_option_definition *)data);
+        gUi->UpdateCoreOptions();
         break;
 
     case RETRO_ENVIRONMENT_SET_DISK_CONTROL_INTERFACE:
@@ -80,19 +82,15 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         break;
 
     case RETRO_ENVIRONMENT_GET_VARIABLE:
-    {
         if (data)
         {
             gConfig->core_options.Get((retro_variable *)data);
         }
-    }
-    break;
+        break;
 
     case RETRO_ENVIRONMENT_SET_VARIABLES:
-    {
         LogDebug("  RETRO_ENVIRONMENT_SET_VARIABLES: %s", ((retro_variable *)data)->key);
-    }
-    break;
+        break;
 
     case RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE:
         *(bool *)data = false;
@@ -105,17 +103,19 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         }
         break;
 
+    case RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY:
+        if (data)
+        {
+            char path[SCE_FIOS_PATH_MAX];
+            snprintf(path, SCE_FIOS_PATH_MAX, CORE_SAVEFILES_DIR "/%s", gEmulator->_current_name.c_str());
+            *(const char **)data = path;
+        }
+        break;
+
     case RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO:
-    {
-        retro_system_av_info *av_info = (retro_system_av_info *)data;
-        // if (_av_info.timing.fps != av_info->timing.fps)
-        // {
-        //     LogDebug("av_info.timing.fps %d", av_info->timing.fps);
-        // }
-        memcpy(&gEmulator->_av_info, av_info, sizeof(retro_system_av_info));
-        gEmulator->_audio->SetSampleRate(av_info->timing.sample_rate);
-    }
-    break;
+        memcpy(&gEmulator->_av_info, data, sizeof(retro_system_av_info));
+        gEmulator->_audio->SetSampleRate(gEmulator->_av_info.timing.sample_rate);
+        break;
 
     case RETRO_ENVIRONMENT_GET_LANGUAGE:
         LogDebug("  RETRO_ENVIRONMENT_GET_LANGUAGE");
@@ -126,24 +126,23 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         break;
 
     case RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION:
-    {
         if (data)
             *(unsigned *)data = CORE_OPTIONS_VERSION;
-    }
-    break;
+        break;
 
     case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_INTL:
         gConfig->core_options.Load((retro_core_options_intl *)data);
+        gUi->UpdateCoreOptions();
         break;
 
     case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_V2_INTL:
         gConfig->core_options.Load((retro_core_options_v2_intl *)data);
+        gUi->UpdateCoreOptions();
         break;
 
     case RETRO_ENVIRONMENT_GET_CURRENT_SOFTWARE_FRAMEBUFFER:
-        return false;
-        //     return gEmulator->GetCurrentSoftwareFramebuffer((retro_framebuffer *)data);
-        // break;
+        gEmulator->GetCurrentSoftwareFramebuffer((retro_framebuffer *)data);
+        break;
 
     case RETRO_ENVIRONMENT_GET_AUDIO_VIDEO_ENABLE:
         if (data)
@@ -221,42 +220,43 @@ void InputPollCallback()
 int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsigned id)
 {
     LogFunctionNameLimited;
-    if (device == RETRO_DEVICE_JOYPAD)
+    if (device != RETRO_DEVICE_JOYPAD)
     {
-        uint32_t key_states = gEmulator->_input.GetKeyStates();
+        return 0;
+    }
 
-        if (id == RETRO_DEVICE_ID_JOYPAD_MASK)
+    uint32_t key_states = gEmulator->_input.GetKeyStates();
+
+    if (id == RETRO_DEVICE_ID_JOYPAD_MASK)
+    {
+        gEmulator->_input.ClearKeyStates(gEmulator->_keys_mask);
+        uint64_t keys = key_states;
+        int16_t state = 0;
+        for (size_t i = 0; i < 16; i++)
         {
-            gEmulator->_input.ClearKeyStates(gEmulator->_keys_mask);
-            uint64_t keys = key_states;
-            int16_t state = 0;
-            for (size_t i = 0; i < 16; i++)
+            if (keys & gEmulator->_keys[i])
             {
-                if (keys & gEmulator->_keys[i])
-                {
-                    state |= (1 << i);
-                }
+                state |= (1 << i);
             }
-            return state;
         }
-
-        if (id >= 16)
-        {
-            LogError("  InputStateCallback, wrong id %d", id);
-            return 0;
-        }
-
-        gEmulator->_input.ClearKeyStates(gEmulator->_keys[id]);
-        return key_states & gEmulator->_keys[id];
+        return state;
+    }
+    else if (id >= 16)
+    {
+        LogError("  InputStateCallback, wrong id %d", id);
+        return 0;
     }
     else
     {
-        return 0;
+        gEmulator->_input.ClearKeyStates(gEmulator->_keys[id]);
+        return key_states & gEmulator->_keys[id];
     }
 }
 
 Emulator::Emulator()
-    : _texture_buf(nullptr), _keys{0}
+    : _texture_buf(nullptr),
+      _keys{0},
+      _soft_frame_buf_render(false)
 {
 }
 
@@ -326,6 +326,11 @@ void Emulator::Run()
     _delay.Wait();
     _input.Poll();
     retro_run();
+
+    if (_soft_frame_buf_render)
+    {
+        gEmulator->_texture_buf->Unlock();
+    }
 }
 
 void Emulator::Reset()
@@ -367,11 +372,11 @@ bool Emulator::GetCurrentSoftwareFramebuffer(retro_framebuffer *fb)
     {
         return false;
     }
+
     gEmulator->_texture_buf->Lock();
-    gEmulator->_texture_buf->EndNext();
-    vita2d_texture *texture = gEmulator->_texture_buf->StartNext();
-    gEmulator->_texture_buf->Unlock();
-    // vita2d_texture *texture = gEmulator->_texture_buf->Next();
+    _soft_frame_buf_render = true;
+    vita2d_texture *texture = gEmulator->_texture_buf->Next();
+
     fb->data = vita2d_texture_get_datap(texture);
     fb->width = vita2d_texture_get_width(texture);
     fb->height = vita2d_texture_get_height(texture);

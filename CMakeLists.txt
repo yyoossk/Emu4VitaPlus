@@ -7,22 +7,22 @@ set(CMAKE_TOOLCHAIN_FILE
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
 option(WITH_LOG "log ouputting" OFF)
-set(BUILD "ALL" CACHE STRING "ALL(default)|gpsp|fba_lite|snes9x2002|snes9x2005|snes9x2010")
-set_property(CACHE BUILD PROPERTY STRINGS "ALL" "gpsp" "fba_lite" "snes9x2002" "snes9x2005" "snes9x2010")
+set(BUILD_LIST "ALL" "gpsp" "fba_lite" "snes9x2002" "snes9x2005" "snes9x2010 ")
+set(BUILD " ALL" CACHE STRING "ALL(default) |gpsp|fba_lite|snes9x2002|snes9x2005|snes9x2010 ")
+set_property(CACHE BUILD PROPERTY STRINGS ${BUILD_LIST})
 
-project("Emu4Vita++")
+if(NOT BUILD IN_LIST BUILD_LIST)
+    message(FATAL_ERROR "valid BUILD value: ${BUILD_LIST}")
+endif()
 
-set(CMAKE_C_FLAGS "-marm -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard \
--DVITA -D__vita__  \
+project(" Emu4Vita++ ")
+
+set(CMAKE_C_FLAGS " -marm -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard \
+-DVITA -D__vita__ \
 -mword-relocations -fno-optimize-sibling-calls \
 -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables \
--ffast-math -ftree-vectorize -O3")
+-ffast-math -ftree-vectorize -O3 ")
 
-# set(CMAKE_C_FLAGS "-march=armv7-a -mfpu=neon -mfloat-abi=hard -mword-relocations -fno-optimize-sibling-calls -O2")
-# set(CMAKE_C_FLAGS "-march=armv7-a -mfpu=neon -mfloat-abi=hard -DVITA \
-# -mword-relocations -fno-optimize-sibling-calls \
-# -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -ftree-vectorize \
-# -O3 -ffast-math")
 if(WITH_LOG)
     set(LOG_LEVEL LOG_LEVEL_DEBUG)
 else()

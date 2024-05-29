@@ -57,6 +57,7 @@ private:
     uint32_t _keys_mask;
     double _speed;
     Delay _delay;
+    bool _soft_frame_buf_render;
 
     void _SetPixelFormat(retro_pixel_format format);
     void _SetVideoSize(uint32_t width, uint32_t height);

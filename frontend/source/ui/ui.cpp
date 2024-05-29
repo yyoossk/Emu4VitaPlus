@@ -97,7 +97,7 @@ void Ui::_DeinitImgui()
     ImGui::DestroyContext();
 }
 
-Ui::Ui() : _tab_index(TAB_INDEX_BROWSER)
+Ui::Ui() : _tab_index(TAB_INDEX_BROWSER), _tabs{nullptr}
 {
     LogFunctionName;
     _InitImgui();
@@ -106,15 +106,20 @@ Ui::Ui() : _tab_index(TAB_INDEX_BROWSER)
 Ui::~Ui()
 {
     LogFunctionName;
-    for (auto &tab : _tabs)
-    {
-        if (tab != nullptr)
-        {
-            delete tab;
-        }
-    }
-
+    _ClearTabs();
     _DeinitImgui();
+}
+
+void Ui::_ClearTabs()
+{
+    for (size_t i = 0; i < TAB_INDEX_COUNT; i++)
+    {
+        if (_tabs[i] != nullptr)
+        {
+            delete _tabs[i];
+        }
+        _tabs[i] = nullptr;
+    }
 }
 
 void Ui::CreateTables(const char *path)
@@ -124,6 +129,8 @@ void Ui::CreateTables(const char *path)
         LogError("gEmulator has not been initialized yet.");
         return;
     }
+
+    _ClearTabs();
 
     _tabs[TAB_INDEX_SYSTEM] = new TabSeletable(TAB_SYSTEM,
                                                {new ItemBase(SYSTEM_RESUME_GAME, "", ResumeGame, NULL, false),
@@ -310,9 +317,9 @@ void Ui::_ShowNormal()
 {
     if (ImGui::BeginTabBar("MyTabBar", ImGuiTabBarFlags_None))
     {
-        for (size_t i = 0; i < _tabs.size(); i++)
+        for (size_t i = 0; i < TAB_INDEX_COUNT; i++)
         {
-            if (_tabs[i]->Visable())
+            if (_tabs[i] && _tabs[i]->Visable())
             {
                 _tabs[i]->Show(_tab_index == i);
             }
@@ -352,4 +359,24 @@ void Ui::ClearLogs()
 {
     LogFunctionName;
     _logs.clear();
+}
+
+void Ui::UpdateCoreOptions()
+{
+    std::vector<ItemBase *> options;
+    for (auto &iter : gConfig->core_options)
+    {
+        options.emplace_back(new ItemCore(&iter.second));
+    }
+
+    gVideo->Lock();
+
+    if (_tabs[TAB_INDEX_CORE] != nullptr)
+    {
+        delete _tabs[TAB_INDEX_CORE];
+    }
+
+    _tabs[TAB_INDEX_CORE] = new TabSeletable(TAB_CORE, options);
+
+    gVideo->Unlock();
 }

@@ -1,6 +1,5 @@
 #pragma once
 #include <psp2/kernel/threadmgr.h>
-#include <array>
 #include <vector>
 #include <string>
 #include "emulator.h"
@@ -36,6 +35,7 @@ public:
     void SetInputHooks();
     void AppendLog(const char *log);
     void ClearLogs();
+    void UpdateCoreOptions();
 
 private:
     void _InitImgui();
@@ -47,10 +47,12 @@ private:
     void _ShowBoot();
     void _ShowNormal();
 
+    void _ClearTabs();
+
     Input _input;
     size_t _tab_index;
 
-    std::array<TabBase *, TAB_INDEX_COUNT> _tabs;
+    TabBase *_tabs[TAB_INDEX_COUNT];
     std::vector<std::string> _logs;
 };
 
