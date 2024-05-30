@@ -51,7 +51,7 @@ private:
     TextureBuf *_texture_buf;
     Rect _video_rect;
 
-    Audio *_audio;
+    Audio _audio;
     Input _input;
     uint32_t _keys[16];
     uint32_t _keys_mask;

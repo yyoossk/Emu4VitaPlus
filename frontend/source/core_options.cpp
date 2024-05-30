@@ -131,3 +131,13 @@ bool CoreOptions::Get(retro_variable *var)
         return true;
     }
 }
+
+bool CoreOptions::Load(const char *path)
+{
+    return true;
+}
+
+bool CoreOptions::Save(const char *path)
+{
+    return true;
+}

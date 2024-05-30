@@ -50,6 +50,8 @@ void RetroLog(retro_log_level level, const char *fmt, ...)
         LogWarn(str);
         break;
     }
+
+    gUi->AppendLog(str);
 }
 
 bool EnvironmentCallback(unsigned cmd, void *data)
@@ -119,7 +121,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
 
     case RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO:
         memcpy(&gEmulator->_av_info, data, sizeof(retro_system_av_info));
-        gEmulator->_audio->SetSampleRate(gEmulator->_av_info.timing.sample_rate);
+        gEmulator->_audio.SetSampleRate(gEmulator->_av_info.timing.sample_rate);
         break;
 
     case RETRO_ENVIRONMENT_GET_LANGUAGE:
@@ -218,7 +220,7 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
 size_t AudioSampleBatchCallback(const int16_t *data, size_t frames)
 {
     LogFunctionNameLimited;
-    return gEmulator->_audio->SendAudioSample(data, frames);
+    return gEmulator->_audio.SendAudioSample(data, frames);
 }
 
 void InputPollCallback()
@@ -264,7 +266,6 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
 
 Emulator::Emulator()
     : _texture_buf(nullptr),
-      _audio{nullptr},
       _keys{0},
       _soft_frame_buf_render(false),
       _info{0},
@@ -279,11 +280,6 @@ Emulator::~Emulator()
     if (_texture_buf)
     {
         delete _texture_buf;
-    }
-
-    if (_audio)
-    {
-        delete _audio;
     }
 
     retro_deinit();
@@ -304,12 +300,13 @@ void Emulator::Init()
 
     retro_set_controller_port_device(0, RETRO_DEVICE_JOYPAD);
     _SetupKeys();
-    _audio = new Audio();
 }
 
 bool Emulator::LoadGame(const char *path)
 {
     LogFunctionName;
+
+    gStatus = APP_STATUS_BOOT;
 
     _current_name = File::GetStem(path);
     gStateManager->Init(_current_name.c_str());
@@ -324,6 +321,11 @@ bool Emulator::LoadGame(const char *path)
     {
         retro_get_system_av_info(&_av_info);
         SetSpeed(1.0);
+        gStatus = APP_STATUS_RUN_GAME;
+    }
+    else
+    {
+        gStatus = APP_STATUS_SHOW_UI;
     }
     return result;
 }

@@ -6,7 +6,7 @@
 
 Video *gVideo = nullptr;
 
-Video::Video() : ThreadBase(_DrawThread)
+Video::Video() : ThreadBase(_DrawThread, 96)
 {
     LogFunctionName;
     vita2d_init();

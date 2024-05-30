@@ -242,10 +242,10 @@ bool Config::Save(const char *path)
         ini.SetLongValue(GRAPHICS_SECTION, GraphicsStr.at(i), graphics[i]);
     }
 
-    for (auto const &option : core_options)
-    {
-        ini.SetValue(CORE_SECTION, option.first.c_str(), option.second.value.c_str());
-    }
+    // for (auto const &option : core_options)
+    // {
+    //     ini.SetValue(CORE_SECTION, option.first.c_str(), option.second.value.c_str());
+    // }
 
     return ini.SaveFile(path) == SI_OK;
 }

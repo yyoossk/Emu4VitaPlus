@@ -296,6 +296,11 @@ void Ui::_ShowBoot()
         ImGui::Text(log.c_str());
     }
 
+    if (ImGui::GetScrollMaxY() > 0.f)
+    {
+        ImGui::SetScrollHereY(1.f);
+    }
+
     if (_logs.size() > 0 && _logs.back() != "Done")
     {
         uint64_t current_ms = sceKernelGetProcessTimeWide();

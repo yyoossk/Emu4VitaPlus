@@ -23,6 +23,9 @@ struct CoreOption
 class CoreOptions : public std::map<std::string, CoreOption>
 {
 public:
+    bool Load(const char *path = APP_CORE_CONFIG_PATH);
+    bool Save(const char *path = APP_CORE_CONFIG_PATH);
+
     void Load(retro_core_options_intl *options);
     void Load(retro_core_options_v2_intl *options);
     void Load(retro_core_option_definition *options);
