@@ -1,7 +1,6 @@
 #pragma once
 #include <imgui_vita2d/imgui_vita.h>
 #include <stdint.h>
-#include "language_define.h"
 
 IMGUI_API void My_ImGui_ImplVita2D_Init(uint32_t language);
 IMGUI_API void My_ImGui_ImplVita2D_Shutdown();
