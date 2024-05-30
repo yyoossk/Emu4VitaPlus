@@ -75,7 +75,7 @@ target_link_libraries(
     SceFiber_stub)
 
 set(VITA_MAKE_FSELF_FLAGS "-a 0x2800000000000001")
-vita_create_self(eboot_${APP_NAME}.bin ${APP_NAME}.elf UNSAFE STRIPPED REL_OPTIMIZE)
+vita_create_self(eboot_${APP_NAME}.bin ${APP_NAME}.elf STRIPPED) # UNSAFE STRIPPED REL_OPTIMIZE)
 
 if(WITH_LOG)
     set(VPK_NAME ${APP_NAME}_${APP_VER}_log.vpk)

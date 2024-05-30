@@ -7,7 +7,7 @@
 class Audio
 {
 public:
-    Audio(uint32_t sample_rate);
+    Audio();
     virtual ~Audio();
 
     void SetSampleRate(uint32_t sample_rate);

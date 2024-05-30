@@ -113,7 +113,7 @@ void CoreOptions::Default()
     }
 }
 
-void CoreOptions::Get(retro_variable *var)
+bool CoreOptions::Get(retro_variable *var)
 {
     LogFunctionName;
     LogDebug("  key: %s", var->key);
@@ -122,10 +122,12 @@ void CoreOptions::Get(retro_variable *var)
     {
         var->value = NULL;
         LogWarn("  %s not found!", var->key);
+        return false;
     }
     else
     {
         var->value = iter->second.value.c_str();
         LogDebug("  value: %s", var->value);
+        return true;
     }
 }

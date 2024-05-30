@@ -5,15 +5,15 @@
 
 const uint32_t SAMPLE_RATES[] = {8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000};
 
-Audio::Audio(uint32_t sample_rate)
+Audio::Audio()
     : _in_sample_rate(0),
       _resampler(nullptr),
       _output(nullptr)
 {
     LogFunctionName;
 
-    SetSampleRate(sample_rate);
-    LogDebug("_in_sample_rate: %d _out_sample_rate:%d _resampler:%08x", _in_sample_rate, _out_sample_rate, _resampler);
+    // SetSampleRate(sample_rate);
+    // LogDebug("_in_sample_rate: %d _out_sample_rate:%d _resampler:%08x", _in_sample_rate, _out_sample_rate, _resampler);
 }
 
 Audio::~Audio()

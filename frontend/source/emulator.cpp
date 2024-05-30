@@ -84,8 +84,13 @@ bool EnvironmentCallback(unsigned cmd, void *data)
     case RETRO_ENVIRONMENT_GET_VARIABLE:
         if (data)
         {
-            gConfig->core_options.Get((retro_variable *)data);
+            return gConfig->core_options.Get((retro_variable *)data);
         }
+        else
+        {
+            return false;
+        }
+
         break;
 
     case RETRO_ENVIRONMENT_SET_VARIABLES:
@@ -259,8 +264,11 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
 
 Emulator::Emulator()
     : _texture_buf(nullptr),
+      _audio{nullptr},
       _keys{0},
-      _soft_frame_buf_render(false)
+      _soft_frame_buf_render(false),
+      _info{0},
+      _av_info{0}
 {
 }
 
@@ -293,14 +301,10 @@ void Emulator::Init()
 
     retro_init();
     retro_get_system_info(&_info);
-    retro_get_system_av_info(&_av_info);
-
-    SetSpeed(1.0);
 
     retro_set_controller_port_device(0, RETRO_DEVICE_JOYPAD);
     _SetupKeys();
-
-    _audio = new Audio(_av_info.timing.sample_rate);
+    _audio = new Audio();
 }
 
 bool Emulator::LoadGame(const char *path)
@@ -315,7 +319,13 @@ bool Emulator::LoadGame(const char *path)
 
     _soft_frame_buf_render = false;
 
-    return retro_load_game(&game_info);
+    bool result = retro_load_game(&game_info);
+    if (result)
+    {
+        retro_get_system_av_info(&_av_info);
+        SetSpeed(1.0);
+    }
+    return result;
 }
 
 void Emulator::UnloadGame()
