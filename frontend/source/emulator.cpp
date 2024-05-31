@@ -349,7 +349,6 @@ void Emulator::Run()
     if (_soft_frame_buf_render)
     {
         _texture_buf->Unlock();
-        _soft_frame_buf_render = false;
     }
 }
 

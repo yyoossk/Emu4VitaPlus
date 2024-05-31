@@ -297,10 +297,6 @@ void Ui::_ShowBoot()
             ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
         }
         ImGui::Text(log.c_str());
-        if (log == _logs.back())
-        {
-            ImGui::PopStyleColor();
-        }
     }
 
     if (_logs.size() > 0 && _logs.back() != "Done")
@@ -316,6 +312,11 @@ void Ui::_ShowBoot()
             next_ms = current_ms + 200000;
         }
         ImGui::Text(frames[count]);
+    }
+
+    if (_logs.size() > 0)
+    {
+        ImGui::PopStyleColor();
     }
 
     if (ImGui::GetScrollMaxY() > 0.f)
