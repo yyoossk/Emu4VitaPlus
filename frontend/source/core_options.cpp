@@ -3,30 +3,30 @@
 #include "core_options.h"
 #include "log.h"
 
-std::vector<LanguageString> CoreOption::GetValues()
+#define CORE_SECTION "CORE"
+
+const std::vector<LanguageString> CoreOption::GetValues() const
 {
     std::vector<LanguageString> _values;
-    const retro_core_option_value *v = values;
-    while (v->value)
+
+    for (const auto &v : values)
     {
-        _values.emplace_back(v->label ? v->label : v->value);
-        v++;
+        _values.emplace_back(v.label ? v.label : v.value);
     }
+
     return _values;
 }
 
 size_t CoreOption::GetValueIndex()
 {
-    const retro_core_option_value *v = values;
     size_t count = 0;
-    while (v->value)
+    for (const auto &v : values)
     {
-        if (value == (v->label ? v->label : v->value))
+        if (value == (v.label ? v.label : v.value))
         {
             return count;
         }
         count++;
-        v++;
     }
 
     return 0;
@@ -75,7 +75,7 @@ void CoreOptions::Load(retro_core_option_definition *options)
 }
 
 template <typename T>
-void CoreOptions::_Load(T *define)
+void CoreOptions::_Load(const T *define)
 {
     LogDebug("  key: %s", define->key);
     LogDebug("  desc: %s", define->desc);
@@ -92,15 +92,22 @@ void CoreOptions::_Load(T *define)
         option = &((*this)[define->key] = CoreOption{define->desc ? define->desc : emptry_string,
                                                      define->info ? define->info : emptry_string,
                                                      define->default_value,
-                                                     define->default_value,
-                                                     define->values});
+                                                     define->default_value});
+        // LogDebug("xx %x %s %x %s", define->key, define->key, define->values, define->values->value);
     }
     else
     {
         option = &(iter->second);
         option->desc = define->desc ? define->desc : emptry_string;
         option->info = define->info ? define->info : emptry_string;
-        option->values = define->values;
+        option->values.clear();
+    }
+
+    const retro_core_option_value *v = define->values;
+    while (v->value)
+    {
+        option->values.emplace_back(*v);
+        v++;
     }
 }
 
@@ -134,10 +141,53 @@ bool CoreOptions::Get(retro_variable *var)
 
 bool CoreOptions::Load(const char *path)
 {
+    LogFunctionName;
     return true;
 }
 
 bool CoreOptions::Save(const char *path)
 {
-    return true;
+    LogFunctionName;
+    CSimpleIniA ini;
+    for (auto const &iter : *this)
+    {
+        const char *key = iter.first.c_str();
+        const CoreOption *option = &iter.second;
+        ini.SetValue(CORE_SECTION, key, option->value.c_str());
+        LogDebug("key %s", key);
+        ini.SetValue(key, "desc", option->desc);
+        LogDebug("desc %s", option->desc);
+        ini.SetValue(key, "info", option->info);
+        LogDebug("info %s", option->info);
+        ini.SetValue(key, "default_value", option->default_value);
+        LogDebug("default_value %s", option->default_value);
+        LogDebug("%s %x", key, option->values);
+
+        // for (auto vv : option->GetValues())
+        // {
+        //     LogDebug(" %s", vv.Get());
+        // }
+        size_t count = 0;
+        for (const auto &v : option->values)
+        {
+            char vs[32];
+            snprintf(vs, 32, "value_%d", count);
+            ini.SetValue(key, vs, v.value);
+            count++;
+        }
+        // const retro_core_option_value *v = option->values;
+        // size_t i = 0;
+        // while (v->value)
+        // {
+        //     LogDebug("  %d %s", i, v->value);
+        //     char vs[32];
+        //     snprintf(vs, 32, "value_%d", i);
+        //     ini.SetValue(key, vs, v->value);
+        //     i++;
+        //     v++;
+        // }
+        // LogDebug("xxx");
+    }
+
+    return ini.SaveFile(path) == SI_OK;
 }

@@ -13,7 +13,6 @@
 #define MAIN_SECTION "MAIN"
 #define HOTKEY_SECTION "HOTKEY"
 #define GRAPHICS_SECTION "GRAPHICS"
-#define CORE_SECTION "CORE"
 
 Config *gConfig = nullptr;
 
@@ -242,12 +241,7 @@ bool Config::Save(const char *path)
         ini.SetLongValue(GRAPHICS_SECTION, GraphicsStr.at(i), graphics[i]);
     }
 
-    // for (auto const &option : core_options)
-    // {
-    //     ini.SetValue(CORE_SECTION, option.first.c_str(), option.second.value.c_str());
-    // }
-
-    return ini.SaveFile(path) == SI_OK;
+    return ini.SaveFile(path) == SI_OK && core_options.Save();
 }
 
 bool Config::Load(const char *path)
@@ -287,13 +281,13 @@ bool Config::Load(const char *path)
         graphics[i] = ini.GetLongValue(GRAPHICS_SECTION, GraphicsStr.at(i));
     }
 
-    CSimpleIniA::TNamesDepend keys;
-    ini.GetAllKeys(CORE_SECTION, keys);
-    for (const auto &iter : keys)
-    {
-        core_options[iter.pItem] = CoreOption();
-        core_options[iter.pItem].value = ini.GetValue(CORE_SECTION, iter.pItem);
-    }
+    // CSimpleIniA::TNamesDepend keys;
+    // ini.GetAllKeys(CORE_SECTION, keys);
+    // for (const auto &iter : keys)
+    // {
+    //     core_options[iter.pItem] = CoreOption();
+    //     core_options[iter.pItem].value = ini.GetValue(CORE_SECTION, iter.pItem);
+    // }
 
     LogDebug("load end");
     return true;

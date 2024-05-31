@@ -97,7 +97,7 @@ void TabSeletable::Show(bool selected)
 
 void TabSeletable::_OnKeyUp(Input *input)
 {
-    LogFunctionName;
+    // LogFunctionName;
     if (_GetItemCount() == 0)
     {
         return;
@@ -112,7 +112,7 @@ void TabSeletable::_OnKeyUp(Input *input)
 
 void TabSeletable::_OnKeyDown(Input *input)
 {
-    LogFunctionName;
+    // LogFunctionName;
     if (_GetItemCount() == 0)
     {
         return;

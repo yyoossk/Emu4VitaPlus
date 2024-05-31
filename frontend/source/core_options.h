@@ -12,9 +12,9 @@ struct CoreOption
     const char *info = nullptr;
     const char *default_value = nullptr;
     std::string value;
-    const retro_core_option_value *values = nullptr;
+    std::vector<retro_core_option_value> values;
 
-    std::vector<LanguageString> GetValues();
+    const std::vector<LanguageString> GetValues() const;
     size_t GetValueIndex();
     void SetValueIndex(size_t index);
     void Default() { value = default_value; };
@@ -34,5 +34,5 @@ public:
 
 private:
     template <typename T>
-    void _Load(T *define);
+    void _Load(const T *define);
 };

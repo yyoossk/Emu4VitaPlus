@@ -327,6 +327,9 @@ bool Emulator::LoadGame(const char *path)
     {
         gStatus = APP_STATUS_SHOW_UI;
     }
+
+    gUi->ClearLogs();
+
     return result;
 }
 
@@ -345,6 +348,7 @@ void Emulator::Run()
     if (_soft_frame_buf_render)
     {
         _texture_buf->Unlock();
+        _soft_frame_buf_render = false;
     }
 }
 
@@ -354,6 +358,7 @@ void Emulator::Reset()
     retro_reset();
 }
 
+vita2d_texture *current_tex;
 void Emulator::Show()
 {
     if (_texture_buf == nullptr)
@@ -362,15 +367,18 @@ void Emulator::Show()
     }
 
     _texture_buf->Lock();
-    // LogDebug("_texture_buf->Current() %08x", _texture_buf->Current());
+    // LogDebug("Show _texture_buf->Current() %08x", _texture_buf->Current());
+    current_tex = _texture_buf->Current();
     vita2d_draw_texture_part_scale_rotate(_texture_buf->Current(),
                                           VITA_WIDTH / 2, VITA_HEIGHT / 2, _video_rect.x, _video_rect.y,
                                           _texture_buf->GetWidth(), _texture_buf->GetHeight(),
                                           _video_rect.width / _texture_buf->GetWidth(),
                                           _video_rect.height / _texture_buf->GetHeight(),
                                           0.f);
+
     // LogDebug("%f %f %f %f", _video_rect.x, _video_rect.y, _video_rect.width, _video_rect.height);
     // LogDebug("%f %f", _video_rect.width / _texture_buf->GetWidth(), _video_rect.height / _texture_buf->GetHeight());
+
     _texture_buf->Unlock();
 }
 
@@ -390,8 +398,13 @@ bool Emulator::GetCurrentSoftwareFramebuffer(retro_framebuffer *fb)
     }
 
     _texture_buf->Lock();
+    // LogDebug("GetCurrentSoftwareFramebuffer _texture_buf->Current() %08x", _texture_buf->Current());
     _soft_frame_buf_render = true;
     vita2d_texture *texture = _texture_buf->Next();
+    if (texture == current_tex)
+    {
+        LogWarn("same texture: %x %x", texture, current_tex);
+    }
 
     fb->data = vita2d_texture_get_datap(texture);
     fb->width = vita2d_texture_get_width(texture);

@@ -290,15 +290,17 @@ void Ui::_ShowBoot()
     static size_t count = 0;
     static uint64_t next_ms = 0;
 
-    ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
     for (const auto &log : _logs)
     {
+        if (log == _logs.back())
+        {
+            ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
+        }
         ImGui::Text(log.c_str());
-    }
-
-    if (ImGui::GetScrollMaxY() > 0.f)
-    {
-        ImGui::SetScrollHereY(1.f);
+        if (log == _logs.back())
+        {
+            ImGui::PopStyleColor();
+        }
     }
 
     if (_logs.size() > 0 && _logs.back() != "Done")
@@ -315,7 +317,11 @@ void Ui::_ShowBoot()
         }
         ImGui::Text(frames[count]);
     }
-    ImGui::PopStyleColor();
+
+    if (ImGui::GetScrollMaxY() > 0.f)
+    {
+        ImGui::SetScrollHereY(1.f);
+    }
 }
 
 void Ui::_ShowNormal()
