@@ -58,6 +58,7 @@ private:
     double _speed;
     Delay _delay;
     bool _soft_frame_buf_render;
+    vita2d_texture *_current_tex;
 
     void _SetPixelFormat(retro_pixel_format format);
     void _SetVideoSize(uint32_t width, uint32_t height);

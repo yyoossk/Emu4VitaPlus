@@ -268,6 +268,7 @@ Emulator::Emulator()
     : _texture_buf(nullptr),
       _keys{0},
       _soft_frame_buf_render(false),
+      _current_tex(nullptr),
       _info{0},
       _av_info{0}
 {
@@ -358,7 +359,6 @@ void Emulator::Reset()
     retro_reset();
 }
 
-vita2d_texture *current_tex;
 void Emulator::Show()
 {
     if (_texture_buf == nullptr)
@@ -368,8 +368,8 @@ void Emulator::Show()
 
     _texture_buf->Lock();
     // LogDebug("Show _texture_buf->Current() %08x", _texture_buf->Current());
-    current_tex = _texture_buf->Current();
-    vita2d_draw_texture_part_scale_rotate(_texture_buf->Current(),
+    _current_tex = _texture_buf->Current();
+    vita2d_draw_texture_part_scale_rotate(_current_tex,
                                           VITA_WIDTH / 2, VITA_HEIGHT / 2, _video_rect.x, _video_rect.y,
                                           _texture_buf->GetWidth(), _texture_buf->GetHeight(),
                                           _video_rect.width / _texture_buf->GetWidth(),
@@ -401,9 +401,10 @@ bool Emulator::GetCurrentSoftwareFramebuffer(retro_framebuffer *fb)
     // LogDebug("GetCurrentSoftwareFramebuffer _texture_buf->Current() %08x", _texture_buf->Current());
     _soft_frame_buf_render = true;
     vita2d_texture *texture = _texture_buf->Next();
-    if (texture == current_tex)
+    if (texture == _current_tex)
     {
-        LogWarn("same texture: %x %x", texture, current_tex);
+        LogWarn("same texture: %x %x", texture, _current_tex);
+        texture = _texture_buf->Next();
     }
 
     fb->data = vita2d_texture_get_datap(texture);
