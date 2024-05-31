@@ -365,6 +365,13 @@ void Emulator::Show()
         return;
     }
 
+    size_t count = 0;
+    while (_current_tex == _texture_buf->Current() && count < 10)
+    {
+        sceKernelDelayThread(1000);
+        count++;
+    }
+
     _texture_buf->Lock();
     // LogDebug("Show _texture_buf->Current() %08x", _texture_buf->Current());
     _current_tex = _texture_buf->Current();
@@ -402,7 +409,7 @@ bool Emulator::GetCurrentSoftwareFramebuffer(retro_framebuffer *fb)
     vita2d_texture *texture = _texture_buf->Next();
     if (texture == _current_tex)
     {
-        LogWarn("same texture: %x %x", texture, _current_tex);
+        // LogWarn("same texture: %x %x", texture, _current_tex);
         texture = _texture_buf->Next();
     }
 
