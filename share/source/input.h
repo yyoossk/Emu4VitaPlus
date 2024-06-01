@@ -3,7 +3,6 @@
 #include <functional>
 #include <unordered_map>
 #include <stack>
-#include <libretro.h>
 #include <psp2/ctrl.h>
 
 class Input;

@@ -42,6 +42,11 @@ public:
     friend int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsigned id);
 
 private:
+    void _SetPixelFormat(retro_pixel_format format);
+    void _SetVideoSize(uint32_t width, uint32_t height);
+    void _SetupKeys();
+    void _OnPsButton(Input *input);
+
     std::string _current_name;
     retro_system_info _info;
     retro_system_av_info _av_info;
@@ -60,10 +65,8 @@ private:
     bool _soft_frame_buf_render;
     vita2d_texture *_current_tex;
 
-    void _SetPixelFormat(retro_pixel_format format);
-    void _SetVideoSize(uint32_t width, uint32_t height);
-    void _SetupKeys();
-    void _OnPsButton(Input *input);
+    SceKernelLwMutexWork _mutex;
+    SceKernelLwCondWork _cond;
 };
 
 extern Emulator *gEmulator;

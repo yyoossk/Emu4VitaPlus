@@ -98,14 +98,10 @@ void ThreadBase::Unlock()
 
 void ThreadBase::Wait()
 {
-    // Lock();
     sceKernelWaitLwCond(&_cond, NULL);
-    // Unlock();
 }
 
 void ThreadBase::Signal()
 {
-    // Lock();
     sceKernelSignalLwCond(&_cond);
-    // Unlock();
 }
