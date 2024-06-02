@@ -215,7 +215,7 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
     }
 
     gEmulator->_texture_buf->Unlock();
-    sceKernelSignalLwCond(&gEmulator->_tex_cond);
+    sceKernelSignalSema(gEmulator->_video_semaid, 1);
 }
 
 size_t AudioSampleBatchCallback(const int16_t *data, size_t frames)
@@ -274,8 +274,7 @@ Emulator::Emulator()
       _av_info{0}
 {
     sceKernelCreateLwMutex(&_run_mutex, "run_mutex", 0, 0, NULL);
-    sceKernelCreateLwMutex(&_tex_mutex, "texture_mutex", 0, 0, NULL);
-    sceKernelCreateLwCond(&_tex_cond, "texture_cond", 0, &_tex_mutex, NULL);
+    _video_semaid = sceKernelCreateSema("video_sema", 0, 0, 1, NULL);
 }
 
 Emulator::~Emulator()
@@ -288,8 +287,7 @@ Emulator::~Emulator()
     }
 
     sceKernelDeleteLwMutex(&_run_mutex);
-    sceKernelDeleteLwMutex(&_tex_mutex);
-    sceKernelDeleteLwCond(&_tex_cond);
+    sceKernelDeleteSema(_video_semaid);
 
     retro_deinit();
 }
@@ -360,7 +358,7 @@ void Emulator::Run()
     if (_soft_frame_buf_render)
     {
         _texture_buf->Unlock();
-        sceKernelSignalLwCond(&_tex_cond);
+        sceKernelSignalSema(_video_semaid, 1);
     }
 }
 
@@ -390,15 +388,17 @@ void Emulator::Show()
     size_t count = 0;
     while (_current_tex == _texture_buf->Current() && count < 10)
     {
-        SceUInt32 time = 1000;
-        sceKernelWaitLwCond(&_tex_cond, &time);
+        SceUInt timeout = 1000;
+        sceKernelWaitSema(_video_semaid, 1, &timeout);
         count++;
     }
 
-    if (count >= 10)
+    if (count >= 10 && gStatus == APP_STATUS_RUN_GAME)
     {
+        LogDebug("skip frame");
         return;
     }
+    // sceKernelWaitSema(_video_semaid, 1, NULL);
 
     _texture_buf->Lock();
     // LogDebug("Show _texture_buf->Current() %08x", _texture_buf->Current());
@@ -419,6 +419,7 @@ void Emulator::Show()
 void Emulator::SetSpeed(double speed)
 {
     LogFunctionName;
+    LogDebug("  fps: %f", _av_info.timing.fps);
     _speed = speed;
     _delay.SetInterval(1000000ull / (uint64_t)(_av_info.timing.fps * speed));
 }
@@ -426,6 +427,8 @@ void Emulator::SetSpeed(double speed)
 bool Emulator::GetCurrentSoftwareFramebuffer(retro_framebuffer *fb)
 {
     LogFunctionNameLimited;
+
+    return false;
     if (!fb || _texture_buf == nullptr)
     {
         return false;

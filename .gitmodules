@@ -52,3 +52,6 @@ url = https://github.com/libretro/libretro-common
 [submodule "deps/simpleini"]
 path = deps/simpleini
 url = https://github.com/brofield/simpleini
+[submodule "cores/FBNeo"]
+	path = cores/FBNeo
+	url = https://github.com/libretro/FBNeo.git

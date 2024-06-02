@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 
+if(TARGET gpSP_build)
+  return()
+endif()
+
 set(CMAKE_TOOLCHAIN_FILE
   "$ENV{VITASDK}/share/vita.toolchain.cmake"
   CACHE PATH "toolchain file")
@@ -7,11 +11,11 @@ include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
 set(APP_NAME "gpSP4vita")
 set(APP_DIR_NAME "gpSP")
-set(CORE_FILE_NAME "gpSP")
-set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/${CORE_FILE_NAME})
+set(CORE_NAME "gpSP")
+set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/${CORE_NAME})
 set(CORE_MAKEFILE_DIR ${CORE_DIR})
 set(CORE_MAKEFILE_NAME Makefile)
-set(SFO_TITLE_NAME "Emu4Vita++ (${CORE_FILE_NAME})")
+set(SFO_TITLE_NAME "Emu4Vita++ (${CORE_NAME})")
 set(SFO_TITLE_ID "GPSP4VITA")
 set(PRIVATE_PKG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pkg)
 

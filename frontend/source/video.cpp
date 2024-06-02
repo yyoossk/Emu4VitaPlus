@@ -60,9 +60,7 @@ int Video::_DrawThread(SceSize args, void *argp)
         }
 
         vita2d_end_drawing();
-        // vita2d_common_dialog_update();
         vita2d_swap_buffers();
-        // sceDisplayWaitVblankStart();
         video->Unlock();
     }
 

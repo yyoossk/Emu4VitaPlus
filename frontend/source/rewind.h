@@ -17,14 +17,20 @@ struct DiffArea
     uint32_t size;
 };
 
-#define REWIND_BUF_HEADER \
-    uint32_t magic;       \
-    uint32_t index;
-
 struct RewindBuf
 {
     uint32_t magic;
     uint32_t index;
+};
+
+struct RewindBlock
+{
+    BlockType type;
+    uint32_t index;
+    RewindBuf *buf;
+    uint32_t size;
+
+    bool IsValid();
 };
 
 struct RewindFullBuf : RewindBuf
@@ -37,16 +43,6 @@ struct RewindDiffBuf : RewindBuf
     RewindBlock *full_block;
     uint32_t num;
     DiffArea areas[];
-};
-
-struct RewindBlock
-{
-    BlockType type;
-    uint32_t index;
-    RewindBuf *buf;
-    uint32_t size;
-
-    bool IsValid();
 };
 
 class Rewind : public ThreadBase

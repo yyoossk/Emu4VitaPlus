@@ -161,7 +161,6 @@ bool CoreOptions::Save(const char *path)
         LogDebug("info %s", option->info);
         ini.SetValue(key, "default_value", option->default_value);
         LogDebug("default_value %s", option->default_value);
-        LogDebug("%s %x", key, option->values);
 
         // for (auto vv : option->GetValues())
         // {

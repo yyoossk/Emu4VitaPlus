@@ -67,9 +67,8 @@ private:
     bool _soft_frame_buf_render;
     vita2d_texture *_current_tex;
 
-    SceKernelLwMutexWork _tex_mutex;
-    SceKernelLwCondWork _tex_cond;
     SceKernelLwMutexWork _run_mutex;
+    SceUID _video_semaid;
 };
 
 extern Emulator *gEmulator;

@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 
+if(TARGET Snes9x2002_build)
+  return()
+endif()
+
 set(CMAKE_TOOLCHAIN_FILE
   "$ENV{VITASDK}/share/vita.toolchain.cmake"
   CACHE PATH "toolchain file")
@@ -7,11 +11,11 @@ include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
 set(APP_NAME "Snes9x2002_4vita")
 set(APP_DIR_NAME "Snes9x2002")
-set(CORE_FILE_NAME "Snes9x2002")
-set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/${CORE_FILE_NAME})
+set(CORE_NAME "Snes9x2002")
+set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/${CORE_NAME})
 set(CORE_MAKEFILE_DIR ${CORE_DIR})
 set(CORE_MAKEFILE_NAME Makefile)
-set(SFO_TITLE_NAME "Emu4Vita++ (${CORE_FILE_NAME})")
+set(SFO_TITLE_NAME "Emu4Vita++ (${CORE_NAME})")
 set(SFO_TITLE_ID "SNES024VT")
 set(PRIVATE_PKG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pkg)
 

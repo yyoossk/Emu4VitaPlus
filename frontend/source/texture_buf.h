@@ -3,7 +3,7 @@
 #include "log.h"
 #include "defines.h"
 
-#define TEXTURE_BUF_COUNT 10
+#define TEXTURE_BUF_COUNT 3
 
 class TextureBuf
 {

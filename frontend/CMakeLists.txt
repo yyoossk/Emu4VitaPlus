@@ -39,10 +39,19 @@ add_compile_definitions(
     APP_TITLE_NAME="${SFO_TITLE_NAME}"
     CORE_SOFTWARE=${CORE_SOFTWARE})
 
-add_executable(${APP_NAME}.elf ${SRC})
+set(ELF_NAME ${APP_NAME}.elf)
+set(EBOOT_NAME eboot_${CORE_NAME}.bin)
+
+if(WITH_LOG)
+    set(VPK_NAME ${APP_NAME}_${APP_VER}_log.vpk)
+else()
+    set(VPK_NAME ${APP_NAME}_${APP_VER}.vpk)
+endif()
+
+add_executable(${ELF_NAME} ${SRC})
 
 target_link_libraries(
-    ${APP_NAME}.elf
+    ${ELF_NAME}
     ${LIBRETRO_LIBRARY}
     share
     retro_comm
@@ -75,20 +84,14 @@ target_link_libraries(
     SceFiber_stub)
 
 set(VITA_MAKE_FSELF_FLAGS "-a 0x2800000000000001")
-vita_create_self(eboot_${APP_NAME}.bin ${APP_NAME}.elf STRIPPED) # UNSAFE STRIPPED REL_OPTIMIZE)
+vita_create_self(${EBOOT_NAME} ${ELF_NAME} STRIPPED) # UNSAFE STRIPPED REL_OPTIMIZE)
 
-if (NOT BUILD_SELF)
-    if(WITH_LOG)
-        set(VPK_NAME ${APP_NAME}_${APP_VER}_log.vpk)
-    else()
-        set(VPK_NAME ${APP_NAME}_${APP_VER}.vpk)
-    endif()
-
+if(NOT BUILD_SELF)
     set(VITA_MKSFOEX_FLAGS -d ATTRIBUTE2=12)
     vita_create_vpk(
         ${VPK_NAME}
         ${SFO_TITLE_ID}
-        eboot_${APP_NAME}.bin
+        ${EBOOT_NAME}
         VERSION
         ${SFO_APP_VER}
         NAME

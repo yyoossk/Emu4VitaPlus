@@ -1,18 +1,22 @@
 cmake_minimum_required(VERSION 3.10)
 
+if(TARGET fba_lite_build)
+  return()
+endif()
+
 set(CMAKE_TOOLCHAIN_FILE
   "$ENV{VITASDK}/share/vita.toolchain.cmake"
   CACHE PATH "toolchain file")
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
-set(APP_NAME "FbaL4vita")
+set(APP_NAME "FbaLite4vita")
 set(APP_DIR_NAME "fba_lite")
-set(CORE_FILE_NAME "fba_lite")
+set(CORE_NAME "fba_lite")
 set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/libretro-fba-lite)
 set(CORE_MAKEFILE_DIR ${CORE_DIR})
 set(CORE_MAKEFILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/makefile.libretro)
-set(SFO_TITLE_NAME "Emu4Vita++ (${CORE_FILE_NAME})")
-set(SFO_TITLE_ID "FBAL4VITA")
+set(SFO_TITLE_NAME "Emu4Vita++ (${CORE_NAME})")
+set(SFO_TITLE_ID "FBALITE4V")
 set(PRIVATE_PKG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pkg)
 
 set(CORE_ARGS platform=vita EXTERNAL_ZLIB=1)

@@ -23,15 +23,19 @@ endforeach()
 project("Arch")
 
 set(BUILD_SELF ON)
-add_subdirectory(../apps/gpsp gpsp)
-add_subdirectory(../apps/fba_lite fba_lite)
 
-if(${CMAKE_VERSION} VERSION_LESS "3.20.0")
-    set(CORE_EBOOTS "eboot_gpSP4vita.bin" "eboot_FbaL4vita.bin")
-else()
-    set(CORE_EBOOTS "eboot_gpSP4vita.bin-self" "eboot_FbaL4vita.bin-self")
-endif()
+set(APPS gpSP fba_lite Snes9x2005)
+set(APP_EBOOTS "")
 
+foreach(app ${APPS})
+    add_subdirectory(../apps/${app} apps/${app})
+
+    if(${CMAKE_VERSION} VERSION_LESS "3.20.0")
+        list(APPEND APP_EBOOTS "eboot_${app}.bin")
+    else()
+        list(APPEND APP_EBOOTS "eboot_${app}.bin-self")
+    endif()
+endforeach()
 
 include_directories(
     source
@@ -94,9 +98,9 @@ add_custom_target(VPK_${APP_NAME} ALL
     COMMAND ${CMAKE_COMMAND} -E rename ${VPK_NAME} ${OUT_PATH}/${VPK_NAME})
 
 if(${CMAKE_VERSION} VERSION_LESS "3.20.0")
-    add_dependencies(${VPK_NAME} ${CORE_EBOOTS})
+    add_dependencies(${VPK_NAME} ${APP_EBOOTS})
     add_dependencies(VPK_${APP_NAME} ${VPK_NAME})
 else()
-    add_dependencies(${VPK_NAME}-vpk ${CORE_EBOOTS})
+    add_dependencies(${VPK_NAME}-vpk ${APP_EBOOTS})
     add_dependencies(VPK_${APP_NAME} ${VPK_NAME}-vpk)
 endif()

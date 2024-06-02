@@ -28,6 +28,7 @@ bool Rewind::Init()
     LogFunctionName;
     _state_size = retro_serialize_size();
     _aligned_state_size = ALIGN_UP_10H(_state_size);
+    return true;
 }
 
 void Rewind::Deinit()
