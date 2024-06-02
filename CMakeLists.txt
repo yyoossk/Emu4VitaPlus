@@ -8,7 +8,7 @@ include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
 option(WITH_LOG "log ouputting" OFF)
 set(BUILD_LIST "ALL" "Arch" "gpsp" "fba_lite" "snes9x2002" "snes9x2005" "snes9x2010 ")
-set(BUILD "XXX" CACHE STRING "ALL(default)|Arch|gpsp|fba_lite|snes9x2002|snes9x2005|snes9x2010")
+set(BUILD "ALL" CACHE STRING "ALL(default)|Arch|gpsp|fba_lite|snes9x2002|snes9x2005|snes9x2010")
 set_property(CACHE BUILD PROPERTY STRINGS ${BUILD_LIST})
 
 string(STRIP ${BUILD} BUILD)
