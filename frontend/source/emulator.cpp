@@ -215,7 +215,7 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
     }
 
     gEmulator->_texture_buf->Unlock();
-    sceKernelSignalLwCond(&gEmulator->_cond);
+    sceKernelSignalLwCond(&gEmulator->_tex_cond);
 }
 
 size_t AudioSampleBatchCallback(const int16_t *data, size_t frames)
@@ -273,8 +273,9 @@ Emulator::Emulator()
       _info{0},
       _av_info{0}
 {
-    sceKernelCreateLwMutex(&_mutex, "emu_mutex", 0, 0, NULL);
-    sceKernelCreateLwCond(&_cond, "emu_cond", 0, &_mutex, NULL);
+    sceKernelCreateLwMutex(&_run_mutex, "run_mutex", 0, 0, NULL);
+    sceKernelCreateLwMutex(&_tex_mutex, "texture_mutex", 0, 0, NULL);
+    sceKernelCreateLwCond(&_tex_cond, "texture_cond", 0, &_tex_mutex, NULL);
 }
 
 Emulator::~Emulator()
@@ -286,8 +287,9 @@ Emulator::~Emulator()
         delete _texture_buf;
     }
 
-    sceKernelDeleteLwMutex(&_mutex);
-    sceKernelDeleteLwCond(&_cond);
+    sceKernelDeleteLwMutex(&_run_mutex);
+    sceKernelDeleteLwMutex(&_tex_mutex);
+    sceKernelDeleteLwCond(&_tex_cond);
 
     retro_deinit();
 }
@@ -350,13 +352,26 @@ void Emulator::Run()
 {
     _delay.Wait();
     _input.Poll();
+
+    Lock();
     retro_run();
+    Unlock();
 
     if (_soft_frame_buf_render)
     {
         _texture_buf->Unlock();
-        sceKernelSignalLwCond(&_cond);
+        sceKernelSignalLwCond(&_tex_cond);
     }
+}
+
+void Emulator::Lock()
+{
+    sceKernelLockLwMutex(&_run_mutex, 1, NULL);
+}
+
+void Emulator::Unlock()
+{
+    sceKernelUnlockLwMutex(&_run_mutex, 1);
 }
 
 void Emulator::Reset()
@@ -376,7 +391,7 @@ void Emulator::Show()
     while (_current_tex == _texture_buf->Current() && count < 10)
     {
         SceUInt32 time = 1000;
-        sceKernelWaitLwCond(&_cond, &time);
+        sceKernelWaitLwCond(&_tex_cond, &time);
         count++;
     }
 

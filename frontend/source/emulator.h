@@ -27,6 +27,8 @@ public:
     void Reset();
     void Run();
     void Show();
+    void Lock();
+    void Unlock();
     void SetSpeed(double speed);
     const char *CurrentName() { return _current_name.c_str(); };
     bool SaveScreenShot(const char *name, size_t height = 0);
@@ -65,8 +67,9 @@ private:
     bool _soft_frame_buf_render;
     vita2d_texture *_current_tex;
 
-    SceKernelLwMutexWork _mutex;
-    SceKernelLwCondWork _cond;
+    SceKernelLwMutexWork _tex_mutex;
+    SceKernelLwCondWork _tex_cond;
+    SceKernelLwMutexWork _run_mutex;
 };
 
 extern Emulator *gEmulator;

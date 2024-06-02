@@ -25,6 +25,7 @@ public:
     retro_language GetRetroLanguage();
 
     uint32_t language;
+    uint32_t rewind_buf_size;
     std::vector<ControlMapConfig> control_maps;
     uint32_t graphics[GRAPHICS_CONFIG_COUNT];
     uint32_t hotkeys[HOT_KEY_COUNT];

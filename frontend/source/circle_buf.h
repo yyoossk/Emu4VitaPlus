@@ -21,6 +21,18 @@ public:
         }
     };
 
+    void Reset()
+    {
+        _read_pos = 0;
+        _write_pos = 0;
+        if (_tmp != nullptr)
+        {
+            delete[] _tmp;
+            _tmp = nullptr;
+            _tmp_size = 0;
+        }
+    };
+
     T *WriteBegin(size_t size)
     {
         const size_t write_pos = _write_pos.load(std::memory_order_relaxed);

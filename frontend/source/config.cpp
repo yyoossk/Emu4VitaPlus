@@ -10,6 +10,8 @@
 #include "log.h"
 #include "defines.h"
 
+#define DEFAULT_REWIND_BUF_SIZE 10
+
 #define MAIN_SECTION "MAIN"
 #define HOTKEY_SECTION "HOTKEY"
 #define GRAPHICS_SECTION "GRAPHICS"
@@ -131,6 +133,8 @@ Config::~Config()
 void Config::Default()
 {
     LogFunctionName;
+
+    rewind_buf_size = DEFAULT_REWIND_BUF_SIZE;
     DefaultControlMap();
     DefaultHotKey();
     DefaultGraphics();
