@@ -9,7 +9,7 @@ set(CMAKE_TOOLCHAIN_FILE
   CACHE PATH "toolchain file")
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
-set(APP_NAME "Snes9x2005_4vita")
+set(APP_NAME "Snes9x2005_4Vita")
 set(APP_DIR_NAME "Snes9x2005")
 set(CORE_NAME "Snes9x2005")
 set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/${CORE_NAME})

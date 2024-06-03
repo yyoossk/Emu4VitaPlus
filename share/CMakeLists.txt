@@ -6,6 +6,20 @@ set(CMAKE_TOOLCHAIN_FILE
     CACHE PATH "toolchain file")
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
+set(PUBLIC_PKG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pkg)
+
+message(${PUBLIC_PKG_DIR})
+
+file(GLOB_RECURSE PKG_FILES ${PUBLIC_PKG_DIR}/*)
+set(PUBLIC_PKG_FILES "")
+
+foreach(file ${PKG_FILES})
+    file(RELATIVE_PATH rel ${PUBLIC_PKG_DIR} ${file})
+    list(APPEND PUBLIC_PKG_FILES FILE ${file} ${rel})
+endforeach()
+
+SET(PUBLIC_PKG_FILES "${PUBLIC_PKG_FILES}" CACHE INTERNAL "PUBLIC_PKG_FILES")
+
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/source/language_define.cpp
     COMMAND python export.py

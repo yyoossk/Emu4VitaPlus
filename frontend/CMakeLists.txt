@@ -5,16 +5,6 @@ set(CMAKE_TOOLCHAIN_FILE
     CACHE PATH "toolchain file")
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
-set(PUBLIC_PKG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../share/pkg)
-
-file(GLOB_RECURSE PKG_FILES ${PUBLIC_PKG_DIR}/*)
-set(PUBLIC_PKG_FILES "")
-
-foreach(file ${PKG_FILES})
-    file(RELATIVE_PATH rel ${PUBLIC_PKG_DIR} ${file})
-    list(APPEND PUBLIC_PKG_FILES FILE ${file} ${rel})
-endforeach()
-
 include_directories(
     source
     source/ui

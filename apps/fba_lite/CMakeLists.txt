@@ -9,7 +9,7 @@ set(CMAKE_TOOLCHAIN_FILE
   CACHE PATH "toolchain file")
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
-set(APP_NAME "FbaLite4vita")
+set(APP_NAME "FbaLite_4Vita")
 set(APP_DIR_NAME "fba_lite")
 set(CORE_NAME "fba_lite")
 set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/libretro-fba-lite)

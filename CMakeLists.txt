@@ -7,8 +7,8 @@ set(CMAKE_TOOLCHAIN_FILE
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
 option(WITH_LOG "log ouputting" OFF)
-set(BUILD_LIST "ALL" "Arch" "gpsp" "fba_lite" "fbneo" "snes9x2002" "snes9x2005" "snes9x2010 ")
-set(BUILD "ALL" CACHE STRING "ALL(default)|Arch|gpsp|fbneo|fba_lite|snes9x2002|snes9x2005|snes9x2010")
+set(BUILD_LIST "ALL" "Arch" "gpsp" "fba_lite" "snes9x2002" "snes9x2005" "snes9x2010 ")
+set(BUILD "ALL" CACHE STRING "ALL(default)|Arch|gpsp|fba_lite|snes9x2002|snes9x2005|snes9x2010")
 set_property(CACHE BUILD PROPERTY STRINGS ${BUILD_LIST})
 
 string(STRIP ${BUILD} BUILD)
@@ -46,10 +46,6 @@ set(SFO_APP_VER "00.01")
 
 if(BUILD STREQUAL "ALL" OR BUILD STREQUAL "gpsp")
     add_subdirectory(apps/gpsp)
-endif()
-
-if(BUILD STREQUAL "ALL" OR BUILD STREQUAL "fbneo")
-    add_subdirectory(apps/fbneo)
 endif()
 
 if(BUILD STREQUAL "ALL" OR BUILD STREQUAL "fba_lite")

@@ -9,7 +9,7 @@ set(CMAKE_TOOLCHAIN_FILE
   CACHE PATH "toolchain file")
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
-set(APP_NAME "gpSP4vita")
+set(APP_NAME "gpSP4_4Vita")
 set(APP_DIR_NAME "gpSP")
 set(CORE_NAME "gpSP")
 set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/${CORE_NAME})

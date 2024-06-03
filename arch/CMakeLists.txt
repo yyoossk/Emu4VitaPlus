@@ -26,15 +26,17 @@ set(BUILD_SELF ON)
 
 set(APPS gpSP fba_lite Snes9x2005)
 set(APP_EBOOTS "")
+set(APP_FILES "")
 
 foreach(app ${APPS})
-    add_subdirectory(../apps/${app} apps/${app})
-
+    # add_subdirectory(../apps/${app} apps/${app})
     if(${CMAKE_VERSION} VERSION_LESS "3.20.0")
         list(APPEND APP_EBOOTS "eboot_${app}.bin")
     else()
         list(APPEND APP_EBOOTS "eboot_${app}.bin-self")
     endif()
+
+    list(APPEND APP_FILES FILE "${CMAKE_CURRENT_BINARY_DIR}/../apps/${app}/frontend/eboot_${app}.bin" "eboot_${app}.self")
 endforeach()
 
 include_directories(
@@ -79,10 +81,11 @@ target_link_libraries(
     SceFiber_stub)
 
 set(VITA_MAKE_FSELF_FLAGS "-a 0x2800000000000001")
-vita_create_self(eboot_${APP_NAME}.bin ${APP_NAME}.elf UNSAFE STRIPPED REL_OPTIMIZE)
+vita_create_self(eboot_${APP_NAME}.bin ${APP_NAME}.elf STRIPPED REL_OPTIMIZE)
 
 set(VPK_NAME ${APP_NAME}_${APP_VER}.vpk)
 set(VITA_MKSFOEX_FLAGS -d ATTRIBUTE2=12)
+
 vita_create_vpk(
     ${VPK_NAME}
     ${SFO_TITLE_ID}
@@ -92,15 +95,16 @@ vita_create_vpk(
     NAME
     "${SFO_TITLE_NAME}"
     ${PRIVATE_PKG_FILES}
-    ${PUBLIC_PKG_FILES})
+    ${PUBLIC_PKG_FILES}
+    ${APP_FILES})
 
 add_custom_target(VPK_${APP_NAME} ALL
     COMMAND ${CMAKE_COMMAND} -E rename ${VPK_NAME} ${OUT_PATH}/${VPK_NAME})
 
 if(${CMAKE_VERSION} VERSION_LESS "3.20.0")
-    add_dependencies(${VPK_NAME} ${APP_EBOOTS})
+    # add_dependencies(${VPK_NAME} ${APP_EBOOTS})
     add_dependencies(VPK_${APP_NAME} ${VPK_NAME})
 else()
-    add_dependencies(${VPK_NAME}-vpk ${APP_EBOOTS})
+    # add_dependencies(${VPK_NAME}-vpk ${APP_EBOOTS})
     add_dependencies(VPK_${APP_NAME} ${VPK_NAME}-vpk)
 endif()
