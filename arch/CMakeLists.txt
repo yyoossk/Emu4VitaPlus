@@ -29,7 +29,10 @@ set(APP_EBOOTS "")
 set(APP_FILES "")
 
 foreach(app ${APPS})
-    # add_subdirectory(../apps/${app} apps/${app})
+    if(BUILD STREQUAL "Arch")
+        add_subdirectory(../apps/${app} ../apps/${app})
+    endif()
+
     if(${CMAKE_VERSION} VERSION_LESS "3.20.0")
         list(APPEND APP_EBOOTS "eboot_${app}.bin")
     else()
@@ -102,9 +105,9 @@ add_custom_target(VPK_${APP_NAME} ALL
     COMMAND ${CMAKE_COMMAND} -E rename ${VPK_NAME} ${OUT_PATH}/${VPK_NAME})
 
 if(${CMAKE_VERSION} VERSION_LESS "3.20.0")
-    # add_dependencies(${VPK_NAME} ${APP_EBOOTS})
+    add_dependencies(${VPK_NAME} ${APP_EBOOTS})
     add_dependencies(VPK_${APP_NAME} ${VPK_NAME})
 else()
-    # add_dependencies(${VPK_NAME}-vpk ${APP_EBOOTS})
+    add_dependencies(${VPK_NAME}-vpk ${APP_EBOOTS})
     add_dependencies(VPK_${APP_NAME} ${VPK_NAME}-vpk)
 endif()
