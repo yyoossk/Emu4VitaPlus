@@ -67,7 +67,6 @@ void ItemState::Show(bool selected)
 
 void ItemState::_ShowPopup()
 {
-
   bool is_popup = ImGui::IsPopupOpen("popup_menu");
 
   if (_actived && !is_popup)

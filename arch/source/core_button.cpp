@@ -4,7 +4,8 @@
 
 CoreButton::CoreButton(std::string name, std::vector<std::string> cores)
     : _name(std::move(name)),
-      _cores(std::move(cores))
+      _cores(std::move(cores)),
+      _actived(false)
 {
     std::string icon = std::string(CORE_DATA_DIR) + "/" + _name + "/icon0.png";
     _texture = vita2d_load_PNG_file(icon.c_str());
@@ -34,7 +35,6 @@ CoreButton::~CoreButton()
 void CoreButton::Show(bool selected)
 {
     ImVec4 color = selected ? ImGui::GetStyleColorVec4(ImGuiCol_ButtonHovered) : ImVec4{0, 0, 0, 0};
-    // ImGui::ImageButton(_texture, {BUTTON_SIZE, BUTTON_SIZE}, _uv0, _uv1, 0, color);
     ImGui::ImageButton(_texture, {BUTTON_SIZE, BUTTON_SIZE}, {0.f, 0.f}, {1.f, 1.f}, 0, color);
 
     ImVec2 pos = ImGui::GetItemRectMin();
@@ -44,4 +44,19 @@ void CoreButton::Show(bool selected)
     pos.y += BUTTON_SIZE - size.y - 5;
     ImDrawList *draw_list = ImGui::GetWindowDrawList();
     draw_list->AddText(pos, IM_COL32_WHITE, _name.c_str());
+
+    if (selected)
+    {
+        _ShowPopup();
+    }
+}
+
+void CoreButton::_ShowPopup()
+{
+    bool is_popup = ImGui::IsPopupOpen("popup_menu");
+
+    if (_actived && !is_popup)
+    {
+        ImGui::OpenPopup("popup_menu");
+    }
 }
