@@ -23,7 +23,7 @@ file(GLOB SRC
 add_compile_definitions(
     APP_NAME_STR="${APP_NAME}"
     APP_NAME_EXT_STR=${APP_NAME_EXT}
-    APP_VER_STR=${APP_VER}
+    APP_VER_STR="${APP_VER}"
     APP_TITLEID=${SFO_TITLE_ID}
     APP_DIR_NAME="${APP_DIR_NAME}"
     APP_TITLE_NAME="${SFO_TITLE_NAME}"

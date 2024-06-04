@@ -34,5 +34,14 @@ CoreButton::~CoreButton()
 void CoreButton::Show(bool selected)
 {
     ImVec4 color = selected ? ImGui::GetStyleColorVec4(ImGuiCol_ButtonHovered) : ImVec4{0, 0, 0, 0};
-    ImGui::ImageButton(_texture, {BUTTON_SIZE, BUTTON_SIZE}, _uv0, _uv1, 0, color);
+    // ImGui::ImageButton(_texture, {BUTTON_SIZE, BUTTON_SIZE}, _uv0, _uv1, 0, color);
+    ImGui::ImageButton(_texture, {BUTTON_SIZE, BUTTON_SIZE}, {0.f, 0.f}, {1.f, 1.f}, 0, color);
+
+    ImVec2 pos = ImGui::GetItemRectMin();
+    ImVec2 size = ImGui::CalcTextSize(_name.c_str());
+
+    pos.x += (BUTTON_SIZE - size.x) / 2;
+    pos.y += BUTTON_SIZE - size.y - 5;
+    ImDrawList *draw_list = ImGui::GetWindowDrawList();
+    draw_list->AddText(pos, IM_COL32_WHITE, _name.c_str());
 }
