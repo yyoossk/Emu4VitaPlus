@@ -7,8 +7,11 @@
 #include "my_imgui.h"
 #include "log.h"
 #include "app.h"
+#include "defines.h"
 
-App::App()
+#define MAIN_WINDOW_PADDING 10
+
+App::App() : _index(0)
 {
     LogFunctionName;
 
@@ -32,15 +35,127 @@ App::App()
     sceCtrlSetSamplingModeExt(SCE_CTRL_MODE_ANALOG);
     sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
     sceTouchSetSamplingState(SCE_TOUCH_PORT_BACK, SCE_TOUCH_SAMPLING_STATE_START);
+
+    vita2d_init();
+    vita2d_set_vblank_wait(1);
+
+    ImGui::CreateContext();
+    My_ImGui_ImplVita2D_Init(0);
+    ImGui_ImplVita2D_TouchUsage(false);
+    ImGui_ImplVita2D_UseIndirectFrontTouch(false);
+    ImGui_ImplVita2D_UseRearTouch(false);
+    ImGui_ImplVita2D_GamepadUsage(false);
+
+    ImGuiStyle *style = &ImGui::GetStyle();
+    style->Colors[ImGuiCol_TitleBg] = style->Colors[ImGuiCol_TitleBgActive];
+
+    _buttons.emplace_back(new CoreButton("NES", {}));
+    _buttons.emplace_back(new CoreButton("SNES", {"Snes9x2002", "Snes9x2005", "Snes9x2010"}));
+    _buttons.emplace_back(new CoreButton("MD", {}));
+    _buttons.emplace_back(new CoreButton("GBA", {"gpSP"}));
+    _buttons.emplace_back(new CoreButton("GBC", {""}));
+    _buttons.emplace_back(new CoreButton("PCE", {""}));
+    _buttons.emplace_back(new CoreButton("PS1", {""}));
+    _buttons.emplace_back(new CoreButton("WSC", {""}));
+    _buttons.emplace_back(new CoreButton("NGP", {""}));
+    _buttons.emplace_back(new CoreButton("ARC", {"fba_lite"}));
+
+    SetInputHooks(&_input);
 }
 
 App::~App()
 {
     LogFunctionName;
 
+    for (auto button : _buttons)
+    {
+        delete button;
+    }
+
+    My_ImGui_ImplVita2D_Shutdown();
+    ImGui::DestroyContext();
+
+    vita2d_wait_rendering_done();
+    vita2d_fini();
+
     sceAppUtilShutdown();
 }
 
 void App::Run()
 {
+    while (true)
+    {
+        _input.Poll();
+        _Show();
+    }
+}
+
+void App::_Show()
+{
+    LogFunctionNameLimited;
+    // vita2d_set_clip_rectangle(0, 0, VITA_WIDTH, VITA_HEIGHT);
+    vita2d_pool_reset();
+    vita2d_start_drawing_advanced(NULL, 0);
+    vita2d_clear_screen();
+
+    ImGui_ImplVita2D_NewFrame();
+    ImGui::SetMouseCursor(ImGuiMouseCursor_None);
+    ImGui::SetNextWindowPos({MAIN_WINDOW_PADDING, MAIN_WINDOW_PADDING});
+    ImGui::SetNextWindowSize({VITA_WIDTH - MAIN_WINDOW_PADDING * 2, VITA_HEIGHT - MAIN_WINDOW_PADDING * 2});
+
+    ImGui::Begin("Emu4Vita++ (" APP_DIR_NAME ")", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoInputs);
+
+    ImGui::SetCursorPos({0, (ImGui::GetContentRegionMax().y - BUTTON_SIZE) / 2});
+    size_t count = 0;
+    for (auto button : _buttons)
+    {
+        bool selected = (count == _index);
+        button->Show(selected);
+        if (selected)
+        {
+            ImGui::SetScrollHereX(float(count) / float(_buttons.size()));
+        }
+        ImGui::SameLine();
+        count++;
+    }
+
+    ImGui::End();
+    ImGui::Render();
+    My_ImGui_ImplVita2D_RenderDrawData(ImGui::GetDrawData());
+
+    vita2d_end_drawing();
+    vita2d_swap_buffers();
+    return;
+}
+
+void App::SetInputHooks(Input *input)
+{
+    input->SetKeyDownCallback(SCE_CTRL_LEFT, std::bind(&App::_OnKeyLeft, this, input), true);
+    input->SetKeyDownCallback(SCE_CTRL_RIGHT, std::bind(&App::_OnKeyRight, this, input), true);
+    input->SetKeyDownCallback(SCE_CTRL_LSTICK_LEFT, std::bind(&App::_OnKeyLeft, this, input), true);
+    input->SetKeyDownCallback(SCE_CTRL_LSTICK_RIGHT, std::bind(&App::_OnKeyRight, this, input), true);
+    input->SetKeyDownCallback(SCE_CTRL_L1, std::bind(&App::_OnKeyLeft, this, input), true);
+    input->SetKeyDownCallback(SCE_CTRL_R1, std::bind(&App::_OnKeyRight, this, input), true);
+    // input->SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&ItemState::_OnClick, this, input));
+}
+
+void App::UnsetInputHooks(Input *input)
+{
+    input->UnsetKeyDownCallback(SCE_CTRL_LEFT);
+    input->UnsetKeyDownCallback(SCE_CTRL_RIGHT);
+    input->UnsetKeyDownCallback(SCE_CTRL_LSTICK_LEFT);
+    input->UnsetKeyDownCallback(SCE_CTRL_LSTICK_RIGHT);
+    input->UnsetKeyDownCallback(SCE_CTRL_L1);
+    input->UnsetKeyDownCallback(SCE_CTRL_R1);
+    input->UnsetKeyUpCallback(SCE_CTRL_CIRCLE);
+}
+
+void App::_OnKeyLeft(Input *input)
+{
+    LOOP_MINUS_ONE(_index, _buttons.size());
+}
+
+void App::_OnKeyRight(Input *input)
+{
+    LOOP_PLUS_ONE(_index, _buttons.size());
 }

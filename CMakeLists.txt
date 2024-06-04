@@ -7,14 +7,20 @@ set(CMAKE_TOOLCHAIN_FILE
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
 option(WITH_LOG "log ouputting" OFF)
-set(BUILD_LIST "ALL" "Arch" "gpsp" "fba_lite" "snes9x2002" "snes9x2005" "snes9x2010 ")
-set(BUILD "ALL" CACHE STRING "ALL(default)|Arch|gpsp|fba_lite|snes9x2002|snes9x2005|snes9x2010")
+set(CORES "gpsp" "fba_lite" "snes9x2002" "snes9x2005" "snes9x2010")
+set(BUILD_LIST "ALL" "Arch" ${CORES})
+string(REPLACE "|" " " BUILD_LIST_STR ${BUILD_LIST})
+set(BUILD "ALL" CACHE STRING ${BUILD_LIST_STR})
 set_property(CACHE BUILD PROPERTY STRINGS ${BUILD_LIST})
 
 string(STRIP ${BUILD} BUILD)
 
 if(NOT ${BUILD} IN_LIST BUILD_LIST)
     message(FATAL_ERROR "valid BUILD value: ${BUILD_LIST}")
+endif()
+
+if(BUILD STREQUAL "Arch")
+    set(BUILD_SELF ON)
 endif()
 
 project(" Emu4Vita++ ")
@@ -44,26 +50,12 @@ add_subdirectory(share)
 set(APP_VER "0.1")
 set(SFO_APP_VER "00.01")
 
-if(BUILD STREQUAL "ALL" OR BUILD STREQUAL "gpsp")
-    add_subdirectory(apps/gpsp)
-endif()
+foreach(core ${CORES})
+    if(BUILD STREQUAL "ALL" OR BUILD STREQUAL "Arch" OR BUILD STREQUAL ${core})
+        add_subdirectory(apps/${core})
+    endif()
+endforeach()
 
-if(BUILD STREQUAL "ALL" OR BUILD STREQUAL "fba_lite")
-    add_subdirectory(apps/fba_lite)
-endif()
-
-if(BUILD STREQUAL "ALL" OR BUILD STREQUAL "snes9x2002")
-    add_subdirectory(apps/snes9x2002)
-endif()
-
-if(BUILD STREQUAL "ALL" OR BUILD STREQUAL "snes9x2005")
-    add_subdirectory(apps/snes9x2005)
-endif()
-
-if(BUILD STREQUAL "ALL" OR BUILD STREQUAL "snes9x2010")
-    add_subdirectory(apps/snes9x2010)
-endif()
-
-if(BUILD STREQUAL "ALL" OR BUILD STREQUAL "Arch")
+if(BUILD STREQUAL "ALL" OR BUILD STREQUAL "Arch" OR BUILD STREQUAL "Arch")
     add_subdirectory(arch)
 endif()

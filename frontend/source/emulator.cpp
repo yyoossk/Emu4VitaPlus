@@ -385,19 +385,24 @@ void Emulator::Show()
         return;
     }
 
-    size_t count = 0;
-    while (_current_tex == _texture_buf->Current() && count < 10)
+    if (gStatus == APP_STATUS_RUN_GAME && _current_tex == _texture_buf->Current())
     {
-        SceUInt timeout = 1000;
-        sceKernelWaitSema(_video_semaid, 1, &timeout);
-        count++;
+        sceKernelWaitSema(_video_semaid, 1, NULL);
     }
 
-    if (count >= 10 && gStatus == APP_STATUS_RUN_GAME)
-    {
-        LogDebug("skip frame");
-        return;
-    }
+    // size_t count = 0;
+    // while (_current_tex == _texture_buf->Current() && count < 10)
+    // {
+    //     SceUInt timeout = 1000;
+    //     sceKernelWaitSema(_video_semaid, 1, &timeout);
+    //     count++;
+    // }
+
+    // if (count >= 10 && gStatus == APP_STATUS_RUN_GAME)
+    // {
+    //     LogDebug("skip frame");
+    //     return;
+    // }
     // sceKernelWaitSema(_video_semaid, 1, NULL);
 
     _texture_buf->Lock();

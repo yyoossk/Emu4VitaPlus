@@ -24,15 +24,11 @@ project("Arch")
 
 set(BUILD_SELF ON)
 
-set(APPS gpSP fba_lite Snes9x2005)
+set(APPS gpSP fba_lite Snes9x2002 Snes9x2005 Snes9x2010)
 set(APP_EBOOTS "")
 set(APP_FILES "")
 
 foreach(app ${APPS})
-    if(BUILD STREQUAL "Arch")
-        add_subdirectory(../apps/${app} ../apps/${app})
-    endif()
-
     if(${CMAKE_VERSION} VERSION_LESS "3.20.0")
         list(APPEND APP_EBOOTS "eboot_${app}.bin")
     else()
@@ -53,6 +49,16 @@ file(GLOB SRC
     source/ui/*.cpp
     source/audio/*.cpp
     ../share/source/*.cpp)
+
+add_compile_definitions(
+    APP_NAME_STR="${APP_NAME}"
+    APP_NAME_EXT_STR=${APP_NAME_EXT}
+    APP_VER_STR=${APP_VER}
+    APP_TITLEID=${SFO_TITLE_ID}
+    APP_DIR_NAME="${APP_DIR_NAME}"
+    APP_TITLE_NAME="${SFO_TITLE_NAME}"
+    CORE_SOFTWARE=${CORE_SOFTWARE})
+
 add_executable(${APP_NAME}.elf ${SRC})
 
 target_link_libraries(
