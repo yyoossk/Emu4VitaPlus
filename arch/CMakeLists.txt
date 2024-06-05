@@ -1,11 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
 
-set(CMAKE_DEPENDS_USE_COMPILER FALSE)
-set(CMAKE_TOOLCHAIN_FILE
-    "$ENV{VITASDK}/share/vita.toolchain.cmake"
-    CACHE PATH "toolchain file")
-include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
-
 set(APP_NAME "Emu4VitaPlus")
 set(APP_DIR_NAME "Arch")
 set(SFO_TITLE_NAME "Emu4Vita++")

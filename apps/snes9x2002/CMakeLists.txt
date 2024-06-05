@@ -4,11 +4,6 @@ if(TARGET Snes9x2002_build)
   return()
 endif()
 
-set(CMAKE_TOOLCHAIN_FILE
-  "$ENV{VITASDK}/share/vita.toolchain.cmake"
-  CACHE PATH "toolchain file")
-include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
-
 set(APP_NAME "Snes9x2002_4Vita")
 set(CORE_NAME "Snes9x2002")
 set(CORE_FULL_NAME "Snes9x 2002")

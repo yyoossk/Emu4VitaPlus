@@ -4,11 +4,6 @@ if(TARGET Nestopia_build)
   return()
 endif()
 
-set(CMAKE_TOOLCHAIN_FILE
-  "$ENV{VITASDK}/share/vita.toolchain.cmake"
-  CACHE PATH "toolchain file")
-include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
-
 set(APP_NAME "Nestopia_4Vita")
 set(CORE_NAME "Nestopia")
 set(CORE_FULL_NAME "Nestopia")

@@ -1,10 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_TOOLCHAIN_FILE
-  "$ENV{VITASDK}/share/vita.toolchain.cmake"
-  CACHE PATH "toolchain file")
-include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
-
 set(APP_NAME "Snes9x2010_4Vita")
 set(CORE_NAME "Snes9x2010")
 set(CORE_FULL_NAME "Snes9x 2010")

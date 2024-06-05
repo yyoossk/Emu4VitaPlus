@@ -4,11 +4,6 @@ if(TARGET fba_lite_build)
   return()
 endif()
 
-set(CMAKE_TOOLCHAIN_FILE
-  "$ENV{VITASDK}/share/vita.toolchain.cmake"
-  CACHE PATH "toolchain file")
-include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
-
 set(APP_NAME "FbaLite_4Vita")
 set(CORE_NAME "fba_lite")
 set(CORE_FULL_NAME "FBA Lite")

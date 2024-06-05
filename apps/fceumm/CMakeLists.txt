@@ -4,11 +4,6 @@ if(TARGET FCEUmm_build)
   return()
 endif()
 
-set(CMAKE_TOOLCHAIN_FILE
-  "$ENV{VITASDK}/share/vita.toolchain.cmake"
-  CACHE PATH "toolchain file")
-include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
-
 set(APP_NAME "FCEUmm_4Vita")
 set(CORE_NAME "FCEUmm")
 set(CORE_FULL_NAME "FCEUmm")
