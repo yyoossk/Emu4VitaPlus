@@ -2,6 +2,10 @@
 #include <vector>
 #include "input.h"
 #include "core_button.h"
+#include "file.h"
+
+extern bool gRunning;
+extern char gCorePath[SCE_FIOS_PATH_MAX];
 
 class App
 {
@@ -14,6 +18,7 @@ public:
 
 private:
     void _Show();
+    void _OnClick(Input *input);
     void _OnKeyLeft(Input *input);
     void _OnKeyRight(Input *input);
 

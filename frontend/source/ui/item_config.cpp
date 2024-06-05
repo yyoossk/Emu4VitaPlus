@@ -3,6 +3,7 @@
 #include "my_imgui.h"
 #include "config.h"
 #include "log.h"
+#include "utils.h"
 
 ItemConfig::ItemConfig(LanguageString text,
                        LanguageString info,

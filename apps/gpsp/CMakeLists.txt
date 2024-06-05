@@ -10,8 +10,8 @@ set(CMAKE_TOOLCHAIN_FILE
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
 set(APP_NAME "gpSP4_4Vita")
-set(APP_DIR_NAME "gpSP")
 set(CORE_NAME "gpSP")
+set(CORE_FULL_NAME "gpSP")
 set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/${CORE_NAME})
 set(CORE_MAKEFILE_DIR ${CORE_DIR})
 set(CORE_MAKEFILE_NAME Makefile)
@@ -21,7 +21,7 @@ set(PRIVATE_PKG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pkg)
 
 set(CORE_ARGS platform=vita EXTERNAL_ZLIB=1)
 
-set(CORE_SOFTWARE, "Nintendo - Game Boy Advance")
+set(CORE_SOFTWARE "Nintendo - Game Boy Advance")
 
 file(GLOB_RECURSE PKG_FILES ${PRIVATE_PKG_DIR}/*)
 set(PRIVATE_PKG_FILES "")

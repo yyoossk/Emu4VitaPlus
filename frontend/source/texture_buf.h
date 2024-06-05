@@ -2,6 +2,7 @@
 #include <vita2d.h>
 #include "log.h"
 #include "defines.h"
+#include "utils.h"
 
 #define TEXTURE_BUF_COUNT 3
 

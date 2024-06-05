@@ -6,8 +6,8 @@ set(CMAKE_TOOLCHAIN_FILE
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
 set(APP_NAME "Snes9x2010_4Vita")
-set(APP_DIR_NAME "Snes9x2010")
 set(CORE_NAME "Snes9x2010")
+set(CORE_FULL_NAME "Snes9x 2010")
 set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/${CORE_NAME})
 set(CORE_MAKEFILE_DIR ${CORE_DIR})
 set(CORE_MAKEFILE_NAME Makefile)

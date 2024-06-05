@@ -1,5 +1,6 @@
 #include "dialog.h"
 #include "defines.h"
+#include "utils.h"
 
 Dialog::Dialog(LanguageString text,
                std::vector<LanguageString> options,

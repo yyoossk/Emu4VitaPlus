@@ -1,27 +1,18 @@
 #include "defines.h"
 #include "core_button.h"
 #include "log.h"
+#include "utils.h"
+#include "file.h"
+#include "app.h"
 
-CoreButton::CoreButton(std::string name, std::vector<std::string> cores)
+CoreButton::CoreButton(std::string name, std::vector<CoreName> cores)
     : _name(std::move(name)),
       _cores(std::move(cores)),
-      _actived(false)
+      _actived(false),
+      _index(0)
 {
     std::string icon = std::string(CORE_DATA_DIR) + "/" + _name + "/icon0.png";
     _texture = vita2d_load_PNG_file(icon.c_str());
-    if (_texture)
-    {
-        float width = vita2d_texture_get_width(_texture);
-        float height = (float)vita2d_texture_get_height(_texture);
-        _uv0.x = (BUTTON_SIZE - width) / 2 / BUTTON_SIZE;
-        _uv0.y = (BUTTON_SIZE - height) / 2 / BUTTON_SIZE;
-        _uv1.x = _uv0.x + width / BUTTON_SIZE;
-        _uv1.y = _uv0.y + height / BUTTON_SIZE;
-    }
-    else
-    {
-        LogError("failed to load icon: %s", icon.c_str());
-    }
 }
 
 CoreButton::~CoreButton()
@@ -59,4 +50,81 @@ void CoreButton::_ShowPopup()
     {
         ImGui::OpenPopup("popup_menu");
     }
+
+    if (ImGui::BeginPopupModal("popup_menu", NULL, ImGuiWindowFlags_NoTitleBar))
+    {
+        if (!_actived && is_popup)
+        {
+            ImGui::CloseCurrentPopup();
+        }
+        size_t count = 0;
+        for (const auto &core : _cores)
+        {
+            ImGui::Selectable(core.name.c_str(), count == _index);
+            count++;
+        }
+        ImGui::EndPopup();
+    }
+}
+
+void CoreButton::OnActive(Input *input)
+{
+    _actived = true;
+    input->PushCallbacks();
+    SetInputHooks(input);
+}
+
+void CoreButton::_OnKeyUp(Input *input)
+{
+    LOOP_MINUS_ONE(_index, _cores.size());
+}
+
+void CoreButton::_OnKeyDown(Input *input)
+{
+    LOOP_PLUS_ONE(_index, _cores.size());
+}
+
+void CoreButton::_OnClick(Input *input)
+{
+    _actived = false;
+    input->PopCallbacks();
+    _BootCore();
+}
+
+void CoreButton::_OnCancel(Input *input)
+{
+    _actived = false;
+    input->PopCallbacks();
+}
+
+void CoreButton::_BootCore()
+{
+    LogFunctionName;
+    if (_cores.size() == 0)
+    {
+        return;
+    }
+
+    snprintf(gCorePath, SCE_FIOS_PATH_MAX, "app0:eboot_%s.self", _cores[_index].boot_name.c_str());
+    gRunning = false;
+}
+
+void CoreButton::SetInputHooks(Input *input)
+{
+    input->SetKeyDownCallback(SCE_CTRL_UP, std::bind(&CoreButton::_OnKeyUp, this, input), true);
+    input->SetKeyDownCallback(SCE_CTRL_DOWN, std::bind(&CoreButton::_OnKeyDown, this, input), true);
+    input->SetKeyDownCallback(SCE_CTRL_LSTICK_UP, std::bind(&CoreButton::_OnKeyUp, this, input), true);
+    input->SetKeyDownCallback(SCE_CTRL_LSTICK_DOWN, std::bind(&CoreButton::_OnKeyDown, this, input), true);
+    input->SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&CoreButton::_OnClick, this, input));
+    input->SetKeyUpCallback(SCE_CTRL_CROSS, std::bind(&CoreButton::_OnCancel, this, input));
+}
+
+void CoreButton::UnsetInputHooks(Input *input)
+{
+    input->UnsetKeyDownCallback(SCE_CTRL_UP);
+    input->UnsetKeyDownCallback(SCE_CTRL_DOWN);
+    input->UnsetKeyDownCallback(SCE_CTRL_LSTICK_UP);
+    input->UnsetKeyDownCallback(SCE_CTRL_LSTICK_DOWN);
+    input->UnsetKeyUpCallback(SCE_CTRL_CIRCLE);
+    input->UnsetKeyUpCallback(SCE_CTRL_CROSS);
 }

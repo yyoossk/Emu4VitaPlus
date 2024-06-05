@@ -1,6 +1,7 @@
 #include "my_imgui.h"
 #include "item_selectable.h"
 #include "defines.h"
+#include "utils.h"
 
 ItemSelectable::ItemSelectable(const LanguageString text, LanguageString info)
     : ItemBase(text, info),

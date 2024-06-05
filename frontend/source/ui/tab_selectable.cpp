@@ -1,5 +1,6 @@
 #include "tab_selectable.h"
 #include "defines.h"
+#include "utils.h"
 
 TabSeletable::TabSeletable(TEXT_ENUM title_id, std::vector<ItemBase *> items, int columns)
     : TabBase(title_id),

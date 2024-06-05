@@ -10,8 +10,8 @@ set(CMAKE_TOOLCHAIN_FILE
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
 set(APP_NAME "FbaLite_4Vita")
-set(APP_DIR_NAME "fba_lite")
 set(CORE_NAME "fba_lite")
+set(CORE_FULL_NAME "FBA Lite")
 set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/libretro-fba-lite)
 set(CORE_MAKEFILE_DIR ${CORE_DIR})
 set(CORE_MAKEFILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/makefile.libretro)
@@ -21,7 +21,7 @@ set(PRIVATE_PKG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pkg)
 
 set(CORE_ARGS platform=vita EXTERNAL_ZLIB=1)
 
-set(CORE_SOFTWARE, "Arcade (CPS1 2 3, NEO GEO, PGM)")
+set(CORE_SOFTWARE "Arcade (CPS1 2 3, NEO GEO, PGM)")
 
 file(GLOB_RECURSE PKG_FILES ${PRIVATE_PKG_DIR}/*)
 set(PRIVATE_PKG_FILES "")

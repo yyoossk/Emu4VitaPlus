@@ -3,6 +3,7 @@
 #include "log.h"
 #include "config.h"
 #include "rewind.h"
+#include "utils.h"
 
 //"REWD"
 #define REWIND_BLOCK_MAGIC 0x44574552

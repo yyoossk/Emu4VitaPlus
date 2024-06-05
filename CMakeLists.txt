@@ -7,7 +7,7 @@ set(CMAKE_TOOLCHAIN_FILE
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
 option(WITH_LOG "log ouputting" OFF)
-set(CORES "gpsp" "fba_lite" "snes9x2002" "snes9x2005" "snes9x2010")
+set(CORES "gpsp" "fba_lite" "snes9x2002" "snes9x2005" "snes9x2010" "fceumm" "nestopia")
 set(BUILD_LIST "ALL" "Arch" ${CORES})
 string(REPLACE "|" " " BUILD_LIST_STR ${BUILD_LIST})
 set(BUILD "ALL" CACHE STRING ${BUILD_LIST_STR})
@@ -56,6 +56,6 @@ foreach(core ${CORES})
     endif()
 endforeach()
 
-if(BUILD STREQUAL "ALL" OR BUILD STREQUAL "Arch" OR BUILD STREQUAL "Arch")
+if(BUILD STREQUAL "ALL" OR BUILD STREQUAL "Arch")
     add_subdirectory(arch)
 endif()

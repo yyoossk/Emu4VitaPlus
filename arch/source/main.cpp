@@ -20,6 +20,12 @@ int main(int argc, char *const argv[])
 
     delete gLog;
 
+    if (*gCorePath)
+    {
+        char *const argv[] = {"arch", NULL};
+        sceAppMgrLoadExec(gCorePath, argv, NULL);
+    }
+
     sceKernelExitProcess(0);
     return 0;
 }

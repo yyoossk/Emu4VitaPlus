@@ -69,24 +69,24 @@ bool Input::Poll(bool waiting)
         return false;
 
     uint32_t key = ctrl_data.buttons;
-    if (ctrl_data.lx < ANALOG_CENTER - ANALOG_THRESHOLD)
+    if (ctrl_data.lx < (ANALOG_CENTER - ANALOG_THRESHOLD))
         key |= SCE_CTRL_LSTICK_LEFT;
-    else if (ctrl_data.lx > ANALOG_CENTER + ANALOG_THRESHOLD)
+    else if (ctrl_data.lx > (ANALOG_CENTER + ANALOG_THRESHOLD))
         key |= SCE_CTRL_LSTICK_RIGHT;
 
-    if (ctrl_data.ly < ANALOG_CENTER - ANALOG_THRESHOLD)
+    if (ctrl_data.ly < (ANALOG_CENTER - ANALOG_THRESHOLD))
         key |= SCE_CTRL_LSTICK_UP;
-    else if (ctrl_data.ly > ANALOG_CENTER + ANALOG_THRESHOLD)
+    else if (ctrl_data.ly > (ANALOG_CENTER + ANALOG_THRESHOLD))
         key |= SCE_CTRL_LSTICK_DOWN;
 
-    if (ctrl_data.rx < ANALOG_CENTER - ANALOG_THRESHOLD)
+    if (ctrl_data.rx < (ANALOG_CENTER - ANALOG_THRESHOLD))
         key |= SCE_CTRL_RSTICK_LEFT;
-    else if (ctrl_data.rx > ANALOG_CENTER + ANALOG_THRESHOLD)
+    else if (ctrl_data.rx > (ANALOG_CENTER + ANALOG_THRESHOLD))
         key |= SCE_CTRL_RSTICK_RIGHT;
 
-    if (ctrl_data.ry < ANALOG_CENTER - ANALOG_THRESHOLD)
+    if (ctrl_data.ry < (ANALOG_CENTER - ANALOG_THRESHOLD))
         key |= SCE_CTRL_RSTICK_UP;
-    else if (ctrl_data.ry > ANALOG_CENTER + ANALOG_THRESHOLD)
+    else if (ctrl_data.ry > (ANALOG_CENTER + ANALOG_THRESHOLD))
         key |= SCE_CTRL_RSTICK_DOWN;
 
     _ProcTurbo(key);

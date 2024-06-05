@@ -8,8 +8,12 @@
 #include "log.h"
 #include "app.h"
 #include "defines.h"
+#include "utils.h"
 
 #define MAIN_WINDOW_PADDING 10
+
+bool gRunning = true;
+char gCorePath[SCE_FIOS_PATH_MAX] = {0};
 
 App::App() : _index(0)
 {
@@ -49,16 +53,20 @@ App::App() : _index(0)
     ImGuiStyle *style = &ImGui::GetStyle();
     style->Colors[ImGuiCol_TitleBg] = style->Colors[ImGuiCol_TitleBgActive];
 
-    _buttons.emplace_back(new CoreButton("NES", {}));
-    _buttons.emplace_back(new CoreButton("SNES", {"Snes9x2002", "Snes9x2005", "Snes9x2010"}));
-    _buttons.emplace_back(new CoreButton("MD", {}));
-    _buttons.emplace_back(new CoreButton("GBA", {"gpSP"}));
-    _buttons.emplace_back(new CoreButton("GBC", {""}));
-    _buttons.emplace_back(new CoreButton("PCE", {""}));
-    _buttons.emplace_back(new CoreButton("PS1", {""}));
-    _buttons.emplace_back(new CoreButton("WSC", {""}));
-    _buttons.emplace_back(new CoreButton("NGP", {""}));
-    _buttons.emplace_back(new CoreButton("ARC", {"fba_lite"}));
+    _buttons = {new CoreButton("NES", {{"FCEUmm", "fceumm"},
+                                       {"Nestopia", "nestopia"}}),
+                new CoreButton("SNES", {{"Snes9x 2002", "Snes9x2002"},
+                                        {"Snes9x 2005", "Snes9x2005"},
+                                        {"Snes9x 2010", "Snes9x2010"}}),
+                new CoreButton("MD", {}),
+                new CoreButton("GBA", {{"gpSP", "gpSP"},
+                                       {"VBA Next", "vba_next"}}),
+                new CoreButton("GBC", {}),
+                new CoreButton("PCE", {}),
+                new CoreButton("PS1", {}),
+                new CoreButton("WSC", {}),
+                new CoreButton("NGP", {}),
+                new CoreButton("ARC", {{"FBA Lite", "fba_lite"}})};
 
     SetInputHooks(&_input);
 }
@@ -83,7 +91,7 @@ App::~App()
 
 void App::Run()
 {
-    while (true)
+    while (gRunning)
     {
         _input.Poll();
         _Show();
@@ -136,7 +144,7 @@ void App::SetInputHooks(Input *input)
     input->SetKeyDownCallback(SCE_CTRL_LSTICK_RIGHT, std::bind(&App::_OnKeyRight, this, input), true);
     input->SetKeyDownCallback(SCE_CTRL_L1, std::bind(&App::_OnKeyLeft, this, input), true);
     input->SetKeyDownCallback(SCE_CTRL_R1, std::bind(&App::_OnKeyRight, this, input), true);
-    // input->SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&ItemState::_OnClick, this, input));
+    input->SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&App::_OnClick, this, input));
 }
 
 void App::UnsetInputHooks(Input *input)
@@ -158,4 +166,10 @@ void App::_OnKeyLeft(Input *input)
 void App::_OnKeyRight(Input *input)
 {
     LOOP_PLUS_ONE(_index, _buttons.size());
+}
+
+void App::_OnClick(Input *input)
+{
+    LogFunctionName;
+    _buttons[_index]->OnActive(input);
 }

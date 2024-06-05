@@ -24,7 +24,7 @@ project("Arch")
 
 set(BUILD_SELF ON)
 
-set(APPS gpSP fba_lite Snes9x2002 Snes9x2005 Snes9x2010)
+set(APPS gpSP fba_lite Snes9x2002 Snes9x2005 Snes9x2010 FCEUmm Nestopia)
 set(APP_EBOOTS "")
 set(APP_FILES "")
 
