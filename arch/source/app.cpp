@@ -83,10 +83,7 @@ App::~App()
     My_ImGui_ImplVita2D_Shutdown();
     ImGui::DestroyContext();
 
-    vita2d_wait_rendering_done();
-    vita2d_fini();
-
-    sceAppUtilShutdown();
+    // vita2d_fini();
 }
 
 void App::Run()

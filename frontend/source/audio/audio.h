@@ -12,6 +12,7 @@ public:
 
     void SetSampleRate(uint32_t sample_rate);
     size_t SendAudioSample(const int16_t *data, size_t frames);
+    bool Inited() { return _resampler != nullptr; };
 
 private:
     bool _GetSuitableSampleRate(uint32_t sample_rate, uint32_t *out_sample_rate);

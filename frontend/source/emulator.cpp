@@ -329,9 +329,14 @@ bool Emulator::LoadGame(const char *path)
         retro_get_system_av_info(&_av_info);
         SetSpeed(1.0);
         gStatus = APP_STATUS_RUN_GAME;
+        if (!_audio.Inited())
+        {
+            _audio.SetSampleRate(_av_info.timing.sample_rate);
+        }
     }
     else
     {
+        LogError("load rom failed: %s", _current_name.c_str());
         gStatus = APP_STATUS_SHOW_UI;
     }
 

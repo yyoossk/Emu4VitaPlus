@@ -17,6 +17,7 @@ int main(int argc, char *const argv[])
     }
 
     LogDebug("Exit");
+    LogDebug("gCorePath: %s", gCorePath);
 
     delete gLog;
 
@@ -26,6 +27,7 @@ int main(int argc, char *const argv[])
         sceAppMgrLoadExec(gCorePath, argv, NULL);
     }
 
+    sceAppUtilShutdown();
     sceKernelExitProcess(0);
     return 0;
 }
