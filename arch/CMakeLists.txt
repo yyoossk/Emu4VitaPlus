@@ -18,8 +18,8 @@ project("Arch")
 
 set(BUILD_SELF ON)
 
-set(CORE_SHORTS gpSP FBALite Snes9x2002 Snes9x2005 Snes9x2010 FCEUmm Nestopia)
-set(CORES gpsp fba_lite snes9x2002 snes9x2005 snes9x2010 fceumm nestopia)
+set(CORE_SHORTS gpSP FBALite Snes9x2002 Snes9x2005 Snes9x2010 FCEUmm Nestopia GenesisPlusGX PicoDrive)
+set(CORES gpsp fba_lite snes9x2002 snes9x2005 snes9x2010 fceumm nestopia genesis_plus_gx picodrive)
 set(CORE_EBOOTS "")
 set(CORE_FILES "")
 

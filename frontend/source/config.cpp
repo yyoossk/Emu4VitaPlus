@@ -192,6 +192,17 @@ void Config::DefaultControlMap()
         {SCE_CTRL_R1},
         {SCE_CTRL_L2},
         {SCE_CTRL_R2},
+#elif defined(MD_BUILD)
+        {SCE_CTRL_CROSS, RETRO_DEVICE_ID_JOYPAD_B},
+        {SCE_CTRL_TRIANGLE, RETRO_DEVICE_ID_JOYPAD_X},
+        {SCE_CTRL_CIRCLE, RETRO_DEVICE_ID_JOYPAD_A},
+        {SCE_CTRL_SQUARE, RETRO_DEVICE_ID_JOYPAD_Y},
+        {SCE_CTRL_SELECT, RETRO_DEVICE_ID_JOYPAD_SELECT},
+        {SCE_CTRL_START, RETRO_DEVICE_ID_JOYPAD_START},
+        {SCE_CTRL_L1, RETRO_DEVICE_ID_JOYPAD_L},
+        {SCE_CTRL_R1, RETRO_DEVICE_ID_JOYPAD_R},
+        {SCE_CTRL_L2},
+        {SCE_CTRL_R2},
 #else
 #error "unknown build"
 #endif

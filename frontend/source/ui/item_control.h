@@ -33,6 +33,13 @@ static uint8_t RetroKeys[] = {
 #elif defined(FC_BUILD)
     RETRO_DEVICE_ID_JOYPAD_A,
     RETRO_DEVICE_ID_JOYPAD_B,
+#elif defined(MD_BUILD)
+    RETRO_DEVICE_ID_JOYPAD_A,
+    RETRO_DEVICE_ID_JOYPAD_B,
+    RETRO_DEVICE_ID_JOYPAD_X,
+    RETRO_DEVICE_ID_JOYPAD_Y,
+    RETRO_DEVICE_ID_JOYPAD_L,
+    RETRO_DEVICE_ID_JOYPAD_R,
 #else
 #error "unknown build"
 #endif

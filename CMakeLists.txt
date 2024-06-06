@@ -7,7 +7,7 @@ set(CMAKE_TOOLCHAIN_FILE
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
 option(WITH_LOG "log ouputting" OFF)
-set(CORES "gpsp" "fba_lite" "snes9x2002" "snes9x2005" "snes9x2010" "fceumm" "nestopia")
+set(CORES "gpsp" "fba_lite" "snes9x2002" "snes9x2005" "snes9x2010" "fceumm" "nestopia" "genesis_plus_gx" "picodrive")
 set(BUILD_LIST "ALL" "Arch" ${CORES})
 string(REPLACE "|" " " BUILD_LIST_STR ${BUILD_LIST})
 set(BUILD "Arch" CACHE STRING ${BUILD_LIST_STR})

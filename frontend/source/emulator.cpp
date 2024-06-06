@@ -62,6 +62,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
     switch (cmd)
     {
     case RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY");
         if (data)
         {
             *(const char **)data = CORE_SYSTEM_DIR;
@@ -69,21 +70,24 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         break;
 
     case RETRO_ENVIRONMENT_SET_PIXEL_FORMAT:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_SET_PIXEL_FORMAT");
         gEmulator->_SetPixelFormat(*(retro_pixel_format *)data);
         break;
 
     // case RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS:
     //     break;
     case RETRO_ENVIRONMENT_SET_CORE_OPTIONS:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_SET_CORE_OPTIONS");
         gConfig->core_options.Load((retro_core_option_definition *)data);
         gUi->UpdateCoreOptions();
         break;
 
     case RETRO_ENVIRONMENT_SET_DISK_CONTROL_INTERFACE:
-        LogDebug("  RETRO_ENVIRONMENT_SET_DISK_CONTROL_INTERFACE");
+        LogDebug("  cmd: RETRO_ENVIRONMENT_SET_DISK_CONTROL_INTERFACE");
         break;
 
     case RETRO_ENVIRONMENT_GET_VARIABLE:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_GET_VARIABLE");
         if (data)
         {
             return gConfig->core_options.Get((retro_variable *)data);
@@ -100,10 +104,12 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         break;
 
     case RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE");
         *(bool *)data = false;
         break;
 
     case RETRO_ENVIRONMENT_GET_LOG_INTERFACE:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_GET_LOG_INTERFACE");
         if (data)
         {
             ((retro_log_callback *)data)->log = RetroLog;
@@ -111,6 +117,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         break;
 
     case RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY");
         if (data)
         {
             char path[SCE_FIOS_PATH_MAX];
@@ -120,12 +127,13 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         break;
 
     case RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO");
         memcpy(&gEmulator->_av_info, data, sizeof(retro_system_av_info));
         gEmulator->_audio.SetSampleRate(gEmulator->_av_info.timing.sample_rate);
         break;
 
     case RETRO_ENVIRONMENT_GET_LANGUAGE:
-        LogDebug("  RETRO_ENVIRONMENT_GET_LANGUAGE");
+        LogDebug("  cmd: RETRO_ENVIRONMENT_GET_LANGUAGE");
         if (data)
         {
             *(retro_language *)data = gConfig->GetRetroLanguage();
@@ -133,16 +141,19 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         break;
 
     case RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION");
         if (data)
             *(unsigned *)data = CORE_OPTIONS_VERSION;
         break;
 
     case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_INTL:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_SET_CORE_OPTIONS_INTL");
         gConfig->core_options.Load((retro_core_options_intl *)data);
         gUi->UpdateCoreOptions();
         break;
 
     case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_V2_INTL:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_SET_CORE_OPTIONS_V2_INTL");
         gConfig->core_options.Load((retro_core_options_v2_intl *)data);
         gUi->UpdateCoreOptions();
         break;
@@ -151,6 +162,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         return gEmulator->GetCurrentSoftwareFramebuffer((retro_framebuffer *)data);
 
     case RETRO_ENVIRONMENT_GET_AUDIO_VIDEO_ENABLE:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_GET_AUDIO_VIDEO_ENABLE");
         if (data)
         {
             *(int *)data = 3;
@@ -158,7 +170,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         break;
 
     case RETRO_ENVIRONMENT_GET_INPUT_BITMASKS:
-        LogDebug("  RETRO_ENVIRONMENT_GET_INPUT_BITMASKS");
+        LogDebug("  cmd: RETRO_ENVIRONMENT_GET_INPUT_BITMASKS");
         break;
 
     default:
