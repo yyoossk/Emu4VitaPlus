@@ -104,7 +104,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         break;
 
     case RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE:
-        LogDebug("  cmd: RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE");
+        // LogDebug("  cmd: RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE");
         *(bool *)data = false;
         break;
 
@@ -162,7 +162,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         return gEmulator->GetCurrentSoftwareFramebuffer((retro_framebuffer *)data);
 
     case RETRO_ENVIRONMENT_GET_AUDIO_VIDEO_ENABLE:
-        LogDebug("  cmd: RETRO_ENVIRONMENT_GET_AUDIO_VIDEO_ENABLE");
+        // LogDebug("  cmd: RETRO_ENVIRONMENT_GET_AUDIO_VIDEO_ENABLE");
         if (data)
         {
             *(int *)data = 3;
