@@ -1,5 +1,21 @@
 cmake_minimum_required(VERSION 3.12)
 
+add_custom_target(
+    ${CORE_NAME}_build ALL
+    COMMAND make -f ${CORE_MAKEFILE_NAME} -j ${CORE_ARGS}
+    WORKING_DIRECTORY ${CORE_DIR})
+
+add_library(${CORE_NAME} STATIC IMPORTED)
+set_property(
+    TARGET ${CORE_NAME}
+    APPEND
+    PROPERTY IMPORTED_CONFIGURATIONS NOCONFIG)
+
+set(LIBRETRO_LIBRARY ${CORE_DIR}/${CORE_NAME}_libretro_vita.a)
+set_target_properties(${CORE_NAME} PROPERTIES IMPORTED_LOCATION_NOCONFIG
+    "${LIBRETRO_LIBRARY}")
+add_dependencies(${CORE_NAME} ${CORE_NAME}_build)
+
 include_directories(
     source
     source/ui
@@ -24,8 +40,8 @@ add_compile_definitions(
     APP_TITLE_NAME="${SFO_TITLE_NAME}"
     CORE_FULL_NAME="${CORE_FULL_NAME}")
 
-set(ELF_NAME ${CORE_NAME}.elf)
-set(EBOOT_NAME eboot_${CORE_NAME}.bin)
+set(ELF_NAME ${CORE_SHORT_NAME}.elf)
+set(EBOOT_NAME eboot_${CORE_SHORT_NAME}.bin)
 
 if(WITH_LOG)
     set(VPK_NAME ${APP_NAME}_${APP_VER}_log.vpk)

@@ -18,18 +18,25 @@ project("Arch")
 
 set(BUILD_SELF ON)
 
-set(APPS gpSP fba_lite Snes9x2002 Snes9x2005 Snes9x2010 FCEUmm Nestopia)
-set(APP_EBOOTS "")
-set(APP_FILES "")
+set(CORE_SHORTS gpSP FBALite Snes9x2002 Snes9x2005 Snes9x2010 FCEUmm Nestopia)
+set(CORES gpsp fba_lite snes9x2002 snes9x2005 snes9x2010 fceumm nestopia)
+set(CORE_EBOOTS "")
+set(CORE_FILES "")
 
-foreach(app ${APPS})
+list(LENGTH CORES length)
+math(EXPR length "${length} - 1")
+
+foreach(index RANGE ${length})
+    list(GET CORE_SHORTS ${index} core_short)
+    list(GET CORES ${index} core)
+
     if(${CMAKE_VERSION} VERSION_LESS "3.20.0")
-        list(APPEND APP_EBOOTS "eboot_${app}.bin")
+        list(APPEND CORE_EBOOTS "eboot_${core_short}.bin")
     else()
-        list(APPEND APP_EBOOTS "eboot_${app}.bin-self")
+        list(APPEND CORE_EBOOTS "eboot_${core_short}.bin-self")
     endif()
 
-    list(APPEND APP_FILES FILE "${CMAKE_CURRENT_BINARY_DIR}/../apps/${app}/frontend/eboot_${app}.bin" "eboot_${app}.self")
+    list(APPEND CORE_FILES FILE "${CMAKE_CURRENT_BINARY_DIR}/../apps/${core}/frontend/eboot_${core_short}.bin" "eboot_${core_short}.self")
 endforeach()
 
 include_directories(
@@ -99,15 +106,15 @@ vita_create_vpk(
     "${SFO_TITLE_NAME}"
     ${PRIVATE_PKG_FILES}
     ${PUBLIC_PKG_FILES}
-    ${APP_FILES})
+    ${CORE_FILES})
 
 add_custom_target(VPK_${APP_NAME} ALL
     COMMAND ${CMAKE_COMMAND} -E rename ${VPK_NAME} ${OUT_PATH}/${VPK_NAME})
 
 if(${CMAKE_VERSION} VERSION_LESS "3.20.0")
-    add_dependencies(${VPK_NAME} ${APP_EBOOTS})
+    add_dependencies(${VPK_NAME} ${CORE_EBOOTS})
     add_dependencies(VPK_${APP_NAME} ${VPK_NAME})
 else()
-    add_dependencies(${VPK_NAME}-vpk ${APP_EBOOTS})
+    add_dependencies(${VPK_NAME}-vpk ${CORE_EBOOTS})
     add_dependencies(VPK_${APP_NAME} ${VPK_NAME}-vpk)
 endif()

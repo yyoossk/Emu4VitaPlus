@@ -10,7 +10,7 @@ option(WITH_LOG "log ouputting" OFF)
 set(CORES "gpsp" "fba_lite" "snes9x2002" "snes9x2005" "snes9x2010" "fceumm" "nestopia")
 set(BUILD_LIST "ALL" "Arch" ${CORES})
 string(REPLACE "|" " " BUILD_LIST_STR ${BUILD_LIST})
-set(BUILD "ALL" CACHE STRING ${BUILD_LIST_STR})
+set(BUILD "Arch" CACHE STRING ${BUILD_LIST_STR})
 set_property(CACHE BUILD PROPERTY STRINGS ${BUILD_LIST})
 
 string(STRIP ${BUILD} BUILD)
