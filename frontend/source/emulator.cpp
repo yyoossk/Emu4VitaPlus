@@ -193,10 +193,15 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
 
     if (gEmulator->_texture_buf == nullptr || gEmulator->_texture_buf->GetWidth() != width || gEmulator->_texture_buf->GetHeight() != height)
     {
+
         if (gEmulator->_texture_buf != nullptr)
         {
+            gVideo->Lock();
             delete gEmulator->_texture_buf;
+            gEmulator->_texture_buf = nullptr;
+            gVideo->Unlock();
         }
+
         gEmulator->_texture_buf = new TextureBuf(gEmulator->_video_pixel_format, width, height);
         gEmulator->_SetVideoSize(width, height);
     }
@@ -372,7 +377,7 @@ void Emulator::Run()
     retro_run();
     Unlock();
 
-    if (_soft_frame_buf_render)
+    if (_soft_frame_buf_render && _texture_buf)
     {
         _texture_buf->Unlock();
         sceKernelSignalSema(_video_semaid, 1);
@@ -404,7 +409,8 @@ void Emulator::Show()
 
     if (gStatus == APP_STATUS_RUN_GAME && _current_tex == _texture_buf->Current())
     {
-        sceKernelWaitSema(_video_semaid, 1, NULL);
+        SceUInt time = 15000;
+        sceKernelWaitSema(_video_semaid, 1, &time);
     }
 
     // size_t count = 0;
@@ -611,6 +617,7 @@ void Emulator::_OnPsButton(Input *input)
     gVideo->Lock();
     gStatus = APP_STATUS_SHOW_UI_IN_GAME;
     gVideo->Unlock();
+    LogDebug("_OnPsButton end");
 }
 
 static void ConvertTextureToRGB888(vita2d_texture *texture, uint8_t *dst, size_t width = 0, size_t height = 0)
