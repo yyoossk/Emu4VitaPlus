@@ -53,8 +53,8 @@ App::App() : _index(0)
     ImGuiStyle *style = &ImGui::GetStyle();
     style->Colors[ImGuiCol_TitleBg] = style->Colors[ImGuiCol_TitleBgActive];
 
-    _buttons = {new CoreButton("NES", {{"FCEUmm", "fceumm"},
-                                       {"Nestopia", "nestopia"}}),
+    _buttons = {new CoreButton("NES", {{"FCEUmm", "FCEUmm"},
+                                       {"Nestopia", "Nestopia"}}),
                 new CoreButton("SNES", {{"Snes9x 2002", "Snes9x2002"},
                                         {"Snes9x 2005", "Snes9x2005"},
                                         {"Snes9x 2010", "Snes9x2010"}}),
@@ -68,7 +68,7 @@ App::App() : _index(0)
                 new CoreButton("PS1", {}),
                 new CoreButton("WSC", {}),
                 new CoreButton("NGP", {}),
-                new CoreButton("ARC", {{"FBA Lite", "fba_lite"}})};
+                new CoreButton("ARC", {{"FBA Lite", "FBALite"}})};
 
     SetInputHooks(&_input);
 }
@@ -111,7 +111,7 @@ void App::_Show()
     ImGui::SetNextWindowSize({VITA_WIDTH - MAIN_WINDOW_PADDING * 2, VITA_HEIGHT - MAIN_WINDOW_PADDING * 2});
 
     ImGui::Begin("Emu4Vita++ v" APP_VER_STR, NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoInputs);
-    // ShowTimePower();
+    ShowTimePower();
     ImGui::SetCursorPos({0, (ImGui::GetContentRegionMax().y - BUTTON_SIZE) / 2});
     size_t count = 0;
     for (auto button : _buttons)

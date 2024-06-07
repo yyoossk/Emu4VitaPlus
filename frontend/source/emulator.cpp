@@ -200,20 +200,22 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
 
     if (gEmulator->_texture_buf == nullptr || gEmulator->_texture_buf->GetWidth() != width || gEmulator->_texture_buf->GetHeight() != height)
     {
+        gVideo->Lock();
 
         if (gEmulator->_texture_buf != nullptr)
         {
-            gVideo->Lock();
+
             delete gEmulator->_texture_buf;
             gEmulator->_texture_buf = nullptr;
-            gVideo->Unlock();
         }
-
         gEmulator->_texture_buf = new TextureBuf(gEmulator->_video_pixel_format, width, height);
         gEmulator->_SetVideoSize(width, height);
+
+        gVideo->Unlock();
     }
     else if (gEmulator->_soft_frame_buf_render)
     {
+        sceKernelSignalSema(gEmulator->_video_semaid, 1);
         return;
     }
 
@@ -436,7 +438,7 @@ void Emulator::Show()
         return;
     }
 
-    if (gStatus == APP_STATUS_RUN_GAME && _current_tex == _texture_buf->Current())
+    if (gStatus == APP_STATUS_RUN_GAME)
     {
         SceUInt time = 15000;
         sceKernelWaitSema(_video_semaid, 1, &time);
@@ -486,6 +488,7 @@ bool Emulator::GetCurrentSoftwareFramebuffer(retro_framebuffer *fb)
     LogFunctionNameLimited;
 
     return false;
+
     if (!fb || _texture_buf == nullptr)
     {
         return false;
@@ -494,12 +497,12 @@ bool Emulator::GetCurrentSoftwareFramebuffer(retro_framebuffer *fb)
     _texture_buf->Lock();
     // LogDebug("GetCurrentSoftwareFramebuffer _texture_buf->Current() %08x", _texture_buf->Current());
     _soft_frame_buf_render = true;
-    vita2d_texture *texture = _texture_buf->Next();
-    if (texture == _current_tex)
-    {
-        // LogWarn("same texture: %x %x", texture, _current_tex);
-        texture = _texture_buf->Next();
-    }
+    vita2d_texture *texture = _texture_buf->Current();
+    // if (texture == _current_tex)
+    // {
+    //     // LogWarn("same texture: %x %x", texture, _current_tex);
+    //     texture = _texture_buf->Next();
+    // }
 
     fb->data = vita2d_texture_get_datap(texture);
     fb->width = vita2d_texture_get_width(texture);

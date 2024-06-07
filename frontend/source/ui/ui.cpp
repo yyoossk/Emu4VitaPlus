@@ -13,6 +13,7 @@
 #include "item_state.h"
 #include "tab_browser.h"
 #include "tab_about.h"
+#include "utils.h"
 
 #define MAIN_WINDOW_PADDING 10
 
@@ -351,6 +352,7 @@ void Ui::Show()
     ImGui::SetNextWindowSize({VITA_WIDTH - MAIN_WINDOW_PADDING * 2, VITA_HEIGHT - MAIN_WINDOW_PADDING * 2});
 
     ImGui::Begin("Emu4Vita++ (" CORE_FULL_NAME ") v" APP_VER_STR, NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs);
+    ShowTimePower();
 
     gStatus == APP_STATUS_BOOT ? _ShowBoot() : _ShowNormal();
 

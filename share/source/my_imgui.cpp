@@ -124,7 +124,6 @@ void My_Imgui_Create_Font(uint32_t language)
         for (auto x = 0; x < width; ++x)
             texture_data[y * stride + x] = pixels[y * width + x];
 
-    IM_FREE(pixels);
     io.Fonts->TexID = gFontTexture;
     return;
 }

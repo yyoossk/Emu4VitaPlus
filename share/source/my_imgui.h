@@ -2,6 +2,9 @@
 #include <imgui_vita2d/imgui_vita.h>
 #include <stdint.h>
 
+#define IM_COL32_GREEN IM_COL32(0, 255, 0, 255)
+#define IM_COL32_RED IM_COL32(255, 0, 0, 255)
+
 IMGUI_API void My_ImGui_ImplVita2D_Init(uint32_t language);
 IMGUI_API void My_ImGui_ImplVita2D_Shutdown();
 IMGUI_API void My_ImGui_ImplVita2D_RenderDrawData(ImDrawData *draw_data);
