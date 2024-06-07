@@ -61,6 +61,13 @@ bool EnvironmentCallback(unsigned cmd, void *data)
 
     switch (cmd)
     {
+    case RETRO_ENVIRONMENT_GET_CAN_DUPE:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_GET_CAN_DUPE");
+        if (data)
+        {
+            *(bool *)data = true;
+        }
+        break;
     case RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY:
         LogDebug("  cmd: RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY");
         if (data)
@@ -336,9 +343,27 @@ bool Emulator::LoadGame(const char *path)
     gStateManager->Init(_current_name.c_str());
 
     retro_game_info game_info = {0};
-    game_info.path = path;
-
     _soft_frame_buf_render = false;
+    char *buf = nullptr;
+
+    if (_info.need_fullpath)
+    {
+        LogDebug("  load rom from path");
+        game_info.path = path;
+    }
+    else
+    {
+        LogDebug("  load rom from memory");
+        game_info.size = File::GetSize(path);
+        buf = new char[game_info.size];
+        if (!File::ReadFile(path, buf, game_info.size))
+        {
+            LogError("failed to read rom: %s", path);
+            delete[] buf;
+            return false;
+        }
+        game_info.data = buf;
+    }
 
     bool result = retro_load_game(&game_info);
     if (result)
@@ -358,6 +383,10 @@ bool Emulator::LoadGame(const char *path)
     }
 
     gUi->ClearLogs();
+    if (buf)
+    {
+        delete[] buf;
+    }
 
     return result;
 }

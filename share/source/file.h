@@ -9,6 +9,8 @@ namespace File
 
     bool Exist(const char *path);
     bool GetCreateTime(const char *name, SceDateTime *time);
+    size_t GetSize(const char *name);
+    bool ReadFile(const char *name, void *buf, SceSSize size);
     void MakeDirs(const char *path, SceIoMode mode = (SceIoMode)0777);
     bool Remove(const char *path);
     std::string GetStem(const char *path);

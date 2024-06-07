@@ -4,12 +4,40 @@
 #include "file.h"
 #include "log.h"
 
+#define SCE_STM_RWU (00600)
+#define SCE_STM_RU (00400)
+
 namespace File
 {
     bool Exist(const char *name)
     {
         SceIoStat stat;
         return sceIoGetstat(name, &stat) == SCE_OK;
+    }
+
+    size_t GetSize(const char *name)
+    {
+        SceIoStat stat;
+        if (sceIoGetstat(name, &stat) == SCE_OK)
+        {
+            return stat.st_size;
+        }
+
+        return 0;
+    }
+
+    bool ReadFile(const char *name, void *buf, SceSSize size)
+    {
+        SceUID fd = sceIoOpen(name, SCE_O_RDONLY, SCE_STM_RU);
+        if (fd <= 0)
+        {
+            return false;
+        }
+
+        SceSSize s = sceIoRead(fd, buf, size);
+        sceIoClose(fd);
+
+        return s == size;
     }
 
     bool GetCreateTime(const char *name, SceDateTime *time)
@@ -29,8 +57,7 @@ namespace File
         return true;
     }
 
-    void
-    MakeDirs(const char *path, SceIoMode mode)
+    void MakeDirs(const char *path, SceIoMode mode)
     {
         if (!(path && *path) || Exist(path))
         {

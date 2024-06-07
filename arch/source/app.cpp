@@ -61,7 +61,7 @@ App::App() : _index(0)
                 new CoreButton("MD", {{"Genesis Plus GX", "GenesisPlusGX"},
                                       {"PicoDrive", "PicoDrive"}}),
                 new CoreButton("GBA", {{"gpSP", "gpSP"},
-                                       {"VBA Next", "vba_next"}}),
+                                       {"VBA Next", "VBANext"}}),
                 new CoreButton("GBC", {}),
                 new CoreButton("PCE", {}),
                 new CoreButton("PS1", {}),
@@ -109,8 +109,8 @@ void App::_Show()
     ImGui::SetNextWindowPos({MAIN_WINDOW_PADDING, MAIN_WINDOW_PADDING});
     ImGui::SetNextWindowSize({VITA_WIDTH - MAIN_WINDOW_PADDING * 2, VITA_HEIGHT - MAIN_WINDOW_PADDING * 2});
 
-    ImGui::Begin("Emu4Vita++ (v" APP_VER_STR ")", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoInputs);
-    ShowTimePower();
+    ImGui::Begin("Emu4Vita++ v" APP_VER_STR, NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoInputs);
+    // ShowTimePower();
     ImGui::SetCursorPos({0, (ImGui::GetContentRegionMax().y - BUTTON_SIZE) / 2});
     size_t count = 0;
     for (auto button : _buttons)
