@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12)
 
 add_custom_target(
     ${CORE_NAME}_build ALL
-    COMMAND make -f ${CORE_MAKEFILE_NAME} -j ${CORE_ARGS}
+    COMMAND make -f ${CORE_MAKEFILE_NAME} ${CORE_ARGS} -j
     WORKING_DIRECTORY ${CORE_DIR})
 
 add_library(${CORE_NAME} STATIC IMPORTED)

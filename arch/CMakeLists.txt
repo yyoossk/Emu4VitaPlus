@@ -18,8 +18,36 @@ project("Arch")
 
 set(BUILD_SELF ON)
 
-set(CORE_SHORTS gpSP VBANext FBALite Snes9x2002 Snes9x2005 Snes9x2010 FCEUmm Nestopia GenesisPlusGX PicoDrive)
-set(CORES gpsp vba_next fba_lite snes9x2002 snes9x2005 snes9x2010 fceumm nestopia genesis_plus_gx picodrive)
+set(CORE_SHORTS
+    gpSP
+    VBANext
+    Gambatte
+    FBALite
+    Snes9x2002
+    Snes9x2005
+    Snes9x2010
+    FCEUmm
+    Nestopia
+    GenesisPlusGX
+    PicoDrive
+    MednafenPCEFast
+    MednafenPCESuperGrafx)
+
+set(CORES
+    gpsp
+    vba_next
+    gambatte
+    fba_lite
+    snes9x2002
+    snes9x2005
+    snes9x2010
+    fceumm
+    nestopia
+    genesis_plus_gx
+    picodrive
+    mednafen_pce_fast
+    mednafen_supergrafx)
+
 set(CORE_EBOOTS "")
 set(CORE_FILES "")
 
