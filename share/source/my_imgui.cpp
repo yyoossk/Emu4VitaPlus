@@ -11,6 +11,7 @@
 #define APP_ASSETS_DIR "app0:assets"
 #define TEXT_FONT_NAME "wqy-microhei.ttf"
 #define GAMEPAD_FONT_NAME "promptfont.ttf"
+#define BATTERY_FONT_NAME "fontello.ttf"
 
 extern SceGxmProgram _binary_assets_imgui_v_cg_gxp_start;
 extern SceGxmProgram _binary_assets_imgui_f_cg_gxp_start;
@@ -24,6 +25,7 @@ const static ImWchar GamePadCharset[] = {0x219c, 0x21a1,
                                          0x21f7, 0x21f8,
                                          0xe000, 0xe000,
                                          0x0000};
+const static ImWchar BatteryCharset[] = {0xe800, 0xe805, 0x0000};
 
 namespace
 {
@@ -108,6 +110,10 @@ void My_Imgui_Create_Font(uint32_t language)
                                  25.0f,
                                  &font_config,
                                  GamePadCharset);
+    io.Fonts->AddFontFromFileTTF(APP_ASSETS_DIR "/" BATTERY_FONT_NAME,
+                                 25.0f,
+                                 &font_config,
+                                 BatteryCharset);
     io.Fonts->GetTexDataAsRGBA32((uint8_t **)&pixels, &width, &height);
 
     gFontTexture = vita2d_create_empty_texture(width, height);
