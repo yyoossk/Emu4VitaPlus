@@ -60,5 +60,6 @@ private:
     size_t _aligned_state_size;
     size_t _threshold_size;
 
-    CircleBuf<RewindBlock, BLOCK_SIZE> _blocks;
+    CircleBuf<RewindBlock> _blocks{BLOCK_SIZE};
+    CircleBuf<uint8_t> *_buf;
 };

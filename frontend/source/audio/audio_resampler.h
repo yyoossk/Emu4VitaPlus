@@ -28,7 +28,7 @@ private:
 
     SwrContext *_swr_ctx;
     uint32_t _in_rate, _out_rate;
-    CircleBuf<int16_t, 0x10000> _in_buf;
+    CircleBuf<int16_t> _in_buf{0x10000};
     AudioOutput *_output;
     AudioBuf *_out_buf;
 };

@@ -3,15 +3,20 @@
 #include <string.h>
 #include "log.h"
 
-template <typename T, size_t SIZE>
+template <typename T>
 class CircleBuf
 {
 public:
-    CircleBuf() : _read_pos(0),
-                  _write_pos(0),
-                  _tmp(nullptr),
-                  _tmp_size(0),
-                  _continue_write(true){};
+    CircleBuf(size_t total_size)
+        : _total_size(total_size),
+          _read_pos(0),
+          _write_pos(0),
+          _tmp(nullptr),
+          _tmp_size(0),
+          _continue_write(true)
+    {
+        _buf = new T[_total_size];
+    };
 
     virtual ~CircleBuf()
     {
@@ -19,6 +24,7 @@ public:
         {
             delete[] _tmp;
         }
+        delete[] _buf;
     };
 
     void Reset()
@@ -42,7 +48,7 @@ public:
             return nullptr;
         }
 
-        _continue_write = write_pos + size < SIZE;
+        _continue_write = write_pos + size < _total_size;
 
         return _continue_write ? _buf + write_pos : _GetTmpBuf(size);
     };
@@ -70,14 +76,14 @@ public:
             return false;
         }
 
-        if (write_pos + size < SIZE)
+        if (write_pos + size < _total_size)
         {
             memcpy(_buf + write_pos, data, size * sizeof(T));
             write_pos += size;
         }
         else
         {
-            size_t first_size = (SIZE - write_pos);
+            size_t first_size = (_total_size - write_pos);
             size_t second_size = size - first_size;
             memcpy(_buf + write_pos, data, first_size * sizeof(T));
             memcpy(_buf, data + first_size, second_size * sizeof(T));
@@ -106,7 +112,7 @@ public:
         }
         else
         {
-            *size = SIZE - read_pos;
+            *size = _total_size - read_pos;
         }
 
         return _buf + read_pos;
@@ -115,7 +121,7 @@ public:
     void ReadEnd(size_t size)
     {
         size_t read_pos = _read_pos.load(std::memory_order_relaxed) + size;
-        if (read_pos == SIZE)
+        if (read_pos == _total_size)
         {
             read_pos = 0;
         }
@@ -126,7 +132,7 @@ public:
     {
 // LogDebug("%d %d %d %d", _read_pos, _write_pos, _write_pos - _read_pos, ((_write_pos - _read_pos) & (_total_size - 1)) < _block_size);
 #if LOG_LEVEL >= LOG_LEVEL_DEBUG
-        if ((SIZE / size) * size != SIZE)
+        if ((_total_size / size) * size != _total_size)
         {
             LogError("SIZE must be a multiple of size.");
         }
@@ -139,7 +145,7 @@ public:
 
         // LogDebug("read_pos %d %d", read_pos, SIZE);
         read_pos += size;
-        if (read_pos >= SIZE)
+        if (read_pos >= _total_size)
         {
             read_pos = 0;
         }
@@ -157,7 +163,7 @@ public:
         }
         else
         {
-            return (SIZE - (write_pos - read_pos));
+            return (_total_size - (write_pos - read_pos));
         }
     };
 
@@ -166,7 +172,7 @@ public:
     {
         const size_t write_pos = _write_pos.load(std::memory_order_relaxed);
         const size_t read_pos = _read_pos.load(std::memory_order_relaxed);
-        return SIZE - FreeSize(write_pos, read_pos);
+        return _total_size - FreeSize(write_pos, read_pos);
     }
 
 protected:
@@ -183,7 +189,8 @@ protected:
         return _tmp;
     }
 
-    T _buf[SIZE];
+    T *_buf;
+    size_t _total_size;
     std::atomic_size_t _read_pos;
     std::atomic_size_t _write_pos;
 

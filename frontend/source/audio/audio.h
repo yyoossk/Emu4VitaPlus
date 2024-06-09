@@ -23,5 +23,5 @@ private:
     AudioResampler *_resampler;
     AudioOutput *_output;
 
-    AudioBuf _out_buf;
+    AudioBuf _out_buf{AUDIO_OUTPUT_BUF_SIZE};
 };
