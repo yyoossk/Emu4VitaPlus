@@ -11,7 +11,7 @@
 
 bool RewindBlock::IsValid()
 {
-    return buf && buf->magic == REWIND_BLOCK_MAGIC && index == buf->index;
+    return buf && buf->magic == REWIND_BLOCK_MAGIC && buf->index == index;
 }
 
 Rewind::Rewind()
@@ -24,6 +24,7 @@ Rewind::Rewind()
 Rewind::~Rewind()
 {
     LogFunctionName;
+    Deinit();
 }
 
 bool Rewind::Init()
@@ -58,4 +59,9 @@ void Rewind::Deinit()
 int Rewind::_RewindThread(SceSize args, void *argp)
 {
     return 0;
+}
+
+bool Rewind::_SaveFullState()
+{
+    // RewindBlock *block = _blocks.WriteBegin(1);
 }

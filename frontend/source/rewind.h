@@ -56,6 +56,8 @@ public:
     void Deinit();
 
 private:
+    bool _SaveFullState();
+
     size_t _state_size;
     size_t _aligned_state_size;
     size_t _threshold_size;
