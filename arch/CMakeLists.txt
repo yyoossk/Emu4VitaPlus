@@ -31,7 +31,8 @@ set(CORE_SHORTS
     GenesisPlusGX
     PicoDrive
     MednafenPCEFast
-    MednafenPCESuperGrafx)
+    MednafenPCESuperGrafx
+    MednafenNgp)
 
 set(CORES
     gpsp
@@ -46,7 +47,8 @@ set(CORES
     genesis_plus_gx
     picodrive
     mednafen_pce_fast
-    mednafen_supergrafx)
+    mednafen_supergrafx
+    mednafen_ngp)
 
 set(CORE_EBOOTS "")
 set(CORE_FILES "")

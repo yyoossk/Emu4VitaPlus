@@ -30,7 +30,7 @@ static uint8_t RetroKeys[] = {
     RETRO_DEVICE_ID_JOYPAD_Y,
     RETRO_DEVICE_ID_JOYPAD_L,
     RETRO_DEVICE_ID_JOYPAD_R,
-#elif defined(FC_BUILD) || defined(GBC_BUILD)
+#elif defined(FC_BUILD) || defined(GBC_BUILD) || defined(NGP_BUILD)
     RETRO_DEVICE_ID_JOYPAD_A,
     RETRO_DEVICE_ID_JOYPAD_B,
 #elif defined(MD_BUILD) || defined(PCE_BUILD)

@@ -64,4 +64,5 @@ int Rewind::_RewindThread(SceSize args, void *argp)
 bool Rewind::_SaveFullState()
 {
     // RewindBlock *block = _blocks.WriteBegin(1);
+    return true;
 }

@@ -21,7 +21,8 @@ set(CORES
     genesis_plus_gx
     picodrive
     mednafen_pce_fast
-    mednafen_supergrafx)
+    mednafen_supergrafx
+    mednafen_ngp)
 
 set(BUILD_LIST "ALL" "Arch" ${CORES})
 string(REPLACE "|" " " BUILD_LIST_STR ${BUILD_LIST})

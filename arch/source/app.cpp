@@ -67,7 +67,7 @@ App::App() : _index(0)
                                        {"Mednafen SuperGrafx", "MednafenPCESuperGrafx"}}),
                 new CoreButton("PS1", {}),
                 new CoreButton("WSC", {}),
-                new CoreButton("NGP", {}),
+                new CoreButton("NGP", {{"Mednafen NeoPop", "MednafenNgp"}}),
                 new CoreButton("ARC", {{"FBA Lite", "FBALite"}})};
 
     SetInputHooks(&_input);

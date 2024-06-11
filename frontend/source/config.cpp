@@ -181,7 +181,7 @@ void Config::DefaultControlMap()
         {SCE_CTRL_R1, RETRO_DEVICE_ID_JOYPAD_R},
         {SCE_CTRL_L2},
         {SCE_CTRL_R2},
-#elif defined(FC_BUILD) || defined(GBC_BUILD)
+#elif defined(FC_BUILD) || defined(GBC_BUILD) || defined(NGP_BUILD)
         {SCE_CTRL_CROSS, RETRO_DEVICE_ID_JOYPAD_B},
         {SCE_CTRL_TRIANGLE, RETRO_DEVICE_ID_JOYPAD_A, true},
         {SCE_CTRL_CIRCLE, RETRO_DEVICE_ID_JOYPAD_A},
