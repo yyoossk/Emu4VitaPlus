@@ -570,7 +570,7 @@ void Emulator::_SetupKeys()
         }
     }
 
-    _input.SetKeyUpCallback(SCE_CTRL_PSBUTTON, std::bind(&Emulator::_OnPsButton, this, &_input));
+    _input.SetKeyUpCallback(SCE_CTRL_PSBUTTON, std::bind(&Emulator::_OnPsButton, this));
     // for (int i = 0; i < 16; i++)
     // {
     //     LogDebug("%d %08x", i, _keys[i]);
@@ -643,7 +643,7 @@ void Emulator::_SetVideoSize(uint32_t width, uint32_t height)
     _video_rect.height = height;
 }
 
-void Emulator::_OnPsButton(Input *input)
+void Emulator::_OnPsButton()
 {
     LogFunctionName;
     gVideo->Lock();
@@ -747,4 +747,11 @@ bool Emulator::SaveScreenShot(const char *name, size_t height)
     delete[] buf;
 
     return true;
+}
+
+void Emulator::_OnHotkeyExitGame()
+{
+    LogFunctionName;
+    gStateManager->states[0]->Save();
+    gStatus = APP_STATUS_SHOW_UI;
 }
