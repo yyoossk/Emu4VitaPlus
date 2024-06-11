@@ -66,7 +66,7 @@ App::App() : _index(0)
                 new CoreButton("PCE", {{"Mednafen PCE Fast", "MednafenPCEFast"},
                                        {"Mednafen SuperGrafx", "MednafenPCESuperGrafx"}}),
                 new CoreButton("PS1", {}),
-                new CoreButton("WSC", {}),
+                new CoreButton("WSC", {{"Mednafen Wswan", "MednafenWswan"}}),
                 new CoreButton("NGP", {{"Mednafen NeoPop", "MednafenNgp"}}),
                 new CoreButton("ARC", {{"FBA Lite", "FBALite"}})};
 

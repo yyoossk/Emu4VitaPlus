@@ -32,7 +32,9 @@ set(CORE_SHORTS
     PicoDrive
     MednafenPCEFast
     MednafenPCESuperGrafx
-    MednafenNgp)
+    MednafenNgp
+    MednafenWswan
+    PCSXReARMed)
 
 set(CORES
     gpsp
@@ -48,7 +50,9 @@ set(CORES
     picodrive
     mednafen_pce_fast
     mednafen_supergrafx
-    mednafen_ngp)
+    mednafen_ngp
+    mednafen_wswan
+    pcsx_rearmed)
 
 set(CORE_EBOOTS "")
 set(CORE_FILES "")
