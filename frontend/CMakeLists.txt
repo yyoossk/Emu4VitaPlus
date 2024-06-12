@@ -20,6 +20,7 @@ include_directories(
     source
     source/ui
     source/audio
+    source/emu
     ../share/source
     ../deps/libretro-common/include
     ../deps/libvita2d/libvita2d/include
@@ -29,6 +30,7 @@ file(GLOB SRC
     source/*.c
     source/*.cpp
     source/ui/*.cpp
+    source/emu/*.cpp
     source/audio/*.cpp)
 
 add_compile_definitions(

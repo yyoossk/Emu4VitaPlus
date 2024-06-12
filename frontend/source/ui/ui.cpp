@@ -35,8 +35,7 @@ static void ResetGame()
 static void ExitGame()
 {
     LogFunctionName;
-    gStateManager->states[0]->Save();
-    gStatus = APP_STATUS_SHOW_UI;
+    gEmulator->UnloadGame();
 }
 
 static void ExitApp()

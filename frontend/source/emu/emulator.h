@@ -47,15 +47,15 @@ private:
     void _SetPixelFormat(retro_pixel_format format);
     void _SetVideoSize(uint32_t width, uint32_t height);
     void _SetupKeys();
-    void _OnPsButton();
-    void _OnHotkeySave();
-    void _OnHotkeyLoad();
-    void _OnHotkeySpeedUp();
-    void _OnHotkeySpeedDown();
-    void _OnHotkeyRewind();
-    void _OnHotkeyCtrlPortUp();
-    void _OnHotkeyCtrlPortDown();
-    void _OnHotkeyExitGame();
+    void _OnPsButton(Input *input);
+    void _OnHotkeySave(Input *input);
+    void _OnHotkeyLoad(Input *input);
+    void _OnHotkeySpeedUp(Input *input);
+    void _OnHotkeySpeedDown(Input *input);
+    void _OnHotkeyRewind(Input *input);
+    void _OnHotkeyCtrlPortUp(Input *input);
+    void _OnHotkeyCtrlPortDown(Input *input);
+    void _OnHotkeyExitGame(Input *input);
 
     std::string _current_name;
     retro_system_info _info;

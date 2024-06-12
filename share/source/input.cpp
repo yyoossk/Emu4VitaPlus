@@ -141,6 +141,7 @@ void Input::_ProcCallbacks(uint32_t key)
             if (iter.first & key && iter.first & ~_last_key)
             {
                 iter.second(this);
+                ClearKeyStates(iter.first);
                 break;
             }
         }
