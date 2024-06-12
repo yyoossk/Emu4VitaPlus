@@ -59,11 +59,17 @@ void Emulator::_OnPsButton(Input *input)
 void Emulator::_OnHotkeySave(Input *input)
 {
     LogFunctionName;
+    Lock();
+    gStateManager->states[0]->Save();
+    Unlock();
 }
 
 void Emulator::_OnHotkeyLoad(Input *input)
 {
     LogFunctionName;
+    Lock();
+    gStateManager->states[0]->Load();
+    Unlock();
 }
 
 void Emulator::_OnHotkeySpeedUp(Input *input)

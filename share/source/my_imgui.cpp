@@ -71,6 +71,39 @@ namespace
     constexpr auto ImguiVertexSize = 20;
 }
 
+bool My_Imgui_Save_Font_Cache(const char *path)
+{
+    LogFunctionName;
+    if (!gFontTexture)
+    {
+        return false;
+    }
+
+    FILE *fp = fopen(path, "wb");
+    if (!fp)
+    {
+        return false;
+    }
+    ImFontAtlas *fonts = ImGui::GetIO().Fonts;
+
+    uint8_t *pixels;
+    int width, height;
+    fonts->GetTexDataAsAlpha8(&pixels, &width, &height);
+    fwrite(&width, sizeof(int), 1, fp);
+    fwrite(&height, sizeof(int), 1, fp);
+    fwrite(pixels, width * height, 1, fp);
+
+    int size = fonts->Fonts[0]->Glyphs.size();
+    fwrite(&size, sizeof(int), 1, fp);
+    fwrite(fonts->Fonts[0]->Glyphs.Data, sizeof(ImFontGlyph) * size, 1, fp);
+
+    fwrite(&fonts->TexUvWhitePixel, sizeof(fonts->TexUvWhitePixel), 1, fp);
+    fwrite(fonts->TexUvLines, sizeof(fonts->TexUvLines), 1, fp);
+
+    fclose(fp);
+    return true;
+}
+
 void My_Imgui_Create_Font(uint32_t language)
 {
     LogFunctionName;
