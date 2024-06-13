@@ -49,7 +49,7 @@ static void ChangeLanguage()
     LogFunctionName;
     gVideo->Lock();
     My_Imgui_Destroy_Font();
-    My_Imgui_Create_Font(gConfig->language);
+    My_Imgui_Create_Font(gConfig->language, CACHE_DIR);
     gVideo->Unlock();
     gConfig->Save();
 }
@@ -80,7 +80,7 @@ void Ui::_InitImgui()
     LogFunctionName;
 
     ImGui::CreateContext();
-    My_ImGui_ImplVita2D_Init(LANGUAGE::LANGUAGE_ENGLISH);
+    My_ImGui_ImplVita2D_Init(LANGUAGE::LANGUAGE_ENGLISH, CACHE_DIR);
     ImGui_ImplVita2D_TouchUsage(false);
     ImGui_ImplVita2D_UseIndirectFrontTouch(false);
     ImGui_ImplVita2D_UseRearTouch(false);

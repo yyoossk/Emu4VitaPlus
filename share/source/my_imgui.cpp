@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <vita2d.h>
 #include <imgui_vita2d/imgui_vita_touch.h>
+#include <zlib.h>
 #include "my_imgui.h"
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include <imgui_vita2d/imgui_internal.h>
@@ -12,6 +13,7 @@
 #define TEXT_FONT_NAME "wqy-microhei.ttf"
 #define GAMEPAD_FONT_NAME "promptfont.ttf"
 #define BATTERY_FONT_NAME "fontello.ttf"
+#define FONT_CACHE_VERSION 1
 
 extern SceGxmProgram _binary_assets_imgui_v_cg_gxp_start;
 extern SceGxmProgram _binary_assets_imgui_f_cg_gxp_start;
@@ -27,51 +29,58 @@ const static ImWchar GamePadCharset[] = {0x219c, 0x21a1,
                                          0x0000};
 const static ImWchar BatteryCharset[] = {0xe800, 0xe805, 0x0000};
 
-namespace
+static void matrix_init_orthographic(float *m,
+                                     float left,
+                                     float right,
+                                     float bottom,
+                                     float top,
+                                     float near,
+                                     float far)
 {
-    void matrix_init_orthographic(float *m,
-                                  float left,
-                                  float right,
-                                  float bottom,
-                                  float top,
-                                  float near,
-                                  float far)
-    {
-        m[0x0] = 2.0f / (right - left);
-        m[0x4] = 0.0f;
-        m[0x8] = 0.0f;
-        m[0xC] = -(right + left) / (right - left);
+    m[0x0] = 2.0f / (right - left);
+    m[0x4] = 0.0f;
+    m[0x8] = 0.0f;
+    m[0xC] = -(right + left) / (right - left);
 
-        m[0x1] = 0.0f;
-        m[0x5] = 2.0f / (top - bottom);
-        m[0x9] = 0.0f;
-        m[0xD] = -(top + bottom) / (top - bottom);
+    m[0x1] = 0.0f;
+    m[0x5] = 2.0f / (top - bottom);
+    m[0x9] = 0.0f;
+    m[0xD] = -(top + bottom) / (top - bottom);
 
-        m[0x2] = 0.0f;
-        m[0x6] = 0.0f;
-        m[0xA] = -2.0f / (far - near);
-        m[0xE] = (far + near) / (far - near);
+    m[0x2] = 0.0f;
+    m[0x6] = 0.0f;
+    m[0xA] = -2.0f / (far - near);
+    m[0xE] = (far + near) / (far - near);
 
-        m[0x3] = 0.0f;
-        m[0x7] = 0.0f;
-        m[0xB] = 0.0f;
-        m[0xF] = 1.0f;
-    }
-
-    SceGxmShaderPatcherId imguiVertexProgramId;
-    SceGxmShaderPatcherId imguiFragmentProgramId;
-
-    SceGxmVertexProgram *_vita2d_imguiVertexProgram;
-    SceGxmFragmentProgram *_vita2d_imguiFragmentProgram;
-
-    const SceGxmProgramParameter *_vita2d_imguiWvpParam;
-
-    float ortho_proj_matrix[16];
-
-    constexpr auto ImguiVertexSize = 20;
+    m[0x3] = 0.0f;
+    m[0x7] = 0.0f;
+    m[0xB] = 0.0f;
+    m[0xF] = 1.0f;
 }
 
-bool My_Imgui_Save_Font_Cache(const char *path)
+SceGxmShaderPatcherId imguiVertexProgramId;
+SceGxmShaderPatcherId imguiFragmentProgramId;
+
+SceGxmVertexProgram *_vita2d_imguiVertexProgram;
+SceGxmFragmentProgram *_vita2d_imguiFragmentProgram;
+
+const SceGxmProgramParameter *_vita2d_imguiWvpParam;
+
+float ortho_proj_matrix[16];
+
+constexpr auto ImguiVertexSize = 20;
+
+struct FontCache
+{
+    uint32_t version;
+    float size;
+    uint32_t glyphs_size;
+    int width;
+    int height;
+    ImVec2 white_uv;
+};
+
+static bool save_font_cache(const char *path)
 {
     LogFunctionName;
     if (!gFontTexture)
@@ -86,28 +95,148 @@ bool My_Imgui_Save_Font_Cache(const char *path)
     }
     ImFontAtlas *fonts = ImGui::GetIO().Fonts;
 
+    FontCache cache;
     uint8_t *pixels;
-    int width, height;
-    fonts->GetTexDataAsAlpha8(&pixels, &width, &height);
-    fwrite(&width, sizeof(int), 1, fp);
-    fwrite(&height, sizeof(int), 1, fp);
-    fwrite(pixels, width * height, 1, fp);
+    fonts->GetTexDataAsAlpha8(&pixels, &cache.width, &cache.height);
+    cache.version = FONT_CACHE_VERSION;
+    cache.white_uv = fonts->TexUvWhitePixel;
+    cache.glyphs_size = fonts->Fonts[0]->Glyphs.size();
+    cache.size = fonts->Fonts[0]->FontSize;
 
-    int size = fonts->Fonts[0]->Glyphs.size();
-    fwrite(&size, sizeof(int), 1, fp);
-    fwrite(fonts->Fonts[0]->Glyphs.Data, sizeof(ImFontGlyph) * size, 1, fp);
-
-    fwrite(&fonts->TexUvWhitePixel, sizeof(fonts->TexUvWhitePixel), 1, fp);
+    fwrite(&cache, sizeof(FontCache), 1, fp);
+    fwrite(pixels, cache.width * cache.height, 1, fp);
     fwrite(fonts->TexUvLines, sizeof(fonts->TexUvLines), 1, fp);
+    fwrite(fonts->Fonts[0]->Glyphs.Data, sizeof(ImFontGlyph) * cache.glyphs_size, 1, fp);
 
     fclose(fp);
     return true;
 }
 
-void My_Imgui_Create_Font(uint32_t language)
+static void gen_font_texture(ImFontAtlas *fonts)
+{
+    int width, height;
+    uint32_t *pixels = NULL;
+    fonts->GetTexDataAsRGBA32((uint8_t **)&pixels, &width, &height);
+
+    gFontTexture = vita2d_create_empty_texture(width, height);
+    const auto stride = vita2d_texture_get_stride(gFontTexture) / 4;
+    auto texture_data = (uint32_t *)vita2d_texture_get_datap(gFontTexture);
+
+    for (auto y = 0; y < height; ++y)
+        for (auto x = 0; x < width; ++x)
+            texture_data[y * stride + x] = pixels[y * width + x];
+
+    fonts->TexID = gFontTexture;
+}
+
+static bool load_font_cache(const char *path)
+{
+    LogFunctionName;
+    FILE *fp = fopen(path, "rb");
+    if (!fp)
+    {
+        return false;
+    }
+
+    FontCache cache;
+    fread(&cache, sizeof(FontCache), 1, fp);
+    if (cache.version != FONT_CACHE_VERSION)
+    {
+        fclose(fp);
+        return false;
+    }
+
+    ImFontAtlas *fonts = ImGui::GetIO().Fonts;
+    ImFontConfig config{};
+    char tmp = 0;
+    config.FontData = &tmp;
+    config.FontDataSize = 1;
+    config.SizePixels = 1.f;
+
+    ImFont *font = fonts->AddFont(&config);
+
+    font->FontSize = cache.size;
+    font->ConfigDataCount = 1;
+    font->ContainerAtlas = fonts;
+    font->ConfigData = &config;
+
+    fonts->TexWidth = cache.width;
+    fonts->TexHeight = cache.height;
+    fonts->TexUvWhitePixel = cache.white_uv;
+
+    size_t size = cache.width * cache.height;
+    LogDebug("fonts:%08x %x %x", fonts, cache.width, cache.height);
+    LogDebug("font:%08x %08x", font, fonts->TexPixelsAlpha8);
+    unsigned char *t = new unsigned char[size]; //(unsigned char *)IM_ALLOC(size);
+    LogDebug("texture:   %08x", t);
+    fonts->TexPixelsAlpha8 = t;
+
+    fread(fonts->TexPixelsAlpha8, size, 1, fp);
+    fread(fonts->TexUvLines, sizeof(fonts->TexUvLines), 1, fp);
+    for (size_t i = 0; i < cache.glyphs_size; i++)
+    {
+        ImFontGlyph glyph;
+        fread(&glyph, sizeof(ImFontGlyph), 1, fp);
+        font->AddGlyph(&config, glyph.Codepoint, glyph.X0, glyph.Y0, glyph.X1, glyph.Y1,
+                       glyph.U0, glyph.V0, glyph.U1, glyph.V1, glyph.AdvanceX);
+        font->SetGlyphVisible(glyph.Codepoint, glyph.Visible);
+    }
+
+    font->BuildLookupTable();
+    gen_font_texture(fonts);
+
+    fclose(fp);
+    return true;
+}
+
+static const ImWchar *get_glyph_ranges(uint32_t language)
+{
+    switch (language)
+    {
+    case LANGUAGE_CHINESE:
+        return GB_2312;
+    // case LANGUAGE_JAPANESE:
+    //     glyph_ranges = GetGlyphRangesJapanese();
+    //     break;
+    case LANGUAGE_ENGLISH:
+    default:
+        return ImGui::GetIO().Fonts->GetGlyphRangesDefault();
+    }
+}
+
+static uint32_t get_glyph_ranges_crc32(uint32_t language)
+{
+    const ImWchar *glyph_ranges = get_glyph_ranges(language);
+    const ImWchar *p = glyph_ranges;
+    size_t size = 0;
+    while (*p)
+    {
+        p++;
+        size += sizeof(ImWchar);
+    }
+
+    return crc32(0, (uint8_t *)glyph_ranges, size);
+}
+
+void My_Imgui_Create_Font(uint32_t language, const char *cache_path)
 {
     LogFunctionName;
     LogDebug("language: %d", language);
+
+    char name[255];
+
+    if (cache_path)
+    {
+        snprintf(name, 255, "%s/font_%08x.bin", cache_path, get_glyph_ranges_crc32(language));
+        if (load_font_cache(name))
+        {
+            return;
+        }
+        else
+        {
+            LogDebug("failed to load cache");
+        }
+    }
 
     // Build texture atlas
     ImGuiIO &io = ImGui::GetIO();
@@ -120,19 +249,7 @@ void My_Imgui_Create_Font(uint32_t language)
     font_config.OversampleV = 1;
     font_config.PixelSnapH = 1;
 
-    const ImWchar *glyph_ranges = nullptr;
-    switch (language)
-    {
-    case LANGUAGE_CHINESE:
-        glyph_ranges = GB_2312;
-        break;
-    // case LANGUAGE_JAPANESE:
-    //     glyph_ranges = GetGlyphRangesJapanese();
-    //     break;
-    case LANGUAGE_ENGLISH:
-    default:
-        glyph_ranges = io.Fonts->GetGlyphRangesDefault();
-    }
+    const ImWchar *glyph_ranges = get_glyph_ranges(language);
 
     io.Fonts->AddFontFromFileTTF(APP_ASSETS_DIR "/" TEXT_FONT_NAME,
                                  25.0f,
@@ -147,17 +264,12 @@ void My_Imgui_Create_Font(uint32_t language)
                                  25.0f,
                                  &font_config,
                                  BatteryCharset);
-    io.Fonts->GetTexDataAsRGBA32((uint8_t **)&pixels, &width, &height);
+    gen_font_texture(io.Fonts);
 
-    gFontTexture = vita2d_create_empty_texture(width, height);
-    const auto stride = vita2d_texture_get_stride(gFontTexture) / 4;
-    auto texture_data = (uint32_t *)vita2d_texture_get_datap(gFontTexture);
-
-    for (auto y = 0; y < height; ++y)
-        for (auto x = 0; x < width; ++x)
-            texture_data[y * stride + x] = pixels[y * width + x];
-
-    io.Fonts->TexID = gFontTexture;
+    if (cache_path)
+    {
+        save_font_cache(name);
+    }
     return;
 }
 
@@ -173,10 +285,10 @@ void My_Imgui_Destroy_Font()
     }
 }
 
-IMGUI_API void My_ImGui_ImplVita2D_Init(uint32_t language)
+IMGUI_API void My_ImGui_ImplVita2D_Init(uint32_t language, const char *cache_path)
 {
     LogFunctionName;
-    My_Imgui_Create_Font(language);
+    My_Imgui_Create_Font(language, cache_path);
 
     // check the shaders
     sceGxmProgramCheck(&_binary_assets_imgui_v_cg_gxp_start);

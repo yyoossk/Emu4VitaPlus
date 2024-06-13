@@ -72,7 +72,7 @@ App::App()
         gUi->AppendLog("Load font");
         gVideo->Lock();
         My_Imgui_Destroy_Font();
-        My_Imgui_Create_Font(gConfig->language);
+        My_Imgui_Create_Font(gConfig->language, CACHE_DIR);
         gVideo->Unlock();
     }
 

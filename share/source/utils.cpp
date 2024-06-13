@@ -12,11 +12,12 @@
 void ShowTimePower()
 {
     int percent = scePowerGetBatteryLifePercent();
+    percent = 10;
     ImU32 color = percent <= 25 ? IM_COL32_RED : IM_COL32_GREEN;
-    char battery[] = "\xee\xa0\x80";
+    char battery[] = "\xee\xa0\x81";
     if (scePowerIsBatteryCharging())
     {
-        battery[2] = '\x84';
+        battery[2] = '\x85';
     }
     else
     {
