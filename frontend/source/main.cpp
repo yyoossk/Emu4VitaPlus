@@ -4,7 +4,10 @@
 #include "log.h"
 #include "defines.h"
 
-unsigned int sceLibcHeapSize = 0x400000;
+#define SCE_LIBC_HEAP_SIZE_EXTENDED_ALLOC_NO_LIMIT (0xffffffffU)
+
+unsigned int sceLibcHeapExtendedAlloc = 1;
+unsigned int sceLibcHeapSize = SCE_LIBC_HEAP_SIZE_EXTENDED_ALLOC_NO_LIMIT;
 
 int main(int argc, char *const argv[])
 {

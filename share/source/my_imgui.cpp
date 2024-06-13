@@ -106,7 +106,7 @@ static bool save_font_cache(const char *path)
     fwrite(&cache, sizeof(FontCache), 1, fp);
     fwrite(pixels, cache.width * cache.height, 1, fp);
     fwrite(fonts->TexUvLines, sizeof(fonts->TexUvLines), 1, fp);
-    fwrite(fonts->Fonts[0]->Glyphs.Data, sizeof(ImFontGlyph) * cache.glyphs_size, 1, fp);
+    fwrite(fonts->Fonts[0]->Glyphs.Data, sizeof(ImFontGlyph), cache.glyphs_size, fp);
 
     fclose(fp);
     return true;
@@ -120,7 +120,7 @@ static void gen_font_texture(ImFontAtlas *fonts)
 
     gFontTexture = vita2d_create_empty_texture(width, height);
     const auto stride = vita2d_texture_get_stride(gFontTexture) / 4;
-    auto texture_data = (uint32_t *)vita2d_texture_get_datap(gFontTexture);
+    uint32_t *texture_data = (uint32_t *)vita2d_texture_get_datap(gFontTexture);
 
     for (auto y = 0; y < height; ++y)
         for (auto x = 0; x < width; ++x)
@@ -148,8 +148,7 @@ static bool load_font_cache(const char *path)
 
     ImFontAtlas *fonts = ImGui::GetIO().Fonts;
     ImFontConfig config{};
-    char tmp = 0;
-    config.FontData = &tmp;
+    config.FontData = IM_ALLOC(1);
     config.FontDataSize = 1;
     config.SizePixels = 1.f;
 
@@ -159,32 +158,27 @@ static bool load_font_cache(const char *path)
     font->ConfigDataCount = 1;
     font->ContainerAtlas = fonts;
     font->ConfigData = &config;
-
     fonts->TexWidth = cache.width;
     fonts->TexHeight = cache.height;
     fonts->TexUvWhitePixel = cache.white_uv;
 
     size_t size = cache.width * cache.height;
-    LogDebug("fonts:%08x %x %x", fonts, cache.width, cache.height);
-    LogDebug("font:%08x %08x", font, fonts->TexPixelsAlpha8);
-    unsigned char *t = new unsigned char[size]; //(unsigned char *)IM_ALLOC(size);
-    LogDebug("texture:   %08x", t);
-    fonts->TexPixelsAlpha8 = t;
+    fonts->TexPixelsAlpha8 = (unsigned char *)IM_ALLOC(size);
 
     fread(fonts->TexPixelsAlpha8, size, 1, fp);
     fread(fonts->TexUvLines, sizeof(fonts->TexUvLines), 1, fp);
+
     for (size_t i = 0; i < cache.glyphs_size; i++)
     {
         ImFontGlyph glyph;
         fread(&glyph, sizeof(ImFontGlyph), 1, fp);
-        font->AddGlyph(&config, glyph.Codepoint, glyph.X0, glyph.Y0, glyph.X1, glyph.Y1,
+        font->AddGlyph(&config, glyph.Codepoint & 0xffff, glyph.X0, glyph.Y0, glyph.X1, glyph.Y1,
                        glyph.U0, glyph.V0, glyph.U1, glyph.V1, glyph.AdvanceX);
         font->SetGlyphVisible(glyph.Codepoint, glyph.Visible);
     }
 
     font->BuildLookupTable();
     gen_font_texture(fonts);
-
     fclose(fp);
     return true;
 }

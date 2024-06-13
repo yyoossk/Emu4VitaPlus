@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "my_imgui.h"
 #include "utils.h"
+#include "log.h"
 
 #define TIME_X (VITA_WIDTH - 320)
 #define BATTERY_X (VITA_WIDTH - 100)
@@ -12,7 +13,6 @@
 void ShowTimePower()
 {
     int percent = scePowerGetBatteryLifePercent();
-    percent = 10;
     ImU32 color = percent <= 25 ? IM_COL32_RED : IM_COL32_GREEN;
     char battery[] = "\xee\xa0\x81";
     if (scePowerIsBatteryCharging())
@@ -21,7 +21,7 @@ void ShowTimePower()
     }
     else
     {
-        battery[2] += percent / 25;
+        battery[2] += std::max(percent - 1, 0) / 25;
     }
 
     char percent_str[64];
