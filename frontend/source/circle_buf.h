@@ -41,15 +41,13 @@ public:
 
     T *WriteBegin(size_t size)
     {
-        const size_t write_pos = _write_pos.load(std::memory_order_relaxed);
-        const size_t read_pos = _read_pos.load(std::memory_order_acquire);
-        if (size > FreeSize(write_pos, read_pos))
+        if (size > FreeSize())
         {
             return nullptr;
         }
 
+        const size_t write_pos = _write_pos.load(std::memory_order_relaxed);
         _continue_write = write_pos + size < _total_size;
-
         return _continue_write ? _buf + write_pos : _GetTmpBuf(size);
     };
 
@@ -69,13 +67,12 @@ public:
 
     bool Write(const T *data, size_t size)
     {
-        size_t write_pos = _write_pos.load(std::memory_order_relaxed);
-        const size_t read_pos = _read_pos.load(std::memory_order_acquire);
-        if (size > FreeSize(write_pos, read_pos))
+        if (size > FreeSize())
         {
             return false;
         }
 
+        size_t write_pos = _write_pos.load(std::memory_order_relaxed);
         if (write_pos + size < _total_size)
         {
             memcpy(_buf + write_pos, data, size * sizeof(T));
@@ -134,7 +131,7 @@ public:
 #if LOG_LEVEL >= LOG_LEVEL_DEBUG
         if ((_total_size / size) * size != _total_size)
         {
-            LogError("SIZE must be a multiple of size.");
+            LogError("_total_size must be a multiple of size.");
         }
 #endif
         if (AvailableSize() < size)
@@ -155,8 +152,10 @@ public:
     }
 
     // the size can be written
-    size_t FreeSize(const size_t write_pos, const size_t read_pos)
+    size_t FreeSize()
     {
+        const size_t write_pos = _write_pos.load(std::memory_order_relaxed);
+        const size_t read_pos = _read_pos.load(std::memory_order_acquire);
         if (read_pos > write_pos)
         {
             return read_pos - write_pos;
@@ -170,9 +169,7 @@ public:
     // the size can be read
     size_t AvailableSize()
     {
-        const size_t write_pos = _write_pos.load(std::memory_order_relaxed);
-        const size_t read_pos = _read_pos.load(std::memory_order_relaxed);
-        return _total_size - FreeSize(write_pos, read_pos);
+        return _total_size - FreeSize();
     }
 
 protected:

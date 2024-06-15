@@ -45,6 +45,29 @@ struct RewindDiffBuf : RewindBuf
     DiffArea areas[];
 };
 
+class RewindBuf
+{
+public:
+    RewindBuf(size_t total);
+    virtual ~RewindBuf();
+
+private:
+    uint8_t *_buf;
+    size_t _total;
+};
+
+class RewindBlocks
+{
+public:
+    RewindBlocks(size_t total);
+    virtual ~RewindBlocks();
+
+private:
+    RewindBlock *_blocks;
+    size_t _total;
+    size_t _current;
+};
+
 class Rewind : public ThreadBase
 {
 public:
