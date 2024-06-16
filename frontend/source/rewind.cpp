@@ -15,8 +15,7 @@ bool RewindBlock::IsValid()
 }
 
 Rewind::Rewind()
-    : ThreadBase(_RewindThread),
-      _buf(nullptr)
+    : ThreadBase(_RewindThread)
 {
     LogFunctionName;
 }
@@ -41,19 +40,12 @@ bool Rewind::Init()
         return false;
     }
 
-    _buf = new CircleBuf<uint8_t>{buf_size};
-
     return true;
 }
 
 void Rewind::Deinit()
 {
     LogFunctionName;
-    if (_buf)
-    {
-        delete _buf;
-        _buf = nullptr;
-    }
 }
 
 int Rewind::_RewindThread(SceSize args, void *argp)
