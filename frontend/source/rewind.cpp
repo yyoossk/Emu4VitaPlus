@@ -1,13 +1,16 @@
+#include <algorithm>
 #include <libretro.h>
 #include "defines.h"
 #include "log.h"
 #include "config.h"
 #include "rewind.h"
 #include "utils.h"
+#include "emulator.h"
 
 //"REWD"
 #define REWIND_BLOCK_MAGIC 0x44574552
 #define MIN_STATE_RATE 5
+#define NEXT_STATE_PERIOD 50000
 
 bool RewindBlock::IsValid()
 {
@@ -15,7 +18,9 @@ bool RewindBlock::IsValid()
 }
 
 Rewind::Rewind()
-    : ThreadBase(_RewindThread)
+    : ThreadBase(_RewindThread),
+      _rewinding(false),
+      _next_time(0)
 {
     LogFunctionName;
 }
@@ -48,9 +53,42 @@ void Rewind::Deinit()
     LogFunctionName;
 }
 
+void Rewind::StartRewind()
+{
+    _rewinding = true;
+}
+
+void Rewind::StopRewind()
+{
+    _rewinding = false;
+}
+
 int Rewind::_RewindThread(SceSize args, void *argp)
 {
+    CLASS_POINTER(Rewind, rewind, argp);
+
+    while (rewind->IsRunning())
+    {
+        int current_time = sceKernelGetProcessTimeWide();
+        if ((!rewind->_rewinding) && current_time < rewind->_next_time)
+        {
+            sceKernelDelayThread(rewind->_next_time - current_time);
+            current_time = sceKernelGetProcessTimeWide();
+        }
+
+        rewind->_rewinding ? rewind->_Rewind() : rewind->_SaveState();
+        rewind->_next_time = current_time + std::max((uint64_t)NEXT_STATE_PERIOD, gEmulator->GetMsPerFrame());
+    }
+
     return 0;
+}
+
+void Rewind::_SaveState()
+{
+}
+
+void Rewind::_Rewind()
+{
 }
 
 bool Rewind::_SaveFullState()

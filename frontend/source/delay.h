@@ -8,6 +8,7 @@ public:
     Delay(uint64_t interval_ms);
     virtual ~Delay();
     void SetInterval(uint64_t interval_ms);
+    uint64_t GetInterval();
     void Wait();
     bool TimeUp();
 

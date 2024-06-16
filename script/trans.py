@@ -237,7 +237,10 @@ class Translation(list):
             row[0].border = self.theme.border
 
     def get_trans(self, index: str):
-        return dict([(d[index], d) for d in self])
+        trans = dict([(d[index], d) for d in self])
+        if len(trans) != len(self):
+            print('warning: There are some duplicate items')
+        return trans
 
     def check_size(self, org: str, trans: str, encoding='utf-8'):
         result = []

@@ -44,14 +44,14 @@ void CoreButton::Show(bool selected)
 
 void CoreButton::_ShowPopup()
 {
-    bool is_popup = ImGui::IsPopupOpen("popup_menu");
+    bool is_popup = ImGui::IsPopupOpen(_name.c_str());
 
     if (_actived && !is_popup)
     {
-        ImGui::OpenPopup("popup_menu");
+        ImGui::OpenPopup(_name.c_str());
     }
 
-    if (ImGui::BeginPopupModal("popup_menu", NULL, ImGuiWindowFlags_NoTitleBar))
+    if (ImGui::BeginPopupModal(_name.c_str(), NULL, ImGuiWindowFlags_NoTitleBar))
     {
         if (!_actived && is_popup)
         {

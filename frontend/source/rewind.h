@@ -134,13 +134,20 @@ public:
 
     bool Init();
     void Deinit();
+    void StartRewind();
+    void StopRewind();
 
 private:
+    void _SaveState();
+    void _Rewind();
+
     bool _SaveFullState();
 
+    bool _rewinding;
     size_t _state_size;
     size_t _aligned_state_size;
     size_t _threshold_size;
+    int _next_time;
 
     RewindBlocks _blocks{BLOCK_SIZE};
 };

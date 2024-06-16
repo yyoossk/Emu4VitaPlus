@@ -36,6 +36,7 @@ public:
     const char *GetValidExtensions() const { return _info.valid_extensions; };
     double GetSampleRate() const { return _av_info.timing.sample_rate; };
     float GetAspectRatio() { return _av_info.geometry.aspect_ratio; };
+    uint64_t GetMsPerFrame() { return _delay.GetInterval(); };
 
     friend bool EnvironmentCallback(unsigned cmd, void *data);
     friend void VideoRefreshCallback(const void *data, unsigned width, unsigned height, size_t pitch);

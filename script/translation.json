@@ -244,5 +244,227 @@
         "English": "Increases number of sprites that can be drawn simultaneously on screen. Reduces flickering in games.",
         "Chinese": "增加可以在屏幕上同时绘制的精灵数量。减少游戏中的闪烁。",
         "Comments": ""
+    },
+    {
+        "No.": "42",
+        "English": "Game Link",
+        "Chinese": "游戏链接",
+        "Comments": ""
+    },
+    {
+        "No.": "43",
+        "English": "Change networked Game Link (multiplayer) settings.",
+        "Chinese": "更改网络游戏链接 (多人)",
+        "Comments": ""
+    },
+    {
+        "No.": "44",
+        "English": "internal",
+        "Chinese": "内建",
+        "Comments": ""
+    },
+    {
+        "No.": "45",
+        "English": "custom",
+        "Chinese": "自定义",
+        "Comments": ""
+    },
+    {
+        "No.": "46",
+        "English": "GB Colorization",
+        "Chinese": "GB 调色",
+        "Comments": ""
+    },
+    {
+        "No.": "47",
+        "English": "Internal Palette",
+        "Chinese": "内部色板",
+        "Comments": ""
+    },
+    {
+        "No.": "48",
+        "English": "Selects palette used for colorizing Game Boy games when 'GB Colorization' is set to 'Internal', or when 'GB Colorization' is set to 'Auto' and game has no pre-defined SGB/GBC palette. 'GB' palettes mimic the display of original Game Boy hardware. 'GBC' palettes are identical to the built-in presets of the Game Boy Color. 'SGB' palettes are identical to the built-in presets of the Super Game Boy.",
+        "Chinese": "选择 'GB 色彩化' 时用于彩色游戏的调色板。'GB 色彩化' 设置为 '内部'， 或者当“GB 色彩化”设置为“自动”且游戏没有预定义的 SGB/GBC 调色板。 'GB'的调色板模拟GameBoy硬件的显示。'GBC' 色板与GameBoy颜色的内置预设相同。 'SGB'调色板与SuperGameBoy的内置预设相同。",
+        "Comments": ""
+    },
+    {
+        "No.": "49",
+        "English": "> TWB64 - Pack 1 Palette",
+        "Chinese": "TWB64-Pack 1调色板",
+        "Comments": ""
+    },
+    {
+        "No.": "50",
+        "English": "> TWB64 - Pack 2 Palette",
+        "Chinese": "TWB64-Pack 2调色板",
+        "Comments": ""
+    },
+    {
+        "No.": "51",
+        "English": "> PixelShift - Pack 1 Palette",
+        "Chinese": "PixelShift-Pack 1调色板",
+        "Comments": ""
+    },
+    {
+        "No.": "52",
+        "English": "Color Correction",
+        "Chinese": "色彩校正",
+        "Comments": ""
+    },
+    {
+        "No.": "53",
+        "English": "GBC Only",
+        "Chinese": "仅GBC",
+        "Comments": ""
+    },
+    {
+        "No.": "54",
+        "English": "Always",
+        "Chinese": "总是",
+        "Comments": ""
+    },
+    {
+        "No.": "55",
+        "English": "Color Correction Mode",
+        "Chinese": "色彩校正模式",
+        "Comments": ""
+    },
+    {
+        "No.": "56",
+        "English": "Accurate",
+        "Chinese": "精确",
+        "Comments": ""
+    },
+    {
+        "No.": "57",
+        "English": "Fast",
+        "Chinese": "快速",
+        "Comments": ""
+    },
+    {
+        "No.": "58",
+        "English": "Color Correction - Frontlight Position",
+        "Chinese": "颜色校正-前灯位置",
+        "Comments": ""
+    },
+    {
+        "No.": "59",
+        "English": "Central",
+        "Chinese": "中央",
+        "Comments": ""
+    },
+    {
+        "No.": "60",
+        "English": "Above Screen",
+        "Chinese": "屏幕上方",
+        "Comments": ""
+    },
+    {
+        "No.": "61",
+        "English": "Below Screen",
+        "Chinese": "屏幕下方",
+        "Comments": ""
+    },
+    {
+        "No.": "62",
+        "English": "Dark Filter Level (%)",
+        "Chinese": "深色滤光级别（%）",
+        "Comments": ""
+    },
+    {
+        "No.": "63",
+        "English": "Simple",
+        "Chinese": "简单",
+        "Comments": ""
+    },
+    {
+        "No.": "64",
+        "English": "LCD Ghosting (Accurate)",
+        "Chinese": "LCD重影（精确）",
+        "Comments": ""
+    },
+    {
+        "No.": "65",
+        "English": "LCD Ghosting (Fast)",
+        "Chinese": "LCD重影（快速）",
+        "Comments": ""
+    },
+    {
+        "No.": "66",
+        "English": "Audio Resampler",
+        "Chinese": "音频重采样器",
+        "Comments": ""
+    },
+    {
+        "No.": "67",
+        "English": "Emulated Hardware (Restart Required)",
+        "Chinese": "模拟硬件（需重启生效）",
+        "Comments": ""
+    },
+    {
+        "No.": "68",
+        "English": "Use Official Bootloader (Restart Required)",
+        "Chinese": "使用官方引导程序（需重启生效）",
+        "Comments": ""
+    },
+    {
+        "No.": "69",
+        "English": "Allow Opposing Directions",
+        "Chinese": "允许相反的方向",
+        "Comments": ""
+    },
+    {
+        "No.": "70",
+        "English": "Turbo Button Period",
+        "Chinese": "连发按键间隔",
+        "Comments": ""
+    },
+    {
+        "No.": "71",
+        "English": "Controller Rumble Strength",
+        "Chinese": "控制器震动强度",
+        "Comments": ""
+    },
+    {
+        "No.": "72",
+        "English": "Show Game Link Settings",
+        "Chinese": "显示游戏链接设置",
+        "Comments": ""
+    },
+    {
+        "No.": "73",
+        "English": "Game Link Mode",
+        "Chinese": "游戏链接模式",
+        "Comments": ""
+    },
+    {
+        "No.": "74",
+        "English": "Not Connected",
+        "Chinese": "未连接",
+        "Comments": ""
+    },
+    {
+        "No.": "75",
+        "English": "Network Server",
+        "Chinese": "网络服务器",
+        "Comments": ""
+    },
+    {
+        "No.": "76",
+        "English": "Network Client",
+        "Chinese": "网络客户端",
+        "Comments": ""
+    },
+    {
+        "No.": "77",
+        "English": "Network Link Port",
+        "Chinese": "网络链接端口",
+        "Comments": ""
+    },
+    {
+        "No.": "78",
+        "English": "Port",
+        "Chinese": "端口",
+        "Comments": ""
     }
 ]

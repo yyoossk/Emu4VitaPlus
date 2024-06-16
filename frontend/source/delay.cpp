@@ -26,6 +26,11 @@ void Delay::SetInterval(uint64_t interval_ms)
     LogDebug("_interval_ms: %lld _next_ms:%lld", _interval_ms, _next_ms);
 }
 
+uint64_t Delay::GetInterval()
+{
+    return _interval_ms;
+}
+
 void Delay::Wait()
 {
     uint64_t current = sceKernelGetProcessTimeWide();
