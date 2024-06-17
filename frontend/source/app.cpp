@@ -10,6 +10,7 @@
 #include "emulator.h"
 #include "config.h"
 #include "ui.h"
+#include "overlay.h"
 #include "state_manager.h"
 #include "log.h"
 #include "defines.h"
@@ -64,6 +65,9 @@ App::App()
     gUi->AppendLog("Initialize state manager");
     gStateManager = new StateManager();
 
+    gUi->AppendLog("Load overlays");
+    gOverlays = new Overlays;
+
     gUi->AppendLog("Create tables of UI");
     gUi->CreateTables("ux0:");
 
@@ -87,6 +91,7 @@ App::~App()
     delete gUi;
     delete gEmulator;
     delete gStateManager;
+    delete gOverlays;
     delete gConfig;
 
     sceAppUtilShutdown();

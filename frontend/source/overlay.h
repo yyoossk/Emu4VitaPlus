@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "language_string.h"
 
 struct Overlay
 {
@@ -13,15 +14,13 @@ struct Overlay
     int viewport_y;
 };
 
-class Overlays
+class Overlays : public std::vector<Overlay>
 {
 public:
     Overlays();
     virtual ~Overlays();
-
     bool Load(const char *path);
-    const std::vector<Overlay> &Get() { return _overlays; };
-
-private:
-    std::vector<Overlay> _overlays;
+    std::vector<LanguageString> GetConfigs();
 };
+
+extern Overlays *gOverlays;

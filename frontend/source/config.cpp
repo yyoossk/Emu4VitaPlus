@@ -67,7 +67,7 @@ const std::unordered_map<uint32_t, const char *> Config::GraphicsStr = {
     KEY_PAIR(DISPLAY_ROTATE),
     KEY_PAIR(GRAPHICS_SHADER),
     KEY_PAIR(GRAPHICS_SMOOTH),
-    KEY_PAIR(GRAPHICS_OVERLAY),
+    KEY_PAIR(GRAPHICS_OVERLAY_MODE),
 };
 
 const std::unordered_map<uint32_t, TEXT_ENUM> Config::ControlTextMap = {
@@ -135,6 +135,7 @@ void Config::Default()
     LogFunctionName;
 
     rewind_buf_size = DEFAULT_REWIND_BUF_SIZE;
+    overlay = 0;
     DefaultControlMap();
     DefaultHotKey();
     DefaultGraphics();
@@ -261,7 +262,7 @@ void Config::DefaultGraphics()
     graphics[DISPLAY_ROTATE] = CONFIG_DISPLAY_ROTATE_DEFAULT;
     graphics[GRAPHICS_SHADER] = CONFIG_GRAPHICS_SHADER_DEFAULT;
     graphics[GRAPHICS_SMOOTH] = CONFIG_GRAPHICS_SMOOTHER_NO;
-    graphics[GRAPHICS_OVERLAY] = CONFIG_GRAPHICS_OVERLAY_MODE_OVERLAY;
+    graphics[GRAPHICS_OVERLAY_MODE] = CONFIG_GRAPHICS_OVERLAY_MODE_OVERLAY;
 }
 
 bool Config::Save(const char *path)
@@ -272,6 +273,7 @@ bool Config::Save(const char *path)
     CSimpleIniA ini;
 
     ini.SetValue(MAIN_SECTION, "language", gLanguageNames[language]);
+
     for (const auto &control : control_maps)
     {
         ini.SetLongValue(PsvKeyStr.at(control.psv), "retro", control.retro);
@@ -287,6 +289,7 @@ bool Config::Save(const char *path)
     {
         ini.SetLongValue(GRAPHICS_SECTION, GraphicsStr.at(i), graphics[i]);
     }
+    ini.SetLongValue(GRAPHICS_SECTION, "GRAPHICS_MENU_OVERLAY_SELECT", overlay);
 
     return ini.SaveFile(path) == SI_OK && core_options.Save();
 }
@@ -328,13 +331,7 @@ bool Config::Load(const char *path)
         graphics[i] = ini.GetLongValue(GRAPHICS_SECTION, GraphicsStr.at(i));
     }
 
-    // CSimpleIniA::TNamesDepend keys;
-    // ini.GetAllKeys(CORE_SECTION, keys);
-    // for (const auto &iter : keys)
-    // {
-    //     core_options[iter.pItem] = CoreOption();
-    //     core_options[iter.pItem].value = ini.GetValue(CORE_SECTION, iter.pItem);
-    // }
+    overlay = ini.GetLongValue(GRAPHICS_SECTION, "GRAPHICS_MENU_OVERLAY_SELECT");
 
     LogDebug("load end");
     return true;

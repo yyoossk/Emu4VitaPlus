@@ -14,6 +14,7 @@
 #include "tab_browser.h"
 #include "tab_about.h"
 #include "utils.h"
+#include "overlay.h"
 
 #define MAIN_WINDOW_PADDING 10
 
@@ -178,9 +179,13 @@ void Ui::CreateTables(const char *path)
                                                                  CONFIG_GRAPHICS_SMOOTHER_COUNT),
                                                   new ItemConfig(GRAPHICS_MENU_OVERLAY_MODE,
                                                                  "",
-                                                                 &gConfig->graphics[GRAPHICS_OVERLAY],
+                                                                 &gConfig->graphics[GRAPHICS_OVERLAY_MODE],
                                                                  OVERLAY_MODE_OVERLAY,
                                                                  CONFIG_GRAPHICS_OVERLAY_MODE_COUNT),
+                                                  new ItemConfig(GRAPHICS_MENU_OVERLAY_SELECT,
+                                                                 "",
+                                                                 &gConfig->overlay,
+                                                                 gOverlays->GetConfigs()),
                                                   new ItemBase(RESET_CONFIGS, "", ResetGraphics)});
     std::vector<ItemBase *> controls;
     for (ControlMapConfig &cmap : gConfig->control_maps)
