@@ -6,7 +6,7 @@ Overlays *gOverlays;
 
 Overlays::Overlays()
 {
-    Load("overlays/overlays.cfg");
+    Load("assets/overlays/overlays.ini");
 }
 
 Overlays::~Overlays()
@@ -37,6 +37,7 @@ bool Overlays::Load(const char *path)
         overlay.viewport_x = ini.GetLongValue(section.pItem, "viewport_x");
         overlay.viewport_y = ini.GetLongValue(section.pItem, "viewport_y");
         this->emplace_back(overlay);
+        LogDebug("  %s %d %d", section.pItem, overlay.viewport_width, overlay.viewport_height);
     }
 
     return true;
@@ -45,6 +46,7 @@ bool Overlays::Load(const char *path)
 std::vector<LanguageString> Overlays::GetConfigs()
 {
     std::vector<LanguageString> configs;
+    configs.emplace_back(LanguageString(NONE));
     for (const auto &overlay : *this)
     {
         configs.emplace_back(overlay.name);
