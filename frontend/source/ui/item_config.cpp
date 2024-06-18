@@ -22,8 +22,10 @@ ItemConfig::ItemConfig(LanguageString text,
                        LanguageString info,
                        uint32_t *config,
                        TEXT_ENUM start,
-                       size_t count)
-    : ItemBase(text, info),
+                       size_t count,
+                       CallbackFunc active_callback,
+                       CallbackFunc option_callback)
+    : ItemBase(text, info, active_callback, option_callback),
       _config(config),
       _actived(false)
 {

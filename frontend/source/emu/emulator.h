@@ -37,6 +37,7 @@ public:
     double GetSampleRate() const { return _av_info.timing.sample_rate; };
     float GetAspectRatio() { return _av_info.geometry.aspect_ratio; };
     uint64_t GetMsPerFrame() { return _delay.GetInterval(); };
+    void ChangeGraphicsConfig() { _graphics_config_changed = true; };
 
     friend bool EnvironmentCallback(unsigned cmd, void *data);
     friend void VideoRefreshCallback(const void *data, unsigned width, unsigned height, size_t pitch);
@@ -66,6 +67,7 @@ private:
     retro_pixel_format _retro_pixel_format;
     TextureBuf *_texture_buf;
     Rect _video_rect;
+    bool _graphics_config_changed;
 
     Audio _audio;
     Input _input;

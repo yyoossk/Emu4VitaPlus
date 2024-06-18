@@ -18,7 +18,9 @@ public:
                LanguageString info,
                uint32_t *config,
                TEXT_ENUM start,
-               size_t count);
+               size_t count,
+               CallbackFunc active_callback = nullptr,
+               CallbackFunc option_callback = nullptr);
 
     virtual ~ItemConfig();
 

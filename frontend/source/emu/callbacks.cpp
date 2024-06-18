@@ -182,7 +182,7 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
         return;
     }
 
-    if (gEmulator->_texture_buf == nullptr || gEmulator->_texture_buf->GetWidth() != width || gEmulator->_texture_buf->GetHeight() != height)
+    if (gEmulator->_graphics_config_changed || gEmulator->_texture_buf == nullptr || gEmulator->_texture_buf->GetWidth() != width || gEmulator->_texture_buf->GetHeight() != height)
     {
         gVideo->Lock();
 
@@ -194,6 +194,7 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
         }
         gEmulator->_texture_buf = new TextureBuf(gEmulator->_video_pixel_format, width, height);
         gEmulator->_SetVideoSize(width, height);
+        gEmulator->_graphics_config_changed = false;
 
         gVideo->Unlock();
     }
