@@ -59,6 +59,7 @@ target_link_libraries(
     share
     retro_comm
     vita2d
+    vita2d_ext
     imgui_vita2d
     swresample
     swscale
