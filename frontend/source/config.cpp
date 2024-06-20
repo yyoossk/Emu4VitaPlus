@@ -67,6 +67,7 @@ const std::unordered_map<uint32_t, const char *> Config::GraphicsStr = {
     KEY_PAIR(DISPLAY_ROTATE),
     KEY_PAIR(GRAPHICS_SHADER),
     KEY_PAIR(GRAPHICS_SMOOTH),
+    KEY_PAIR(GRAPHICS_OVERLAY),
     KEY_PAIR(GRAPHICS_OVERLAY_MODE),
 };
 
@@ -135,7 +136,6 @@ void Config::Default()
     LogFunctionName;
 
     rewind_buf_size = DEFAULT_REWIND_BUF_SIZE;
-    overlay = 0;
     DefaultControlMap();
     DefaultHotKey();
     DefaultGraphics();
@@ -260,9 +260,10 @@ void Config::DefaultGraphics()
     graphics[DISPLAY_SIZE] = CONFIG_DISPLAY_SIZE_FULL;
     graphics[DISPLAY_RATIO] = CONFIG_DISPLAY_RATIO_BY_GAME_RESOLUTION;
     graphics[DISPLAY_ROTATE] = CONFIG_DISPLAY_ROTATE_DEFAULT;
-    graphics[GRAPHICS_SHADER] = CONFIG_GRAPHICS_SHADER_DEFAULT;
+    graphics[GRAPHICS_SHADER] = 0;
     graphics[GRAPHICS_SMOOTH] = CONFIG_GRAPHICS_SMOOTHER_NO;
     graphics[GRAPHICS_OVERLAY_MODE] = CONFIG_GRAPHICS_OVERLAY_MODE_OVERLAY;
+    graphics[GRAPHICS_OVERLAY] = 0;
 }
 
 bool Config::Save(const char *path)
@@ -289,7 +290,6 @@ bool Config::Save(const char *path)
     {
         ini.SetLongValue(GRAPHICS_SECTION, GraphicsStr.at(i), graphics[i]);
     }
-    ini.SetLongValue(GRAPHICS_SECTION, "GRAPHICS_MENU_OVERLAY_SELECT", overlay);
 
     return ini.SaveFile(path) == SI_OK && core_options.Save();
 }
@@ -330,8 +330,6 @@ bool Config::Load(const char *path)
     {
         graphics[i] = ini.GetLongValue(GRAPHICS_SECTION, GraphicsStr.at(i));
     }
-
-    overlay = ini.GetLongValue(GRAPHICS_SECTION, "GRAPHICS_MENU_OVERLAY_SELECT");
 
     LogDebug("load end");
     return true;

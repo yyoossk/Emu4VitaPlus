@@ -14,6 +14,7 @@
 #include "state_manager.h"
 #include "log.h"
 #include "defines.h"
+#include "shader.h"
 
 APP_STATUS gStatus = APP_STATUS_BOOT;
 
@@ -68,6 +69,9 @@ App::App()
     gUi->AppendLog("Load overlays");
     gOverlays = new Overlays;
 
+    gUi->AppendLog("Load shaders");
+    gShaders = new Shaders;
+
     gUi->AppendLog("Create tables of UI");
     gUi->CreateTables("ux0:");
 
@@ -91,6 +95,7 @@ App::~App()
     delete gUi;
     delete gEmulator;
     delete gStateManager;
+    delete gShaders;
     delete gOverlays;
     delete gConfig;
 

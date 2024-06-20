@@ -13,6 +13,7 @@ Overlay::Overlay() : _texture(nullptr)
 
 Overlay::~Overlay()
 {
+    LogFunctionName;
     if (_texture != nullptr)
     {
         gVideo->Lock();
@@ -43,6 +44,7 @@ Overlays::Overlays()
 
 Overlays::~Overlays()
 {
+    LogFunctionName;
 }
 
 bool Overlays::Load(const char *path)
@@ -52,6 +54,7 @@ bool Overlays::Load(const char *path)
     CSimpleIniA ini;
     if (ini.LoadFile(path) != SI_OK)
     {
+        LogError("failed to load %s", path);
         return false;
     }
 

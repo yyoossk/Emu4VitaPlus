@@ -1,4 +1,5 @@
 #include <vita2d.h>
+#include <vita2d_ext.h>
 #include "video.h"
 #include "app.h"
 #include "ui.h"
@@ -10,6 +11,7 @@ Video::Video() : ThreadBase(_DrawThread)
 {
     LogFunctionName;
     vita2d_init();
+    vita2d_ext_init(vita2d_get_context(), vita2d_get_shader_patcher());
     vita2d_set_vblank_wait(1);
     // vita2d_set_clear_color(0xFF362B00);
 }
@@ -23,6 +25,7 @@ Video::~Video()
     }
 
     vita2d_wait_rendering_done();
+    vita2d_ext_fini();
     vita2d_fini();
 }
 

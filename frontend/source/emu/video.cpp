@@ -3,6 +3,9 @@
 #include "config.h"
 #include "app.h"
 #include "overlay.h"
+#include "shader.h"
+
+extern float _vita2d_ortho_matrix[4 * 4];
 
 void Emulator::Show()
 {
@@ -32,9 +35,9 @@ void Emulator::Show()
     // }
     // sceKernelWaitSema(_video_semaid, 1, NULL);
 
-    if (gConfig->overlay > 0 && gConfig->graphics[GRAPHICS_OVERLAY_MODE] == CONFIG_GRAPHICS_OVERLAY_MODE_BACKGROUND)
+    if (gConfig->graphics[GRAPHICS_OVERLAY] > 0 && gConfig->graphics[GRAPHICS_OVERLAY_MODE] == CONFIG_GRAPHICS_OVERLAY_MODE_BACKGROUND)
     {
-        vita2d_texture *tex = (*gOverlays)[gConfig->overlay - 1].Get();
+        vita2d_texture *tex = (*gOverlays)[gConfig->graphics[GRAPHICS_OVERLAY] - 1].Get();
         if (tex)
         {
             vita2d_draw_texture(tex, 0.f, 0.f);
@@ -44,21 +47,56 @@ void Emulator::Show()
     _texture_buf->Lock();
     // LogDebug("Show _texture_buf->Current() %08x", _texture_buf->Current());
     _current_tex = _texture_buf->Current();
-    vita2d_draw_texture_part_scale_rotate(_current_tex,
-                                          VITA_WIDTH / 2, VITA_HEIGHT / 2, _video_rect.x, _video_rect.y,
-                                          _texture_buf->GetWidth(), _texture_buf->GetHeight(),
-                                          _video_rect.width / _texture_buf->GetWidth(),
-                                          _video_rect.height / _texture_buf->GetHeight(),
-                                          0.f);
 
+    vita2d_shader *shader = gConfig->graphics[GRAPHICS_SHADER] > 0 ? (*gShaders)[gConfig->graphics[GRAPHICS_SHADER] - 1].Get() : nullptr;
+    if (shader)
+    {
+        vita2d_set_shader(shader);
+
+        float *texture_size = (float *)vita2d_pool_memalign(2 * sizeof(float), sizeof(float));
+        texture_size[0] = _texture_buf->GetWidth();
+        texture_size[1] = _texture_buf->GetHeight();
+
+        float *output_size = (float *)vita2d_pool_memalign(2 * sizeof(float), sizeof(float));
+        output_size[0] = _video_rect.width;
+        output_size[1] = _video_rect.height;
+
+        vita2d_set_vertex_uniform(shader, "IN.texture_size", texture_size, 2);
+        vita2d_set_vertex_uniform(shader, "IN.video_size", texture_size, 2);
+        vita2d_set_vertex_uniform(shader, "IN.output_size", output_size, 2);
+
+        vita2d_set_fragment_uniform(shader, "IN.texture_size", texture_size, 2);
+        vita2d_set_fragment_uniform(shader, "IN.video_size", texture_size, 2);
+        vita2d_set_fragment_uniform(shader, "IN.output_size", output_size, 2);
+
+        vita2d_set_wvp_uniform(shader, _vita2d_ortho_matrix);
+
+        vita2d_draw_texture_part_scale_rotate_generic(_current_tex,
+                                                      VITA_WIDTH / 2, VITA_HEIGHT / 2,
+                                                      _video_rect.x, _video_rect.y,
+                                                      _texture_buf->GetWidth(), _texture_buf->GetHeight(),
+                                                      _video_rect.width / _texture_buf->GetWidth(),
+                                                      _video_rect.height / _texture_buf->GetHeight(),
+                                                      0.f);
+    }
+    else
+    {
+        vita2d_draw_texture_part_scale_rotate(_current_tex,
+                                              VITA_WIDTH / 2, VITA_HEIGHT / 2,
+                                              _video_rect.x, _video_rect.y,
+                                              _texture_buf->GetWidth(), _texture_buf->GetHeight(),
+                                              _video_rect.width / _texture_buf->GetWidth(),
+                                              _video_rect.height / _texture_buf->GetHeight(),
+                                              0.f);
+    }
     // LogDebug("%f %f %f %f", _video_rect.x, _video_rect.y, _video_rect.width, _video_rect.height);
     // LogDebug("%f %f", _video_rect.width / _texture_buf->GetWidth(), _video_rect.height / _texture_buf->GetHeight());
 
     _texture_buf->Unlock();
 
-    if (gConfig->overlay > 0 && gConfig->graphics[GRAPHICS_OVERLAY_MODE] == CONFIG_GRAPHICS_OVERLAY_MODE_OVERLAY)
+    if (gConfig->graphics[GRAPHICS_OVERLAY] > 0 && gConfig->graphics[GRAPHICS_OVERLAY_MODE] == CONFIG_GRAPHICS_OVERLAY_MODE_OVERLAY)
     {
-        vita2d_texture *tex = (*gOverlays)[gConfig->overlay - 1].Get();
+        vita2d_texture *tex = (*gOverlays)[gConfig->graphics[GRAPHICS_OVERLAY] - 1].Get();
         if (tex)
         {
             vita2d_draw_texture(tex, 0.f, 0.f);
@@ -131,10 +169,10 @@ void Emulator::_SetPixelFormat(retro_pixel_format format)
 
 void Emulator::_SetVideoSize(uint32_t width, uint32_t height)
 {
-    if (gConfig->overlay > 0)
+    if (gConfig->graphics[GRAPHICS_OVERLAY] > 0)
     {
-        _video_rect.width = (*gOverlays)[gConfig->overlay - 1].viewport_width;
-        _video_rect.height = (*gOverlays)[gConfig->overlay - 1].viewport_height;
+        _video_rect.width = (*gOverlays)[gConfig->graphics[GRAPHICS_OVERLAY] - 1].viewport_width;
+        _video_rect.height = (*gOverlays)[gConfig->graphics[GRAPHICS_OVERLAY] - 1].viewport_height;
         return;
     }
 

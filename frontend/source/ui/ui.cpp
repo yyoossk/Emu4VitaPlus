@@ -15,6 +15,7 @@
 #include "tab_about.h"
 #include "utils.h"
 #include "overlay.h"
+#include "shader.h"
 
 #define MAIN_WINDOW_PADDING 10
 
@@ -172,8 +173,7 @@ void Ui::CreateTables(const char *path)
                                                   new ItemConfig(GRAPHICS_MENU_GRAPHICS_SHADER,
                                                                  "",
                                                                  &gConfig->graphics[GRAPHICS_SHADER],
-                                                                 SHADER_DEFAULT,
-                                                                 CONFIG_GRAPHICS_SHADER_COUNT,
+                                                                 gShaders->GetConfigs(),
                                                                  std::bind(&Emulator::ChangeGraphicsConfig, gEmulator)),
                                                   new ItemConfig(GRAPHICS_MENU_GRAPHICS_SMOOTH,
                                                                  "",
@@ -189,7 +189,7 @@ void Ui::CreateTables(const char *path)
                                                                  std::bind(&Emulator::ChangeGraphicsConfig, gEmulator)),
                                                   new ItemConfig(GRAPHICS_MENU_OVERLAY_SELECT,
                                                                  "",
-                                                                 &gConfig->overlay,
+                                                                 &gConfig->graphics[GRAPHICS_OVERLAY],
                                                                  gOverlays->GetConfigs(),
                                                                  std::bind(&Emulator::ChangeGraphicsConfig, gEmulator)),
                                                   new ItemBase(RESET_CONFIGS,
