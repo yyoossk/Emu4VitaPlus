@@ -1,0 +1,8 @@
+import os
+from pathlib import Path
+
+for name in Path('shaders').rglob('*.cg'):
+    print(name)
+    stem = name.stem
+    os.system(f'psp2cgc.exe -profile sce_vp_psp2 -DVERTEX {name} -o {stem}_v.gxp')
+    os.system(f'psp2cgc.exe -profile sce_fp_psp2 -DFRAGMENT {name} -o {stem}_f.gxp')
