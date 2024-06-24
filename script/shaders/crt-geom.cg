@@ -17,16 +17,16 @@
 #define mod(x,y) (x - y * trunc(x/y))
 
 // Comment the next line to disable interpolation in linear gamma (and gain speed)
-#define LINEAR_PROCESSING
+//#define LINEAR_PROCESSING
 
 // Use the older, purely gaussian beam profile; uncomment for speed
-// #define USEGAUSSIAN
+#define USEGAUSSIAN
 
 // Enable 3x oversampling of the beam profile; improves moire effect caused by scanlines + curvature
-#define OVERSAMPLE
+//#define OVERSAMPLE
 
 // Use interlacing detection; may interfere with other shaders if combined
-#define INTERLACED
+//#define INTERLACED
 
 // Macros
 #define FIX(c) max(abs(c), 1e-5);
@@ -300,16 +300,13 @@ float4 crt_geom(float2 texture_size, float2 video_size, float2 output_size, floa
   return float4(mul_res, 1.0);
 }
 
-void main(
+float4 main(
   in out_vertex VOUT,
   uniform sampler2D vTexture :TEXUNIT0,
   uniform input IN,
-
-  in float2 TexCoord : TEXCOORD0,
-
-  float4 out oColor : COLOR
-) {
-	oColor = crt_geom(
+  in float2 TexCoord : TEXCOORD0
+) : COLOR {
+	return crt_geom(
     IN.texture_size,
     IN.video_size,
     IN.output_size,
