@@ -121,7 +121,6 @@ struct input
     float frame_rotation;
 };
 
-
 #if defined(VERTEX)
 void main(  float2 aTexcoord : TEXCOORD0,
   float4 aPosition : POSITION,
@@ -636,7 +635,7 @@ float4 crt_lottes_fast(float2 TextureSize, float2 InputSize, float2 OutputSize, 
 	return float4(ToSrgb(final.rgb), 1.0);
 }
 
-float4 main(  in out_vertex VOUT,
+float4 main(in out_vertex VOUT,
   uniform sampler2D s0 :TEXUNIT0,
   uniform input IN) : COLOR
 {
