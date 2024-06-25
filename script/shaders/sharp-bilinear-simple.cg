@@ -38,7 +38,7 @@ void main(
     scale = max(floor(float4(IN.output_size, 1.0 / IN.output_size).xy / IN.video_size.xy), float2(1.0, 1.0));
 }
 #elif defined(FRAGMENT)
-float main(
+float4 main(
   uniform sampler2D vTexture : TEXUNIT0,
   uniform input IN,
   float2 TexCoord : TEXCOORD0,
