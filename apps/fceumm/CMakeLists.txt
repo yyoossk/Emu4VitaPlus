@@ -29,5 +29,5 @@ foreach(file ${PKG_FILES})
   list(APPEND PRIVATE_PKG_FILES FILE ${file} ${rel})
 endforeach()
 
-add_compile_definitions(FCEUMM_BUILD FC_BUILD)
+add_compile_definitions(FCEUMM_BUILD FC_BUILD CONSOLE="NES")
 add_subdirectory(../../frontend ${CMAKE_CURRENT_BINARY_DIR}/frontend)

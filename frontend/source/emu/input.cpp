@@ -100,5 +100,7 @@ void Emulator::_OnHotkeyCtrlPortDown(Input *input)
 void Emulator::_OnHotkeyExitGame(Input *input)
 {
     LogFunctionName;
+    gVideo->Lock();
     UnloadGame();
+    gVideo->Unlock();
 }

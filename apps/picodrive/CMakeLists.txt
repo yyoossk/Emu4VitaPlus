@@ -29,5 +29,5 @@ foreach(file ${PKG_FILES})
   list(APPEND PRIVATE_PKG_FILES FILE ${file} ${rel})
 endforeach()
 
-add_compile_definitions(PICODRIVE_BUILD SMS_BUILD MD_BUILD MDCD_BUILD MD32X_BUILD)
+add_compile_definitions(PICODRIVE_BUILD SMS_BUILD MD_BUILD MDCD_BUILD MD32X_BUILD CONSOLE="MD")
 add_subdirectory(../../frontend ${CMAKE_CURRENT_BINARY_DIR}/frontend)

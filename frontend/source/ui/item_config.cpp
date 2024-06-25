@@ -16,6 +16,10 @@ ItemConfig::ItemConfig(LanguageString text,
       _config_texts(std::move(config_texts)),
       _actived(false)
 {
+    if (*_config >= _config_texts.size())
+    {
+        *_config = 0;
+    }
 }
 
 ItemConfig::ItemConfig(LanguageString text,
@@ -32,6 +36,11 @@ ItemConfig::ItemConfig(LanguageString text,
     for (size_t i = 0; i < count; i++)
     {
         _config_texts.emplace_back(LanguageString(start + i));
+    }
+
+    if (*_config >= _config_texts.size())
+    {
+        *_config = 0;
     }
 }
 

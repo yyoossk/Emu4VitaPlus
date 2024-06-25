@@ -29,5 +29,5 @@ foreach(file ${PKG_FILES})
   list(APPEND PRIVATE_PKG_FILES FILE ${file} ${rel})
 endforeach()
 
-add_compile_definitions(PCSX_REARMED_BUILD PS_BUILD)
+add_compile_definitions(PCSX_REARMED_BUILD PS_BUILD CONSOLE="PS")
 add_subdirectory(../../frontend ${CMAKE_CURRENT_BINARY_DIR}/frontend)

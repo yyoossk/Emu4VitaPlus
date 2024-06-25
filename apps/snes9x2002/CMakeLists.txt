@@ -29,5 +29,5 @@ foreach(file ${PKG_FILES})
   list(APPEND PRIVATE_PKG_FILES FILE ${file} ${rel})
 endforeach()
 
-add_compile_definitions(SNES9X2002_BUILD SFC_BUILD)
+add_compile_definitions(SNES9X2002_BUILD SFC_BUILD CONSOLE="SNES")
 add_subdirectory(../../frontend ${CMAKE_CURRENT_BINARY_DIR}/frontend)

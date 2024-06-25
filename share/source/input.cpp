@@ -138,7 +138,7 @@ void Input::_ProcCallbacks(uint32_t key)
     {
         for (const auto &iter : _key_down_callbacks)
         {
-            if (iter.first & key && iter.first & ~_last_key)
+            if (((iter.first & key) == iter.first) && (iter.first & ~_last_key))
             {
                 iter.second(this);
                 ClearKeyStates(iter.first);
@@ -148,7 +148,7 @@ void Input::_ProcCallbacks(uint32_t key)
 
         for (const auto &iter : _key_up_callbacks)
         {
-            if (iter.first & _last_key)
+            if ((iter.first & _last_key) == iter.first)
             {
                 iter.second(this);
                 break;
