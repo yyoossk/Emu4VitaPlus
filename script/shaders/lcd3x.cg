@@ -23,7 +23,6 @@ struct input
 void main (
   float2 aTexcoord,
   float4 aPosition,
-
   uniform input IN,
   uniform float4x4 wvp,
 
