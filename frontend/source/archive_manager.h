@@ -2,7 +2,7 @@
 #include <string>
 #include <unordered_map>
 #include <stdint.h>
-#include <time>
+#include <time.h>
 
 #define DEFAULT_CACHE_SIZE 10
 
@@ -39,5 +39,5 @@ public:
     size_t GetCachedMemory(const char *name, int index, void **buf);
 
 private:
-    ArchiveCache _cache(DEFAULT_CACHE_SIZE);
+    ArchiveCache _cache{DEFAULT_CACHE_SIZE};
 };
