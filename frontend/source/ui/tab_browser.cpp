@@ -47,14 +47,14 @@ void TabBrowser::Show(bool selected)
         {
             const DirItem &item = _directory->GetItem(i);
 
-            if (!item.isDir)
+            if (!item.is_dir)
             {
                 ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
             }
 
             ImGui::Selectable(item.name.c_str(), i == _index);
 
-            if (!item.isDir)
+            if (!item.is_dir)
             {
                 ImGui::PopStyleColor();
             }
@@ -91,14 +91,14 @@ void TabBrowser::_OnActive(Input *input)
     LogFunctionName;
     auto item = _directory->GetItem(_index);
 
-    if (item.isDir)
+    if (item.is_dir)
     {
         _directory->SetCurrentPath(_directory->GetCurrentPath() + "/" + item.name);
         _index = 0;
     }
     else
     {
-        if (gEmulator->LoadGame((_directory->GetCurrentPath() + "/" + item.name).c_str()))
+        if (gEmulator->LoadGame((_directory->GetCurrentPath() + "/" + item.name).c_str(), item.entry_index))
         {
             gStatus = APP_STATUS_RUN_GAME;
             sceShellUtilLock((SceShellUtilLockType)(SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN_2));
@@ -151,7 +151,7 @@ void TabBrowser::_UpdateTexture()
     }
 
     const DirItem &item = _directory->GetItem(_index);
-    if (item.isDir)
+    if (item.is_dir)
     {
         return;
     }

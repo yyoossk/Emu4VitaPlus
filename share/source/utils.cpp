@@ -1,5 +1,6 @@
 #include <imgui_vita2d/imgui_vita.h>
 #include <psp2/power.h>
+#include <algorithm>
 #include <stdio.h>
 #include "my_imgui.h"
 #include "utils.h"
@@ -48,4 +49,11 @@ void ShowTimePower()
     draw_list->AddText({BATTERY_PERCENT_X, TOP_RIGHT_Y}, color, percent_str);
 
     draw_list->PopClipRect();
+}
+
+void Lower(std::string *s)
+{
+    std::transform(s->begin(), s->end(), s->begin(),
+                   [](unsigned char c)
+                   { return std::tolower(c); });
 }

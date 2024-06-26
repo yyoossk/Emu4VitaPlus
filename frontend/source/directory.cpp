@@ -1,12 +1,21 @@
 #include <psp2/io/dirent.h>
 #include <algorithm>
 #include <string.h>
+#include <minizip/mz.h>
+#include <minizip/mz_zip.h>
+#include <minizip/mz_strm.h>
+#include <minizip/mz_zip_rw.h>
 #include "directory.h"
+#include "utils.h"
 #include "log.h"
+
+std::unordered_set<std::string> Directory::_ext_archives{"zip", "7z"};
 
 Directory::Directory(const char *path, const char *ext_filters, char split)
 {
     LogFunctionName;
+
+    _zip_handle = mz_zip_reader_create();
 
     if (ext_filters)
     {
@@ -22,6 +31,7 @@ Directory::Directory(const char *path, const char *ext_filters, char split)
 Directory::~Directory()
 {
     LogFunctionName;
+    mz_zip_reader_delete(&_zip_handle);
 }
 
 void Directory::SetExtensionFilter(const char *exts, char split)
@@ -55,21 +65,59 @@ void Directory::SetExtensionFilter(const char *exts, char split)
     delete[] exts_string;
 }
 
-bool Directory::_LeagleTest(const char *name)
+bool Directory::_LeagleTest(const char *name, int *entry_index)
 {
-    name = strrchr(name, '.');
-    if (!name)
+    if (entry_index)
+    {
+        *entry_index = -1;
+    }
+
+    char *ext = strrchr(name, '.');
+    if (!ext)
     {
         return false;
     }
 
-    name++;
+    ext++;
 
-    std::string n(name);
-    std::transform(n.begin(), n.end(), n.begin(),
-                   [](unsigned char c)
-                   { return std::tolower(c); });
-    return _ext_filters.find(n) != _ext_filters.end();
+    std::string n(ext);
+    Lower(&n);
+
+    if (_ext_filters.find(n) != _ext_filters.end())
+    {
+        return true;
+    }
+
+    if (!entry_index)
+    {
+        return false;
+    }
+
+    if (_ext_archives.find(n) != _ext_archives.end())
+    {
+        bool result = false;
+        if (mz_zip_reader_open_file(_zip_handle, (_current_path + "/" + name).c_str()) == MZ_OK)
+        {
+            mz_zip_reader_goto_first_entry(_zip_handle);
+            do
+            {
+                mz_zip_file *info;
+                mz_zip_reader_entry_get_info(_zip_handle, &info);
+                result = _LeagleTest(info->filename);
+                (*entry_index)++;
+            } while ((!result) && mz_zip_reader_goto_next_entry(_zip_handle) == MZ_OK);
+
+            mz_zip_reader_close(_zip_handle);
+        }
+        else
+        {
+            LogError("failed to open %s/%s", _current_path.c_str(), name);
+        }
+
+        return result;
+    }
+
+    return false;
 }
 
 bool Directory::SetCurrentPath(const std::string &path)
@@ -96,9 +144,10 @@ bool Directory::SetCurrentPath(const std::string &path)
         }
         else
         {
-            if (_LeagleTest(dir.d_name))
+            int index;
+            if (_LeagleTest(dir.d_name, &index))
             {
-                files.push_back({dir.d_name, false});
+                files.push_back({dir.d_name, false, index});
             }
         }
     }

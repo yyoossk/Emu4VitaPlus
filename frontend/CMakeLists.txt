@@ -68,6 +68,8 @@ target_link_libraries(
     png
     jpeg
     z
+    minizip
+    crypto
     pthread
     ScePvf_stub
     ScePgf_stub

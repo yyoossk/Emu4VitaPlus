@@ -22,7 +22,7 @@ public:
     virtual ~Emulator();
 
     void Init();
-    bool LoadGame(const char *path);
+    bool LoadGame(const char *path, int entry_index);
     void UnloadGame();
     void Reset();
     void Run();

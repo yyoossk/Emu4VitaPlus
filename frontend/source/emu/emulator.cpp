@@ -66,7 +66,7 @@ void Emulator::Init()
     _SetupKeys();
 }
 
-bool Emulator::LoadGame(const char *path)
+bool Emulator::LoadGame(const char *path, int entry_index)
 {
     LogFunctionName;
 
