@@ -12,32 +12,19 @@ struct CachedItem
     std::string name;
 };
 
-class ArchiveCache
+class ArchiveManager
 {
 public:
-    ArchiveCache(size_t max_size);
-    virtual ~ArchiveCache();
+    ArchiveManager(size_t max_size);
+    virtual ~ArchiveManager();
 
-    const CachedItem *Find(uint32_t crc32);
-    void Set(uint32_t crc32, SceDateTime sdtime, const std::string &name);
-    void Set(uint32_t crc32, time_t time, const std::string &name);
+    const char *GetCachedPath(uint32_t crc32, const char *name = nullptr, const char *entry_name = nullptr);
+    size_t GetCachedMemory(const char *name, const char *entry_name, uint32_t crc32, void **buf);
 
 private:
+    void _Set(uint32_t crc32, const std::string &name, SceDateTime sdtime = {0});
     void _CheckSize();
 
     std::unordered_map<uint32_t, CachedItem> _cache;
     size_t _max_size;
-};
-
-class ArchiveManager
-{
-public:
-    ArchiveManager();
-    virtual ~ArchiveManager();
-
-    const char *GetCachedPath(const char *name, int index);
-    size_t GetCachedMemory(const char *name, int index, void **buf);
-
-private:
-    ArchiveCache _cache{DEFAULT_CACHE_SIZE};
 };

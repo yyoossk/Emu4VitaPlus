@@ -6,6 +6,7 @@
 #include "audio.h"
 #include "delay.h"
 #include "input.h"
+#include "archive_manager.h"
 
 struct Rect
 {
@@ -22,7 +23,7 @@ public:
     virtual ~Emulator();
 
     void Init();
-    bool LoadGame(const char *path, int entry_index);
+    bool LoadGame(const char *path, const char *entry_name, uint32_t crc32);
     void UnloadGame();
     void Reset();
     void Run();
@@ -80,6 +81,8 @@ private:
 
     SceKernelLwMutexWork _run_mutex;
     SceUID _video_semaid;
+
+    ArchiveManager _archive_manager{DEFAULT_CACHE_SIZE};
 };
 
 extern Emulator *gEmulator;

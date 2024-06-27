@@ -65,13 +65,8 @@ void Directory::SetExtensionFilter(const char *exts, char split)
     delete[] exts_string;
 }
 
-bool Directory::_LeagleTest(const char *name, int *entry_index)
+bool Directory::_LeagleTest(const char *name, DirItem *item)
 {
-    if (entry_index)
-    {
-        *entry_index = -1;
-    }
-
     char *ext = strrchr(name, '.');
     if (!ext)
     {
@@ -88,7 +83,7 @@ bool Directory::_LeagleTest(const char *name, int *entry_index)
         return true;
     }
 
-    if (!entry_index)
+    if (!item)
     {
         return false;
     }
@@ -104,7 +99,11 @@ bool Directory::_LeagleTest(const char *name, int *entry_index)
                 mz_zip_file *info;
                 mz_zip_reader_entry_get_info(_zip_handle, &info);
                 result = _LeagleTest(info->filename);
-                (*entry_index)++;
+                if (result)
+                {
+                    item->entry_name = info->filename;
+                    item->crc32 = info->crc;
+                }
             } while ((!result) && mz_zip_reader_goto_next_entry(_zip_handle) == MZ_OK);
 
             mz_zip_reader_close(_zip_handle);
@@ -144,10 +143,10 @@ bool Directory::SetCurrentPath(const std::string &path)
         }
         else
         {
-            int index;
-            if (_LeagleTest(dir.d_name, &index))
+            DirItem item{dir.d_name, false};
+            if (_LeagleTest(dir.d_name, &item))
             {
-                files.push_back({dir.d_name, false, index});
+                files.push_back(item);
             }
         }
     }

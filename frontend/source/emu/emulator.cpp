@@ -66,7 +66,7 @@ void Emulator::Init()
     _SetupKeys();
 }
 
-bool Emulator::LoadGame(const char *path, int entry_index)
+bool Emulator::LoadGame(const char *path, const char *entry_name, uint32_t crc32)
 {
     LogFunctionName;
 
@@ -78,6 +78,11 @@ bool Emulator::LoadGame(const char *path, int entry_index)
     retro_game_info game_info = {0};
     _soft_frame_buf_render = false;
     char *buf = nullptr;
+
+    if (*entry_name)
+    {
+        path = _archive_manager.GetCachedPath(crc32, path, entry_name);
+    }
 
     if (_info.need_fullpath)
     {

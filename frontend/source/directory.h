@@ -2,13 +2,13 @@
 #include <vector>
 #include <unordered_set>
 #include <string>
-#include <minizip/mz_zip.h>
 
 struct DirItem
 {
     std::string name;
     bool is_dir;
-    int entry_index;
+    uint32_t crc32 = 0;
+    std::string entry_name = "";
 };
 
 class Directory
@@ -35,5 +35,5 @@ private:
 
     void *_zip_handle;
 
-    bool _LeagleTest(const char *name, int *entry_index = nullptr);
+    bool _LeagleTest(const char *name, DirItem *item = nullptr);
 };
