@@ -41,7 +41,8 @@ set(RETRO_SRC
 include_directories("libretro-common/include")
 
 add_compile_definitions(HAVE_NEON HAVE_THREADS HAVE_COMPRESSION HAVE_ZLIB)
-    # HAVE_7ZIP)
+
+# HAVE_7ZIP)
 add_library(retro_comm STATIC ${RETRO_SRC})
 
 # ----------------------
@@ -77,3 +78,11 @@ add_library(vita2d STATIC ${VITA2D_SRC})
 target_link_libraries(vita2d ${VITA2D_OBJ})
 
 add_subdirectory(simpleini)
+
+option(MZ_BZIP2 OFF)
+option(MZ_LZMA OFF)
+option(MZ_ZSTD OFF)
+option(MZ_PKCRYPT OFF)
+option(MZ_WZAES OFF)
+option(MZ_DECOMPRESS_ONLY ON)
+add_subdirectory(minizip-ng)

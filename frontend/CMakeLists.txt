@@ -24,7 +24,8 @@ include_directories(
     ../share/source
     ../deps/libretro-common/include
     ../deps/libvita2d/libvita2d/include
-    ../deps/simpleini)
+    ../deps/simpleini
+    ../deps/minizip-ng)
 
 file(GLOB SRC
     source/*.c
@@ -68,7 +69,7 @@ target_link_libraries(
     png
     jpeg
     z
-    miniz
+    minizip
     pthread
     ScePvf_stub
     ScePgf_stub

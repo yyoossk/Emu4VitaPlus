@@ -14,6 +14,7 @@
 
 ArchiveManager::ArchiveManager(size_t max_size)
 {
+    LogFunctionName;
     if (File::Exist(ARCHIVE_CACHE_DIR))
     {
         SceUID dfd = sceIoDopen(ARCHIVE_CACHE_DIR);
@@ -22,6 +23,16 @@ ArchiveManager::ArchiveManager(size_t max_size)
         {
             if (SCE_S_ISREG(dir.d_stat.st_mode))
             {
+                char *p;
+                uint32_t crc = strtoul(dir.d_name, &p, 16);
+                if (*p == '.')
+                {
+                    time_t time;
+                    std::string name = std::string(ARCHIVE_CACHE_DIR) + "/" + dir.d_name;
+                    File::GetCreateTime(name.c_str(), &time);
+                    _cache[crc] = {time, name};
+                    LogDebug("  cached: %s %08x %u", name.c_str(), crc, time);
+                }
             }
         }
         sceIoDclose(dfd);
@@ -44,6 +55,7 @@ const char *ArchiveManager::GetCachedPath(uint32_t crc32, const char *name, cons
     auto iter = _cache.find(crc32);
     if (iter != _cache.end())
     {
+        LogDebug("  return: %s", iter->second.name.c_str());
         return iter->second.name.c_str();
     }
 
@@ -56,19 +68,12 @@ const char *ArchiveManager::GetCachedPath(uint32_t crc32, const char *name, cons
     if (mz_zip_reader_open_file(handle, name) == MZ_OK)
     {
         int result = mz_zip_reader_locate_entry(handle, entry_name, true);
-        LogDebug("result %d", result);
         char p[255];
         snprintf(p, 255, "%s/%08x%s", ARCHIVE_CACHE_DIR, crc32, strrchr(entry_name, '.'));
         result = mz_zip_reader_entry_save_file(handle, p);
-        LogDebug("result %d", result);
+        mz_zip_reader_close(handle);
 
-        size_t size = mz_zip_reader_entry_save_buffer_length(handle);
-        char *buf = new char[size];
-        result = mz_zip_reader_entry_save_buffer(handle, buf, size);
-        LogDebug("%d result %d", size, result);
-        delete[] buf;
-
-        mz_zip_reader_close(&handle);
+        LogDebug(" extract: %s", p);
         _Set(crc32, p);
     }
     mz_zip_reader_delete(&handle);

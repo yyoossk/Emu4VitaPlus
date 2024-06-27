@@ -57,6 +57,17 @@ namespace File
         return true;
     }
 
+    bool GetCreateTime(const char *name, time_t *time)
+    {
+        SceDateTime t;
+        if (GetCreateTime(name, &t))
+        {
+            sceRtcGetTime_t(&t, time);
+            return true;
+        }
+        return false;
+    }
+
     void MakeDirs(const char *path, SceIoMode mode)
     {
         if (!(path && *path) || Exist(path))
