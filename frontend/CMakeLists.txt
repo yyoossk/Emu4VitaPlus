@@ -24,6 +24,7 @@ include_directories(
     ../share/source
     ../deps/libretro-common/include
     ../deps/libvita2d/libvita2d/include
+    ../deps/libvita2d_ext/libvita2d_ext/include
     ../deps/simpleini
     ../deps/minizip-ng)
 

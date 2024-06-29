@@ -71,10 +71,10 @@ App::App()
 
     gUi->AppendLog("Load shaders");
     gShaders = new Shaders;
-    for (auto &shader : *gShaders)
-    {
-        shader.Get();
-    }
+    // for (auto &shader : *gShaders)
+    // {
+    //     shader.Get();
+    // }
 
     gUi->AppendLog("Create tables of UI");
     gUi->CreateTables("ux0:");

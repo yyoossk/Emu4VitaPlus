@@ -613,9 +613,13 @@ float4 crt_lottes_fast(float2 TextureSize, float2 InputSize, float2 OutputSize, 
 {
 	float4 final;
 	float2 warp_factor;
-	warp_factor.x = CURVATURE;
-	warp_factor.y = (3.0 / 4.0) * warp_factor.x; // assume 4:3 aspect
-	warp_factor.x *= (1.0 - TRINITRON_CURVE);
+	// warp_factor.x = CURVATURE;
+	// warp_factor.y = (3.0 / 4.0) * warp_factor.x; // assume 4:3 aspect
+	// warp_factor.x *= (1.0 - TRINITRON_CURVE);
+
+  warp_factor.x = CURVATURE * (1.0 - TRINITRON_CURVE);
+  warp_factor.y = CURVATURE *  3.0 / 4.0;
+
 	final.rgb = CrtsFilter(texCoord.xy * OutputSize.xy*(TextureSize.xy / InputSize.xy),
 	InputSize.xy / OutputSize.xy,
 	InputSize.xy * float2(0.5,0.5),

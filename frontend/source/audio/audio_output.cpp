@@ -32,6 +32,8 @@ int AudioOutput::_AudioThread(SceSize args, void *argp)
         while ((buf = output->_out_buf->Read(AUDIO_OUTPUT_BLOCK_SIZE)) == nullptr)
         {
             output->Wait();
+            if (!output->IsRunning())
+                break;
         }
         sceAudioOutOutput(output->_port, buf);
     }

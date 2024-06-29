@@ -13,7 +13,6 @@ void vita2d_set_shader(const vita2d_shader *shader)
 	sceGxmSetFragmentProgram(_vita2d_ext_context, shader->fragmentProgram);
 }
 
-
 void vita2d_set_wvp_uniform(const vita2d_shader *shader, float *matrix)
 {
 	void *vertex_wvp_buffer;
@@ -21,26 +20,32 @@ void vita2d_set_wvp_uniform(const vita2d_shader *shader, float *matrix)
 	sceGxmSetUniformDataF(vertex_wvp_buffer, shader->wvpParam, 0, 16, matrix);
 }
 
-void vita2d_set_vertex_uniform(const vita2d_shader *shader, const char * param, const float *value, unsigned int length)
+void vita2d_set_vertex_uniform(const vita2d_shader *shader, const char *param, const float *value, unsigned int length)
 {
 	void *vertex_wvp_buffer;
 	const SceGxmProgram *program = sceGxmVertexProgramGetProgram(shader->vertexProgram);
 	const SceGxmProgramParameter *program_parameter = sceGxmProgramFindParameterByName(program, param);
-	sceGxmReserveVertexDefaultUniformBuffer(_vita2d_ext_context, &vertex_wvp_buffer);
-	sceGxmSetUniformDataF(vertex_wvp_buffer, program_parameter, 0, length, value);
+	if (program_parameter)
+	{
+		sceGxmReserveVertexDefaultUniformBuffer(_vita2d_ext_context, &vertex_wvp_buffer);
+		sceGxmSetUniformDataF(vertex_wvp_buffer, program_parameter, 0, length, value);
+	}
 }
 
-void vita2d_set_fragment_uniform(const vita2d_shader *shader, const char * param, const float *value, unsigned int length)
+void vita2d_set_fragment_uniform(const vita2d_shader *shader, const char *param, const float *value, unsigned int length)
 {
 	void *fragment_wvp_buffer;
 	const SceGxmProgram *program = sceGxmFragmentProgramGetProgram(shader->fragmentProgram);
 	const SceGxmProgramParameter *program_parameter = sceGxmProgramFindParameterByName(program, param);
-	sceGxmReserveFragmentDefaultUniformBuffer(_vita2d_ext_context, &fragment_wvp_buffer);
-	sceGxmSetUniformDataF(fragment_wvp_buffer, program_parameter, 0, length, value);
+	if (program_parameter)
+	{
+		sceGxmReserveFragmentDefaultUniformBuffer(_vita2d_ext_context, &fragment_wvp_buffer);
+		sceGxmSetUniformDataF(fragment_wvp_buffer, program_parameter, 0, length, value);
+	}
 }
 
 void vita2d_draw_texture_part_scale_rotate_generic(const vita2d_texture *texture, float x, float y,
-	float tex_x, float tex_y, float tex_w, float tex_h, float x_scale, float y_scale, float rad)
+												   float tex_x, float tex_y, float tex_w, float tex_h, float x_scale, float y_scale, float rad)
 {
 	vita2d_texture_vertex *vertices = (vita2d_texture_vertex *)vita2d_pool_memalign(
 		4 * sizeof(vita2d_texture_vertex), // 4 vertices
@@ -88,11 +93,12 @@ void vita2d_draw_texture_part_scale_rotate_generic(const vita2d_texture *texture
 	const float c = cosf(rad);
 	const float s = sinf(rad);
 	int i;
-	for (i = 0; i < 4; ++i) { // Rotate and translate
+	for (i = 0; i < 4; ++i)
+	{ // Rotate and translate
 		float _x = vertices[i].x;
 		float _y = vertices[i].y;
-		vertices[i].x = _x*c - _y*s + x;
-		vertices[i].y = _x*s + _y*c + y;
+		vertices[i].x = _x * c - _y * s + x;
+		vertices[i].y = _x * s + _y * c + y;
 	}
 
 	indices[0] = 0;
