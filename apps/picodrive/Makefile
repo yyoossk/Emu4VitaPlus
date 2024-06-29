@@ -1,5 +1,5 @@
 $(LD) ?= $(CC)
-TARGET ?= PicoDrive
+TARGET ?= picodrive
 ASAN ?= 0
 DEBUG ?= 0
 CFLAGS += -I$(PWD)
@@ -102,7 +102,7 @@ asm_32xmemory ?= 1
 else
 use_fame ?= 1
 use_cz80 ?= 1
-ifneq (,$(filter x86% i386% mips% aarch% riscv% powerpc% ppc%, $(ARCH)))
+ifneq (,$(filter x86% i386% i686% mips% aarch% riscv% powerpc% ppc%, $(ARCH)))
 use_sh2drc ?= 1
 endif
 endif
@@ -111,15 +111,14 @@ endif
 
 # TODO this should somehow go to the platform directory?
 ifeq "$(PLATFORM)" "generic"
-$(TARGET).zip: $(TARGET)
+PicoDrive.zip: $(TARGET)
 	$(RM) -rf .od_data
 	mkdir .od_data
 	cp -r platform/linux/skin .od_data
 	cp platform/game_def.cfg .od_data
-	cp $< .od_data/PicoDrive
-	$(STRIP) .od_data/PicoDrive
+	$(STRIP) $< -o .od_data/picodrive
 	cd .od_data && zip -9 -r ../$@ *
-all: $(TARGET).zip
+all: PicoDrive.zip
 endif
 
 ifeq "$(PLATFORM)" "opendingux"
@@ -128,28 +127,27 @@ ifeq "$(PLATFORM)" "opendingux"
 	mkdir .od_data
 	cp -r platform/opendingux/data/. .od_data
 	cp platform/game_def.cfg .od_data
-	cp $< .od_data/PicoDrive
-	$(STRIP) .od_data/PicoDrive
+	$(STRIP) $< -o .od_data/picodrive
 .PHONY: .od_data
 
 ifneq (,$(filter %__DINGUX__, $(CFLAGS)))
 # "legacy" dingux without opk support
-$(TARGET)-dge.zip: .od_data
+PicoDrive-dge.zip: .od_data
 	rm -f .od_data/default.*.desktop
 	cd .od_data && zip -9 -r ../$@ *
-all: $(TARGET)-dge.zip
+all: PicoDrive-dge.zip
 CFLAGS += -DSDL_SURFACE_SW # some legacy dinguces had bugs in HWSURFACE
 else
 ifneq (,$(filter %__MIYOO__, $(CFLAGS)))
-$(TARGET)-miyoo.zip: .od_data
+PicoDrive-miyoo.zip: .od_data
 	rm -f .od_data/default.*.desktop .od_data/PicoDrive.dge
 	cd .od_data && zip -9 -r ../$@ *
-all: $(TARGET)-miyoo.zip
+all: PicoDrive-miyoo.zip
 else
-$(TARGET).opk: .od_data
+PicoDrive.opk: .od_data
 	rm -f .od_data/PicoDrive.dge
 	mksquashfs .od_data $@ -all-root -noappend -no-exports -no-xattrs
-all: $(TARGET).opk
+all: PicoDrive.opk
 endif
 endif
 
@@ -328,14 +326,26 @@ CHDR_OBJS += $(CHDR)/src/libchdr_chd.o $(CHDR)/src/libchdr_cdrom.o
 CHDR_OBJS += $(CHDR)/src/libchdr_flac.o
 CHDR_OBJS += $(CHDR)/src/libchdr_bitstream.o $(CHDR)/src/libchdr_huffman.o
 
-# lzma - use 19.00 as newer versions have compile problems with libretro platforms
-LZMA = $(CHDR)/deps/lzma-19.00
+LZMA = $(CHDR)/deps/lzma-24.05
 LZMA_OBJS += $(LZMA)/src/CpuArch.o $(LZMA)/src/Alloc.o $(LZMA)/src/LzmaEnc.o
 LZMA_OBJS += $(LZMA)/src/Sort.o $(LZMA)/src/LzmaDec.o $(LZMA)/src/LzFind.o
 LZMA_OBJS += $(LZMA)/src/Delta.o
-$(LZMA_OBJS): CFLAGS += -D_7ZIP_ST
+$(LZMA_OBJS): CFLAGS += -DZ7_ST -Wno-unused
 
-OBJS += $(CHDR_OBJS)
+ZSTD = $(CHDR)/deps/zstd-1.5.6/lib
+ZSTD_OBJS += $(ZSTD)/common/entropy_common.o $(ZSTD)/common/error_private.o
+ZSTD_OBJS += $(ZSTD)/common/fse_decompress.o $(ZSTD)/common/xxhash.o
+ZSTD_OBJS += $(ZSTD)/common/zstd_common.o
+ZSTD_OBJS += $(ZSTD)/decompress/huf_decompress.o
+ifneq (,$(filter x86%, $(ARCH)))
+ZSTD_OBJS += $(ZSTD)/decompress/huf_decompress_amd64.o
+endif
+ZSTD_OBJS += $(ZSTD)/decompress/zstd_ddict.o
+ZSTD_OBJS += $(ZSTD)/decompress/zstd_decompress_block.o
+ZSTD_OBJS += $(ZSTD)/decompress/zstd_decompress.o
+$(ZSTD_OBJS) $(CHDR_OBJS): CFLAGS += -I$(ZSTD) -Wno-unused
+
+OBJS += $(CHDR_OBJS) $(ZSTD_OBJS)
 ifeq ($(STATIC_LINKING), 1)
 OBJS += $(LZMA_OBJS)
 endif

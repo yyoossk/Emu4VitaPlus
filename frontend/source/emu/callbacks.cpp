@@ -128,6 +128,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         if (data)
         {
             *(retro_language *)data = gConfig->GetRetroLanguage();
+            LogDebug("  retro_language:%d", *(retro_language *)data);
         }
         break;
 

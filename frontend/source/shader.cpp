@@ -121,7 +121,7 @@ bool Shaders::Load(const char *path)
         }
         else
         {
-            this->emplace_back(value);
+            this->emplace_back(std::move(Shader(value)));
         }
     }
 
