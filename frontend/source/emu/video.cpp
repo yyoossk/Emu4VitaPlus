@@ -51,6 +51,7 @@ void Emulator::Show()
     vita2d_shader *shader = gConfig->graphics[GRAPHICS_SHADER] > 0 ? (*gShaders)[gConfig->graphics[GRAPHICS_SHADER] - 1].Get() : nullptr;
     if (shader)
     {
+        LogDebug("set shader: %08x", shader);
         vita2d_set_shader(shader);
         LogDebug("000");
         float *texture_size = (float *)vita2d_pool_memalign(2 * sizeof(float), sizeof(float));

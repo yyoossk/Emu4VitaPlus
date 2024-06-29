@@ -72,10 +72,20 @@ set(VITA2D_OBJ
     ${VITA2D_SHADER_PATH}/texture_f_gxp.o
     ${VITA2D_SHADER_PATH}/texture_tint_f_gxp.o)
 
-include_directories(libvita2d/libvita2d/include
+include_directories(${VITA2D_PATH}/include
     $ENV{VITASDK}/arm-vita-eabi/include/freetype2)
 add_library(vita2d STATIC ${VITA2D_SRC})
 target_link_libraries(vita2d ${VITA2D_OBJ})
+
+# ----------------------
+set(VITA2D_EXT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/libvita2d_ext/libvita2d_ext)
+set(VITA2D_EXT_SOURCE_PATH ${VITA2D_EXT_PATH}/source)
+set(VITA2D_EXT_SRC ${VITA2D_EXT_SOURCE_PATH}/utils.c
+    ${VITA2D_EXT_SOURCE_PATH}/vita2d_ext.c
+    ${VITA2D_EXT_SOURCE_PATH}/vita2d_ext_draw.c)
+
+include_directories(${VITA2D_EXT_PATH}/include)
+add_library(vita2d_ext STATIC ${VITA2D_EXT_SRC})
 
 add_subdirectory(simpleini)
 
