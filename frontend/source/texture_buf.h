@@ -4,7 +4,7 @@
 #include "defines.h"
 #include "utils.h"
 
-#define TEXTURE_BUF_COUNT 3
+#define TEXTURE_BUF_COUNT 10
 
 class TextureBuf
 {
