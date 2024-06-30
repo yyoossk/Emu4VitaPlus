@@ -5,12 +5,12 @@
 
 #define SCE_KERNEL_HIGHEST_PRIORITY_USER 64
 #define SCE_KERNEL_LOWEST_PRIORITY_USER 191
-#define SCE_KERNEL_DEFAULT_PRIORITY 0x10000100
+#define SCE_KERNEL_DEFAULT_PRIORITY_USER 0x10000100
 
 class ThreadBase
 {
 public:
-    ThreadBase(SceKernelThreadEntry entry, int priority = SCE_KERNEL_DEFAULT_PRIORITY, int stack_size = 0x10000);
+    ThreadBase(SceKernelThreadEntry entry, int priority = SCE_KERNEL_DEFAULT_PRIORITY_USER, int stack_size = 0x10000);
     virtual ~ThreadBase();
     bool Start(); // the point of class will be sent
     bool Start(void *data, SceSize size);
