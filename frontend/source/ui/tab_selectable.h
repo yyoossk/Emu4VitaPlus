@@ -17,6 +17,7 @@ public:
     void SetItemVisable(size_t index, bool visable);
     bool ItemVisable(size_t index);
     void SetColumns(int columns);
+    void SetIndex(size_t index);
 
 protected:
     virtual void

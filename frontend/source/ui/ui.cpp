@@ -269,6 +269,12 @@ void Ui::_OnKeyR2(Input *input)
     _tabs[_tab_index]->SetInputHooks(&_input);
 }
 
+void Ui::_OnPsButton(Input *input)
+{
+    LogFunctionName;
+    ResumeGame();
+}
+
 void Ui::Run()
 {
     _input.Poll(true);
@@ -284,6 +290,15 @@ void Ui::Run()
         system_tab->SetItemVisable(0, gStatus == APP_STATUS_SHOW_UI_IN_GAME);
         system_tab->SetItemVisable(1, gStatus == APP_STATUS_SHOW_UI_IN_GAME);
         system_tab->SetItemVisable(2, gStatus == APP_STATUS_SHOW_UI_IN_GAME);
+        if (gStatus == APP_STATUS_SHOW_UI_IN_GAME)
+        {
+            system_tab->SetIndex(0);
+            _input.SetKeyUpCallback(SCE_CTRL_PSBUTTON, std::bind(&Ui::_OnPsButton, this, &_input));
+        }
+        else
+        {
+            _input.UnsetKeyUpCallback(SCE_CTRL_PSBUTTON);
+        }
 
         gVideo->Unlock();
 

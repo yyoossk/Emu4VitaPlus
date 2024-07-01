@@ -43,6 +43,7 @@ private:
 
     void _OnKeyL2(Input *input);
     void _OnKeyR2(Input *input);
+    void _OnPsButton(Input *input);
 
     void _ShowBoot();
     void _ShowNormal();

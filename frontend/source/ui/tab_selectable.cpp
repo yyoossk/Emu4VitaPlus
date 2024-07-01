@@ -191,3 +191,11 @@ void TabSeletable::SetColumns(int columns)
 {
     _columns = columns;
 }
+
+void TabSeletable::SetIndex(size_t index)
+{
+    if (index >= 0 && index < _items.size())
+    {
+        _index = index;
+    }
+}

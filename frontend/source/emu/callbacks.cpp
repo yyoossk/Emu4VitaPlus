@@ -111,9 +111,10 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         LogDebug("  cmd: RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY");
         if (data)
         {
-            char path[SCE_FIOS_PATH_MAX];
+            static char path[SCE_FIOS_PATH_MAX];
             snprintf(path, SCE_FIOS_PATH_MAX, CORE_SAVEFILES_DIR "/%s", gEmulator->_current_name.c_str());
             *(const char **)data = path;
+            LogDebug("  return: %s", path);
         }
         break;
 
