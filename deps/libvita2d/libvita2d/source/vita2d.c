@@ -26,7 +26,7 @@
 #define DISPLAY_COLOR_FORMAT SCE_GXM_COLOR_FORMAT_A8B8G8R8
 #define DISPLAY_PIXEL_FORMAT SCE_DISPLAY_PIXELFORMAT_A8B8G8R8
 #define DISPLAY_BUFFER_COUNT 3
-#define DISPLAY_MAX_PENDING_SWAPS 3
+#define DISPLAY_MAX_PENDING_SWAPS 2
 #define DEFAULT_TEMP_POOL_SIZE (1 * 1024 * 1024)
 
 typedef struct vita2d_display_data
@@ -244,11 +244,11 @@ static int vita2d_init_internal(unsigned int temp_pool_size, SceGxmMultisampleMo
 
 	SceGxmInitializeParams initializeParams;
 	memset(&initializeParams, 0, sizeof(SceGxmInitializeParams));
-	initializeParams.flags = system_app_mode ? 0x0A : 0x00020000U;
+	initializeParams.flags = system_app_mode ? 0x0A : 0;
 	initializeParams.displayQueueMaxPendingCount = DISPLAY_MAX_PENDING_SWAPS;
 	initializeParams.displayQueueCallback = display_callback;
 	initializeParams.displayQueueCallbackDataSize = sizeof(vita2d_display_data);
-	initializeParams.parameterBufferSize = system_app_mode ? 2 * 1024 * 1024 : SCE_GXM_DEFAULT_PARAMETER_BUFFER_SIZE * 4;
+	initializeParams.parameterBufferSize = system_app_mode ? 2 * 1024 * 1024 : SCE_GXM_DEFAULT_PARAMETER_BUFFER_SIZE;
 
 	err = system_app_mode ? sceGxmVshInitialize(&initializeParams) : sceGxmInitialize(&initializeParams);
 	DEBUG("sceGxmInitialize(): 0x%08X\n", err);
@@ -291,14 +291,14 @@ static int vita2d_init_internal(unsigned int temp_pool_size, SceGxmMultisampleMo
 
 	void *fragmentRingBuffer = gpu_alloc(
 		SCE_KERNEL_MEMBLOCK_TYPE_USER_RW_UNCACHE,
-		SCE_GXM_DEFAULT_FRAGMENT_RING_BUFFER_SIZE * 4,
+		SCE_GXM_DEFAULT_FRAGMENT_RING_BUFFER_SIZE,
 		4,
 		SCE_GXM_MEMORY_ATTRIB_READ,
 		&fragmentRingBufferUid);
 
 	unsigned int fragmentUsseRingBufferOffset;
 	void *fragmentUsseRingBuffer = fragment_usse_alloc(
-		SCE_GXM_DEFAULT_FRAGMENT_USSE_RING_BUFFER_SIZE * 4,
+		SCE_GXM_DEFAULT_FRAGMENT_USSE_RING_BUFFER_SIZE,
 		&fragmentUsseRingBufferUid,
 		&fragmentUsseRingBufferOffset);
 
@@ -310,9 +310,9 @@ static int vita2d_init_internal(unsigned int temp_pool_size, SceGxmMultisampleMo
 	contextParams.vertexRingBufferMem = vertexRingBuffer;
 	contextParams.vertexRingBufferMemSize = SCE_GXM_DEFAULT_VERTEX_RING_BUFFER_SIZE;
 	contextParams.fragmentRingBufferMem = fragmentRingBuffer;
-	contextParams.fragmentRingBufferMemSize = SCE_GXM_DEFAULT_FRAGMENT_RING_BUFFER_SIZE * 4;
+	contextParams.fragmentRingBufferMemSize = SCE_GXM_DEFAULT_FRAGMENT_RING_BUFFER_SIZE;
 	contextParams.fragmentUsseRingBufferMem = fragmentUsseRingBuffer;
-	contextParams.fragmentUsseRingBufferMemSize = SCE_GXM_DEFAULT_FRAGMENT_USSE_RING_BUFFER_SIZE * 4;
+	contextParams.fragmentUsseRingBufferMemSize = SCE_GXM_DEFAULT_FRAGMENT_USSE_RING_BUFFER_SIZE;
 	contextParams.fragmentUsseRingBufferOffset = fragmentUsseRingBufferOffset;
 
 	err = sceGxmCreateContext(&contextParams, &_vita2d_context);
@@ -431,7 +431,7 @@ static int vita2d_init_internal(unsigned int temp_pool_size, SceGxmMultisampleMo
 	// set buffer sizes for this sample
 	const unsigned int patcherBufferSize = 64 * 1024;
 	const unsigned int patcherVertexUsseSize = 64 * 1024;
-	const unsigned int patcherFragmentUsseSize = 64 * 1024 * 4;
+	const unsigned int patcherFragmentUsseSize = 64 * 1024;
 
 	// allocate memory for buffers and USSE code
 	void *patcherBuffer = gpu_alloc(
