@@ -126,6 +126,9 @@ void Ui::_ClearTabs()
 
 void Ui::CreateTables(const char *path)
 {
+    LogFunctionName;
+    LogDebug("  path: %s", path);
+
     if (gEmulator == nullptr)
     {
         LogError("gEmulator has not been initialized yet.");
@@ -219,12 +222,22 @@ void Ui::CreateTables(const char *path)
     }
     _tabs[TAB_INDEX_CORE] = new TabSeletable(TAB_CORE, options);
 
-    _tabs[TAB_INDEX_OPTIONS] = new TabSeletable(TAB_OPTIONS, {new ItemConfig(SYSTEM_MENU_LANGUAGE,
+    _tabs[TAB_INDEX_OPTIONS] = new TabSeletable(TAB_OPTIONS, {new ItemConfig(OPTIONS_MENU_LANGUAGE,
                                                                              "",
                                                                              (uint32_t *)&gConfig->language,
                                                                              {LanguageString(gLanguageNames[LANGUAGE_ENGLISH]),
                                                                               LanguageString(gLanguageNames[LANGUAGE_CHINESE])},
-                                                                             ChangeLanguage)});
+                                                                             ChangeLanguage),
+                                                              new ItemConfig(OPTIONS_MENU_REWIND,
+                                                                             "",
+                                                                             &gConfig->rewind,
+                                                                             {NO, YES}),
+                                                              new ItemIntConfig(OPTIONS_MENU_REWIND_BUF_SIZE,
+                                                                                "",
+                                                                                &gConfig->rewind_buf_size,
+                                                                                MIN_REWIND_BUF_SIZE,
+                                                                                MAX_REWIND_BUF_SIZE,
+                                                                                REWIND_BUF_SIZE_STEP)});
 
     _tabs[TAB_INDEX_ABOUT] = new TabAbout();
 

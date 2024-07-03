@@ -9,6 +9,11 @@
 #include "language_define.h"
 #include "defines.h"
 
+#define DEFAULT_REWIND_BUF_SIZE 10
+#define MIN_REWIND_BUF_SIZE 5
+#define MAX_REWIND_BUF_SIZE 50
+#define REWIND_BUF_SIZE_STEP 5
+
 class Config
 {
 public:
@@ -24,7 +29,9 @@ public:
     void DefaultGraphics();
     retro_language GetRetroLanguage();
 
+    std::string last_rom;
     uint32_t language;
+    uint32_t rewind;
     uint32_t rewind_buf_size;
     std::vector<ControlMapConfig> control_maps;
     uint32_t graphics[GRAPHICS_CONFIG_COUNT];

@@ -110,29 +110,56 @@ namespace File
         return sceIoRemove(path) == SCE_OK;
     }
 
-    std::string GetStem(const char *path)
+    static const char *_GetDirEndPos(const char *path)
     {
-        const char *start = strrchr(path, '/');
-        if (start == NULL)
-        {
-            start = strrchr(path, ':');
-        }
+        char *p = strrchr(path, '/');
+        if (p)
+            return p;
+        return strrchr(path, ':');
+    }
 
-        if (start == NULL)
+    static char *_GetDotPos(const char *path)
+    {
+        return strrchr(path, '.');
+    }
+
+    std::string GetName(const char *path)
+    {
+        const char *start = _GetDirEndPos(path);
+        if (start)
         {
-            start = path;
+            return path;
         }
         else
         {
             start++;
+            return start;
         }
+    }
 
-        const char *end = strrchr(path, '.');
-        if (end == NULL)
-        {
+    std::string GetStem(const char *path)
+    {
+        const char *start = _GetDirEndPos(path);
+        const char *end = _GetDotPos(path);
+
+        if (!start)
+            start = path;
+        if (!end)
             end = path + strlen(path);
-        }
 
         return std::string(start, end - start);
+    }
+
+    std::string GetDir(const char *path)
+    {
+        const char *end = _GetDirEndPos(path);
+        if (end)
+        {
+            return std::string(path, end - path);
+        }
+        else
+        {
+            return path;
+        }
     }
 }

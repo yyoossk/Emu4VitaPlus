@@ -3,6 +3,7 @@
 #include "emulator.h"
 #include "video.h"
 #include "app.h"
+#include "file.h"
 #include "log.h"
 
 #define TEXTURE_MAX_WIDTH 446
@@ -13,7 +14,9 @@ TabBrowser::TabBrowser(const char *path)
       _texture(nullptr)
 {
     LogFunctionName;
-    _directory = new Directory(path, gEmulator->GetValidExtensions());
+    LogDebug(File::GetStem(path).c_str());
+    LogDebug(File::GetDir(path).c_str());
+    _directory = new Directory(File::GetDir(path).c_str(), gEmulator->GetValidExtensions());
 }
 
 TabBrowser::~TabBrowser()

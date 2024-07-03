@@ -145,3 +145,35 @@ void ItemConfig::UnsetInputHooks(Input *input)
     input->UnsetKeyUpCallback(SCE_CTRL_CIRCLE);
     input->UnsetKeyUpCallback(SCE_CTRL_CROSS);
 }
+
+ItemIntConfig::ItemIntConfig(LanguageString text,
+                             LanguageString info,
+                             uint32_t *config,
+                             size_t start,
+                             size_t end,
+                             size_t step,
+                             CallbackFunc active_callback,
+                             CallbackFunc option_callback)
+    : ItemBase(text, info, active_callback, option_callback),
+      ItemConfig(text, info, config, {}, active_callback, option_callback),
+      _step(step)
+{
+    for (size_t i = start; i <= end; i += step)
+    {
+        _config_texts.emplace_back(LanguageString(std::to_string(i)));
+    }
+    if (GetConfig() < start || GetConfig() > end)
+    {
+        SetConfig(0);
+    }
+}
+
+uint32_t ItemIntConfig::GetConfig() const
+{
+    return (*_config) / _step - 1;
+}
+
+void ItemIntConfig::SetConfig(uint32_t value)
+{
+    *_config = (value + 1) * _step;
+}

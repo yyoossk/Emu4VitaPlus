@@ -78,25 +78,25 @@ bool Emulator::LoadGame(const char *path, const char *entry_name, uint32_t crc32
     retro_game_info game_info = {0};
     _soft_frame_buf_render = false;
     char *buf = nullptr;
-
+    const char *_path = path;
     if (*entry_name)
     {
-        path = _archive_manager.GetCachedPath(crc32, path, entry_name);
+        _path = _archive_manager.GetCachedPath(crc32, path, entry_name);
     }
 
     if (_info.need_fullpath)
     {
         LogDebug("  load rom from path");
-        game_info.path = path;
+        game_info.path = _path;
     }
     else
     {
         LogDebug("  load rom from memory");
-        game_info.size = File::GetSize(path);
+        game_info.size = File::GetSize(_path);
         buf = new char[game_info.size];
-        if (!File::ReadFile(path, buf, game_info.size))
+        if (!File::ReadFile(_path, buf, game_info.size))
         {
-            LogError("failed to read rom: %s", path);
+            LogError("failed to read rom: %s", _path);
             delete[] buf;
             return false;
         }
@@ -113,6 +113,9 @@ bool Emulator::LoadGame(const char *path, const char *entry_name, uint32_t crc32
         {
             _audio.SetSampleRate(_av_info.timing.sample_rate);
         }
+
+        gConfig->last_rom = path;
+        gConfig->Save();
     }
     else
     {

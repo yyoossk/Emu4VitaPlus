@@ -10,8 +10,6 @@
 #include "log.h"
 #include "defines.h"
 
-#define DEFAULT_REWIND_BUF_SIZE 10
-
 #define MAIN_SECTION "MAIN"
 #define HOTKEY_SECTION "HOTKEY"
 #define GRAPHICS_SECTION "GRAPHICS"
@@ -135,6 +133,7 @@ void Config::Default()
 {
     LogFunctionName;
 
+    rewind = 1;
     rewind_buf_size = DEFAULT_REWIND_BUF_SIZE;
     DefaultControlMap();
     DefaultHotKey();
@@ -274,6 +273,9 @@ bool Config::Save(const char *path)
     CSimpleIniA ini;
 
     ini.SetValue(MAIN_SECTION, "language", gLanguageNames[language]);
+    ini.SetLongValue(MAIN_SECTION, "rewind", rewind);
+    ini.SetLongValue(MAIN_SECTION, "rewind_buf_size", rewind_buf_size);
+    ini.SetValue(MAIN_SECTION, "last_rom", last_rom.c_str());
 
     for (const auto &control : control_maps)
     {
@@ -313,6 +315,15 @@ bool Config::Load(const char *path)
             language = (LANGUAGE)i;
             break;
         }
+    }
+
+    rewind = ini.GetLongValue(MAIN_SECTION, "rewind");
+    rewind_buf_size = ini.GetLongValue(MAIN_SECTION, "rewind_buf_size");
+    last_rom = ini.GetValue(MAIN_SECTION, "last_rom");
+
+    if (rewind_buf_size < MIN_REWIND_BUF_SIZE || rewind_buf_size > MAX_REWIND_BUF_SIZE)
+    {
+        rewind_buf_size = DEFAULT_REWIND_BUF_SIZE;
     }
 
     for (auto &control : control_maps)
