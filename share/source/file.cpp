@@ -128,12 +128,12 @@ namespace File
         const char *start = _GetDirEndPos(path);
         if (start)
         {
-            return path;
+            start++;
+            return start;
         }
         else
         {
-            start++;
-            return start;
+            return path;
         }
     }
 
@@ -144,6 +144,9 @@ namespace File
 
         if (!start)
             start = path;
+        else
+            start++;
+
         if (!end)
             end = path + strlen(path);
 
@@ -155,7 +158,9 @@ namespace File
         const char *end = _GetDirEndPos(path);
         if (end)
         {
-            return std::string(path, end - path);
+            if (*(end - 1) == ':')
+                end--;
+            return std::string(path, end - path + 1);
         }
         else
         {

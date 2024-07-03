@@ -78,14 +78,7 @@ App::App()
 
     gUi->AppendLog("Create tables of UI");
 
-    if (gConfig->last_rom.size() == 0)
-    {
-        gUi->CreateTables("ux0:");
-    }
-    else
-    {
-        gUi->CreateTables(gConfig->last_rom.c_str());
-    }
+    gUi->CreateTables(gConfig->last_rom.c_str());
 
     if (gConfig->language != LANGUAGE::LANGUAGE_ENGLISH)
     {

@@ -14,9 +14,18 @@ TabBrowser::TabBrowser(const char *path)
       _texture(nullptr)
 {
     LogFunctionName;
-    LogDebug(File::GetStem(path).c_str());
-    LogDebug(File::GetDir(path).c_str());
+
     _directory = new Directory(File::GetDir(path).c_str(), gEmulator->GetValidExtensions());
+
+    std::string name = File::GetName(path);
+    for (size_t i = 0; i < _directory->GetSize(); i++)
+    {
+        if (_directory->GetItemName(i) == name)
+        {
+            _index = i;
+            break;
+        }
+    }
 }
 
 TabBrowser::~TabBrowser()

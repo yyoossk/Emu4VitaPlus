@@ -135,6 +135,8 @@ void Config::Default()
 
     rewind = 1;
     rewind_buf_size = DEFAULT_REWIND_BUF_SIZE;
+    last_rom = "ux0:";
+
     DefaultControlMap();
     DefaultHotKey();
     DefaultGraphics();
@@ -320,6 +322,10 @@ bool Config::Load(const char *path)
     rewind = ini.GetLongValue(MAIN_SECTION, "rewind");
     rewind_buf_size = ini.GetLongValue(MAIN_SECTION, "rewind_buf_size");
     last_rom = ini.GetValue(MAIN_SECTION, "last_rom");
+    if (!File::Exist(last_rom.c_str()))
+    {
+        last_rom = "ux0:";
+    }
 
     if (rewind_buf_size < MIN_REWIND_BUF_SIZE || rewind_buf_size > MAX_REWIND_BUF_SIZE)
     {

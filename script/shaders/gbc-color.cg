@@ -1,0 +1,81 @@
+/*
+   GBC Color Correction Shader
+   A shader that replicates the LCD dynamics from a Game Boy Color
+   Color values are derived from Gambatte's color correction implementation.
+
+   Based on Color Mangler
+   Author: hunterk
+   License: Public domain
+*/
+
+#define darken_screen 0.0
+
+#define target_gamma 2.2
+#define display_gamma 2.2
+#define blr 0.0
+#define blg 0.0
+#define blb 0.0
+#define r 0.78824
+#define g 0.72941
+#define b 0.82
+#define rg 0.025
+#define rb 0.12039
+#define gr 0.12157
+#define gb 0.12157
+#define br 0.0
+#define bg 0.275000
+
+struct out_vertex
+{
+     float4 position : POSITION;
+     float2 texCoord : TEXCOORD;
+};
+
+struct input
+{
+    float2 video_size;
+    float2 texture_size;
+    float2 output_size;
+    float frame_count;
+    float frame_direction;
+    float frame_rotation;
+};
+
+/*
+     VERTEX_SHADER
+*/
+#if defined(VERTEX)
+
+void main (
+  float2 aTexcoord,
+  float4 aPosition,
+  uniform input IN,
+  uniform float4x4 wvp,
+  out_vertex out OUT)
+{
+	OUT.position = mul(aPosition, wvp);
+	OUT.texCoord = aTexcoord;
+}
+
+#elif defined(FRAGMENT)
+
+uniform sampler2D decal : TEXUNIT0;
+
+float4 gbc_color(float2 texCoord : TEXCOORD)
+{
+     float4 screen = pow(tex2D(decal, texCoord), target_gamma + darken_screen).rgba;
+     //                r    g     b    black
+     float4x4 color = {r,   gr,   br,  blr,   //red channel
+                       rg,  g,    bg,  blg,   //green channel
+                       rb,  gb,   b,   blb,   //blue channel
+                       0.0, 0.0,  0.0, 1.0};  //alpha channel; these numbers do nothing for our purposes.
+                  
+     screen = mul(color, screen);
+     return pow(screen, 1.0 / display_gamma);
+}
+   
+float4 main(in out_vertex VOUT) : COLOR
+{
+     return gbc_color(VOUT.texCoord);
+}
+#endif
