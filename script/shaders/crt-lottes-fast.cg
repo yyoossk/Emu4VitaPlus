@@ -203,7 +203,7 @@ float3 ToSrgb(float3 c){return float3(
 #define CRTS_GPU 1
 #define CRTS_HLSL 1
 //--------------------------------------------------------------
-//#define CRTS_2_TAP 1
+#define CRTS_2_TAP 1
 //--------------------------------------------------------------
 #define CRTS_TONE 1
 #define CRTS_CONTRAST 0

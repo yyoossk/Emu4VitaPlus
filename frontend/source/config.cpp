@@ -309,10 +309,10 @@ bool Config::Load(const char *path)
         return false;
     }
 
-    const char *lang = ini.GetValue(MAIN_SECTION, "language", "ENGLISH");
+    const char *tmp = ini.GetValue(MAIN_SECTION, "language", "ENGLISH");
     for (size_t i = 0; i < LANGUAGE_COUNT; i++)
     {
-        if (strcmp(lang, gLanguageNames[i]) == 0)
+        if (strcmp(tmp, gLanguageNames[i]) == 0)
         {
             language = (LANGUAGE)i;
             break;
@@ -321,8 +321,12 @@ bool Config::Load(const char *path)
 
     rewind = ini.GetLongValue(MAIN_SECTION, "rewind");
     rewind_buf_size = ini.GetLongValue(MAIN_SECTION, "rewind_buf_size");
-    last_rom = ini.GetValue(MAIN_SECTION, "last_rom");
-    if (!File::Exist(last_rom.c_str()))
+    tmp = ini.GetValue(MAIN_SECTION, "last_rom");
+    if (tmp && File::Exist(tmp))
+    {
+        last_rom = tmp;
+    }
+    else
     {
         last_rom = "ux0:";
     }
