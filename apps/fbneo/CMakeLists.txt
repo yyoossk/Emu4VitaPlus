@@ -13,7 +13,7 @@ project(${CORE_NAME})
 set(APP_NAME "${CORE_SHORT_NAME}_4Vita")
 set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/libretro-fbneo/src/burner/libretro)
 set(CORE_MAKEFILE_DIR ${CORE_DIR})
-set(CORE_MAKEFILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/Makefile)
+set(CORE_MAKEFILE_NAME Makefile)
 set(SFO_TITLE_NAME "Emu4Vita++ (${CORE_FULL_NAME})")
 set(SFO_TITLE_ID "FBNEO4VIT")
 
@@ -29,5 +29,6 @@ foreach(file ${PKG_FILES})
   list(APPEND PRIVATE_PKG_FILES FILE ${file} ${rel})
 endforeach()
 
-add_compile_definitions(FBNEO_BUILD ARC_BUILD FBA_BUILD CONSOLE="ARC")
+add_compile_definitions(FBNEO_BUILD ARC_BUILD FBA_BUILD CONSOLE="ARC" USE_CYCLONE INCLUDE_7Z_SUPPORT _7ZIP_PPMD_SUPPPORT _7ZIP_ST
+  LSB_FIRST USE_SPEEDHACKS NO_VIZ _LARGEFILE64_SOURCE=0 _FILE_OFFSET_BITS=32)
 add_subdirectory(../../frontend ${CMAKE_CURRENT_BINARY_DIR}/frontend)

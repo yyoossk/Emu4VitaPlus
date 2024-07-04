@@ -55,3 +55,6 @@ url = https://github.com/brofield/simpleini
 [submodule "deps/7-Zip"]
 	path = deps/7-Zip
 	url = https://github.com/mcmilk/7-Zip.git
+[submodule "cores/libretro-fbneo"]
+	path = cores/libretro-fbneo
+	url = https://github.com/libretro/FBNeo.git

@@ -249,7 +249,7 @@ else ifeq ($(platform), vita)
 
 #	CXXFLAGS += -mfloat-abi=hard -fsingle-precision-constant -fpermissive -fno-rtti
 	CXXFLAGS += -mfloat-abi=hard -fsingle-precision-constant -fpermissive \
-     -marm -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard -DVITA -D__vita__ \
+     -marm -mcpu=cortex-a9 -mfpu=neon -DVITA -D__vita__ \
      -mword-relocations -fno-optimize-sibling-calls \
      -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables \
      -ffast-math -ftree-vectorize -O3 \
