@@ -20,6 +20,7 @@ set(CORES
     vba_next
     gambatte
     fba_lite
+    fbneo
     snes9x2002
     snes9x2005
     snes9x2010
@@ -63,8 +64,14 @@ else()
 endif()
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLOG_LEVEL=${LOG_LEVEL}")
-set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fno-rtti -fno-exceptions -std=c++17")
-set(CMAKE_EXE_LINKER_FLAGS "-Wl,-q,-no-enum-size-warning,--as-needed") # ,--no-undefined,--as-needed,--hash-style=gnu")
+
+if(BUILD STREQUAL "fbneo")
+    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fno-rtti")
+else()
+    set(CMAKE_CXX_FLAGS " ${CMAKE_C_FLAGS} -fno-rtti -fno-exceptions -std=c++17 ")
+endif()
+
+set(CMAKE_EXE_LINKER_FLAGS " -Wl,-q,-no-enum-size-warning,--as-needed ") # ,--no-undefined,--as-needed,--hash-style=gnu")
 
 set(OUT_PATH "${CMAKE_BINARY_DIR}/out")
 file(MAKE_DIRECTORY ${OUT_PATH})

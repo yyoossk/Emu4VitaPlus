@@ -16,6 +16,13 @@ set_target_properties(${CORE_NAME} PROPERTIES IMPORTED_LOCATION_NOCONFIG
     "${LIBRETRO_LIBRARY}")
 add_dependencies(${CORE_NAME} ${CORE_NAME}_build)
 
+if(CORE_NAME STREQUAL "fbneo")
+    set(CMAKE_C_FLAGS " -marm -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard -DVITA -D__vita__ -O3")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLOG_LEVEL=${LOG_LEVEL}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fno-rtti")
+    set(CMAKE_EXE_LINKER_FLAGS "-Wl,-q")
+endif()
+
 include_directories(
     source
     source/ui
@@ -72,6 +79,7 @@ target_link_libraries(
     z
     lzma
     minizip
+    7zip
     pthread
     ScePvf_stub
     ScePgf_stub

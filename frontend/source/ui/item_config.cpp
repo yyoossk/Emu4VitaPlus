@@ -170,10 +170,18 @@ ItemIntConfig::ItemIntConfig(LanguageString text,
 
 uint32_t ItemIntConfig::GetConfig() const
 {
-    return (*_config) / _step - 1;
+    std::string s = std::to_string(*_config);
+    for (size_t i = 0; i < _config_texts.size(); i++)
+    {
+        if (s == _config_texts[i].Get())
+        {
+            return i;
+        }
+    }
+    return 0;
 }
 
 void ItemIntConfig::SetConfig(uint32_t value)
 {
-    *_config = (value + 1) * _step;
+    *_config = std::stoi(_config_texts[value].Get());
 }

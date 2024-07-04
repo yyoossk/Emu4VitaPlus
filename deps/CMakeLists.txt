@@ -5,6 +5,8 @@ set(CMAKE_TOOLCHAIN_FILE
     CACHE PATH "toolchain file")
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
+# retro_comm
+# ----------------------
 set(RETRO_SRC
     "libretro-common/string/stdstring.c"
     "libretro-common/encodings/encoding_utf.c"
@@ -40,11 +42,10 @@ set(RETRO_SRC
 
 include_directories("libretro-common/include")
 
-add_compile_definitions(HAVE_NEON HAVE_THREADS HAVE_COMPRESSION HAVE_ZLIB)
-
-# HAVE_7ZIP)
+add_compile_definitions(HAVE_NEON HAVE_THREADS HAVE_COMPRESSION HAVE_ZLIB HAVE_7ZIP)
 add_library(retro_comm STATIC ${RETRO_SRC})
 
+# vita2d
 # ----------------------
 set(VITA2D_PATH ${CMAKE_CURRENT_SOURCE_DIR}/libvita2d/libvita2d)
 set(VITA2D_SOURCE_PATH ${VITA2D_PATH}/source)
@@ -78,6 +79,7 @@ target_include_directories(vita2d PRIVATE
     $ENV{VITASDK}/arm-vita-eabi/include/freetype2)
 target_link_libraries(vita2d ${VITA2D_OBJ})
 
+# vita2d_ext
 # ----------------------
 set(VITA2D_EXT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/libvita2d_ext/libvita2d_ext)
 set(VITA2D_EXT_SOURCE_PATH ${VITA2D_EXT_PATH}/source)
@@ -91,6 +93,38 @@ target_include_directories(vita2d_ext PRIVATE
     ${VITA2D_EXT_PATH}/include
     ${VITA2D_PATH}/include)
 
+# 7zip
+# ----------------------
+set(SEVENZIP_PATH ${CMAKE_CURRENT_SOURCE_DIR}/7-Zip/C)
+set(SEVEN_SRC ${SEVENZIP_PATH}/7zAlloc.c
+    ${SEVENZIP_PATH}/7zArcIn.c
+    ${SEVENZIP_PATH}/7zBuf.c
+    ${SEVENZIP_PATH}/7zCrc.c
+    ${SEVENZIP_PATH}/7zCrcOpt.c
+    ${SEVENZIP_PATH}/7zDec.c
+    ${SEVENZIP_PATH}/7zFile.c
+    ${SEVENZIP_PATH}/7zStream.c
+    ${SEVENZIP_PATH}/Bcj2.c
+    ${SEVENZIP_PATH}/Bra.c
+    ${SEVENZIP_PATH}/Bra86.c
+    ${SEVENZIP_PATH}/BraIA64.c
+    ${SEVENZIP_PATH}/CpuArch.c
+    ${SEVENZIP_PATH}/Delta.c
+    ${SEVENZIP_PATH}/LzFind.c
+    ${SEVENZIP_PATH}/LzFindMt.c
+    ${SEVENZIP_PATH}/LzFindOpt.c
+    ${SEVENZIP_PATH}/Lzma2Dec.c
+    ${SEVENZIP_PATH}/Lzma2Enc.c
+    ${SEVENZIP_PATH}/LzmaDec.c
+    ${SEVENZIP_PATH}/LzmaEnc.c
+    ${SEVENZIP_PATH}/MtCoder.c
+    ${SEVENZIP_PATH}/MtDec.c
+    ${SEVENZIP_PATH}/Threads.c)
+add_library(7zip ${SEVEN_SRC})
+target_include_directories(7zip PRIVATE ${SEVENZIP_PATH})
+
+# simpleini
+# ----------------------
 add_subdirectory(simpleini)
 
 option(MZ_BZIP2 OFF)

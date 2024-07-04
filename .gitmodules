@@ -52,3 +52,6 @@ url = https://github.com/libretro/libretro-common
 [submodule "deps/simpleini"]
 path = deps/simpleini
 url = https://github.com/brofield/simpleini
+[submodule "deps/7-Zip"]
+	path = deps/7-Zip
+	url = https://github.com/mcmilk/7-Zip.git
