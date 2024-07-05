@@ -8,6 +8,7 @@
 
 unsigned int sceLibcHeapExtendedAlloc = 1;
 unsigned int sceLibcHeapSize = SCE_LIBC_HEAP_SIZE_EXTENDED_ALLOC_NO_LIMIT;
+// unsigned int sceUserMainThreadStackSize = 2 * 1024 * 1024;
 
 int main(int argc, char *const argv[])
 {

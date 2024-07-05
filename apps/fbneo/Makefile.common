@@ -504,7 +504,7 @@ ifeq ($(USE_CYCLONE), 1)
 	INCLUDE_DIRS	+= $(FBNEO_CPU_DIR)/cyclone
 	SOURCES_S		+= $(FBNEO_CPU_DIR)/cyclone/Cyclone.S
 	BURN_BLACKLIST	+= $(FBNEO_CPU_DIR)/m68000_intf.cpp
-	ARM_FLAGS		= -mword-relocations -mlittle-endian -munaligned-access
+	# ARM_FLAGS		= -mword-relocations -mlittle-endian -munaligned-access
 	# ios and android don't support this
 	ifneq (,$(findstring ios,$(platform)))
 		ARM_FLAGS =
@@ -512,8 +512,8 @@ ifeq ($(USE_CYCLONE), 1)
 	ifneq (,$(findstring android,$(platform)))
 		ARM_FLAGS =
 	endif
-	CFLAGS			+= -fno-optimize-sibling-calls -funsafe-math-optimizations -fsingle-precision-constant
-	CXXFLAGS		+= -fno-optimize-sibling-calls -funsafe-math-optimizations -fsingle-precision-constant
+	# CFLAGS			+= -fno-optimize-sibling-calls -funsafe-math-optimizations -fsingle-precision-constant
+	# CXXFLAGS		+= -fno-optimize-sibling-calls -funsafe-math-optimizations -fsingle-precision-constant
 else
 	BURN_BLACKLIST	+= $(FBNEO_CPU_DIR)/c68000_intf.cpp
 endif

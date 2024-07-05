@@ -6,7 +6,6 @@
 
 namespace File
 {
-
     bool Exist(const char *path);
     bool GetCreateTime(const char *name, SceDateTime *time);
     bool GetCreateTime(const char *name, time_t *time);

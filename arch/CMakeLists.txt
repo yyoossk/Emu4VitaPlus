@@ -24,6 +24,7 @@ set(CORE_SHORTS
     Gambatte
     FBALite
     FBNeo
+    FBA2012
     Snes9x2002
     Snes9x2005
     Snes9x2010
@@ -43,6 +44,7 @@ set(CORES
     gambatte
     fba_lite
     fbneo
+    fbalpha2012
     snes9x2002
     snes9x2005
     snes9x2010

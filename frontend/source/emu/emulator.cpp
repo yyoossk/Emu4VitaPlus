@@ -116,6 +116,8 @@ bool Emulator::LoadGame(const char *path, const char *entry_name, uint32_t crc32
 
         gConfig->last_rom = path;
         gConfig->Save();
+
+        Load();
     }
     else
     {
@@ -137,6 +139,7 @@ void Emulator::UnloadGame()
     LogFunctionName;
     Lock();
     gStateManager->states[0]->Save();
+    Save();
     retro_unload_game();
     gStatus = APP_STATUS_SHOW_UI;
     Unlock();
@@ -277,4 +280,76 @@ bool Emulator::SaveScreenShot(const char *name, size_t height)
     delete[] buf;
 
     return true;
+}
+
+std::string Emulator::_SaveDirPath()
+{
+    return std::string(CORE_SAVEFILES_DIR) + "/" + gEmulator->_current_name;
+}
+
+std::string Emulator::_SaveNamePath(uint32_t id)
+{
+    std::string s = _SaveDirPath() + "/" + gEmulator->_current_name;
+    switch (id)
+    {
+    case RETRO_MEMORY_SAVE_RAM:
+        s += ".srm";
+        break;
+    case RETRO_MEMORY_RTC:
+        s += ".rtc";
+        break;
+    default:
+        s += ".unk";
+    }
+    return s;
+}
+
+static const uint32_t RETRO_MEMORY_IDS[] = {RETRO_MEMORY_SAVE_RAM, RETRO_MEMORY_RTC};
+
+void Emulator::Save()
+{
+    LogFunctionName;
+
+    std::string path = _SaveDirPath();
+    if (!File::Exist(path.c_str()))
+    {
+        File::MakeDirs(path.c_str());
+    }
+
+    for (auto id : RETRO_MEMORY_IDS)
+    {
+        FILE *fp = fopen(_SaveNamePath(id).c_str(), "wb");
+        if (fp)
+        {
+            size_t size = retro_get_memory_size(id);
+            void *data = retro_get_memory_data(id);
+            if (size > 0 && data)
+            {
+                fwrite(data, size, 1, fp);
+            }
+            fclose(fp);
+        }
+    }
+}
+
+void Emulator::Load()
+{
+    LogFunctionName;
+    for (auto id : RETRO_MEMORY_IDS)
+    {
+        size_t size = retro_get_memory_size(id);
+        void *data = retro_get_memory_data(id);
+        FILE *fp = fopen(_SaveNamePath(id).c_str(), "rb");
+        if (fp && size > 0 && data)
+        {
+            fseek(fp, 0, SEEK_END);
+
+            if (size == ftell(fp))
+            {
+                fseek(fp, 0, SEEK_SET);
+                fread(data, size, 1, fp);
+            }
+            fclose(fp);
+        }
+    }
 }

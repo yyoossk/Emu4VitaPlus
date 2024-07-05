@@ -58,3 +58,6 @@ url = https://github.com/brofield/simpleini
 [submodule "cores/libretro-fbneo"]
 	path = cores/libretro-fbneo
 	url = https://github.com/libretro/FBNeo.git
+[submodule "cores/fbalpha2012"]
+	path = cores/fbalpha2012
+	url = https://github.com/libretro/fbalpha2012.git

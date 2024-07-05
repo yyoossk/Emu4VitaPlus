@@ -21,6 +21,7 @@ set(CORES
     gambatte
     fba_lite
     fbneo
+    fbalpha2012
     snes9x2002
     snes9x2005
     snes9x2010

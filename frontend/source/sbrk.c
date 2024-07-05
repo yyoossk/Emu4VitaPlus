@@ -20,7 +20,7 @@ static int _newlib_vm_memblock;
 extern int _newlib_heap_size_user __attribute__((weak));
 extern int _newlib_vm_size_user __attribute__((weak));
 
-#define ALIGN(x, a) (((x) + ((a)-1)) & ~((a)-1))
+#define ALIGN(x, a) (((x) + ((a) - 1)) & ~((a) - 1))
 
 void *_sbrk_r(struct _reent *reent, ptrdiff_t incr)
 {
@@ -45,6 +45,8 @@ void _init_vita_heap(void)
 {
 
 	int _newlib_vm_size = 0;
+	printf("_newlib_vm_size_user %08x", _newlib_vm_size_user);
+
 	if (&_newlib_vm_size_user != NULL)
 	{
 		_newlib_vm_size = ALIGN(_newlib_vm_size_user, 0x100000);
@@ -53,6 +55,7 @@ void _init_vita_heap(void)
 		if (_newlib_vm_memblock < 0)
 		{
 			// sceClibPrintf("sceKernelAllocMemBlockForVM failed\n");
+			printf("sceKernelAllocMemBlockForVM failed: %08x\n", _newlib_vm_size);
 		}
 	}
 	else

@@ -113,6 +113,10 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         {
             static char path[SCE_FIOS_PATH_MAX];
             snprintf(path, SCE_FIOS_PATH_MAX, CORE_SAVEFILES_DIR "/%s", gEmulator->_current_name.c_str());
+            if (!File::Exist(path))
+            {
+                File::MakeDirs(path);
+            }
             *(const char **)data = path;
             LogDebug("  return: %s", path);
         }

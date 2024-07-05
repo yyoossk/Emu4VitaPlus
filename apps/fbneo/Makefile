@@ -242,7 +242,7 @@ else ifeq ($(platform), vita)
 	ENDIANNESS_DEFINES := -DLSB_FIRST
 #	CFLAGS += -mfloat-abi=hard -fsingle-precision-constant
 	CFLAGS += -mfloat-abi=hard -fsingle-precision-constant \
-    -marm -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard -DVITA -D__vita__ \
+    -marm -mcpu=cortex-a9 -mfpu=neon -DVITA -D__vita__ \
     -mword-relocations -fno-optimize-sibling-calls \
     -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables \
     -ffast-math -ftree-vectorize -O3
@@ -557,8 +557,8 @@ ifeq ($(FASTMATH), 1)
 		# we got some evidence that -ffast-math is actually not safe for fbneo
 		# adding -frounding-math to fix arithmetic in neogeo_run.cpp, it might fix other stuff
 		# clang might need a minimum version for -frounding-math support
-		CFLAGS += -ffast-math -frounding-math
-		CXXFLAGS += -ffast-math -frounding-math
+		# CFLAGS += -ffast-math -frounding-math
+		# CXXFLAGS += -ffast-math -frounding-math
 	endif
 endif
 
@@ -610,11 +610,11 @@ CXXFLAGS += $(fpic) $(FBNEO_DEFINES)
 LDFLAGS += $(fpic)
 
 ifeq (,$(findstring msvc,$(platform)))
-	CFLAGS += -fforce-addr  \
-		-Wall -Wno-long-long -Wno-sign-compare -Wno-uninitialized -Wno-unused \
+	# CFLAGS += -fforce-addr  \
+	CFLAGS += 	-Wall -Wno-long-long -Wno-sign-compare -Wno-uninitialized -Wno-unused \
 		-Wno-sequence-point -Wno-strict-aliasing
-	CXXFLAGS += -fforce-addr \
-		-Wall -W -Wshadow -Wno-long-long -Wno-write-strings \
+	# CXXFLAGS += -fforce-addr \
+	CFLAGS += 	-Wall -W -Wshadow -Wno-long-long -Wno-write-strings \
 		-Wunknown-pragmas -Wundef -Wno-conversion -Wno-missing-braces -Wno-multichar \
 		-Wuninitialized -Wpointer-arith -Wno-inline -Wno-unused-value \
 		-Wno-sequence-point -Wno-extra -Wno-strict-aliasing
@@ -626,14 +626,14 @@ ifeq (,$(findstring msvc,$(platform)))
 endif
 
 # gcc specific flags
-ifeq ($(shell $(CC) -v 2>&1 | grep -c "gcc version"), 1)
-	CFLAGS += -ffloat-store
-	CXXFLAGS += -ffloat-store
-	ifeq ($(shell expr `$(CC) -dumpversion | cut -f1 -d.` \>= 5), 1)
-		CFLAGS += -finline-limit=1200 -fcheck-new
-		CXXFLAGS += -finline-limit=1200 -fcheck-new
-	endif
-endif
+# ifeq ($(shell $(CC) -v 2>&1 | grep -c "gcc version"), 1)
+# 	CFLAGS += -ffloat-store
+# 	CXXFLAGS += -ffloat-store
+# 	ifeq ($(shell expr `$(CC) -dumpversion | cut -f1 -d.` \>= 5), 1)
+# 		CFLAGS += -finline-limit=1200 -fcheck-new
+# 		CXXFLAGS += -finline-limit=1200 -fcheck-new
+# 	endif
+# endif
 
 PERL = perl$(EXE_EXT)
 M68KMAKE_EXE = m68kmake$(EXE_EXT)

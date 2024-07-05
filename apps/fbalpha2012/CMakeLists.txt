@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CORE_NAME "fbneo")
-set(CORE_SHORT_NAME "FBNeo")
-set(CORE_FULL_NAME "FinalBurn Neo")
+set(CORE_NAME "fbalpha2012")
+set(CORE_SHORT_NAME "FBA2012")
+set(CORE_FULL_NAME "FBA 2012")
 
 if(TARGET ${CORE_NAME}_build)
   return()
@@ -10,14 +10,14 @@ endif()
 
 project(${CORE_NAME})
 
-set(APP_NAME "${CORE_SHORT_NAME}_4Vita")
-set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/libretro-fbneo/src/burner/libretro)
+set(APP_NAME "Fba2012_4Vita")
+set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/fbalpha2012/svn-current/trunk)
 set(CORE_MAKEFILE_DIR ${CORE_DIR})
-set(CORE_MAKEFILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/Makefile)
+set(CORE_MAKEFILE_NAME makefile.libretro)
 set(SFO_TITLE_NAME "Emu4Vita++ (${CORE_FULL_NAME})")
-set(SFO_TITLE_ID "FBNEO4VIT")
+set(SFO_TITLE_ID "FBA20124V")
 
-set(CORE_ARGS platform=vita EXTERNAL_ZLIB=1 STATIC_LINKING=1)
+set(CORE_ARGS platform=vita EXTERNAL_ZLIB=1 HAVE_NEON=1)
 set(CORE_SOFTWARE "Arcade (CPS1 2 3, NEO GEO, PGM)")
 
 set(PRIVATE_PKG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pkg)
@@ -29,6 +29,5 @@ foreach(file ${PKG_FILES})
   list(APPEND PRIVATE_PKG_FILES FILE ${file} ${rel})
 endforeach()
 
-add_compile_definitions(FBNEO_BUILD ARC_BUILD FBA_BUILD CONSOLE="ARC" USE_CYCLONE INCLUDE_7Z_SUPPORT _7ZIP_PPMD_SUPPPORT _7ZIP_ST
-  LSB_FIRST USE_SPEEDHACKS NO_VIZ _LARGEFILE64_SOURCE=0 _FILE_OFFSET_BITS=32)
+add_compile_definitions(FBA_2012_BUILD ARC_BUILD FBA_BUILD CONSOLE="ARC")
 add_subdirectory(../../frontend ${CMAKE_CURRENT_BINARY_DIR}/frontend)

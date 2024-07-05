@@ -28,6 +28,8 @@ public:
     void Reset();
     void Run();
     void Show();
+    void Save();
+    void Load();
     void Lock();
     void Unlock();
     void SetSpeed(double speed);
@@ -59,6 +61,8 @@ private:
     void _OnHotkeyCtrlPortUp(Input *input);
     void _OnHotkeyCtrlPortDown(Input *input);
     void _OnHotkeyExitGame(Input *input);
+    std::string _SaveDirPath();
+    std::string _SaveNamePath(uint32_t id);
 
     std::string _current_name;
     retro_system_info _info;
