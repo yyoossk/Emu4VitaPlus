@@ -9,6 +9,7 @@
 #include "app.h"
 #include "defines.h"
 #include "utils.h"
+#include "config.h"
 
 #define MAIN_WINDOW_PADDING 10
 
@@ -68,9 +69,30 @@ App::App() : _index(0)
                 new CoreButton("PS1", {}),
                 new CoreButton("WSC", {{"Mednafen Wswan", "MednafenWswan"}}),
                 new CoreButton("NGP", {{"Mednafen NeoPop", "MednafenNgp"}}),
-                new CoreButton("ARC", {{"FBA Lite", "FBALite"}})};
+                new CoreButton("ARC", {{"FBA Lite", "FBALite"},
+                                       {"FBA 2012", "FBA2012"}})};
 
     SetInputHooks(&_input);
+
+    bool found = false;
+    for (size_t i = 0; i < _buttons.size(); i++)
+    {
+        CoreButton *button = _buttons[i];
+        for (size_t j = 0; j < button->_cores.size(); j++)
+        {
+            if (gConfig->last_core == button->_cores[j].boot_name)
+            {
+                _index = i;
+                button->_index = j;
+                found = true;
+                break;
+            }
+        }
+        if (found)
+        {
+            break;
+        }
+    }
 }
 
 App::~App()

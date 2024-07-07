@@ -12,17 +12,15 @@ set_property(
     PROPERTY IMPORTED_CONFIGURATIONS NOCONFIG)
 
 set(LIBRETRO_LIBRARY ${CORE_DIR}/${CORE_NAME}_libretro_vita.a)
-set_target_properties(${CORE_NAME} PROPERTIES IMPORTED_LOCATION_NOCONFIG
-    "${LIBRETRO_LIBRARY}")
+set_target_properties(${CORE_NAME} PROPERTIES IMPORTED_LOCATION "${LIBRETRO_LIBRARY}")
 add_dependencies(${CORE_NAME} ${CORE_NAME}_build)
 
-if(CORE_NAME STREQUAL "fbneo")
-    set(CMAKE_C_FLAGS " -marm -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard -DVITA -D__vita__ -O3")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLOG_LEVEL=${LOG_LEVEL}")
-    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fno-rtti")
-    set(CMAKE_EXE_LINKER_FLAGS "-Wl,-q")
-endif()
-
+# if(CORE_NAME STREQUAL "fbneo")
+# set(CMAKE_C_FLAGS " -marm -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard -DVITA -D__vita__ -O3")
+# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLOG_LEVEL=${LOG_LEVEL}")
+# set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fno-rtti")
+# set(CMAKE_EXE_LINKER_FLAGS "-Wl,-q")
+# endif()
 include_directories(
     source
     source/ui
@@ -50,7 +48,9 @@ add_compile_definitions(
     APP_DIR_NAME="${CORE_NAME}"
     APP_TITLE_NAME="${SFO_TITLE_NAME}"
     CORE_FULL_NAME="${CORE_FULL_NAME}"
-    SCE_LIBC_SIZE=0x400000)
+
+    # SCE_LIBC_SIZE=0x400000
+)
 
 set(ELF_NAME ${CORE_SHORT_NAME}.elf)
 set(EBOOT_NAME eboot_${CORE_SHORT_NAME}.bin)
@@ -101,7 +101,15 @@ target_link_libraries(
     SceFiber_stub)
 
 set(VITA_MAKE_FSELF_FLAGS "-a 0x2800000000000001")
-vita_create_self(${EBOOT_NAME} ${ELF_NAME} STRIPPED) # UNSAFE STRIPPED REL_OPTIMIZE)
+set(MEMSIZE "0x12800")
+vita_create_self(${EBOOT_NAME} ${ELF_NAME}
+    STRIPPED
+
+    # NOASLR
+    # MEMSIZE 0x12800
+    # UNSAFE
+    # REL_OPTIMIZE
+)
 
 if(NOT BUILD_SELF)
     set(VITA_MKSFOEX_FLAGS -d ATTRIBUTE2=12)

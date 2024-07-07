@@ -4,11 +4,13 @@
 #include "log.h"
 #include "app.h"
 #include "defines.h"
+#include "config.h"
 
 int main(int argc, char *const argv[])
 {
     File::MakeDirs(APP_DATA_DIR);
     gLog = new Log(APP_LOG_PATH);
+    gConfig = new Config();
     LogInfo("updated on " __DATE__ " " __TIME__);
     LogDebug("Start");
     {
@@ -19,11 +21,12 @@ int main(int argc, char *const argv[])
     LogDebug("Exit");
     LogDebug("gCorePath: %s", gCorePath);
 
+    delete gConfig;
     delete gLog;
 
     if (*gCorePath)
     {
-        char *const argv[] = {"arch", NULL};
+        char *argv[2] = {"arch", NULL};
         sceAppMgrLoadExec(gCorePath, argv, NULL);
     }
 

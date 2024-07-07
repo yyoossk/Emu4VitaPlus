@@ -43,9 +43,10 @@ void *_sbrk_r(struct _reent *reent, ptrdiff_t incr)
 
 void _init_vita_heap(void)
 {
+	// printf("_newlib_heap_size_user %08x\n", _newlib_heap_size_user);
+	// printf("_newlib_vm_size_user %08x\n", _newlib_vm_size_user);
 
 	int _newlib_vm_size = 0;
-	printf("_newlib_vm_size_user %08x", _newlib_vm_size_user);
 
 	if (&_newlib_vm_size_user != NULL)
 	{
@@ -55,7 +56,7 @@ void _init_vita_heap(void)
 		if (_newlib_vm_memblock < 0)
 		{
 			// sceClibPrintf("sceKernelAllocMemBlockForVM failed\n");
-			printf("sceKernelAllocMemBlockForVM failed: %08x\n", _newlib_vm_size);
+			// printf("sceKernelAllocMemBlockForVM failed: %08x\n", _newlib_vm_size);
 		}
 	}
 	else
@@ -74,7 +75,7 @@ void _init_vita_heap(void)
 	info.size = sizeof(SceKernelFreeMemorySizeInfo);
 	sceKernelGetFreeMemorySize(&info);
 
-	printf("sceKernelGetFreeMemorySize %x\n", info.size_user);
+	// printf("sceKernelGetFreeMemorySize %x\n", info.size_user);
 
 	if (&_newlib_heap_size_user != NULL)
 	{
@@ -98,9 +99,11 @@ void _init_vita_heap(void)
 	}
 	_newlib_heap_end = _newlib_heap_base + _newlib_heap_size;
 	_newlib_heap_cur = _newlib_heap_base;
-
+	// printf("_newlib_heap_cur: %08x _newlib_heap_end: %08x", _newlib_heap_cur, _newlib_heap_end);
 	return;
+
 failure:
+	// printf("_init_vita_heap failed");
 	_newlib_vm_memblock = 0;
 	_newlib_heap_memblock = 0;
 	_newlib_heap_base = 0;

@@ -4,6 +4,7 @@
 #include "utils.h"
 #include "file.h"
 #include "app.h"
+#include "config.h"
 
 CoreButton::CoreButton(std::string name, std::vector<CoreName> cores)
     : _name(std::move(name)),
@@ -105,6 +106,7 @@ void CoreButton::_BootCore()
         return;
     }
 
+    gConfig->last_core = _cores[_index].boot_name;
     snprintf(gCorePath, SCE_FIOS_PATH_MAX, "app0:eboot_%s.self", _cores[_index].boot_name.c_str());
     gRunning = false;
 }

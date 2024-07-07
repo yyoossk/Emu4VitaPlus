@@ -23,7 +23,8 @@ set(CORE_SHORTS
     VBANext
     Gambatte
     FBALite
-    FBNeo
+
+    # FBNeo
     FBA2012
     Snes9x2002
     Snes9x2005
@@ -43,7 +44,8 @@ set(CORES
     vba_next
     gambatte
     fba_lite
-    fbneo
+
+    # fbneo
     fbalpha2012
     snes9x2002
     snes9x2005
@@ -83,11 +85,7 @@ include_directories(
     ../deps/libvita2d/libvita2d/include
     ../deps/simpleini)
 
-file(GLOB SRC
-    source/*.cpp
-    source/ui/*.cpp
-    source/audio/*.cpp
-    ../share/source/*.cpp)
+file(GLOB SRC source/*.cpp)
 
 add_compile_definitions(
     APP_NAME_STR="${APP_NAME}"

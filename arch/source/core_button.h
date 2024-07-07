@@ -11,8 +11,12 @@ struct CoreName
     std::string boot_name;
 };
 
+class App;
+
 class CoreButton
 {
+    friend class App;
+
 public:
     CoreButton(std::string name, std::vector<CoreName> cores);
     virtual ~CoreButton();
