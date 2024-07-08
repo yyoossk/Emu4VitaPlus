@@ -101,7 +101,7 @@ target_link_libraries(
     SceFiber_stub)
 
 set(VITA_MAKE_FSELF_FLAGS "-a 0x2800000000000001")
-set(MEMSIZE "0x12800")
+
 vita_create_self(${EBOOT_NAME} ${ELF_NAME}
     STRIPPED
 

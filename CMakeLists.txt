@@ -20,8 +20,7 @@ set(CORES
     vba_next
     gambatte
     fba_lite
-
-    # fbneo
+    fbneo
     fbalpha2012
     snes9x2002
     snes9x2005
@@ -51,13 +50,7 @@ if(BUILD STREQUAL "Arch")
     set(BUILD_SELF ON)
 endif()
 
-project(" Emu4Vita++ ")
-
-set(CMAKE_C_FLAGS " -marm -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard \
--DVITA -D__vita__ \
--mword-relocations -fno-optimize-sibling-calls \
--fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables \
--ffast-math -ftree-vectorize -O3 ")
+project("Emu4Vita++")
 
 if(WITH_LOG)
     set(LOG_LEVEL LOG_LEVEL_DEBUG)
@@ -65,15 +58,32 @@ else()
     set(LOG_LEVEL LOG_LEVEL_INFO)
 endif()
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLOG_LEVEL=${LOG_LEVEL}")
+set(COMMON_CMAKE_C_FLAGS "-marm -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard \
+-DVITA -D__vita__ \
+-mword-relocations -fno-optimize-sibling-calls -fsingle-precision-constant \
+-fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables \
+-ffast-math -ftree-vectorize -O3 \
+-DLOG_LEVEL=${LOG_LEVEL}")
+set(COMMON_CMAKE_CXX_FLAGS "${COMMON_CMAKE_C_FLAGS} -fno-rtti -std=gnu++17 -fno-exceptions")
+set(COMMON_CMAKE_EXE_LINKER_FLAGS "-Wl,-q,-no-enum-size-warning,--as-needed") # ,--no-undefined,--as-needed,--hash-style=gnu")
 
-# if(BUILD STREQUAL "fbneo")
-# set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fno-rtti")
-# else()
-set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fno-rtti -fno-exceptions -std=gnu++17")
+set(FBNEO_CMAKE_C_FLAGS "-mfloat-abi=hard -fsingle-precision-constant -DLOG_LEVEL=${LOG_LEVEL}")
+set(FBNEO_CMAKE_CXX_FLAGS "${FBNEO_CMAKE_C_FLAGS} -fno-rtti -fpermissive")
+set(FBNEO_CMAKE_EXE_LINKER_FLAGS "-Wl,-q")
 
-# endif()
-set(CMAKE_EXE_LINKER_FLAGS " -Wl,-q,-no-enum-size-warning,--as-needed ") # ,--no-undefined,--as-needed,--hash-style=gnu")
+macro(SET_FLAG core)
+    if(${core} STREQUAL "fbneo")
+        set(CMAKE_C_FLAGS ${FBNEO_CMAKE_C_FLAGS})
+        set(CMAKE_CXX_FLAGS ${FBNEO_CMAKE_CXX_FLAGS})
+        set(CMAKE_EXE_LINKER_FLAGS ${FBNEO_CMAKE_EXE_LINKER_FLAGS})
+    else()
+        set(CMAKE_C_FLAGS ${COMMON_CMAKE_C_FLAGS})
+        set(CMAKE_CXX_FLAGS ${COMMON_CMAKE_CXX_FLAGS})
+        set(CMAKE_EXE_LINKER_FLAGS ${COMMON_CMAKE_EXE_LINKER_FLAGS})
+    endif()
+endmacro()
+
+SET_FLAG(BUILD)
 
 set(OUT_PATH "${CMAKE_BINARY_DIR}/out")
 file(MAKE_DIRECTORY ${OUT_PATH})
@@ -86,10 +96,14 @@ set(SFO_APP_VER "00.01")
 
 foreach(core ${CORES})
     if(BUILD STREQUAL "ALL" OR BUILD STREQUAL "Arch" OR BUILD STREQUAL ${core})
+        SET_FLAG(core)
         add_subdirectory(apps/${core})
     endif()
 endforeach()
 
 if(BUILD STREQUAL "ALL" OR BUILD STREQUAL "Arch")
+    set(CMAKE_C_FLAGS ${COMMON_CMAKE_C_FLAGS})
+    set(CMAKE_CXX_FLAGS ${COMMON_CMAKE_CXX_FLAGS})
+    set(CMAKE_EXE_LINKER_FLAGS ${COMMON_CMAKE_EXE_LINKER_FLAGS})
     add_subdirectory(arch)
 endif()
