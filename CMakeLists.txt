@@ -67,7 +67,14 @@ set(COMMON_CMAKE_C_FLAGS "-marm -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard \
 set(COMMON_CMAKE_CXX_FLAGS "${COMMON_CMAKE_C_FLAGS} -fno-rtti -std=gnu++17 -fno-exceptions")
 set(COMMON_CMAKE_EXE_LINKER_FLAGS "-Wl,-q,-no-enum-size-warning,--as-needed") # ,--no-undefined,--as-needed,--hash-style=gnu")
 
-set(FBNEO_CMAKE_C_FLAGS "-mfloat-abi=hard -fsingle-precision-constant -DLOG_LEVEL=${LOG_LEVEL}")
+set(FBNEO_CMAKE_C_FLAGS "-DLOG_LEVEL=${LOG_LEVEL} \
+-mfloat-abi=hard -fsingle-precision-constant \
+-ffloat-store \
+-finline-limit=1200 \
+-fcheck-new \
+-ffast-math \
+-frounding-math \
+")
 set(FBNEO_CMAKE_CXX_FLAGS "${FBNEO_CMAKE_C_FLAGS} -fno-rtti -fpermissive")
 set(FBNEO_CMAKE_EXE_LINKER_FLAGS "-Wl,-q")
 

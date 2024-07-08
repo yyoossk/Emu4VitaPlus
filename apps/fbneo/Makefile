@@ -234,9 +234,9 @@ else ifneq (,$(filter $(platform), ps3 psl1ght))
 # Vita
 else ifeq ($(platform), vita)
 	TARGET := $(TARGET_NAME)_libretro_$(platform).a
-	CC = arm-vita-eabi-gcc$(EXE_EXT)
+	CC = ccache arm-vita-eabi-gcc$(EXE_EXT)
 	CC_AS = arm-vita-eabi-gcc$(EXE_EXT)
-	CXX = arm-vita-eabi-g++$(EXE_EXT)
+	CXX = ccache arm-vita-eabi-g++$(EXE_EXT)
 	AR = arm-vita-eabi-ar$(EXE_EXT)
 	PLATFORM_DEFINES += -DVITA
 	ENDIANNESS_DEFINES := -DLSB_FIRST
@@ -258,7 +258,7 @@ else ifeq ($(platform), vita)
 	EXTERNAL_ZLIB = 1
 	STATIC_LINKING = 1
 	USE_CYCLONE = 1
-    HAVE_NEON = 1
+    # HAVE_NEON = 1
 
 # CTR (3DS)
 else ifeq ($(platform), ctr)
@@ -557,8 +557,8 @@ ifeq ($(FASTMATH), 1)
 		# we got some evidence that -ffast-math is actually not safe for fbneo
 		# adding -frounding-math to fix arithmetic in neogeo_run.cpp, it might fix other stuff
 		# clang might need a minimum version for -frounding-math support
-		# CFLAGS += -ffast-math -frounding-math
-		# CXXFLAGS += -ffast-math -frounding-math
+		CFLAGS += -ffast-math -frounding-math
+		CXXFLAGS += -ffast-math -frounding-math
 	endif
 endif
 
@@ -626,14 +626,14 @@ ifeq (,$(findstring msvc,$(platform)))
 endif
 
 # gcc specific flags
-# ifeq ($(shell $(CC) -v 2>&1 | grep -c "gcc version"), 1)
-# 	CFLAGS += -ffloat-store
-# 	CXXFLAGS += -ffloat-store
-# 	ifeq ($(shell expr `$(CC) -dumpversion | cut -f1 -d.` \>= 5), 1)
-# 		CFLAGS += -finline-limit=1200 -fcheck-new
-# 		CXXFLAGS += -finline-limit=1200 -fcheck-new
-# 	endif
-# endif
+ifeq ($(shell $(CC) -v 2>&1 | grep -c "gcc version"), 1)
+	CFLAGS += -ffloat-store
+	CXXFLAGS += -ffloat-store
+	ifeq ($(shell expr `$(CC) -dumpversion | cut -f1 -d.` \>= 5), 1)
+		CFLAGS += -finline-limit=1200 -fcheck-new
+		CXXFLAGS += -finline-limit=1200 -fcheck-new
+	endif
+endif
 
 PERL = perl$(EXE_EXT)
 M68KMAKE_EXE = m68kmake$(EXE_EXT)
