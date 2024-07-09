@@ -63,6 +63,14 @@ public:
         return _buf[_index];
     };
 
+    void SetFilter(SceGxmTextureFilter filter)
+    {
+        for (auto &buf : _buf)
+        {
+            vita2d_texture_set_filters(buf, filter, filter);
+        }
+    }
+
 private:
     SceKernelLwMutexWork _mutex;
     size_t _width, _height;

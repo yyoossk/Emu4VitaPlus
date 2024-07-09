@@ -53,11 +53,14 @@ url = https://github.com/libretro/libretro-common
 path = deps/simpleini
 url = https://github.com/brofield/simpleini
 [submodule "deps/7-Zip"]
-	path = deps/7-Zip
-	url = https://github.com/mcmilk/7-Zip.git
+path = deps/7-Zip
+url = https://github.com/mcmilk/7-Zip.git
 [submodule "cores/libretro-fbneo"]
-	path = cores/libretro-fbneo
-	url = https://github.com/libretro/FBNeo.git
+path = cores/libretro-fbneo
+url = https://github.com/libretro/FBNeo.git
 [submodule "cores/fbalpha2012"]
-	path = cores/fbalpha2012
-	url = https://github.com/libretro/fbalpha2012.git
+path = cores/fbalpha2012
+url = https://github.com/libretro/fbalpha2012.git
+[submodule "cores/mgba"]
+	path = cores/mgba
+	url = https://github.com/libretro/mgba.git

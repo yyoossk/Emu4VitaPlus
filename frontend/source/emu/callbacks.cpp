@@ -199,6 +199,7 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
             gEmulator->_texture_buf = nullptr;
         }
         gEmulator->_texture_buf = new TextureBuf(gEmulator->_video_pixel_format, width, height);
+        gEmulator->_texture_buf->SetFilter(gConfig->graphics[GRAPHICS_SMOOTH] ? SCE_GXM_TEXTURE_FILTER_LINEAR : SCE_GXM_TEXTURE_FILTER_POINT);
         gEmulator->_SetVideoSize(width, height);
         gEmulator->_graphics_config_changed = false;
 

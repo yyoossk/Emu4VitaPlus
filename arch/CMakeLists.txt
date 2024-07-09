@@ -20,11 +20,11 @@ set(BUILD_SELF ON)
 
 set(CORE_SHORTS
     gpSP
+    mGBA
     VBANext
     Gambatte
     FBALite
-
-    # FBNeo
+    FBNeo
     FBA2012
     Snes9x2002
     Snes9x2005
@@ -41,11 +41,11 @@ set(CORE_SHORTS
 
 set(CORES
     gpsp
+    mgba
     vba_next
     gambatte
     fba_lite
-
-    # fbneo
+    fbneo
     fbalpha2012
     snes9x2002
     snes9x2005

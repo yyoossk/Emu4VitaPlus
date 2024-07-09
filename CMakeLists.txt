@@ -17,6 +17,7 @@ endif()
 
 set(CORES
     gpsp
+    mgba
     vba_next
     gambatte
     fba_lite
@@ -58,39 +59,14 @@ else()
     set(LOG_LEVEL LOG_LEVEL_INFO)
 endif()
 
-set(COMMON_CMAKE_C_FLAGS "-marm -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard \
+set(CMAKE_C_FLAGS "-marm -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard \
 -DVITA -D__vita__ \
 -mword-relocations -fno-optimize-sibling-calls -fsingle-precision-constant \
 -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables \
 -ffast-math -ftree-vectorize -O3 \
 -DLOG_LEVEL=${LOG_LEVEL}")
-set(COMMON_CMAKE_CXX_FLAGS "${COMMON_CMAKE_C_FLAGS} -fno-rtti -std=gnu++17 -fno-exceptions")
-set(COMMON_CMAKE_EXE_LINKER_FLAGS "-Wl,-q,-no-enum-size-warning,--as-needed") # ,--no-undefined,--as-needed,--hash-style=gnu")
-
-set(FBNEO_CMAKE_C_FLAGS "-DLOG_LEVEL=${LOG_LEVEL} \
--mfloat-abi=hard -fsingle-precision-constant \
--ffloat-store \
--finline-limit=1200 \
--fcheck-new \
--ffast-math \
--frounding-math \
-")
-set(FBNEO_CMAKE_CXX_FLAGS "${FBNEO_CMAKE_C_FLAGS} -fno-rtti -fpermissive")
-set(FBNEO_CMAKE_EXE_LINKER_FLAGS "-Wl,-q")
-
-macro(SET_FLAG core)
-    if(${core} STREQUAL "fbneo")
-        set(CMAKE_C_FLAGS ${FBNEO_CMAKE_C_FLAGS})
-        set(CMAKE_CXX_FLAGS ${FBNEO_CMAKE_CXX_FLAGS})
-        set(CMAKE_EXE_LINKER_FLAGS ${FBNEO_CMAKE_EXE_LINKER_FLAGS})
-    else()
-        set(CMAKE_C_FLAGS ${COMMON_CMAKE_C_FLAGS})
-        set(CMAKE_CXX_FLAGS ${COMMON_CMAKE_CXX_FLAGS})
-        set(CMAKE_EXE_LINKER_FLAGS ${COMMON_CMAKE_EXE_LINKER_FLAGS})
-    endif()
-endmacro()
-
-SET_FLAG(BUILD)
+set(CMAKE_CXX_FLAGS "${COMMON_CMAKE_C_FLAGS} -fno-rtti -std=gnu++17 -fno-exceptions")
+set(CMAKE_EXE_LINKER_FLAGS "-Wl,-q,-no-enum-size-warning,--as-needed") # ,--no-undefined,--as-needed,--hash-style=gnu")
 
 set(OUT_PATH "${CMAKE_BINARY_DIR}/out")
 file(MAKE_DIRECTORY ${OUT_PATH})
@@ -103,14 +79,10 @@ set(SFO_APP_VER "00.01")
 
 foreach(core ${CORES})
     if(BUILD STREQUAL "ALL" OR BUILD STREQUAL "Arch" OR BUILD STREQUAL ${core})
-        SET_FLAG(core)
         add_subdirectory(apps/${core})
     endif()
 endforeach()
 
 if(BUILD STREQUAL "ALL" OR BUILD STREQUAL "Arch")
-    set(CMAKE_C_FLAGS ${COMMON_CMAKE_C_FLAGS})
-    set(CMAKE_CXX_FLAGS ${COMMON_CMAKE_CXX_FLAGS})
-    set(CMAKE_EXE_LINKER_FLAGS ${COMMON_CMAKE_EXE_LINKER_FLAGS})
     add_subdirectory(arch)
 endif()
