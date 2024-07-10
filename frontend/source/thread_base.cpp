@@ -72,6 +72,11 @@ bool ThreadBase::Start(void *data, SceSize size)
 void ThreadBase::Stop(bool force)
 {
     LogFunctionName;
+    if (_thread_id == -1)
+    {
+        return;
+    }
+
     Signal();
     _keep_running = false;
     if (force)

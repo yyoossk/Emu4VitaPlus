@@ -5,6 +5,8 @@
 #include "utils.h"
 
 #define BLOCK_SIZE 0x400
+//"REWD"
+#define REWIND_BLOCK_MAGIC 0x44574552
 
 enum BlockType
 {
@@ -28,10 +30,13 @@ struct RewindBlock
 {
     BlockType type;
     uint32_t index;
-    RewindContent *buf;
+    RewindContent *content;
     uint32_t size;
 
-    bool IsValid();
+    bool IsValid()
+    {
+        return content && content->magic == REWIND_BLOCK_MAGIC && content->index == index;
+    }
 };
 
 struct RewindFullContent : RewindContent
@@ -78,12 +83,25 @@ public:
     void WriteEnd(size_t size)
     {
         _current += size;
-    };
+    }
+
+    bool ShouldSaveFull()
+    {
+        size_t dist = _current - _last_full;
+        if (dist < 0)
+        {
+            dist = _total_bytes - dist;
+        }
+        return dist * 2 > _total_bytes;
+    }
+
+    void SetLastFull(uint8_t *last_full) { _last_full = last_full - _data; }
 
 private:
     uint8_t *_data;
     size_t _total_bytes;
     size_t _current;
+    size_t _last_full;
 };
 
 class RewindBlocks
@@ -93,7 +111,6 @@ public:
         : _total(total)
     {
         _blocks = new RewindBlock[total];
-        Reset();
     };
 
     virtual ~RewindBlocks()
@@ -105,6 +122,11 @@ public:
     {
         _current = _total;
         memset(_blocks, 0, _total * sizeof(RewindBlock));
+    }
+
+    RewindBlock *Current()
+    {
+        return _current == _total ? nullptr : (_blocks + _current);
     }
 
     RewindBlock *Next()
@@ -141,13 +163,20 @@ private:
     void _SaveState();
     void _Rewind();
 
-    bool _SaveFullState();
+    bool _SaveFullState(bool from_tmp = false);
+    bool _SaveDiffState();
+
+    bool _Serialize(void *data, size_t size);
+    bool _UnSerialize(void *data, size_t size);
 
     bool _rewinding;
     size_t _state_size;
     size_t _aligned_state_size;
     size_t _threshold_size;
     int _next_time;
+    uint32_t _count;
+    uint8_t *_tmp_buf;
 
     RewindBlocks _blocks{BLOCK_SIZE};
+    RewindContens *_contens;
 };

@@ -4,9 +4,9 @@
 ## Windows
 * 安装 [msys2](https://www.msys2.org/) 或 [devkitPro](https://github.com/devkitPro/installer/releases)
 * 安装 [vitasdk](https://vitasdk.org/)
-* 安装 cmake, python
+* 安装 cmake, python, ccache(可选)
   
-  `pacman -S cmake python python-pip`
+  `pacman -S cmake python python-pip [ccache]`
 
 * 安装 [openpyxl](https://pypi.org/project/openpyxl/)
 

@@ -53,6 +53,7 @@ void Emulator::_OnPsButton(Input *input)
     gVideo->Lock();
     gStatus = APP_STATUS_SHOW_UI_IN_GAME;
     gVideo->Unlock();
+    Save();
     LogDebug("_OnPsButton end");
 }
 

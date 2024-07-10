@@ -63,10 +63,11 @@ App::App() : _index(0)
                                       {"PicoDrive", "PicoDrive"}}),
                 new CoreButton("GBA", {{"gpSP", "gpSP"},
                                        {"VBA Next", "VBANext"}}),
-                new CoreButton("GBC", {{"Gambatte", "Gambatte"}}),
+                new CoreButton("GBC", {{"Gambatte", "Gambatte"},
+                                       {"mGBA", "mGBA"}}),
                 new CoreButton("PCE", {{"Mednafen PCE Fast", "MednafenPCEFast"},
                                        {"Mednafen SuperGrafx", "MednafenPCESuperGrafx"}}),
-                new CoreButton("PS1", {}),
+                new CoreButton("PS1", {{"PCSX ReARMed", "PCSXReARMed"}}),
                 new CoreButton("WSC", {{"Mednafen Wswan", "MednafenWswan"}}),
                 new CoreButton("NGP", {{"Mednafen NeoPop", "MednafenNgp"}}),
                 new CoreButton("ARC", {{"FBA Lite", "FBALite"},
@@ -76,7 +77,7 @@ App::App() : _index(0)
     SetInputHooks(&_input);
 
     bool found = false;
-    for (size_t i = 0; i < _buttons.size(); i++)
+    for (size_t i = 0; i < _buttons.size() && !found; i++)
     {
         CoreButton *button = _buttons[i];
         for (size_t j = 0; j < button->_cores.size(); j++)
@@ -88,10 +89,6 @@ App::App() : _index(0)
                 found = true;
                 break;
             }
-        }
-        if (found)
-        {
-            break;
         }
     }
 }

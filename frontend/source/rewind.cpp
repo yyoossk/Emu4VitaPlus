@@ -7,20 +7,17 @@
 #include "utils.h"
 #include "emulator.h"
 
-//"REWD"
-#define REWIND_BLOCK_MAGIC 0x44574552
 #define MIN_STATE_RATE 5
 #define NEXT_STATE_PERIOD 50000
-
-bool RewindBlock::IsValid()
-{
-    return buf && buf->magic == REWIND_BLOCK_MAGIC && buf->index == index;
-}
+#define THRESHOLD_RATE 0.1
 
 Rewind::Rewind()
     : ThreadBase(_RewindThread),
       _rewinding(false),
-      _next_time(0)
+      _next_time(0),
+      _contens(nullptr),
+      _count(0),
+      _tmp_buf(nullptr)
 {
     LogFunctionName;
 }
@@ -34,6 +31,9 @@ Rewind::~Rewind()
 bool Rewind::Init()
 {
     LogFunctionName;
+
+    Deinit();
+
     _state_size = retro_serialize_size();
     _aligned_state_size = ALIGN_UP_10H(_state_size);
 
@@ -45,12 +45,33 @@ bool Rewind::Init()
         return false;
     }
 
+    _threshold_size = _state_size * THRESHOLD_RATE;
+    _tmp_buf = new uint8_t[_state_size];
+    _contens = new RewindContens(buf_size);
+    StopRewind();
+
+    Start();
+
     return true;
 }
 
 void Rewind::Deinit()
 {
     LogFunctionName;
+    Stop();
+
+    _blocks.Reset();
+    if (_contens != nullptr)
+    {
+        delete _contens;
+        _contens = nullptr;
+    }
+
+    if (_tmp_buf != nullptr)
+    {
+        delete[] _tmp_buf;
+        _tmp_buf = nullptr;
+    }
 }
 
 void Rewind::StartRewind()
@@ -85,14 +106,65 @@ int Rewind::_RewindThread(SceSize args, void *argp)
 
 void Rewind::_SaveState()
 {
+    if (_blocks.Current() == nullptr || _contens->ShouldSaveFull())
+    {
+        _SaveFullState(false);
+    }
+    else if (!_SaveDiffState())
+    {
+        _SaveFullState(true);
+    }
 }
 
 void Rewind::_Rewind()
 {
 }
 
-bool Rewind::_SaveFullState()
+bool Rewind::_SaveDiffState()
 {
-    // RewindBlock *block = _blocks.WriteBegin(1);
-    return true;
+    RewindBlock *current = _blocks.Current();
+    _Serialize(_tmp_buf, _state_size);
+    RewindBlock *full_block = current->type == BLOCK_FULL ? current : ((RewindDiffContent *)current->content)->full_block;
+}
+
+bool Rewind::_SaveFullState(bool from_tmp)
+{
+    RewindBlock *block = _blocks.Next();
+    block->type = BLOCK_FULL;
+    block->index = _count;
+    block->size = sizeof(RewindFullContent) + _aligned_state_size;
+    RewindFullContent *content = (RewindFullContent *)_contens->WriteBegin(block->size);
+    block->content = content;
+
+    content->magic = REWIND_BLOCK_MAGIC;
+    content->index = _count;
+    _count++;
+
+    _contens->SetLastFull((uint8_t *)content);
+
+    if (from_tmp)
+    {
+        memcpy(content->buf, _tmp_buf, _state_size);
+        return true;
+    }
+    else
+    {
+        return _Serialize(content->buf, _state_size);
+    }
+}
+
+bool Rewind::_Serialize(void *data, size_t size)
+{
+    gEmulator->Lock();
+    bool result = retro_serialize(data, size);
+    gEmulator->Unlock();
+    return result;
+}
+
+bool Rewind::_UnSerialize(void *data, size_t size)
+{
+    gEmulator->Lock();
+    bool result = retro_unserialize(data, size);
+    gEmulator->Unlock();
+    return result;
 }
