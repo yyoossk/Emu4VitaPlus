@@ -1,8 +1,9 @@
-<!-- [English](README.en.md) -->
+[For English](README.en.md)
 
 # 编译前准备
 ## Windows
 * 安装 [msys2](https://www.msys2.org/) 或 [devkitPro](https://github.com/devkitPro/installer/releases)
+#### 进入 msys
 * 安装 [vitasdk](https://vitasdk.org/)
 * 安装 cmake, python, ccache(可选)
   
@@ -23,10 +24,17 @@ cd build
 cmake ../
 make
 ```
-编译带日志的版本
+编译带日志的版本:
 ```bash
 mkdir build-debug
 cd build-debug
 cmake ../ -DWITH_LOG=ON
+make
+```
+编译独立内核的vpk:
+```bash
+mkdir build-gpsp
+cd build-gpsp
+cmake ../ -DBUILD=gpsp
 make
 ```
