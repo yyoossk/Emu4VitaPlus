@@ -7,6 +7,7 @@
 #include "delay.h"
 #include "input.h"
 #include "archive_manager.h"
+#include "rewind.h"
 
 struct Rect
 {
@@ -87,6 +88,7 @@ private:
     SceUID _video_semaid;
 
     ArchiveManager _archive_manager{DEFAULT_CACHE_SIZE};
+    RewindManager _rewind_manager;
 };
 
 extern Emulator *gEmulator;

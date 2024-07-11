@@ -118,6 +118,11 @@ bool Emulator::LoadGame(const char *path, const char *entry_name, uint32_t crc32
         gConfig->Save();
 
         Load();
+
+        if (gConfig->rewind)
+        {
+            _rewind_manager.Init();
+        }
     }
     else
     {
@@ -138,6 +143,7 @@ void Emulator::UnloadGame()
 {
     LogFunctionName;
     Lock();
+    _rewind_manager.Deinit();
     gStateManager->states[0]->Save();
     Save();
     retro_unload_game();

@@ -85,23 +85,28 @@ public:
         _current += size;
     }
 
-    bool ShouldSaveFull()
+    size_t GetDistance(uint8_t *b)
     {
-        size_t dist = _current - _last_full;
-        if (dist < 0)
+        size_t pos = b - _data;
+        if (_current >= pos)
         {
-            dist = _total_bytes - dist;
+            return _current - pos;
         }
-        return dist * 2 > _total_bytes;
+        else
+        {
+            return _total_bytes + pos - _current;
+        }
     }
 
-    void SetLastFull(uint8_t *last_full) { _last_full = last_full - _data; }
+    size_t GetSize()
+    {
+        return _total_bytes;
+    }
 
 private:
     uint8_t *_data;
     size_t _total_bytes;
     size_t _current;
-    size_t _last_full;
 };
 
 class RewindBlocks
@@ -147,11 +152,11 @@ private:
     size_t _current;
 };
 
-class Rewind : public ThreadBase
+class RewindManager : public ThreadBase
 {
 public:
-    Rewind();
-    virtual ~Rewind();
+    RewindManager();
+    virtual ~RewindManager();
     static int _RewindThread(SceSize args, void *argp);
 
     bool Init();
@@ -163,8 +168,8 @@ private:
     void _SaveState();
     void _Rewind();
 
-    bool _SaveFullState(bool from_tmp = false);
-    bool _SaveDiffState();
+    bool _SaveFullState(RewindBlock *block, bool from_tmp = false);
+    bool _SaveDiffState(RewindBlock *block);
 
     bool _Serialize(void *data, size_t size);
     bool _UnSerialize(void *data, size_t size);
@@ -176,6 +181,7 @@ private:
     int _next_time;
     uint32_t _count;
     uint8_t *_tmp_buf;
+    RewindBlock *_last_full_block;
 
     RewindBlocks _blocks{BLOCK_SIZE};
     RewindContens *_contens;

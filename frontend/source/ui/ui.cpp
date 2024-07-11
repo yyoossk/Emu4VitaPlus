@@ -38,6 +38,7 @@ static void ExitGame()
 {
     LogFunctionName;
     gEmulator->UnloadGame();
+    gStatus = APP_STATUS_SHOW_UI;
 }
 
 static void ExitApp()
@@ -249,11 +250,11 @@ void Ui::SetInputHooks()
     _input.SetKeyUpCallback(SCE_CTRL_L1, std::bind(&Ui::_OnKeyL2, this, &_input));
     _input.SetKeyUpCallback(SCE_CTRL_R1, std::bind(&Ui::_OnKeyR2, this, &_input));
 
-    _tabs[_tab_index]->SetInputHooks(&_input);
     while (!_tabs[_tab_index]->Visable())
     {
         _OnKeyL2(&_input);
     }
+    _tabs[_tab_index]->SetInputHooks(&_input);
 }
 
 void Ui::_OnKeyL2(Input *input)
@@ -294,6 +295,8 @@ void Ui::Run()
     static APP_STATUS last_status = APP_STATUS_SHOW_UI;
     if (gStatus != last_status)
     {
+        LogDebug("  status change to: %d last status: %d", gStatus, last_status);
+        LogDebug("  _tab_index: %d", _tab_index);
         gVideo->Lock();
 
         _tabs[TAB_INDEX_STATE]->SetVisable(gStatus == APP_STATUS_SHOW_UI_IN_GAME);
@@ -303,6 +306,7 @@ void Ui::Run()
         system_tab->SetItemVisable(0, gStatus == APP_STATUS_SHOW_UI_IN_GAME);
         system_tab->SetItemVisable(1, gStatus == APP_STATUS_SHOW_UI_IN_GAME);
         system_tab->SetItemVisable(2, gStatus == APP_STATUS_SHOW_UI_IN_GAME);
+
         if (gStatus == APP_STATUS_SHOW_UI_IN_GAME)
         {
             system_tab->SetIndex(0);
@@ -310,12 +314,13 @@ void Ui::Run()
         }
         else
         {
+            _tab_index = TAB_INDEX_BROWSER;
             _input.UnsetKeyUpCallback(SCE_CTRL_PSBUTTON);
         }
 
-        gVideo->Unlock();
-
         SetInputHooks();
+
+        gVideo->Unlock();
 
         last_status = gStatus;
     }
