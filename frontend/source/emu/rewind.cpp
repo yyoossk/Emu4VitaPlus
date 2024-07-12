@@ -24,7 +24,8 @@ RewindManager::RewindManager()
       _contens(nullptr),
       _count(0),
       _tmp_buf(nullptr),
-      _last_full_block(nullptr)
+      _last_full_block(nullptr),
+      _delay_count(0)
 {
     LogFunctionName;
 }
@@ -42,13 +43,13 @@ bool RewindManager::Init()
     Deinit();
 
     _state_size = retro_serialize_size();
-    _aligned_state_size = ALIGN_UP_10H(_state_size);
+    _full_content_size = ALIGN_UP_10H(sizeof(RewindFullContent) + _state_size);
 
     size_t buf_size = gConfig->rewind_buf_size << 20;
-    if (buf_size < _aligned_state_size * MIN_STATE_RATE)
+    if (buf_size < _full_content_size * MIN_STATE_RATE)
     {
-        size_t min_size = _aligned_state_size * MIN_STATE_RATE >> 20;
-        LogError(" the buffer size is too small, minimum required is %dMB", min_size);
+        size_t min_size = (_full_content_size * MIN_STATE_RATE) >> 20;
+        LogError("the buffer size is too small, minimum required is %dMB", min_size);
         return false;
     }
 
@@ -58,7 +59,8 @@ bool RewindManager::Init()
     StopRewind();
 
     Start();
-
+    LogDebug("  _contens.size: %08x _state_size: %08x _full_content_size:%08x _threshold_size:%08x",
+             buf_size, _state_size, _full_content_size, _threshold_size);
     return true;
 }
 
@@ -99,7 +101,13 @@ int RewindManager::_RewindThread(SceSize args, void *argp)
     {
         if (gStatus != APP_STATUS_RUN_GAME)
         {
-            sceKernelDelayThread(500000);
+            sceKernelDelayThread(20000);
+            continue;
+        }
+
+        if (rewind->_delay_count < 100)
+        {
+            rewind->_delay_count++;
             continue;
         }
 
@@ -160,15 +168,7 @@ bool RewindManager::_SaveDiffState(RewindBlock *block)
 
     RewindDiffContent *content = (RewindDiffContent *)_contens->WriteBegin(_threshold_size);
     DiffArea *areas = content->areas;
-
-    block->type = BLOCK_DIFF;
-    block->index = _count;
-    block->content = content;
-    content->magic = REWIND_BLOCK_MAGIC;
-    content->index = _count;
-    content->full_block = _last_full_block;
     content->num = 0;
-    _count++;
 
     for (; offset < chunk_size; offset += DIFF_STEP)
     {
@@ -223,7 +223,17 @@ bool RewindManager::_SaveDiffState(RewindBlock *block)
         return false;
     }
 
+    block->type = BLOCK_DIFF;
+    block->index = _count;
+    block->content = content;
     block->size = ALIGN_UP_10H(diff_size);
+
+    content->magic = REWIND_BLOCK_MAGIC;
+    content->index = _count++;
+    content->full_block = _last_full_block;
+
+    _contens->WriteEnd(block->size);
+
     uint8_t *buf = (uint8_t *)content + sizeof(RewindDiffContent) + content->num * sizeof(DiffArea);
     for (size_t i = 0; i < content->num; i++)
     {
@@ -231,20 +241,14 @@ bool RewindManager::_SaveDiffState(RewindBlock *block)
         buf += areas[i].size;
     }
 
+    // LogDebug("  _SaveDiffState %08x %08x %08x", block->content, block->size, content->full_block);
+
     return true;
 }
 
 bool RewindManager::_SaveFullState(RewindBlock *block, bool from_tmp)
 {
-    block->type = BLOCK_FULL;
-    block->index = _count;
-    block->size = sizeof(RewindFullContent) + _aligned_state_size;
-    RewindFullContent *content = (RewindFullContent *)_contens->WriteBegin(block->size);
-    block->content = content;
-
-    content->magic = REWIND_BLOCK_MAGIC;
-    content->index = _count;
-    _count++;
+    RewindFullContent *content = (RewindFullContent *)_contens->WriteBegin(_full_content_size);
 
     bool result = true;
     if (from_tmp)
@@ -258,8 +262,19 @@ bool RewindManager::_SaveFullState(RewindBlock *block, bool from_tmp)
 
     if (result)
     {
+        content->magic = REWIND_BLOCK_MAGIC;
+        content->index = _count;
+
         _last_full_block = block;
-        _contens->WriteEnd(block->size);
+
+        block->type = BLOCK_FULL;
+        block->index = _count++;
+        block->size = _full_content_size;
+        block->content = content;
+
+        _contens->WriteEnd(_full_content_size);
+
+        // LogDebug("  _SaveFullState %08x", block->content);
     }
 
     return result;

@@ -176,12 +176,13 @@ private:
 
     bool _rewinding;
     size_t _state_size;
-    size_t _aligned_state_size;
+    size_t _full_content_size;
     size_t _threshold_size;
     int _next_time;
     uint32_t _count;
     uint8_t *_tmp_buf;
     RewindBlock *_last_full_block;
+    uint32_t _delay_count;
 
     RewindBlocks _blocks{BLOCK_SIZE};
     RewindContens *_contens;
