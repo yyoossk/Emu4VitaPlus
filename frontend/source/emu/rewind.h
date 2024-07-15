@@ -49,6 +49,8 @@ struct RewindDiffContent : RewindContent
     RewindBlock *full_block;
     uint32_t num;
     DiffArea areas[];
+
+    uint8_t *GetBuf() const { return (uint8_t *)this + sizeof(RewindDiffContent) + this->num * sizeof(DiffArea); };
 };
 
 class RewindContens
@@ -134,16 +136,34 @@ public:
         return _current == _total ? nullptr : (_blocks + _current);
     }
 
-    RewindBlock *Next()
+    RewindBlock *Next(bool move = true)
     {
-        LOOP_PLUS_ONE(_current, _total);
-        return _blocks + _current;
+        if (move)
+        {
+            LOOP_PLUS_ONE(_current, _total);
+            return _blocks + _current;
+        }
+        else
+        {
+            size_t current = _current;
+            LOOP_PLUS_ONE(current, _total);
+            return _blocks + current;
+        }
     };
 
-    RewindBlock *Prev()
+    RewindBlock *Prev(bool move = true)
     {
-        LOOP_MINUS_ONE(_current, _total);
-        return _blocks + _current;
+        if (move)
+        {
+            LOOP_MINUS_ONE(_current, _total);
+            return _blocks + _current;
+        }
+        else
+        {
+            size_t current = _current;
+            LOOP_MINUS_ONE(current, _total);
+            return _blocks + current;
+        }
     };
 
 private:
@@ -166,6 +186,7 @@ public:
 
 private:
     void _SaveState();
+    void *_GetState();
     void _Rewind();
 
     bool _SaveFullState(RewindBlock *block, bool from_tmp = false);

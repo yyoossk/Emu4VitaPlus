@@ -140,8 +140,40 @@ void RewindManager::_SaveState()
     }
 }
 
+void *RewindManager::_GetState()
+{
+    RewindBlock *block = _blocks.Prev(false);
+    if (!block->IsValid())
+    {
+        return nullptr;
+    }
+
+    _blocks.Prev();
+    if (block->type == BLOCK_FULL)
+    {
+        return ((RewindFullContent *)block->content)->buf;
+    }
+
+    const RewindDiffContent *diff = (RewindDiffContent *)block->content;
+    const uint8_t *buf = diff->GetBuf();
+    const DiffArea *area = diff->areas;
+    memcpy(_tmp_buf, ((RewindFullContent *)diff->full_block->content)->buf, _state_size);
+    for (size_t i = 0; i < diff->num; i++)
+    {
+        memcpy(_tmp_buf + area->offset, buf, area->size);
+        buf += area->size;
+        area++;
+    }
+    return _tmp_buf;
+}
+
 void RewindManager::_Rewind()
 {
+    void *data = _GetState();
+    if (data != nullptr)
+    {
+        _UnSerialize(data, _state_size);
+    }
 }
 
 static inline int memcmp_0x10(const void *src, const void *dst)
@@ -234,7 +266,7 @@ bool RewindManager::_SaveDiffState(RewindBlock *block)
 
     _contens->WriteEnd(block->size);
 
-    uint8_t *buf = (uint8_t *)content + sizeof(RewindDiffContent) + content->num * sizeof(DiffArea);
+    uint8_t *buf = content->GetBuf();
     for (size_t i = 0; i < content->num; i++)
     {
         memcpy(buf, buf + areas[i].offset, areas[i].size);
