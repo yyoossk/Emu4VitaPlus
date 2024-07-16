@@ -59,6 +59,7 @@ private:
     void _OnHotkeySpeedUp(Input *input);
     void _OnHotkeySpeedDown(Input *input);
     void _OnHotkeyRewind(Input *input);
+    void _OnHotkeyRewindUp(Input *input);
     void _OnHotkeyCtrlPortUp(Input *input);
     void _OnHotkeyCtrlPortDown(Input *input);
     void _OnHotkeyExitGame(Input *input);

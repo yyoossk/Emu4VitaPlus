@@ -157,7 +157,8 @@ void *RewindManager::_GetState()
     const RewindDiffContent *diff = (RewindDiffContent *)block->content;
     const uint8_t *buf = diff->GetBuf();
     const DiffArea *area = diff->areas;
-    memcpy(_tmp_buf, ((RewindFullContent *)diff->full_block->content)->buf, _state_size);
+    _last_full_block = diff->full_block;
+    memcpy(_tmp_buf, ((RewindFullContent *)_last_full_block->content)->buf, _state_size);
     for (size_t i = 0; i < diff->num; i++)
     {
         memcpy(_tmp_buf + area->offset, buf, area->size);
@@ -307,6 +308,10 @@ bool RewindManager::_SaveFullState(RewindBlock *block, bool from_tmp)
         _contens->WriteEnd(_full_content_size);
 
         // LogDebug("  _SaveFullState %08x", block->content);
+    }
+    else
+    {
+        LogError("  _SaveFullState failed");
     }
 
     return result;

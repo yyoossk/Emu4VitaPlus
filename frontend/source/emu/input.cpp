@@ -36,6 +36,7 @@ void Emulator::_SetupKeys()
     // }
 
 #define BIND_HOTKEY(KEY, FUNC) _input.SetKeyDownCallback(gConfig->hotkeys[KEY], std::bind(&Emulator::FUNC, this, &_input));
+#define BIND_HOTKEY_UP(KEY, FUNC) _input.SetKeyUpCallback(gConfig->hotkeys[KEY], std::bind(&Emulator::FUNC, this, &_input));
 
     BIND_HOTKEY(SAVE_STATE, _OnHotkeySave);
     BIND_HOTKEY(LOAD_STATE, _OnHotkeyLoad);
@@ -45,6 +46,8 @@ void Emulator::_SetupKeys()
     BIND_HOTKEY(CONTROLLER_PORT_UP, _OnHotkeyCtrlPortUp);
     BIND_HOTKEY(CONTROLLER_PORT_DOWN, _OnHotkeyCtrlPortDown);
     BIND_HOTKEY(EXIT_GAME, _OnHotkeyExitGame);
+
+    BIND_HOTKEY_UP(GAME_REWIND, _OnHotkeyRewindUp);
 }
 
 void Emulator::_OnPsButton(Input *input)
@@ -85,7 +88,12 @@ void Emulator::_OnHotkeySpeedDown(Input *input)
 
 void Emulator::_OnHotkeyRewind(Input *input)
 {
-    LogFunctionName;
+    _rewind_manager.StartRewind();
+}
+
+void Emulator::_OnHotkeyRewindUp(Input *input)
+{
+    _rewind_manager.StopRewind();
 }
 
 void Emulator::_OnHotkeyCtrlPortUp(Input *input)
