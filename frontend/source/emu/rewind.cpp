@@ -85,11 +85,13 @@ void RewindManager::Deinit()
 
 void RewindManager::StartRewind()
 {
+    LogFunctionName;
     _rewinding = true;
 }
 
 void RewindManager::StopRewind()
 {
+    LogFunctionName;
     _rewinding = false;
 }
 
@@ -148,13 +150,19 @@ void *RewindManager::_GetState()
         return nullptr;
     }
 
-    _blocks.Prev();
     if (block->type == BLOCK_FULL)
     {
+        _blocks.Prev();
         return ((RewindFullContent *)block->content)->buf;
     }
 
     const RewindDiffContent *diff = (RewindDiffContent *)block->content;
+    if (!diff->full_block->IsValid())
+    {
+        return nullptr;
+    }
+
+    _blocks.Prev();
     const uint8_t *buf = diff->GetBuf();
     const DiffArea *area = diff->areas;
     _last_full_block = diff->full_block;
@@ -186,6 +194,7 @@ static inline int memcmp_0x10(const void *src, const void *dst)
 
 bool RewindManager::_SaveDiffState(RewindBlock *block)
 {
+    // LogFunctionName;
     if (!_Serialize(_tmp_buf, _state_size))
     {
         return false;
@@ -274,13 +283,15 @@ bool RewindManager::_SaveDiffState(RewindBlock *block)
         buf += areas[i].size;
     }
 
-    // LogDebug("  _SaveDiffState %08x %08x %08x", block->content, block->size, content->full_block);
+    // LogDebug("  _SaveDiffState %08x %08x %08x", block->content, block->size, content->full_block->content);
 
     return true;
 }
 
 bool RewindManager::_SaveFullState(RewindBlock *block, bool from_tmp)
 {
+    // LogFunctionName;
+
     RewindFullContent *content = (RewindFullContent *)_contens->WriteBegin(_full_content_size);
 
     bool result = true;

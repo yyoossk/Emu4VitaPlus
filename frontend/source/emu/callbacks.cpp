@@ -259,7 +259,7 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
 
     if (id == RETRO_DEVICE_ID_JOYPAD_MASK)
     {
-        gEmulator->_input.ClearKeyStates(gEmulator->_keys_mask);
+        // gEmulator->_input.ClearKeyStates(gEmulator->_keys_mask);
         uint64_t keys = key_states;
         int16_t state = 0;
         for (size_t i = 0; i < 16; i++)

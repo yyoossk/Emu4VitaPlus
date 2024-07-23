@@ -103,7 +103,7 @@ void Input::_ProcTurbo(uint32_t key)
     {
         return;
     }
-
+    LogFunctionName;
     uint64_t current = sceKernelGetProcessTimeWide();
     uint32_t k = 1;
     do
@@ -140,8 +140,12 @@ void Input::_ProcCallbacks(uint32_t key)
         {
             if (((iter.first & key) == iter.first) && (iter.first & ~_last_key))
             {
+                // LogDebug("  call down: %08x %08x", iter.first, iter.second);
                 iter.second(this);
-                ClearKeyStates(iter.first);
+                if (_key_up_callbacks.find(iter.first) == _key_up_callbacks.end())
+                {
+                    ClearKeyStates(iter.first);
+                }
                 break;
             }
         }
@@ -150,6 +154,7 @@ void Input::_ProcCallbacks(uint32_t key)
         {
             if ((iter.first & _last_key) == iter.first)
             {
+                // LogDebug("  call up: %08x %08x", iter.first, iter.second);
                 iter.second(this);
                 break;
             }

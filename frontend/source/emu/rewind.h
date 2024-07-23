@@ -74,12 +74,9 @@ public:
     {
         if (_current + max_size >= _total_bytes)
         {
-            return _data;
+            _current = 0;
         }
-        else
-        {
-            return _data + _current;
-        }
+        return _data + _current;
     }
 
     void WriteEnd(size_t size)
