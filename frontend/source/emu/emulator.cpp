@@ -156,6 +156,11 @@ void Emulator::Run()
     _delay.Wait();
     _input.Poll();
 
+    if (_rewind_manager.InRewinding())
+    {
+        _rewind_manager.Wait();
+    }
+
     Lock();
     retro_run();
     Unlock();

@@ -103,7 +103,7 @@ void Input::_ProcTurbo(uint32_t key)
     {
         return;
     }
-    LogFunctionName;
+
     uint64_t current = sceKernelGetProcessTimeWide();
     uint32_t k = 1;
     do

@@ -180,6 +180,7 @@ public:
     void Deinit();
     void StartRewind();
     void StopRewind();
+    bool InRewinding() { return _rewinding; };
 
 private:
     void _SaveState();

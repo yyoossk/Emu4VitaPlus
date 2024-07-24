@@ -239,7 +239,13 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
 size_t AudioSampleBatchCallback(const int16_t *data, size_t frames)
 {
     LogFunctionNameLimited;
-    return gEmulator->_audio.SendAudioSample(data, frames);
+
+    if (!gEmulator->_rewind_manager.InRewinding())
+    {
+        gEmulator->_audio.SendAudioSample(data, frames);
+    }
+
+    return frames;
 }
 
 void InputPollCallback()

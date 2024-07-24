@@ -150,6 +150,7 @@ void *RewindManager::_GetState()
         return nullptr;
     }
 
+    LogDebug("  _GetState: %08x", block);
     if (block->type == BLOCK_FULL)
     {
         _blocks.Prev();
@@ -179,10 +180,15 @@ void *RewindManager::_GetState()
 void RewindManager::_Rewind()
 {
     void *data = _GetState();
-    if (data != nullptr)
+    if (data == nullptr)
+    {
+        _last_full_block = nullptr;
+    }
+    else
     {
         _UnSerialize(data, _state_size);
     }
+    Signal();
 }
 
 static inline int memcmp_0x10(const void *src, const void *dst)
