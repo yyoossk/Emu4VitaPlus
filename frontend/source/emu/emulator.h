@@ -42,6 +42,7 @@ public:
     float GetAspectRatio() { return _av_info.geometry.aspect_ratio; };
     uint64_t GetMsPerFrame() { return _delay.GetInterval(); };
     void ChangeGraphicsConfig() { _graphics_config_changed = true; };
+    void ChangeRewindConfig();
 
     friend bool EnvironmentCallback(unsigned cmd, void *data);
     friend void VideoRefreshCallback(const void *data, unsigned width, unsigned height, size_t pitch);

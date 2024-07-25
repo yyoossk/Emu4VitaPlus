@@ -137,7 +137,11 @@ bool Directory::SetCurrentPath(const std::string &path)
     SceIoDirent dir;
     while (sceIoDread(dfd, &dir) > 0)
     {
-        if (SCE_S_ISDIR(dir.d_stat.st_mode))
+        if (*dir.d_name == '.')
+        {
+            continue;
+        }
+        else if (SCE_S_ISDIR(dir.d_stat.st_mode))
         {
             _items.push_back({dir.d_name, true});
         }

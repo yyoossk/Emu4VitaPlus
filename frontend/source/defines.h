@@ -13,4 +13,4 @@
 #define CORE_SAVESTATES_DIR APP_DATA_DIR "/savestates"
 
 #define OVERLAYS_DIR_NAME "overlays"
-#define PREVIEW_DIR_NAME "images"
+#define PREVIEW_DIR_NAME ".previews"

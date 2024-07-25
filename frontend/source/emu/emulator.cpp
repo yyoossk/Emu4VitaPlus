@@ -364,3 +364,18 @@ void Emulator::Load()
         }
     }
 }
+
+void Emulator::ChangeRewindConfig()
+{
+    if (gStatus == APP_STATUS_RUN_GAME || gStatus == APP_STATUS_SHOW_UI_IN_GAME)
+    {
+        if (gConfig->rewind)
+        {
+            _rewind_manager.Init();
+        }
+        else
+        {
+            _rewind_manager.Deinit();
+        }
+    }
+}
