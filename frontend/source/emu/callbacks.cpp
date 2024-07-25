@@ -188,8 +188,23 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
         return;
     }
 
+    if (width == 0 || height == 0)
+    {
+        LogDebug("invalid size: %d %d", width, height);
+        return;
+    }
+
     if (gEmulator->_graphics_config_changed || gEmulator->_texture_buf == nullptr || gEmulator->_texture_buf->GetWidth() != width || gEmulator->_texture_buf->GetHeight() != height)
     {
+        if (gEmulator->_texture_buf)
+        {
+            LogDebug("(%d, %d) (%d, %d)",
+                     gEmulator->_texture_buf->GetWidth(),
+                     gEmulator->_texture_buf->GetHeight(),
+                     width,
+                     height);
+        }
+
         gVideo->Lock();
 
         if (gEmulator->_texture_buf != nullptr)

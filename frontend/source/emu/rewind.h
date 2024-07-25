@@ -50,7 +50,7 @@ struct RewindDiffContent : RewindContent
     uint32_t num;
     DiffArea areas[];
 
-    uint8_t *GetBuf() const { return (uint8_t *)this + sizeof(RewindDiffContent) + this->num * sizeof(DiffArea); };
+    uint8_t *GetBuf() const { return (uint8_t *)(this->areas) + this->num * sizeof(DiffArea); };
 };
 
 class RewindContens

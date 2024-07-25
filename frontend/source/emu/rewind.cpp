@@ -7,6 +7,7 @@
 #include "utils.h"
 #include "emulator.h"
 #include "app.h"
+#include "file.h"
 
 #define MIN_STATE_RATE 5
 #define NEXT_STATE_PERIOD 50000
@@ -114,7 +115,7 @@ int RewindManager::_RewindThread(SceSize args, void *argp)
         }
 
         int current_time = sceKernelGetProcessTimeWide();
-        if ((!rewind->_rewinding) && current_time < rewind->_next_time)
+        if (current_time < rewind->_next_time)
         {
             sceKernelDelayThread(rewind->_next_time - current_time);
             current_time = sceKernelGetProcessTimeWide();
@@ -150,7 +151,6 @@ void *RewindManager::_GetState()
         return nullptr;
     }
 
-    LogDebug("  _GetState: %08x", block);
     if (block->type == BLOCK_FULL)
     {
         _blocks.Prev();
@@ -180,6 +180,7 @@ void *RewindManager::_GetState()
 void RewindManager::_Rewind()
 {
     void *data = _GetState();
+
     if (data == nullptr)
     {
         _last_full_block = nullptr;
@@ -188,6 +189,7 @@ void RewindManager::_Rewind()
     {
         _UnSerialize(data, _state_size);
     }
+
     Signal();
 }
 
@@ -285,7 +287,7 @@ bool RewindManager::_SaveDiffState(RewindBlock *block)
     uint8_t *buf = content->GetBuf();
     for (size_t i = 0; i < content->num; i++)
     {
-        memcpy(buf, buf + areas[i].offset, areas[i].size);
+        memcpy(buf, _tmp_buf + areas[i].offset, areas[i].size);
         buf += areas[i].size;
     }
 
