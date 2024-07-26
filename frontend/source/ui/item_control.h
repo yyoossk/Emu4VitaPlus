@@ -2,71 +2,15 @@
 #include <stdint.h>
 #include "item_selectable.h"
 #include "config.h"
-
-static uint8_t RetroKeys[] = {
-    RETRO_DEVICE_ID_NONE,
-    RETRO_DEVICE_ID_JOYPAD_UP,
-    RETRO_DEVICE_ID_JOYPAD_DOWN,
-    RETRO_DEVICE_ID_JOYPAD_LEFT,
-    RETRO_DEVICE_ID_JOYPAD_RIGHT,
-#if defined(GBA_BUILD)
-    RETRO_DEVICE_ID_JOYPAD_A,
-    RETRO_DEVICE_ID_JOYPAD_B,
-    RETRO_DEVICE_ID_JOYPAD_L,
-    RETRO_DEVICE_ID_JOYPAD_R,
-#elif defined(ARC_BUILD)
-    RETRO_DEVICE_ID_JOYPAD_A,
-    RETRO_DEVICE_ID_JOYPAD_B,
-    RETRO_DEVICE_ID_JOYPAD_X,
-    RETRO_DEVICE_ID_JOYPAD_Y,
-    RETRO_DEVICE_ID_JOYPAD_L,
-    RETRO_DEVICE_ID_JOYPAD_R,
-    RETRO_DEVICE_ID_JOYPAD_L2,
-    RETRO_DEVICE_ID_JOYPAD_R2,
-#elif defined(SFC_BUILD)
-    RETRO_DEVICE_ID_JOYPAD_A,
-    RETRO_DEVICE_ID_JOYPAD_B,
-    RETRO_DEVICE_ID_JOYPAD_X,
-    RETRO_DEVICE_ID_JOYPAD_Y,
-    RETRO_DEVICE_ID_JOYPAD_L,
-    RETRO_DEVICE_ID_JOYPAD_R,
-#elif defined(FC_BUILD) || defined(GBC_BUILD) || defined(NGP_BUILD) || defined(WSC_BUILD)
-    RETRO_DEVICE_ID_JOYPAD_A,
-    RETRO_DEVICE_ID_JOYPAD_B,
-#elif defined(MD_BUILD) || defined(PCE_BUILD)
-    RETRO_DEVICE_ID_JOYPAD_A,
-    RETRO_DEVICE_ID_JOYPAD_B,
-    RETRO_DEVICE_ID_JOYPAD_X,
-    RETRO_DEVICE_ID_JOYPAD_Y,
-    RETRO_DEVICE_ID_JOYPAD_L,
-    RETRO_DEVICE_ID_JOYPAD_R,
-#elif defined(PS_BUILD)
-    RETRO_DEVICE_ID_JOYPAD_A,
-    RETRO_DEVICE_ID_JOYPAD_B,
-    RETRO_DEVICE_ID_JOYPAD_X,
-    RETRO_DEVICE_ID_JOYPAD_Y,
-    RETRO_DEVICE_ID_JOYPAD_L,
-    RETRO_DEVICE_ID_JOYPAD_R,
-    RETRO_DEVICE_ID_JOYPAD_L2,
-    RETRO_DEVICE_ID_JOYPAD_R2,
-    RETRO_DEVICE_ID_JOYPAD_L3,
-    RETRO_DEVICE_ID_JOYPAD_R3,
-#else
-#error "unknown build"
-#endif
-    RETRO_DEVICE_ID_JOYPAD_START,
-    RETRO_DEVICE_ID_JOYPAD_SELECT,
-};
-
-#define RETRO_KEYS_SIZE (sizeof(RetroKeys) / sizeof(RetroKeys[0]))
+#include "defines.h"
 
 class ItemControl : public ItemSelectable
 {
 public:
     ItemControl(ControlMapConfig *control_map)
         : ItemSelectable(Config::ControlTextMap.at(control_map->psv)),
-          _control_map(control_map){};
-    virtual ~ItemControl(){};
+          _control_map(control_map) {};
+    virtual ~ItemControl() {};
 
     void Show(bool selected) override
     {
@@ -88,14 +32,14 @@ private:
 
     const char *_GetOptionString(size_t index) override
     {
-        return TEXT(Config::RetroTextMap.at(RetroKeys[index]));
+        return TEXT(Config::RetroTextMap.at(RETRO_KEYS[index]));
     };
 
     size_t _GetIndex() override
     {
         for (uint32_t i = 0; i < RETRO_KEYS_SIZE; i++)
         {
-            if (RetroKeys[i] == _control_map->retro)
+            if (RETRO_KEYS[i] == _control_map->retro)
             {
                 return i;
             }
@@ -105,7 +49,7 @@ private:
 
     void _SetIndex(size_t index) override
     {
-        _control_map->retro = RetroKeys[index];
+        _control_map->retro = RETRO_KEYS[index];
     };
 
     void _OnClick(Input *input) override

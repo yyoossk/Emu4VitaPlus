@@ -16,6 +16,7 @@
 #include "utils.h"
 #include "overlay.h"
 #include "shader.h"
+#include "defines.h"
 
 #define MAIN_WINDOW_PADDING 10
 
@@ -103,6 +104,7 @@ void Ui::_DeinitImgui()
 Ui::Ui() : _tab_index(TAB_INDEX_BROWSER), _tabs{nullptr}
 {
     LogFunctionName;
+    _title = std::string("Emu4Vita++ (") + CORE_FULL_NAME + ") v" + APP_VER_STR;
     _InitImgui();
 }
 
@@ -398,7 +400,7 @@ void Ui::Show()
     ImGui::SetNextWindowPos({MAIN_WINDOW_PADDING, MAIN_WINDOW_PADDING});
     ImGui::SetNextWindowSize({VITA_WIDTH - MAIN_WINDOW_PADDING * 2, VITA_HEIGHT - MAIN_WINDOW_PADDING * 2});
 
-    ImGui::Begin("Emu4Vita++ (" CORE_FULL_NAME ") v" APP_VER_STR, NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs);
+    ImGui::Begin(_title.c_str(), NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs);
     ShowTimePower();
 
     gStatus == APP_STATUS_BOOT ? _ShowBoot() : _ShowNormal();

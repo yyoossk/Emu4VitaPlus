@@ -30,4 +30,5 @@ foreach(file ${PKG_FILES})
 endforeach()
 
 add_compile_definitions(SNES9X2005_BUILD SFC_BUILD CONSOLE="SNES")
-add_subdirectory(../../frontend ${CMAKE_CURRENT_BINARY_DIR}/frontend)
+
+add_subdirectory(.. ${CMAKE_CURRENT_BINARY_DIR}/app)

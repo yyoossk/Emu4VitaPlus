@@ -73,6 +73,7 @@ file(MAKE_DIRECTORY ${OUT_PATH})
 
 add_subdirectory(deps)
 add_subdirectory(share)
+add_subdirectory(frontend)
 
 set(APP_VER "0.1")
 set(SFO_APP_VER "00.01")

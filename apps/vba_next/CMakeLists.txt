@@ -30,4 +30,5 @@ foreach(file ${PKG_FILES})
 endforeach()
 
 add_compile_definitions(VBA_NEXT_BUILD GBA_BUILD CONSOLE="GBA")
-add_subdirectory(../../frontend ${CMAKE_CURRENT_BINARY_DIR}/frontend)
+
+add_subdirectory(.. ${CMAKE_CURRENT_BINARY_DIR}/app)

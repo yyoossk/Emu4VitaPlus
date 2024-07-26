@@ -30,4 +30,5 @@ foreach(file ${PKG_FILES})
 endforeach()
 
 add_compile_definitions(MEDNAFEN_SUPERGRAFX_BUILD PCE_BUILD CONSOLE="PCE")
-add_subdirectory(../../frontend ${CMAKE_CURRENT_BINARY_DIR}/frontend)
+
+add_subdirectory(.. ${CMAKE_CURRENT_BINARY_DIR}/app)

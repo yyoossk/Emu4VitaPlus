@@ -30,4 +30,5 @@ foreach(file ${PKG_FILES})
 endforeach()
 
 add_compile_definitions(FBA_LITE_BUILD ARC_BUILD FBA_BUILD CONSOLE="ARC")
-add_subdirectory(../../frontend ${CMAKE_CURRENT_BINARY_DIR}/frontend)
+
+add_subdirectory(.. ${CMAKE_CURRENT_BINARY_DIR}/app)

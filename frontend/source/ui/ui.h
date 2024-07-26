@@ -50,6 +50,8 @@ private:
 
     void _ClearTabs();
 
+    std::string _title;
+
     Input _input;
     size_t _tab_index;
 

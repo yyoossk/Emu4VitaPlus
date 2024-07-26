@@ -2,9 +2,7 @@
 #include "overlay.h"
 #include "log.h"
 #include "video.h"
-
-#define OVERLAY_PATH0 "app0:assets/overlays/"
-#define OVERLAY_PATH1 "app0:data/" CONSOLE "/overlays/"
+#include "defines.h"
 
 Overlays *gOverlays;
 
@@ -29,12 +27,14 @@ vita2d_texture *Overlay::Get()
 {
     if (_texture == nullptr && image_name.size() > 0)
     {
-        for (auto const &path : {OVERLAY_PATH0, OVERLAY_PATH1})
+        for (auto const &path : {"app0:assets", APP_DATA_DIR})
         {
-            _texture = vita2d_load_PNG_file((path + image_name).c_str());
+            const std::string name = std::string(path) + "/" OVERLAYS_DIR_NAME "/" + image_name;
+
+            _texture = vita2d_load_PNG_file(name.c_str());
             if (_texture)
                 break;
-            _texture = vita2d_load_JPEG_file((path + image_name).c_str());
+            _texture = vita2d_load_JPEG_file(name.c_str());
             if (_texture)
                 break;
         }
@@ -44,9 +44,9 @@ vita2d_texture *Overlay::Get()
 
 Overlays::Overlays()
 {
-    if (!Load(OVERLAY_PATH0))
+    if (!Load("app0:assets/" OVERLAYS_DIR_NAME))
     {
-        Load(OVERLAY_PATH1);
+        Load((std::string(APP_DATA_DIR) + "/" OVERLAYS_DIR_NAME).c_str());
     }
 }
 
@@ -60,7 +60,7 @@ bool Overlays::Load(const char *path)
     LogFunctionName;
 
     CSimpleIniA ini;
-    if (ini.LoadFile((std::string(path) + "overlays.ini").c_str()) != SI_OK)
+    if (ini.LoadFile((std::string(path) + "/overlays.ini").c_str()) != SI_OK)
     {
         LogError("failed to load overlays.ini from %s", path);
         return false;

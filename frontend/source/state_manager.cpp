@@ -31,7 +31,7 @@ void State::Init(const char *game_name)
     LogFunctionName;
 
     char path[SCE_FIOS_PATH_MAX];
-    snprintf(path, SCE_FIOS_PATH_MAX, CORE_SAVESTATES_DIR "/%s/state_%s.bin", game_name, _slot_name.c_str());
+    snprintf(path, SCE_FIOS_PATH_MAX, "%s/%s/state_%s.bin", CORE_SAVESTATES_DIR, game_name, _slot_name.c_str());
 
     _state_path = path;
     _valid = File::Exist(path);
@@ -40,7 +40,7 @@ void State::Init(const char *game_name)
         File::GetCreateTime(path, &_create_time);
     }
 
-    snprintf(path, SCE_FIOS_PATH_MAX, CORE_SAVESTATES_DIR "/%s/state_%s.jpg", game_name, _slot_name.c_str());
+    snprintf(path, SCE_FIOS_PATH_MAX, "%s/%s/state_%s.jpg", CORE_SAVESTATES_DIR, game_name, _slot_name.c_str());
     _image_path = path;
     if (_texture)
     {
