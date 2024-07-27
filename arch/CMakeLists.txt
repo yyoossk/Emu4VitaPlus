@@ -76,7 +76,7 @@ foreach(index RANGE ${length})
         list(APPEND CORE_EBOOTS "eboot_${core_short}.bin-self")
     endif()
 
-    list(APPEND CORE_FILES FILE "${CMAKE_CURRENT_BINARY_DIR}/../apps/${core}/frontend/eboot_${core_short}.bin" "eboot_${core_short}.self")
+    list(APPEND CORE_FILES FILE "${CMAKE_CURRENT_BINARY_DIR}/../apps/${core}/app/eboot_${core_short}.bin" "eboot_${core_short}.self")
 endforeach()
 
 include_directories(

@@ -1,3 +1,6 @@
+# Emu4Vita++
+This is an emulator frontend for the PlayStation Vita, based on the [Libretro API](https://github.com/libretro/libretro-common).
+
 # Pre-Compilation Preparation
 ## Windows
 * Install [msys2](https://www.msys2.org/) or [devkitPro](https://github.com/devkitPro/installer/releases)

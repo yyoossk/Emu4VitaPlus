@@ -1,4 +1,6 @@
 #include <psp2/ctrl.h>
+#include <psp2/apputil.h>
+#include <psp2/system_param.h>
 #include <libretro.h>
 #include <stdio.h>
 #include <unordered_map>
@@ -135,6 +137,21 @@ void Config::Default()
     rewind = 1;
     rewind_buf_size = DEFAULT_REWIND_BUF_SIZE;
     last_rom = "ux0:";
+
+    int sys_lang;
+    sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &sys_lang);
+    switch (sys_lang)
+    {
+    case SCE_SYSTEM_PARAM_LANG_CHINESE_S:
+    case SCE_SYSTEM_PARAM_LANG_CHINESE_T:
+        language = LANGUAGE_CHINESE;
+        break;
+    case SCE_SYSTEM_PARAM_LANG_ENGLISH_US:
+    case SCE_SYSTEM_PARAM_LANG_ENGLISH_GB:
+    default:
+        language = LANGUAGE_ENGLISH;
+        break;
+    }
 
     DefaultControlMap();
     DefaultHotKey();

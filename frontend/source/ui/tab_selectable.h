@@ -20,8 +20,7 @@ public:
     void SetIndex(size_t index);
 
 protected:
-    virtual void
-    _OnKeyUp(Input *input);
+    virtual void _OnKeyUp(Input *input);
     virtual void _OnKeyDown(Input *input);
     virtual size_t _GetItemCount();
     virtual void _ShowItem(size_t index, bool selected);

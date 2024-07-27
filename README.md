@@ -1,5 +1,8 @@
 [For English](README.en.md)
 
+# Emu4Vita++
+这是一个在 PlayStation Vita 使用的, 基于 [Libretro API](https://github.com/libretro/libretro-common) 的模拟器前端。
+
 # 编译前准备
 ## Windows
 * 安装 [msys2](https://www.msys2.org/) 或 [devkitPro](https://github.com/devkitPro/installer/releases)

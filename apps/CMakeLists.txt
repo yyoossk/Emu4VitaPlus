@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.12)
 
+set(CORE_TAG ${CORE_NAME}_build)
+
 add_custom_target(
-    ${CORE_NAME}_build ALL
+    ${CORE_TAG} ALL
     COMMAND make -f ${CORE_MAKEFILE_NAME} ${CORE_ARGS} -j4
     WORKING_DIRECTORY ${CORE_DIR})
 
@@ -13,7 +15,7 @@ set_property(
 
 set(LIBRETRO_LIBRARY ${CORE_DIR}/${CORE_NAME}_libretro_vita.a)
 set_target_properties(${CORE_NAME} PROPERTIES IMPORTED_LOCATION "${LIBRETRO_LIBRARY}")
-add_dependencies(${CORE_NAME} ${CORE_NAME}_build)
+add_dependencies(${CORE_NAME} ${CORE_TAG})
 
 set(ELF_NAME ${CORE_SHORT_NAME}.elf)
 set(EBOOT_NAME eboot_${CORE_SHORT_NAME}.bin)
@@ -42,7 +44,7 @@ include_directories(
     ../share/source)
 
 add_executable(${ELF_NAME} defines.cpp)
-
+add_dependencies(${ELF_NAME} ${CORE_TAG})
 target_link_libraries(
     ${ELF_NAME}
     frontend
