@@ -42,6 +42,12 @@ static void ExitGame()
     gStatus = APP_STATUS_SHOW_UI;
 }
 
+static void ReturnToArch()
+{
+    LogFunctionName;
+    gStatus = APP_STATUS_RETURN_ARCH;
+}
+
 static void ExitApp()
 {
     LogFunctionName;
@@ -140,11 +146,17 @@ void Ui::CreateTables(const char *path)
 
     _ClearTabs();
 
-    _tabs[TAB_INDEX_SYSTEM] = new TabSeletable(TAB_SYSTEM,
-                                               {new ItemBase(SYSTEM_RESUME_GAME, "", ResumeGame, NULL, false),
-                                                new ItemBase(SYSTEM_RESET_GAME, "", ResetGame, NULL, false),
-                                                new ItemBase(SYSTEM_EXIT_GAME, "", ExitGame, NULL, false),
-                                                new ItemBase(SYSTEM_MENU_EXIT, "", ExitApp)});
+    std::vector<ItemBase *> items{new ItemBase(SYSTEM_MENU_RESUME_GAME, "", ResumeGame, NULL, false),
+                                  new ItemBase(SYSTEM_MENU_RESET_GAME, "", ResetGame, NULL, false),
+                                  new ItemBase(SYSTEM_MENU_EXIT_GAME, "", ExitGame, NULL, false)};
+
+    if (gConfig->boot_from_arch)
+    {
+        items.emplace_back(new ItemBase(SYSTEM_MENU_BACK_TO_ARCH, "", ReturnToArch));
+    }
+    items.emplace_back(new ItemBase(SYSTEM_MENU_EXIT, "", ExitApp));
+
+    _tabs[TAB_INDEX_SYSTEM] = new TabSeletable(TAB_SYSTEM, items);
 
     std::vector<ItemBase *> states;
     for (size_t i = 0; i < MAX_STATES; i++)

@@ -118,7 +118,10 @@ const std::unordered_map<uint8_t, TEXT_ENUM> Config::RetroTextMap = {
     {RETRO_DEVICE_ID_NONE, NONE},
 };
 
-Config::Config() : language(LANGUAGE_ENGLISH), hotkeys{0}
+Config::Config()
+    : language(LANGUAGE_ENGLISH),
+      hotkeys{0},
+      boot_from_arch(false)
 {
     LogFunctionName;
     Default();

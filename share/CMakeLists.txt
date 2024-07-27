@@ -14,13 +14,13 @@ endforeach()
 
 SET(PUBLIC_PKG_FILES "${PUBLIC_PKG_FILES}" CACHE INTERNAL "PUBLIC_PKG_FILES")
 
-add_custom_command(
-    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/source/language_define.cpp
+add_custom_target(
+    lang_cpp
     COMMAND python export.py
     COMMAND mv language_define.h ${CMAKE_CURRENT_SOURCE_DIR}/source
     COMMAND mv language_define.cpp ${CMAKE_CURRENT_SOURCE_DIR}/source
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../script
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/../script/language.json
+    BYPRODUCTS ${CMAKE_CURRENT_SOURCE_DIR}/../script/language.json
     ${CMAKE_CURRENT_SOURCE_DIR}/../script/translation.json
     ${CMAKE_CURRENT_SOURCE_DIR}/../script/export.py
 )
@@ -34,3 +34,4 @@ endif()
 include_directories(../deps/libretro-common/include)
 
 add_library(share STATIC ${SRC})
+add_dependencies(share lang_cpp)

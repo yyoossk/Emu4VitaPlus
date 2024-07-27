@@ -29,6 +29,7 @@ public:
     void DefaultGraphics();
     retro_language GetRetroLanguage();
 
+    bool boot_from_arch;
     std::string last_rom;
     uint32_t language;
     uint32_t rewind;

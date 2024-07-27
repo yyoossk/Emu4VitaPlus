@@ -16,9 +16,13 @@ int main(int argc, char *const argv[])
     File::MakeDirs(CORE_SYSTEM_DIR);
     gLog = new Log(APP_LOG_PATH);
     LogInfo("updated on " __DATE__ " " __TIME__);
+    for (int i = 0; i < argc; i++)
+    {
+        LogDebug(argv[i]);
+    }
     LogDebug("Start");
     {
-        App app;
+        App app(argc, argv);
         app.Run();
     }
 

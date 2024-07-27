@@ -26,7 +26,7 @@ int main(int argc, char *const argv[])
 
     if (*gCorePath)
     {
-        char *argv[2] = {"arch", NULL};
+        char *const argv[] = {"arch", NULL};
         sceAppMgrLoadExec(gCorePath, argv, NULL);
     }
 

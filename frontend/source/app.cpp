@@ -18,7 +18,7 @@
 
 APP_STATUS gStatus = APP_STATUS_BOOT;
 
-App::App()
+App::App(int argc, char *const argv[])
 {
     LogFunctionName;
 
@@ -52,6 +52,9 @@ App::App()
     gVideo->Start();
 
     gUi->AppendLog("Booting");
+    gUi->AppendLog("Parse params");
+    _ParseParams(argc, argv);
+
     gUi->AppendLog("Initialize video");
     gUi->AppendLog("Load config");
     if (!gConfig->Load())
@@ -124,6 +127,14 @@ void App::Run()
             gEmulator->Run();
             break;
 
+        case APP_STATUS_RETURN_ARCH:
+        {
+            char *argv[] = {NULL};
+            sceAppMgrLoadExec("app0:eboot.bin", argv, NULL);
+            gStatus = APP_STATUS_EXIT;
+        }
+        break;
+
         case APP_STATUS_BOOT:
         default:
             break;
@@ -134,4 +145,15 @@ void App::Run()
 bool App::_IsSaveMode()
 {
     return sceIoDevctl("ux0:", 0x3001, NULL, 0, NULL, 0) == 0x80010030;
+}
+
+void App::_ParseParams(int argc, char *const argv[])
+{
+    for (int i = 0; i < argc; i++)
+    {
+        if (strcmp(argv[i], "arch") == 0)
+        {
+            gConfig->boot_from_arch = true;
+        }
+    }
 }
