@@ -62,7 +62,6 @@ void Emulator::Init()
     retro_init();
     retro_get_system_info(&_info);
 
-    retro_set_controller_port_device(0, RETRO_DEVICE_JOYPAD);
     _SetupKeys();
 }
 
@@ -107,6 +106,7 @@ bool Emulator::LoadGame(const char *path, const char *entry_name, uint32_t crc32
     if (result)
     {
         retro_get_system_av_info(&_av_info);
+        retro_set_controller_port_device(0, RETRO_DEVICE_JOYPAD);
         SetSpeed(1.0);
         gStatus = APP_STATUS_RUN_GAME;
         if (!_audio.Inited())

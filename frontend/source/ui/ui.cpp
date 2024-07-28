@@ -352,31 +352,30 @@ void Ui::_ShowBoot()
     static size_t count = 0;
     static uint64_t next_ms = 0;
 
+    bool need_pop = false;
+
     for (const auto &log : _logs)
     {
-        if (log == _logs.back())
+        if (&log == &_logs.back())
         {
             ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
+            need_pop = true;
         }
         ImGui::Text(log.c_str());
     }
 
-    if (_logs.size() > 0 && _logs.back() != "Done")
+    if (_logs.size() > 0)
     {
         uint64_t current_ms = sceKernelGetProcessTimeWide();
         if (next_ms <= current_ms)
         {
-            count++;
-            if (count >= sizeof(frames) / sizeof(*frames))
-            {
-                count = 0;
-            }
+            LOOP_PLUS_ONE(count, sizeof(frames) / sizeof(*frames));
             next_ms = current_ms + 200000;
         }
         ImGui::Text(frames[count]);
     }
 
-    if (_logs.size() > 0)
+    if (need_pop)
     {
         ImGui::PopStyleColor();
     }
@@ -436,7 +435,9 @@ void Ui::AppendLog(const char *log)
 void Ui::ClearLogs()
 {
     LogFunctionName;
+    gVideo->Lock();
     _logs.clear();
+    gVideo->Unlock();
 }
 
 void Ui::UpdateCoreOptions()
