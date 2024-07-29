@@ -240,8 +240,10 @@ else ifeq ($(platform), vita)
 	AR = arm-vita-eabi-ar$(EXE_EXT)
 	PLATFORM_DEFINES += -DVITA
 	ENDIANNESS_DEFINES := -DLSB_FIRST
-	CFLAGS += -mfloat-abi=hard -fsingle-precision-constant
-	CXXFLAGS += -mfloat-abi=hard -fsingle-precision-constant -fpermissive -fno-rtti
+	CFLAGS += -mfloat-abi=hard -fsingle-precision-constant \
+	          -mfpu=neon
+	CXXFLAGS += -mfloat-abi=hard -fsingle-precision-constant -fpermissive -fno-rtti \
+	          -mfpu=neon
 #    CFLAGS += -mfloat-abi=hard -fsingle-precision-constant \
 #     -marm -mcpu=cortex-a9 -mfpu=neon -DVITA -D__vita__ -O3
     # -mword-relocations -fno-optimize-sibling-calls \
@@ -258,7 +260,7 @@ else ifeq ($(platform), vita)
 	EXTERNAL_ZLIB = 1
 	STATIC_LINKING = 1
 	USE_CYCLONE = 1
-    # HAVE_NEON = 1
+	HAVE_NEON = 1
 
 # CTR (3DS)
 else ifeq ($(platform), ctr)
