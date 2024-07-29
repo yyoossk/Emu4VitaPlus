@@ -241,9 +241,12 @@ else ifeq ($(platform), vita)
 	PLATFORM_DEFINES += -DVITA
 	ENDIANNESS_DEFINES := -DLSB_FIRST
 	CFLAGS += -mfloat-abi=hard -fsingle-precision-constant \
-	          -mfpu=neon
+	          -mfpu=neon -mcpu=cortex-a9 \
+			  -ffast-math -ftree-vectorize 
 	CXXFLAGS += -mfloat-abi=hard -fsingle-precision-constant -fpermissive -fno-rtti \
-	          -mfpu=neon
+	          -mfpu=neon -mcpu=cortex-a9 \
+			  -ffast-math -ftree-vectorize 
+	ASFLAGS += -mcpu=cortex-a9
 #    CFLAGS += -mfloat-abi=hard -fsingle-precision-constant \
 #     -marm -mcpu=cortex-a9 -mfpu=neon -DVITA -D__vita__ -O3
     # -mword-relocations -fno-optimize-sibling-calls \
