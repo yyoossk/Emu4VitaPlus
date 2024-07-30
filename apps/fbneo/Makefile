@@ -60,8 +60,7 @@ VERSION_SCRIPT	:= $(MAIN_FBNEO_DIR)/burner/libretro/link.T
 # TARGET
 ifeq ($(subset),)
 	TARGET_NAME := fbneo
-	mkfile_path := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
-	INCLUDED_MAKEFILE = $(mkfile_path)/Makefile.common
+	INCLUDED_MAKEFILE = Makefile.common
 else
 	TARGET_NAME := fbneo_$(subset)
 	INCLUDED_MAKEFILE = Makefile.$(subset)

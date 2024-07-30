@@ -233,7 +233,10 @@ void Ui::CreateTables(const char *path)
     std::vector<ItemBase *> options;
     for (auto &iter : gConfig->core_options)
     {
-        options.emplace_back(new ItemCore(&iter.second));
+        if (iter.second.visible)
+        {
+            options.emplace_back(new ItemCore(&iter.second));
+        }
     }
     _tabs[TAB_INDEX_CORE] = new TabSeletable(TAB_CORE, options);
 
@@ -253,7 +256,11 @@ void Ui::CreateTables(const char *path)
                                                                                 &gConfig->rewind_buf_size,
                                                                                 MIN_REWIND_BUF_SIZE,
                                                                                 MAX_REWIND_BUF_SIZE,
-                                                                                REWIND_BUF_SIZE_STEP)});
+                                                                                REWIND_BUF_SIZE_STEP),
+                                                              new ItemConfig(OPTIONS_MENU_MUTE,
+                                                                             "",
+                                                                             (uint32_t *)&gConfig->mute,
+                                                                             {NO, YES})});
 
     _tabs[TAB_INDEX_ABOUT] = new TabAbout();
 

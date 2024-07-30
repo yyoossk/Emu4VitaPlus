@@ -38,6 +38,7 @@ public:
     uint32_t graphics[GRAPHICS_CONFIG_COUNT];
     uint32_t hotkeys[HOT_KEY_COUNT];
     CoreOptions core_options;
+    bool mute;
 
     static const std::unordered_map<uint32_t, const char *> PsvKeyStr;
     static const std::unordered_map<uint32_t, const char *> HotkeyStr;

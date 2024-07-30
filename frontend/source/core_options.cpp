@@ -74,6 +74,17 @@ void CoreOptions::Load(retro_core_option_definition *options)
     }
 }
 
+void CoreOptions::Load(retro_core_options_v2 *options)
+{
+    LogFunctionName;
+    const retro_core_option_v2_definition *definitions = options->definitions;
+    while (definitions && definitions->key)
+    {
+        _Load(definitions);
+        definitions++;
+    }
+}
+
 template <typename T>
 void CoreOptions::_Load(const T *define)
 {
@@ -174,19 +185,18 @@ bool CoreOptions::Save(const char *path)
             ini.SetValue(key, vs, v.value);
             count++;
         }
-        // const retro_core_option_value *v = option->values;
-        // size_t i = 0;
-        // while (v->value)
-        // {
-        //     LogDebug("  %d %s", i, v->value);
-        //     char vs[32];
-        //     snprintf(vs, 32, "value_%d", i);
-        //     ini.SetValue(key, vs, v->value);
-        //     i++;
-        //     v++;
-        // }
-        // LogDebug("xxx");
     }
 
     return ini.SaveFile(path) == SI_OK;
+}
+
+void CoreOptions::SetVisable(const struct retro_core_option_display *option_display)
+{
+    LogFunctionName;
+    auto iter = this->find(option_display->key);
+    if (iter != this->end())
+    {
+        LogDebug("  %s %d", option_display->key, option_display->visible);
+        iter->second.visible = option_display->visible;
+    }
 }

@@ -45,6 +45,11 @@ bool EnvironmentCallback(unsigned cmd, void *data)
 
     switch (cmd)
     {
+    case RETRO_ENVIRONMENT_SET_ROTATION:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_SET_ROTATION");
+        LogDebug("  *data: %d", *(unsigned *)data);
+        // TODO: Support Rotation
+        break;
     case RETRO_ENVIRONMENT_GET_CAN_DUPE:
         LogDebug("  cmd: RETRO_ENVIRONMENT_GET_CAN_DUPE");
         if (data)
@@ -149,6 +154,17 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         gUi->UpdateCoreOptions();
         break;
 
+    case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_DISPLAY:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_SET_CORE_OPTIONS_DISPLAY");
+        gConfig->core_options.SetVisable((const struct retro_core_option_display *)data);
+        break;
+
+    case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_V2:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_SET_CORE_OPTIONS_V2");
+        gConfig->core_options.Load((retro_core_options_v2 *)data);
+        gUi->UpdateCoreOptions();
+        break;
+
     case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_V2_INTL:
         LogDebug("  cmd: RETRO_ENVIRONMENT_SET_CORE_OPTIONS_V2_INTL");
         gConfig->core_options.Load((retro_core_options_v2_intl *)data);
@@ -162,7 +178,11 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         // LogDebug("  cmd: RETRO_ENVIRONMENT_GET_AUDIO_VIDEO_ENABLE");
         if (data)
         {
-            *(int *)data = 3;
+            *(int *)data = RETRO_AV_ENABLE_VIDEO;
+            if (!gConfig->mute)
+            {
+                *(int *)data |= RETRO_AV_ENABLE_AUDIO;
+            }
         }
         break;
 

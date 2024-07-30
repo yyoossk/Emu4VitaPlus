@@ -13,6 +13,7 @@ struct CoreOption
     const char *default_value = nullptr;
     std::string value;
     std::vector<retro_core_option_value> values;
+    bool visible = true;
 
     const std::vector<LanguageString> GetValues() const;
     size_t GetValueIndex();
@@ -29,8 +30,10 @@ public:
     void Load(retro_core_options_intl *options);
     void Load(retro_core_options_v2_intl *options);
     void Load(retro_core_option_definition *options);
+    void Load(retro_core_options_v2 *options);
     bool Get(retro_variable *var);
     void Default();
+    void SetVisable(const struct retro_core_option_display *option_display);
 
 private:
     template <typename T>

@@ -140,6 +140,7 @@ void Config::Default()
     rewind = 1;
     rewind_buf_size = DEFAULT_REWIND_BUF_SIZE;
     last_rom = "ux0:";
+    mute = false;
 
     int sys_lang;
     sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &sys_lang);
