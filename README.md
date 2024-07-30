@@ -41,3 +41,6 @@ cd build-gpsp
 cmake ../ -DBUILD=gpsp
 make
 ```
+
+# 相关脚本
+[跳转](script/README.md)

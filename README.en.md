@@ -43,3 +43,6 @@ cd build-gpsp
 cmake ../ -DBUILD=gpsp
 make
 ```
+
+# Scripts
+[Go](script/README.md)
