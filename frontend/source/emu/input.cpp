@@ -29,7 +29,6 @@ void Emulator::_SetupKeys()
         }
     }
 
-    _input.SetKeyUpCallback(SCE_CTRL_PSBUTTON, std::bind(&Emulator::_OnPsButton, this, &_input));
     // for (int i = 0; i < 16; i++)
     // {
     //     LogDebug("%d %08x", i, _keys[i]);
@@ -48,6 +47,7 @@ void Emulator::_SetupKeys()
     BIND_HOTKEY(EXIT_GAME, _OnHotkeyExitGame);
 
     BIND_HOTKEY_UP(GAME_REWIND, _OnHotkeyRewindUp);
+    _input.SetKeyUpCallback(SCE_CTRL_PSBUTTON, std::bind(&Emulator::_OnPsButton, this, &_input));
 }
 
 void Emulator::_OnPsButton(Input *input)
