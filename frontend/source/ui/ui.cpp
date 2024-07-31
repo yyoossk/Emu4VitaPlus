@@ -32,7 +32,7 @@ static void ResetGame()
 {
     LogFunctionName;
     gEmulator->Reset();
-    gStatus = APP_STATUS_RUN_GAME;
+    gStatus = APP_STATUS_SHOW_UI_IN_GAME;
 }
 
 static void ExitGame()

@@ -1,6 +1,7 @@
 #include <speex/speex_resampler.h>
 #include <psp2/audioout.h>
 #include "audio.h"
+#include "config.h"
 #include "log.h"
 
 const uint32_t SAMPLE_RATES[] = {8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000};
@@ -8,7 +9,8 @@ const uint32_t SAMPLE_RATES[] = {8000, 11025, 12000, 16000, 22050, 24000, 32000,
 Audio::Audio()
     : _in_sample_rate(0),
       _resampler(nullptr),
-      _output(nullptr)
+      _output(nullptr),
+      _buf_status_callback(nullptr)
 {
     LogFunctionName;
 
@@ -81,9 +83,19 @@ bool Audio::_GetSuitableSampleRate(uint32_t sample_rate, uint32_t *out_sample_ra
 
 size_t Audio::SendAudioSample(const int16_t *data, size_t frames)
 {
+    static uint32_t status_count = 0;
     if (_resampler != nullptr)
     {
         _resampler->Process(data, frames);
+        if (_buf_status_callback)
+        {
+            if (status_count & 0xf == 0)
+            {
+                size_t occupancy = _resampler->GetInBufOccupancy();
+                _buf_status_callback(gConfig->mute, occupancy, occupancy < 25);
+            }
+            status_count++;
+        }
     }
     else
     {

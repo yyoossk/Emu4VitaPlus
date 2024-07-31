@@ -21,12 +21,11 @@
 RewindManager::RewindManager()
     : ThreadBase(_RewindThread),
       _rewinding(false),
-      _next_time(0),
       _contens(nullptr),
-      _count(0),
+      _block_count(0),
       _tmp_buf(nullptr),
       _last_full_block(nullptr),
-      _delay_count(0)
+      _frame_count(0)
 {
     LogFunctionName;
 }
@@ -57,6 +56,7 @@ bool RewindManager::Init()
     _threshold_size = _state_size * THRESHOLD_RATE;
     _tmp_buf = new uint8_t[_state_size];
     _contens = new RewindContens(buf_size);
+    _delay.SetInterval(gEmulator->GetMsPerFrame());
     StopRewind();
 
     Start();
@@ -108,21 +108,16 @@ int RewindManager::_RewindThread(SceSize args, void *argp)
             continue;
         }
 
-        if (rewind->_delay_count < 100)
+        // skip first 100 frames
+        if (rewind->_frame_count < 100)
         {
-            rewind->_delay_count++;
+            rewind->_frame_count++;
             continue;
         }
 
-        int current_time = sceKernelGetProcessTimeWide();
-        if (current_time < rewind->_next_time)
-        {
-            sceKernelDelayThread(rewind->_next_time - current_time);
-            current_time = sceKernelGetProcessTimeWide();
-        }
+        rewind->_delay.Wait();
 
         rewind->_rewinding ? rewind->_Rewind() : rewind->_SaveState();
-        rewind->_next_time = current_time + std::max((uint64_t)NEXT_STATE_PERIOD, gEmulator->GetMsPerFrame());
     }
 
     return 0;
@@ -274,12 +269,12 @@ bool RewindManager::_SaveDiffState(RewindBlock *block)
     }
 
     block->type = BLOCK_DIFF;
-    block->index = _count;
+    block->index = _block_count;
     block->content = content;
     block->size = ALIGN_UP_10H(diff_size);
 
     content->magic = REWIND_BLOCK_MAGIC;
-    content->index = _count++;
+    content->index = _block_count++;
     content->full_block = _last_full_block;
 
     _contens->WriteEnd(block->size);
@@ -315,12 +310,12 @@ bool RewindManager::_SaveFullState(RewindBlock *block, bool from_tmp)
     if (result)
     {
         content->magic = REWIND_BLOCK_MAGIC;
-        content->index = _count;
+        content->index = _block_count;
 
         _last_full_block = block;
 
         block->type = BLOCK_FULL;
-        block->index = _count++;
+        block->index = _block_count++;
         block->size = _full_content_size;
         block->content = content;
 

@@ -70,13 +70,8 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         gEmulator->_SetPixelFormat(*(retro_pixel_format *)data);
         break;
 
-    // case RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS:
-    //     break;
-    case RETRO_ENVIRONMENT_SET_CORE_OPTIONS:
-        LogDebug("  cmd: RETRO_ENVIRONMENT_SET_CORE_OPTIONS");
-        gConfig->core_options.Load((retro_core_option_definition *)data);
-        gUi->UpdateCoreOptions();
-        break;
+        // case RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS:
+        //     break;
 
     case RETRO_ENVIRONMENT_SET_DISK_CONTROL_INTERFACE:
         LogDebug("  cmd: RETRO_ENVIRONMENT_SET_DISK_CONTROL_INTERFACE");
@@ -148,6 +143,12 @@ bool EnvironmentCallback(unsigned cmd, void *data)
             *(unsigned *)data = CORE_OPTIONS_VERSION;
         break;
 
+    case RETRO_ENVIRONMENT_SET_CORE_OPTIONS:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_SET_CORE_OPTIONS");
+        gConfig->core_options.Load((retro_core_option_definition *)data);
+        gUi->UpdateCoreOptions();
+        break;
+
     case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_INTL:
         LogDebug("  cmd: RETRO_ENVIRONMENT_SET_CORE_OPTIONS_INTL");
         gConfig->core_options.Load((retro_core_options_intl *)data);
@@ -156,7 +157,12 @@ bool EnvironmentCallback(unsigned cmd, void *data)
 
     case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_DISPLAY:
         LogDebug("  cmd: RETRO_ENVIRONMENT_SET_CORE_OPTIONS_DISPLAY");
-        gConfig->core_options.SetVisable((const struct retro_core_option_display *)data);
+        gConfig->core_options.SetVisable((const retro_core_option_display *)data);
+        break;
+
+    case RETRO_ENVIRONMENT_SET_AUDIO_BUFFER_STATUS_CALLBACK:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_SET_AUDIO_BUFFER_STATUS_CALLBACK");
+        gEmulator->_audio.SetBufStatusCallback(data ? ((const retro_audio_buffer_status_callback *)data)->callback : nullptr);
         break;
 
     case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_V2:
@@ -171,6 +177,10 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         gUi->UpdateCoreOptions();
         break;
 
+    case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_UPDATE_DISPLAY_CALLBACK:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_SET_CORE_OPTIONS_UPDATE_DISPLAY_CALLBACK");
+        break;
+
     case RETRO_ENVIRONMENT_GET_CURRENT_SOFTWARE_FRAMEBUFFER:
         return gEmulator->GetCurrentSoftwareFramebuffer((retro_framebuffer *)data);
 
@@ -178,11 +188,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         // LogDebug("  cmd: RETRO_ENVIRONMENT_GET_AUDIO_VIDEO_ENABLE");
         if (data)
         {
-            *(int *)data = RETRO_AV_ENABLE_VIDEO;
-            if (!gConfig->mute)
-            {
-                *(int *)data |= RETRO_AV_ENABLE_AUDIO;
-            }
+            *(int *)data = (gConfig->mute ? RETRO_AV_ENABLE_VIDEO : RETRO_AV_ENABLE_VIDEO | RETRO_AV_ENABLE_AUDIO);
         }
         break;
 
@@ -301,11 +307,10 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
     if (id == RETRO_DEVICE_ID_JOYPAD_MASK)
     {
         // gEmulator->_input.ClearKeyStates(gEmulator->_keys_mask);
-        uint64_t keys = key_states;
         int16_t state = 0;
         for (size_t i = 0; i < 16; i++)
         {
-            if (keys & gEmulator->_keys[i])
+            if (key_states & gEmulator->_keys[i])
             {
                 state |= (1 << i);
             }

@@ -172,6 +172,11 @@ public:
         return _total_size - FreeSize();
     }
 
+    size_t TotalSize()
+    {
+        return _total_size;
+    }
+
 protected:
     T *_GetTmpBuf(size_t size)
     {

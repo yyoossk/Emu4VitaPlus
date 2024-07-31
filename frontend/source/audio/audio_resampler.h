@@ -23,6 +23,8 @@ public:
     void SetRate(uint32_t in_rate, uint32_t out_rate);
     void Process(const int16_t *in, uint32_t in_size);
 
+    size_t GetInBufOccupancy();
+
 private:
     static int _ResampleThread(SceSize args, void *argp);
 

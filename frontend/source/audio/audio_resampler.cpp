@@ -43,9 +43,12 @@ void AudioResampler::Process(const int16_t *in, uint32_t in_size)
 {
     size_t size = in_size * 2;
     int16_t *write_ptr = _in_buf.WriteBegin(size);
-    memcpy(write_ptr, in, size * sizeof(int16_t));
-    _in_buf.WriteEnd(size);
-    Signal();
+    if (write_ptr)
+    {
+        memcpy(write_ptr, in, size * sizeof(int16_t));
+        _in_buf.WriteEnd(size);
+        Signal();
+    }
 }
 
 int AudioResampler::_ResampleThread(SceSize args, void *argp)
@@ -77,4 +80,9 @@ int AudioResampler::_ResampleThread(SceSize args, void *argp)
     sceKernelExitThread(0);
 
     return 0;
+}
+
+size_t AudioResampler::GetInBufOccupancy()
+{
+    return _in_buf.FreeSize() * 100 / _in_buf.TotalSize();
 }
