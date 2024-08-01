@@ -1,13 +1,10 @@
 #pragma once
 #include <stdint.h>
 #include <functional>
+#include <map>
 #include <unordered_map>
 #include <stack>
 #include <psp2/ctrl.h>
-
-class Input;
-
-typedef std::function<void(Input *)> InputFunc;
 
 const uint32_t SCE_CTRL_LSTICK_UP = 0x00400000;
 const uint32_t SCE_CTRL_LSTICK_RIGHT = 0x00800000;
@@ -20,6 +17,20 @@ const uint32_t SCE_CTRL_RSTICK_LEFT = 0x20000000;
 
 #define DEFAULT_TURBO_INTERVAL 100000ull
 #define DEFAULT_TURBO_START_TIME 500000ull
+
+class Input;
+
+using InputFunc = std::function<void(Input *)>;
+
+struct CompareKey
+{
+    bool operator()(uint32_t a, uint32_t b) const
+    {
+        return a > b;
+    }
+};
+
+using InputMap = std::map<uint32_t, InputFunc, CompareKey>;
 
 class Input
 {
@@ -49,15 +60,15 @@ public:
     void PopCallbacks();
 
 private:
-    std::unordered_map<uint32_t, InputFunc> _key_up_callbacks;
-    std::unordered_map<uint32_t, InputFunc> _key_down_callbacks;
+    InputMap _key_up_callbacks;
+    InputMap _key_down_callbacks;
     std::unordered_map<uint32_t, uint64_t> _next_turbo_times;
     uint32_t _last_key;
     uint32_t _turbo_key;
     uint64_t _turbo_start_ms;
     uint64_t _turbo_interval_ms;
 
-    std::stack<std::unordered_map<uint32_t, InputFunc>> _callback_stack;
+    std::stack<InputMap> _callback_stack;
 
     void _ProcTurbo(uint32_t key);
     void _ProcCallbacks(uint32_t key);

@@ -36,7 +36,14 @@ void Input::SetKeyDownCallback(uint32_t key, InputFunc func, bool turbo)
 
 void Input::SetKeyUpCallback(uint32_t key, InputFunc func)
 {
-    _key_up_callbacks[key] = func;
+    if (func == nullptr)
+    {
+        UnsetKeyUpCallback(key);
+    }
+    else
+    {
+        _key_up_callbacks[key] = func;
+    }
 }
 
 void Input::UnsetKeyUpCallback(uint32_t key)
@@ -138,21 +145,21 @@ void Input::_ProcCallbacks(uint32_t key)
     {
         for (const auto &iter : _key_down_callbacks)
         {
-            if (((iter.first & key) == iter.first) && (iter.first & ~_last_key))
+            if (((iter.first & key) == iter.first) && !(iter.first & _last_key))
             {
                 // LogDebug("  call down: %08x %08x", iter.first, iter.second);
                 iter.second(this);
-                if (_key_up_callbacks.find(iter.first) == _key_up_callbacks.end())
-                {
-                    ClearKeyStates(iter.first);
-                }
+                // if (_key_up_callbacks.find(iter.first) == _key_up_callbacks.end())
+                // {
+                //     ClearKeyStates(iter.first);
+                // }
                 break;
             }
         }
 
         for (const auto &iter : _key_up_callbacks)
         {
-            if ((iter.first & _last_key) == iter.first)
+            if ((iter.first & _last_key) == iter.first && !(iter.first & key))
             {
                 // LogDebug("  call up: %08x %08x", iter.first, iter.second);
                 iter.second(this);
