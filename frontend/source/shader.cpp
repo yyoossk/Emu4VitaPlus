@@ -109,20 +109,14 @@ bool Shaders::Load(const char *path)
         return false;
     }
 
-    size_t count = 0;
-    char key[8];
-    while (true)
+    CSimpleIniA::TNamesDepend keys;
+    ini.GetAllKeys(SHADER_SECTION, keys);
+    this->reserve(keys.size());
+    for (auto const &key : keys)
     {
-        snprintf(key, 8, "%03u", count++);
-        const char *value = ini.GetValue(SHADER_SECTION, key, "NULL");
-        if (strcmp(value, "NULL") == 0)
-        {
-            break;
-        }
-        else
-        {
-            this->emplace_back(Shader(value));
-        }
+        const char *value = ini.GetValue(SHADER_SECTION, key.pItem, "NULL");
+        LogDebug("%s %s", key.pItem, value);
+        this->emplace_back(value);
     }
 
     return true;

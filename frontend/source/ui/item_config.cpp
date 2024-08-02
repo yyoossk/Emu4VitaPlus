@@ -33,6 +33,7 @@ ItemConfig::ItemConfig(LanguageString text,
       _config(config),
       _actived(false)
 {
+    _config_texts.reserve(count);
     for (size_t i = 0; i < count; i++)
     {
         _config_texts.emplace_back(LanguageString(start + i));
@@ -158,6 +159,7 @@ ItemIntConfig::ItemIntConfig(LanguageString text,
       ItemConfig(text, info, config, {}, active_callback, option_callback),
       _step(step)
 {
+    _config_texts.reserve(end - start + 1);
     for (size_t i = start; i <= end; i += step)
     {
         _config_texts.emplace_back(LanguageString(std::to_string(i)));

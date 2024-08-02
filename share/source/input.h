@@ -54,7 +54,7 @@ public:
     void Reset();
 
     uint32_t GetKeyStates() { return _last_key; };
-    void ClearKeyStates(uint32_t mask);
+    // void ClearKeyStates(uint32_t mask);
 
     void PushCallbacks();
     void PopCallbacks();

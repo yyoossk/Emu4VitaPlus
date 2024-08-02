@@ -8,7 +8,7 @@
 const std::vector<LanguageString> CoreOption::GetValues() const
 {
     std::vector<LanguageString> _values;
-
+    _values.reserve(values.size());
     for (const auto &v : values)
     {
         _values.emplace_back(v.label ? v.label : v.value);

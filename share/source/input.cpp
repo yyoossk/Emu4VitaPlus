@@ -212,7 +212,7 @@ void Input::PopCallbacks()
     _callback_stack.pop();
 }
 
-void Input::ClearKeyStates(uint32_t mask)
-{
-    _last_key &= ~mask;
-}
+// void Input::ClearKeyStates(uint32_t mask)
+// {
+//     _last_key &= ~mask;
+// }

@@ -68,7 +68,7 @@ bool Overlays::Load(const char *path)
 
     CSimpleIniA::TNamesDepend sections;
     ini.GetAllSections(sections);
-
+    this->reserve(sections.size());
     for (const auto &section : sections)
     {
         Overlay overlay;

@@ -159,6 +159,7 @@ void Ui::CreateTables(const char *path)
     _tabs[TAB_INDEX_SYSTEM] = new TabSeletable(TAB_SYSTEM, items);
 
     std::vector<ItemBase *> states;
+    states.reserve(MAX_STATES);
     for (size_t i = 0; i < MAX_STATES; i++)
     {
         states.emplace_back(new ItemState(gStateManager->states[i]));
@@ -215,6 +216,7 @@ void Ui::CreateTables(const char *path)
                                                                ResetGraphics,
                                                                std::bind(&Emulator::ChangeGraphicsConfig, gEmulator))});
     std::vector<ItemBase *> controls;
+    controls.reserve(gConfig->control_maps.size() + 1);
     for (ControlMapConfig &cmap : gConfig->control_maps)
     {
         controls.emplace_back(new ItemControl(&cmap));
@@ -223,6 +225,7 @@ void Ui::CreateTables(const char *path)
     _tabs[TAB_INDEX_CONTROL] = new TabSeletable(TAB_CONTROL, controls);
 
     std::vector<ItemBase *> hotkeys;
+    hotkeys.reserve(HOT_KEY_COUNT + 1);
     for (size_t i = 0; i < HOT_KEY_COUNT; i++)
     {
         hotkeys.emplace_back(new ItemHotkey((HotKeyConfig)i, &gConfig->hotkeys[i]));
@@ -450,6 +453,7 @@ void Ui::ClearLogs()
 void Ui::UpdateCoreOptions()
 {
     std::vector<ItemBase *> options;
+    options.reserve(gConfig->core_options.size());
     for (auto &iter : gConfig->core_options)
     {
         options.emplace_back(new ItemCore(&iter.second));

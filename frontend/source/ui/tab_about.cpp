@@ -60,41 +60,42 @@ void TabAbout::UnsetInputHooks(Input *input)
 void TabAbout::_InitTexts()
 {
     _last_lang = gConfig->language;
-    _texts.clear();
-    _texts.emplace_back(APP_TITLE_NAME);
-    _texts.emplace_back(std::string(TEXT(COMPILED_ON)) + " " + __DATE__ + " " + __TIME__);
-    _texts.emplace_back(std::string(TEXT(AUTHOR)) + ": noword   " + TEXT(SPECIAL_THANKS) + ": yizhigai");
-    _texts.emplace_back(std::string(TEXT(SITE)) + ": https://github.com/noword/Emu4VitaPlus");
-    _texts.emplace_back("");
-    _texts.emplace_back(TEXT(EXTERNAL_COMPONENTS));
-    _texts.emplace_back("7-Zip (GPL v2.1) https://github.com/mcmilk/7-Zip.git");
-    _texts.emplace_back("minizip-ng (zlib) https://github.com/zlib-ng/minizip-ng");
-    _texts.emplace_back("simpleini (MIT) https://github.com/brofield/simpleini");
-    _texts.emplace_back("libretro-common (?) https://github.com/libretro/libretro-common");
-    _texts.emplace_back("libvita2d (MIT) https://github.com/xerpi/libvita2d");
-    _texts.emplace_back("libvita2d_ext (MIT) https://github.com/frangarcj/libvita2d_ext");
-    _texts.emplace_back("");
-    _texts.emplace_back(TEXT(TAB_CORE));
-    _texts.emplace_back("https://gitee.com/yizhigai/libretro-fba-lite");
-    _texts.emplace_back("https://github.com/libretro/gpsp");
-    _texts.emplace_back("https://github.com/libretro/libretro-fceumm");
-    _texts.emplace_back("https://github.com/libretro/gambatte-libretro");
-    _texts.emplace_back("https://github.com/libretro/beetle-ngp-libretro");
-    _texts.emplace_back("https://github.com/libretro/beetle-pce-fast-libretro");
-    _texts.emplace_back("https://github.com/libretro/Genesis-Plus-GX");
-    _texts.emplace_back("https://github.com/libretro/beetle-supergrafx-libretro");
-    _texts.emplace_back("https://github.com/libretro/beetle-wswan-libretro");
-    _texts.emplace_back("https://github.com/libretro/nestopia");
-    _texts.emplace_back("https://github.com/libretro/pcsx_rearmed");
-    _texts.emplace_back("https://github.com/libretro/picodrive");
-    _texts.emplace_back("https://github.com/libretro/snes9x2002");
-    _texts.emplace_back("https://github.com/libretro/snes9x2005");
-    _texts.emplace_back("https://github.com/libretro/snes9x2010");
-    _texts.emplace_back("https://github.com/libretro/vba-next");
-    _texts.emplace_back("https://github.com/libretro/FBNeo.git");
-    _texts.emplace_back("https://github.com/libretro/fbalpha2012.git");
-    _texts.emplace_back("https://github.com/libretro/mgba.git");
-    _texts.emplace_back("https://github.com/libretro/Genesis-Plus-GX-Wide.git");
+    _texts = {
+        APP_TITLE_NAME,
+        std::string(TEXT(COMPILED_ON)) + " " + __DATE__ + " " + __TIME__,
+        std::string(TEXT(AUTHOR)) + ": noword   " + TEXT(SPECIAL_THANKS) + ": yizhigai",
+        std::string(TEXT(SITE)) + ": https://github.com/noword/Emu4VitaPlus",
+        "",
+        TEXT(EXTERNAL_COMPONENTS),
+        "7-Zip (GPL v2.1) https://github.com/mcmilk/7-Zip.git",
+        "minizip-ng (zlib) https://github.com/zlib-ng/minizip-ng",
+        "simpleini (MIT) https://github.com/brofield/simpleini",
+        "libretro-common (?) https://github.com/libretro/libretro-common",
+        "libvita2d (MIT) https://github.com/xerpi/libvita2d",
+        "libvita2d_ext (MIT) https://github.com/frangarcj/libvita2d_ext",
+        "",
+        TEXT(TAB_CORE),
+        "https://gitee.com/yizhigai/libretro-fba-lite",
+        "https://github.com/libretro/gpsp",
+        "https://github.com/libretro/libretro-fceumm",
+        "https://github.com/libretro/gambatte-libretro",
+        "https://github.com/libretro/beetle-ngp-libretro",
+        "https://github.com/libretro/beetle-pce-fast-libretro",
+        "https://github.com/libretro/Genesis-Plus-GX",
+        "https://github.com/libretro/beetle-supergrafx-libretro",
+        "https://github.com/libretro/beetle-wswan-libretro",
+        "https://github.com/libretro/nestopia",
+        "https://github.com/libretro/pcsx_rearmed",
+        "https://github.com/libretro/picodrive",
+        "https://github.com/libretro/snes9x2002",
+        "https://github.com/libretro/snes9x2005",
+        "https://github.com/libretro/snes9x2010",
+        "https://github.com/libretro/vba-next",
+        "https://github.com/libretro/FBNeo.git",
+        "https://github.com/libretro/fbalpha2012.git",
+        "https://github.com/libretro/mgba.git",
+        "https://github.com/libretro/Genesis-Plus-GX-Wide.git",
+    };
 }
 
 void TabAbout::_OnKeyUp(Input *input)
