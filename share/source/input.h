@@ -72,5 +72,5 @@ private:
     std::stack<InputMap> _callback_stack;
 
     void _ProcTurbo(uint32_t key);
-    void _ProcCallbacks(uint32_t key);
+    void _ProcCallbacks(uint32_t *key);
 };

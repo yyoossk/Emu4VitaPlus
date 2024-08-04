@@ -98,7 +98,7 @@ bool Input::Poll(bool waiting)
         key |= SCE_CTRL_RSTICK_DOWN;
 
     _ProcTurbo(key);
-    _ProcCallbacks(key);
+    _ProcCallbacks(&key);
 
     bool changed = (_last_key != key);
     _last_key = key;
@@ -140,21 +140,17 @@ void Input::_ProcTurbo(uint32_t key)
     } while (k);
 }
 
-void Input::_ProcCallbacks(uint32_t key)
+void Input::_ProcCallbacks(uint32_t *key)
 {
-    if (key != _last_key)
+    if (*key != _last_key)
     {
         // LogDebug("key %08x", key);
         for (const auto &iter : _key_down_callbacks)
         {
-            if (((iter.first & key) == iter.first) && ((iter.first & _last_key) != iter.first))
+            if (((iter.first & *key) == iter.first) && ((iter.first & _last_key) != iter.first))
             {
                 // LogDebug("  call down: %08x %08x", iter.first, iter.second);
                 iter.second(this);
-                // if (_key_up_callbacks.find(iter.first) == _key_up_callbacks.end())
-                // {
-                //     ClearKeyStates(iter.first);
-                // }
                 break;
             }
         }
@@ -170,9 +166,14 @@ void Input::_ProcCallbacks(uint32_t key)
                     // LogDebug("  call up: %08x %08x", iter.first, iter.second);
                     iter.second(this);
                     _next_key_up_called_ms = current + DEFAULT_TURBO_START_TIME;
+                    *key &= ~iter.first;
                     break;
                 }
             }
+        }
+        else if (*key)
+        {
+            *key = 0;
         }
     }
 }
