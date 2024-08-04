@@ -9,6 +9,7 @@ void Emulator::_SetupKeys()
     LogFunctionName;
     memset(_keys, 0, sizeof(_keys));
     _keys_mask = 0;
+    _input.Reset();
     for (const auto &k : gConfig->control_maps)
     {
         if (k.retro == 0xff)
@@ -26,6 +27,7 @@ void Emulator::_SetupKeys()
         if (k.turbo)
         {
             _input.SetTurbo(k.psv);
+            LogDebug("_input.SetTurbo: %08x", k.psv);
         }
     }
 
@@ -34,8 +36,13 @@ void Emulator::_SetupKeys()
     //     LogDebug("%d %08x", i, _keys[i]);
     // }
 
-#define BIND_HOTKEY(KEY, FUNC) _input.SetKeyDownCallback(gConfig->hotkeys[KEY], std::bind(&Emulator::FUNC, this, &_input));
-#define BIND_HOTKEY_UP(KEY, FUNC) _input.SetKeyUpCallback(gConfig->hotkeys[KEY], std::bind(&Emulator::FUNC, this, &_input));
+#define BIND_HOTKEY(KEY, FUNC)                                                                   \
+    _input.SetKeyDownCallback(gConfig->hotkeys[KEY], std::bind(&Emulator::FUNC, this, &_input)); \
+    LogDebug("SetKeyDownCallback " #FUNC " %08x", gConfig->hotkeys[KEY]);
+
+#define BIND_HOTKEY_UP(KEY, FUNC)                                                              \
+    _input.SetKeyUpCallback(gConfig->hotkeys[KEY], std::bind(&Emulator::FUNC, this, &_input)); \
+    LogDebug("SetKeyUpCallback " #FUNC " %08x", gConfig->hotkeys[KEY]);
 
     BIND_HOTKEY(SAVE_STATE, _OnHotkeySave);
     BIND_HOTKEY(LOAD_STATE, _OnHotkeyLoad);

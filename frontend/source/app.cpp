@@ -93,6 +93,11 @@ App::App(int argc, char *const argv[])
     }
 
     gUi->ClearLogs();
+
+    sceShellUtilLock((SceShellUtilLockType)(SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN |
+                                            SCE_SHELL_UTIL_LOCK_TYPE_QUICK_MENU |
+                                            SCE_SHELL_UTIL_LOCK_TYPE_USB_CONNECTION |
+                                            SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN_2));
 }
 
 App::~App()

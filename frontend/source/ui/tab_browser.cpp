@@ -112,7 +112,6 @@ void TabBrowser::_OnActive(Input *input)
     {
         if (gEmulator->LoadGame((_directory->GetCurrentPath() + "/" + item.name).c_str(), item.entry_name.c_str(), item.crc32))
         {
-            sceShellUtilLock((SceShellUtilLockType)(SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN | SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN_2));
             UnsetInputHooks(input);
         }
     }

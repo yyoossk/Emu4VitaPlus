@@ -65,5 +65,5 @@ url = https://github.com/libretro/fbalpha2012.git
 path = cores/mgba
 url = https://github.com/libretro/mgba.git
 [submodule "Genesis-Plus-GX-Wide"]
-path = Genesis-Plus-GX-Wide
+path = cores/Genesis-Plus-GX-Wide
 url = https://github.com/libretro/Genesis-Plus-GX-Wide.git

@@ -67,6 +67,7 @@ private:
     uint32_t _turbo_key;
     uint64_t _turbo_start_ms;
     uint64_t _turbo_interval_ms;
+    uint64_t _next_key_up_called_ms;
 
     std::stack<InputMap> _callback_stack;
 

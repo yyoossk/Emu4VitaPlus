@@ -10,7 +10,8 @@
 Input::Input() : _last_key(0ull),
                  _turbo_key(0ull),
                  _turbo_start_ms(DEFAULT_TURBO_START_TIME),
-                 _turbo_interval_ms(DEFAULT_TURBO_INTERVAL)
+                 _turbo_interval_ms(DEFAULT_TURBO_INTERVAL),
+                 _next_key_up_called_ms(0)
 {
 }
 
@@ -143,9 +144,10 @@ void Input::_ProcCallbacks(uint32_t key)
 {
     if (key != _last_key)
     {
+        // LogDebug("key %08x", key);
         for (const auto &iter : _key_down_callbacks)
         {
-            if (((iter.first & key) == iter.first) && !(iter.first & _last_key))
+            if (((iter.first & key) == iter.first) && ((iter.first & _last_key) != iter.first))
             {
                 // LogDebug("  call down: %08x %08x", iter.first, iter.second);
                 iter.second(this);
@@ -157,13 +159,19 @@ void Input::_ProcCallbacks(uint32_t key)
             }
         }
 
-        for (const auto &iter : _key_up_callbacks)
+        uint64_t current = sceKernelGetProcessTimeWide();
+        if (current > _next_key_up_called_ms)
         {
-            if ((iter.first & _last_key) == iter.first && !(iter.first & key))
+            for (const auto &iter : _key_up_callbacks)
             {
-                // LogDebug("  call up: %08x %08x", iter.first, iter.second);
-                iter.second(this);
-                break;
+                // LogDebug("_key_up_callbacks %08x %08x", iter.first, _last_key);
+                if ((iter.first & _last_key) == iter.first)
+                {
+                    // LogDebug("  call up: %08x %08x", iter.first, iter.second);
+                    iter.second(this);
+                    _next_key_up_called_ms = current + DEFAULT_TURBO_START_TIME;
+                    break;
+                }
             }
         }
     }
