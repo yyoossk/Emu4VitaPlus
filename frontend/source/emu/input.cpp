@@ -31,11 +31,6 @@ void Emulator::_SetupKeys()
         }
     }
 
-    // for (int i = 0; i < 16; i++)
-    // {
-    //     LogDebug("%d %08x", i, _keys[i]);
-    // }
-
 #define BIND_HOTKEY(KEY, FUNC)                                                                   \
     _input.SetKeyDownCallback(gConfig->hotkeys[KEY], std::bind(&Emulator::FUNC, this, &_input)); \
     LogDebug("SetKeyDownCallback " #FUNC " %08x", gConfig->hotkeys[KEY]);
@@ -54,7 +49,7 @@ void Emulator::_SetupKeys()
     BIND_HOTKEY(EXIT_GAME, _OnHotkeyExitGame);
 
     BIND_HOTKEY_UP(GAME_REWIND, _OnHotkeyRewindUp);
-    _input.SetKeyUpCallback(SCE_CTRL_PSBUTTON, std::bind(&Emulator::_OnPsButton, this, &_input));
+    BIND_HOTKEY_UP(MENU_TOGGLE, _OnPsButton);
 }
 
 void Emulator::_OnPsButton(Input *input)
@@ -64,7 +59,6 @@ void Emulator::_OnPsButton(Input *input)
     gStatus = APP_STATUS_SHOW_UI_IN_GAME;
     gVideo->Unlock();
     Save();
-    LogDebug("_OnPsButton end");
 }
 
 void Emulator::_OnHotkeySave(Input *input)

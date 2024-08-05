@@ -68,9 +68,10 @@ private:
     uint64_t _turbo_start_ms;
     uint64_t _turbo_interval_ms;
     uint64_t _next_key_up_called_ms;
+    bool _enable_key_up;
 
     std::stack<InputMap> _callback_stack;
 
     void _ProcTurbo(uint32_t key);
-    void _ProcCallbacks(uint32_t *key);
+    void _ProcCallbacks(uint32_t key);
 };

@@ -44,7 +44,7 @@ void Emulator::Show()
         }
     }
 
-    _texture_buf->Lock();
+    // _texture_buf->Lock();
     // LogDebug("Show _texture_buf->Current() %08x", _texture_buf->Current());
     _current_tex = _texture_buf->Current();
 
@@ -86,7 +86,7 @@ void Emulator::Show()
     // LogDebug("%f %f %f %f", _video_rect.x, _video_rect.y, _video_rect.width, _video_rect.height);
     // LogDebug("%f %f", _video_rect.width / _texture_buf->GetWidth(), _video_rect.height / _texture_buf->GetHeight());
 
-    _texture_buf->Unlock();
+    // _texture_buf->Unlock();
 
     if (gConfig->graphics[GRAPHICS_OVERLAY] > 0 && gConfig->graphics[GRAPHICS_OVERLAY_MODE] == CONFIG_GRAPHICS_OVERLAY_MODE_OVERLAY)
     {

@@ -57,6 +57,7 @@ const std::unordered_map<uint32_t, const char *> Config::HotkeyStr = {
     KEY_PAIR(GAME_REWIND),
     KEY_PAIR(CONTROLLER_PORT_UP),
     KEY_PAIR(CONTROLLER_PORT_DOWN),
+    KEY_PAIR(MENU_TOGGLE),
     KEY_PAIR(EXIT_GAME),
 };
 
@@ -178,6 +179,7 @@ void Config::DefaultHotKey()
     hotkeys[GAME_REWIND] = SCE_CTRL_PSBUTTON | SCE_CTRL_RSTICK_LEFT;
     hotkeys[CONTROLLER_PORT_UP] = SCE_CTRL_PSBUTTON | SCE_CTRL_RSTICK_UP;
     hotkeys[CONTROLLER_PORT_DOWN] = SCE_CTRL_PSBUTTON | SCE_CTRL_RSTICK_DOWN;
+    hotkeys[MENU_TOGGLE] = SCE_CTRL_PSBUTTON;
     hotkeys[EXIT_GAME] = SCE_CTRL_PSBUTTON | SCE_CTRL_CROSS;
 }
 
@@ -264,18 +266,18 @@ bool Config::Load(const char *path)
 
     for (auto &control : control_maps)
     {
-        control.retro = ini.GetLongValue(PsvKeyStr.at(control.psv), "retro");
-        control.turbo = ini.GetBoolValue(PsvKeyStr.at(control.psv), "turbo");
+        control.retro = ini.GetLongValue(PsvKeyStr.at(control.psv), "retro", control.retro);
+        control.turbo = ini.GetBoolValue(PsvKeyStr.at(control.psv), "turbo", control.turbo);
     }
 
     for (size_t i = 0; i < HOT_KEY_COUNT; i++)
     {
-        hotkeys[i] = ini.GetLongValue(HOTKEY_SECTION, HotkeyStr.at(i));
+        hotkeys[i] = ini.GetLongValue(HOTKEY_SECTION, HotkeyStr.at(i), hotkeys[i]);
     }
 
     for (size_t i = 0; i < GRAPHICS_CONFIG_COUNT; i++)
     {
-        graphics[i] = ini.GetLongValue(GRAPHICS_SECTION, GraphicsStr.at(i));
+        graphics[i] = ini.GetLongValue(GRAPHICS_SECTION, GraphicsStr.at(i), graphics[i]);
     }
 
     LogDebug("load end");

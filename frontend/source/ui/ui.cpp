@@ -335,12 +335,12 @@ void Ui::Run()
         if (gStatus == APP_STATUS_SHOW_UI_IN_GAME)
         {
             system_tab->SetIndex(0);
-            _input.SetKeyUpCallback(SCE_CTRL_PSBUTTON, std::bind(&Ui::_OnPsButton, this, &_input));
+            _input.SetKeyUpCallback(gConfig->hotkeys[MENU_TOGGLE], std::bind(&Ui::_OnPsButton, this, &_input));
         }
         else
         {
             _tab_index = TAB_INDEX_BROWSER;
-            _input.UnsetKeyUpCallback(SCE_CTRL_PSBUTTON);
+            _input.UnsetKeyUpCallback(gConfig->hotkeys[MENU_TOGGLE]);
         }
 
         SetInputHooks();

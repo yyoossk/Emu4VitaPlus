@@ -7,11 +7,14 @@
 #define ANALOG_CENTER 128
 #define ANALOG_THRESHOLD 64
 
+#define TEST_KEY(KEY, KEYS) (((KEY) & (KEYS)) == (KEY))
+
 Input::Input() : _last_key(0ull),
                  _turbo_key(0ull),
                  _turbo_start_ms(DEFAULT_TURBO_START_TIME),
                  _turbo_interval_ms(DEFAULT_TURBO_INTERVAL),
-                 _next_key_up_called_ms(0)
+                 _next_key_up_called_ms(0),
+                 _enable_key_up(true)
 {
 }
 
@@ -98,7 +101,7 @@ bool Input::Poll(bool waiting)
         key |= SCE_CTRL_RSTICK_DOWN;
 
     _ProcTurbo(key);
-    _ProcCallbacks(&key);
+    _ProcCallbacks(key);
 
     bool changed = (_last_key != key);
     _last_key = key;
@@ -140,14 +143,14 @@ void Input::_ProcTurbo(uint32_t key)
     } while (k);
 }
 
-void Input::_ProcCallbacks(uint32_t *key)
+void Input::_ProcCallbacks(uint32_t key)
 {
-    if (*key != _last_key)
+    if (key != _last_key)
     {
         // LogDebug("key %08x", key);
         for (const auto &iter : _key_down_callbacks)
         {
-            if (((iter.first & *key) == iter.first) && ((iter.first & _last_key) != iter.first))
+            if (TEST_KEY(iter.first, key) && !TEST_KEY(iter.first, _last_key))
             {
                 // LogDebug("  call down: %08x %08x", iter.first, iter.second);
                 iter.second(this);
@@ -156,24 +159,26 @@ void Input::_ProcCallbacks(uint32_t *key)
         }
 
         uint64_t current = sceKernelGetProcessTimeWide();
-        if (current > _next_key_up_called_ms)
+        if (_enable_key_up)
         {
             for (const auto &iter : _key_up_callbacks)
             {
                 // LogDebug("_key_up_callbacks %08x %08x", iter.first, _last_key);
-                if ((iter.first & _last_key) == iter.first)
+                if (TEST_KEY(iter.first, _last_key) && !TEST_KEY(iter.first, key))
                 {
                     // LogDebug("  call up: %08x %08x", iter.first, iter.second);
                     iter.second(this);
-                    _next_key_up_called_ms = current + DEFAULT_TURBO_START_TIME;
-                    *key &= ~iter.first;
+                    if (key)
+                    {
+                        _enable_key_up = false;
+                    }
                     break;
                 }
             }
         }
-        else if (*key)
+        else if (!key)
         {
-            *key = 0;
+            _enable_key_up = true;
         }
     }
 }
