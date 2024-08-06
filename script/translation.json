@@ -466,5 +466,317 @@
         "English": "Port",
         "Chinese": "端口",
         "Comments": ""
+    },
+    {
+        "No.": "79",
+        "English": "Region",
+        "Chinese": "区域",
+        "Comments": ""
+    },
+    {
+        "No.": "80",
+        "English": "Force core to use NTSC, PAL or Dendy region timings.",
+        "Chinese": "强制核心使用NTSC、PAL或Dendy区域的时序。",
+        "Comments": ""
+    },
+    {
+        "No.": "81",
+        "English": "Game Genie Add-On (Restart Required)",
+        "Chinese": "游戏精灵附加组件（需要重启）",
+        "Comments": ""
+    },
+    {
+        "No.": "82",
+        "English": "Enable emulation of a Game Genie add-on cartridge, allowing cheat codes to be entered when launching games. The Game Genie ROM file 'gamegenie.nes' must be present in the frontend's system directory. Does not apply to FDS or arcade content.",
+        "Chinese": "启用游戏精灵附加卡带的模拟功能，允许在启动游戏时输入作弊码。游戏精灵ROM文件“gamegenie.nes”必须位于前端的系统目录中。不适用于FDS或街机内容。",
+        "Comments": ""
+    },
+    {
+        "No.": "83",
+        "English": "Show Advanced System Options",
+        "Chinese": "显示高级系统选项",
+        "Comments": ""
+    },
+    {
+        "No.": "84",
+        "English": "Show advanced system options and tweaks.",
+        "Chinese": "显示高级系统选项和调整。",
+        "Comments": ""
+    },
+    {
+        "No.": "85",
+        "English": "Show Advanced Sound Options",
+        "Chinese": "显示高级音频选项",
+        "Comments": ""
+    },
+    {
+        "No.": "86",
+        "English": "Show advanced sound options and tweaks.",
+        "Chinese": "显示高级音频选项和调整。",
+        "Comments": ""
+    },
+    {
+        "No.": "87",
+        "English": "Aspect Ratio",
+        "Chinese": "长宽比",
+        "Comments": ""
+    },
+    {
+        "No.": "88",
+        "English": "Choose preferred aspect ratio.",
+        "Chinese": "选择喜欢的纵横比。",
+        "Comments": ""
+    },
+    {
+        "No.": "89",
+        "English": "Pixel Perfect",
+        "Chinese": "完美像素",
+        "Comments": ""
+    },
+    {
+        "No.": "90",
+        "English": "Crop Overscan",
+        "Chinese": "裁剪过扫描",
+        "Comments": ""
+    },
+    {
+        "No.": "91",
+        "English": "Removes 8 pixel overscan from all sides of the screen.",
+        "Chinese": "从屏幕的四边移除8像素的过扫描。",
+        "Comments": ""
+    },
+    {
+        "No.": "92",
+        "English": "Crop Horizontal Left Overscan",
+        "Chinese": "裁剪水平左侧过扫描",
+        "Comments": ""
+    },
+    {
+        "No.": "93",
+        "English": "Removes pixels from left side of the screen to simulate overscan seen on standard CRT televisions.",
+        "Chinese": "从屏幕左侧移除像素，以模拟标准CRT电视上的过扫描效果。",
+        "Comments": ""
+    },
+    {
+        "No.": "94",
+        "English": "Crop Horizontal Right Overscan",
+        "Chinese": "裁剪水平右侧过扫描",
+        "Comments": ""
+    },
+    {
+        "No.": "95",
+        "English": "Removes pixels from right side of the screen to simulate overscan seen on standard CRT televisions.",
+        "Chinese": "从屏幕右侧移除像素，以模拟标准CRT电视上的过扫描效果。",
+        "Comments": ""
+    },
+    {
+        "No.": "96",
+        "English": "Crop Vertical Top Overscan",
+        "Chinese": "Crop Vertical Top Overscan",
+        "Comments": ""
+    },
+    {
+        "No.": "97",
+        "English": "Removes pixels from the top of the screen to simulate overscan seen on standard CRT televisions.",
+        "Chinese": "Removes pixels from the top of the screen to simulate overscan seen on standard CRT televisions.",
+        "Comments": ""
+    },
+    {
+        "No.": "98",
+        "English": "Crop Vertical Bottom Overscan",
+        "Chinese": "Crop Vertical Bottom Overscan",
+        "Comments": ""
+    },
+    {
+        "No.": "99",
+        "English": "Removes pixels from the bottom of the screen to simulate overscan seen on standard CRT televisions.",
+        "Chinese": "Removes pixels from the bottom of the screen to simulate overscan seen on standard CRT televisions.",
+        "Comments": ""
+    },
+    {
+        "No.": "100",
+        "English": "Color Palette",
+        "Chinese": "Color Palette",
+        "Comments": ""
+    },
+    {
+        "No.": "101",
+        "English": "Choose from pre-generated palettes, a custom 64x3 palette from file or raw format (needs to use a nes-decoder shader).",
+        "Chinese": "Choose from pre-generated palettes, a custom 64x3 palette from file or raw format (needs to use a nes-decoder shader).",
+        "Comments": ""
+    },
+    {
+        "No.": "102",
+        "English": "NTSC Filter",
+        "Chinese": "NTSC Filter",
+        "Comments": ""
+    },
+    {
+        "No.": "103",
+        "English": "Blargg's NTSC filters are used to replicate RF, Composite, S-Video, and RGB cable signals.",
+        "Chinese": "Blargg's NTSC filters are used to replicate RF, Composite, S-Video, and RGB cable signals.",
+        "Comments": ""
+    },
+    {
+        "No.": "104",
+        "English": "Sound Quality",
+        "Chinese": "Sound Quality",
+        "Comments": ""
+    },
+    {
+        "No.": "105",
+        "English": "Enable higher quality sound. Increases performance requirements.",
+        "Chinese": "Enable higher quality sound. Increases performance requirements.",
+        "Comments": ""
+    },
+    {
+        "No.": "106",
+        "English": "Audio RF Filter",
+        "Chinese": "Audio RF Filter",
+        "Comments": ""
+    },
+    {
+        "No.": "107",
+        "English": "Apply a low pass audio filter to simulate the 'muted' sound of the NES when connected to a television via the RF modulator.",
+        "Chinese": "Apply a low pass audio filter to simulate the 'muted' sound of the NES when connected to a television via the RF modulator.",
+        "Comments": ""
+    },
+    {
+        "No.": "108",
+        "English": "Stereo Sound Effect",
+        "Chinese": "Stereo Sound Effect",
+        "Comments": ""
+    },
+    {
+        "No.": "109",
+        "English": "Enable a fake stereo sound effect by delaying the right audio channel when upmixing the mono signal output from the NES.",
+        "Chinese": "Enable a fake stereo sound effect by delaying the right audio channel when upmixing the mono signal output from the NES.",
+        "Comments": ""
+    },
+    {
+        "No.": "110",
+        "English": "Swap Audio Duty Cycles",
+        "Chinese": "Swap Audio Duty Cycles",
+        "Comments": ""
+    },
+    {
+        "No.": "111",
+        "English": "Swap Duty Cycles",
+        "Chinese": "Swap Duty Cycles",
+        "Comments": ""
+    },
+    {
+        "No.": "112",
+        "English": "Simulates the sound from famiclones that have the pulse wave channels duty cycle bits reversed.",
+        "Chinese": "Simulates the sound from famiclones that have the pulse wave channels duty cycle bits reversed.",
+        "Comments": ""
+    },
+    {
+        "No.": "113",
+        "English": "Master Volume",
+        "Chinese": "Master Volume",
+        "Comments": ""
+    },
+    {
+        "No.": "114",
+        "English": "Change master volume level.",
+        "Chinese": "Change master volume level.",
+        "Comments": ""
+    },
+    {
+        "No.": "115",
+        "English": "Audio Channel 1 (Square 1)",
+        "Chinese": "Audio Channel 1 (Square 1)",
+        "Comments": ""
+    },
+    {
+        "No.": "116",
+        "English": "Enables or disables pulse wave generator audio output 1.",
+        "Chinese": "Enables or disables pulse wave generator audio output 1.",
+        "Comments": ""
+    },
+    {
+        "No.": "117",
+        "English": "Audio Channel 2 (Square 2)",
+        "Chinese": "Audio Channel 2 (Square 2)",
+        "Comments": ""
+    },
+    {
+        "No.": "118",
+        "English": "Enables or disables pulse wave generator audio output 2.",
+        "Chinese": "Enables or disables pulse wave generator audio output 2.",
+        "Comments": ""
+    },
+    {
+        "No.": "119",
+        "English": "Audio Channel 3 (Triangle)",
+        "Chinese": "Audio Channel 3 (Triangle)",
+        "Comments": ""
+    },
+    {
+        "No.": "120",
+        "English": "Enables or disables triangle wave generator audio output.",
+        "Chinese": "Enables or disables triangle wave generator audio output.",
+        "Comments": ""
+    },
+    {
+        "No.": "121",
+        "English": "Audio Channel 4 (Noise)",
+        "Chinese": "Audio Channel 4 (Noise)",
+        "Comments": ""
+    },
+    {
+        "No.": "122",
+        "English": "Enables or disables noise generator audio output.",
+        "Chinese": "Enables or disables noise generator audio output.",
+        "Comments": ""
+    },
+    {
+        "No.": "123",
+        "English": "Audio Channel 5 (PCM)",
+        "Chinese": "Audio Channel 5 (PCM)",
+        "Comments": ""
+    },
+    {
+        "No.": "124",
+        "English": "Enables or disables delta modulation channel audio output.",
+        "Chinese": "Enables or disables delta modulation channel audio output.",
+        "Comments": ""
+    },
+    {
+        "No.": "125",
+        "English": "Turbo Enable",
+        "Chinese": "Turbo Enable",
+        "Comments": ""
+    },
+    {
+        "No.": "126",
+        "English": "Enables or disables turbo buttons.",
+        "Chinese": "Enables or disables turbo buttons.",
+        "Comments": ""
+    },
+    {
+        "No.": "127",
+        "English": "Turbo Delay (in frames)",
+        "Chinese": "Turbo Delay (in frames)",
+        "Comments": ""
+    },
+    {
+        "No.": "128",
+        "English": "Repeat rate of turbo buttons in frames.",
+        "Chinese": "Repeat rate of turbo buttons in frames.",
+        "Comments": ""
+    },
+    {
+        "No.": "129",
+        "English": "Zapper Mode",
+        "Chinese": "Zapper Mode",
+        "Comments": ""
+    },
+    {
+        "No.": "130",
+        "English": "Selects device to use for Zapper games.",
+        "Chinese": "Selects device to use for Zapper games.",
+        "Comments": ""
     }
 ]

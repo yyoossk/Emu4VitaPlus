@@ -142,12 +142,13 @@ bool Emulator::LoadGame(const char *path, const char *entry_name, uint32_t crc32
 void Emulator::UnloadGame()
 {
     LogFunctionName;
-    Lock();
+    gStatus = APP_STATUS_SHOW_UI;
     _rewind_manager.Deinit();
+
+    Lock();
     gStateManager->states[0]->Save();
     Save();
     retro_unload_game();
-    gStatus = APP_STATUS_SHOW_UI;
     Unlock();
 }
 
@@ -155,6 +156,11 @@ void Emulator::Run()
 {
     _delay.Wait();
     _input.Poll();
+
+    if (gStatus == APP_STATUS_SHOW_UI)
+    {
+        return;
+    }
 
     if (_rewind_manager.InRewinding())
     {
@@ -329,16 +335,16 @@ void Emulator::Save()
 
     for (auto id : RETRO_MEMORY_IDS)
     {
-        FILE *fp = fopen(_SaveNamePath(id).c_str(), "wb");
-        if (fp)
+        size_t size = retro_get_memory_size(id);
+        void *data = retro_get_memory_data(id);
+        if (size > 0 && data)
         {
-            size_t size = retro_get_memory_size(id);
-            void *data = retro_get_memory_data(id);
-            if (size > 0 && data)
+            FILE *fp = fopen(_SaveNamePath(id).c_str(), "wb");
+            if (fp)
             {
                 fwrite(data, size, 1, fp);
+                fclose(fp);
             }
-            fclose(fp);
         }
     }
 }

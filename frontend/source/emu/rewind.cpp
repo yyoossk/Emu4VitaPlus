@@ -105,6 +105,7 @@ int RewindManager::_RewindThread(SceSize args, void *argp)
         if (gStatus != APP_STATUS_RUN_GAME)
         {
             sceKernelDelayThread(20000);
+            // LogDebug("RewindManager delay");
             continue;
         }
 
@@ -118,8 +119,10 @@ int RewindManager::_RewindThread(SceSize args, void *argp)
         rewind->_delay.Wait();
 
         rewind->_rewinding ? rewind->_Rewind() : rewind->_SaveState();
+        // LogDebug("_RewindThread loop");
     }
 
+    LogDebug("_RewindThread exit");
     return 0;
 }
 
