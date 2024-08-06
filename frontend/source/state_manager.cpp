@@ -31,22 +31,29 @@ void State::Init(const char *game_name)
     LogFunctionName;
 
     char path[SCE_FIOS_PATH_MAX];
-    snprintf(path, SCE_FIOS_PATH_MAX, "%s/%s/state_%s.bin", CORE_SAVESTATES_DIR, game_name, _slot_name.c_str());
-
-    _state_path = path;
-    _valid = File::Exist(path);
-    if (_valid)
+    char name[SCE_FIOS_PATH_MAX];
+    snprintf(path, SCE_FIOS_PATH_MAX, "%s/%s", CORE_SAVESTATES_DIR, game_name);
+    if (!File::Exist(path))
     {
-        File::GetCreateTime(path, &_create_time);
+        File::MakeDirs(path);
     }
 
-    snprintf(path, SCE_FIOS_PATH_MAX, "%s/%s/state_%s.jpg", CORE_SAVESTATES_DIR, game_name, _slot_name.c_str());
-    _image_path = path;
+    snprintf(name, SCE_FIOS_PATH_MAX, "%s/state_%s.bin", path, _slot_name.c_str());
+
+    _state_path = name;
+    _valid = File::Exist(name);
+    if (_valid)
+    {
+        File::GetCreateTime(name, &_create_time);
+    }
+
+    snprintf(name, SCE_FIOS_PATH_MAX, "%s/state_%s.jpg", path, _slot_name.c_str());
+    _image_path = name;
     if (_texture)
     {
         vita2d_free_texture(_texture);
     }
-    _texture = vita2d_load_JPEG_file(path);
+    _texture = vita2d_load_JPEG_file(name);
 }
 
 bool State::Save()
