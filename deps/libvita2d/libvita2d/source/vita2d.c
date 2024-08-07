@@ -713,10 +713,10 @@ static int vita2d_init_internal(unsigned int temp_pool_size, SceGxmMultisampleMo
 	backBufferIndex = 0;
 	frontBufferIndex = 0;
 
-	pgf_module_was_loaded = sceSysmoduleIsLoaded(SCE_SYSMODULE_PGF);
+	// pgf_module_was_loaded = sceSysmoduleIsLoaded(SCE_SYSMODULE_PGF);
 
-	if (pgf_module_was_loaded != SCE_SYSMODULE_LOADED)
-		sceSysmoduleLoadModule(SCE_SYSMODULE_PGF);
+	// if (pgf_module_was_loaded != SCE_SYSMODULE_LOADED)
+	// 	sceSysmoduleLoadModule(SCE_SYSMODULE_PGF);
 
 	vita2d_initialized = 1;
 	return 1;
