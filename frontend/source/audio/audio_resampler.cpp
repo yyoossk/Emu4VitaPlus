@@ -74,6 +74,8 @@ int AudioResampler::_ResampleThread(SceSize args, void *argp)
         resampler->_in_buf.ReadEnd(in_size);
         resampler->_out_buf->WriteEnd(out_size * 2);
         resampler->_output->Signal();
+
+        resampler->LogCpuId("AudioResampler");
     }
 
     LogDebug("_Audio_ResempleThreadThread exit");

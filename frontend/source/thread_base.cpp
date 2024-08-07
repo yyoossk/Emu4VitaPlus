@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include "thread_base.h"
 #include "log.h"
 
@@ -109,4 +110,20 @@ void ThreadBase::Wait()
 void ThreadBase::Signal()
 {
     sceKernelSignalLwCond(&_cond);
+}
+
+void ThreadBase::LogCpuId(const char *str)
+{
+#ifdef LOG_CPU_ID
+    static uint64_t next_time = 0;
+    uint64_t current = sceKernelGetProcessTimeWide();
+    if (current >= next_time)
+    {
+        SceKernelThreadInfo info{0};
+        info.size = sizeof(SceKernelThreadInfo);
+        sceKernelGetThreadInfo(_thread_id, &info);
+        LogDebug("%s CPU: %d", str, info.currentCpuId);
+        next_time = current + LOG_CPU_ID_INTERVAL;
+    }
+#endif
 }

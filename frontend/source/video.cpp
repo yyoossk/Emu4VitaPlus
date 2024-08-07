@@ -65,6 +65,7 @@ int Video::_DrawThread(SceSize args, void *argp)
         vita2d_end_drawing();
         vita2d_swap_buffers();
         video->Unlock();
+        video->LogCpuId("Video");
     }
 
     LogDebug("_DrawThread exit");
