@@ -36,4 +36,5 @@ private:
     void *_zip_handle;
 
     bool _LeagleTest(const char *name, DirItem *item = nullptr);
+    bool _ToRoot();
 };

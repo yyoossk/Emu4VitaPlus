@@ -8,6 +8,7 @@
 #include "directory.h"
 #include "utils.h"
 #include "log.h"
+#include "file.h"
 
 std::unordered_set<std::string> Directory::_ext_archives{"zip", "7z"};
 
@@ -122,6 +123,12 @@ bool Directory::_LeagleTest(const char *name, DirItem *item)
 bool Directory::SetCurrentPath(const std::string &path)
 {
     LogFunctionName;
+    LogDebug("  path: %s", path.c_str());
+
+    if (path.size() == 0)
+    {
+        return _ToRoot();
+    }
 
     _items.clear();
 
@@ -164,4 +171,26 @@ bool Directory::SetCurrentPath(const std::string &path)
 size_t Directory::GetSize()
 {
     return _items.size();
+}
+
+bool Directory::_ToRoot()
+{
+    _items.clear();
+    _current_path = "";
+
+    for (const auto device : {
+             "imc0:",
+             "uma0:",
+             "ur0:",
+             "ux0:",
+             "xmc0:",
+         })
+    {
+        if (File::Exist(device))
+        {
+            _items.push_back({device, true});
+        }
+    }
+
+    return _items.size() > 0;
 }

@@ -105,7 +105,14 @@ void TabBrowser::_OnActive(Input *input)
 
     if (item.is_dir)
     {
-        _directory->SetCurrentPath(_directory->GetCurrentPath() + "/" + item.name);
+        if (_directory->GetCurrentPath().size() == 0)
+        {
+            _directory->SetCurrentPath(item.name);
+        }
+        else
+        {
+            _directory->SetCurrentPath(_directory->GetCurrentPath() + "/" + item.name);
+        }
         _index = 0;
     }
     else
@@ -122,16 +129,18 @@ void TabBrowser::_OnKeyCross(Input *input)
     auto path = _directory->GetCurrentPath();
     if (path.size() <= 5)
     {
-        return;
+        _directory->SetCurrentPath("");
     }
-
-    size_t pos = path.rfind('/');
-    if (pos != std::string::npos)
+    else
     {
-        LogDebug(path.c_str());
-        path = path.substr(0, pos);
-        LogDebug(path.c_str());
-        _directory->SetCurrentPath(path);
+        size_t pos = path.rfind('/');
+        if (pos != std::string::npos)
+        {
+            LogDebug(path.c_str());
+            path = path.substr(0, pos);
+            LogDebug(path.c_str());
+            _directory->SetCurrentPath(path);
+        }
     }
 }
 

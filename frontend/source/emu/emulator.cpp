@@ -69,6 +69,11 @@ bool Emulator::LoadGame(const char *path, const char *entry_name, uint32_t crc32
 {
     LogFunctionName;
 
+    if (!File::Exist(path))
+    {
+        return false;
+    }
+
     gStatus = APP_STATUS_BOOT;
 
     _current_name = File::GetStem(path);
