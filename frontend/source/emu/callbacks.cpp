@@ -197,7 +197,14 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         break;
 
     default:
-        LogDebug("  unsupported cmd:%d", cmd);
+        if (cmd > RETRO_ENVIRONMENT_EXPERIMENTAL)
+        {
+            LogDebug("  unsupported cmd: RETRO_ENVIRONMENT_EXPERIMENTAL | %d", cmd - RETRO_ENVIRONMENT_EXPERIMENTAL);
+        }
+        else
+        {
+            LogDebug("  unsupported cmd: %d", cmd);
+        }
         return false;
     }
 
