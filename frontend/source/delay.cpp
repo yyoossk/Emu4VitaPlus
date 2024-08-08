@@ -7,10 +7,10 @@ Delay::Delay() : Delay(0ULL)
     LogFunctionName;
 }
 
-Delay::Delay(uint64_t interval_ms) : _interval_ms(interval_ms)
+Delay::Delay(uint64_t interval_ms)
 {
     LogFunctionName;
-    _next_ms = sceKernelGetProcessTimeWide();
+    SetInterval(interval_ms);
 }
 
 Delay::~Delay()
