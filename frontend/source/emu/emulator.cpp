@@ -159,7 +159,6 @@ void Emulator::UnloadGame()
 
 void Emulator::Run()
 {
-    _delay.Wait();
     _input.Poll();
 
     if (gStatus == APP_STATUS_SHOW_UI)

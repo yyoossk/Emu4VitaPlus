@@ -328,7 +328,6 @@ else ifeq ($(platform), vita)
 	__FLAGS := -marm -mfpu=neon -mtune=cortex-a9 -mcpu=cortex-a9 -mfloat-abi=hard -mword-relocations
 	__FLAGS += -fno-optimize-sibling-calls -fno-strict-aliasing -fno-partial-inlining -fno-tree-vrp
 	__FLAGS += -ffast-math -fsingle-precision-constant -funroll-loops -ftracer
-	__FLAGS += -DHAVE_NEON -DUSE_FRAME_SKIP -DUSE_MOTION_SENSOR -DUSE_THREADED_RENDERER -DUSE_TWEAKS
 
 	CFLAGS += $(__FLAGS)
 	CXXFLAGS += $(__FLAGS)
@@ -389,8 +388,8 @@ else ifeq ($(platform), wiiu)
    CXX = $(DEVKITPPC)/bin/powerpc-eabi-g++$(EXE_EXT)
    AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
    ENDIANNESS_DEFINES += -DMSB_FIRST
-   PLATFORM_DEFINES += -DGEKKO -DWIIU -DHW_RVL -mwup -mcpu=750 -meabi -mhard-float -D__ppc__
-   PLATFORM_DEFINES += -U__INT32_TYPE__ -U __UINT32_TYPE__ -D__INT32_TYPE__=int
+   PLATFORM_DEFINES += -DGEKKO -DWIIU -DHW_RVL -mcpu=750 -meabi -mhard-float -D__ppc__
+   PLATFORM_DEFINES += -ffunction-sections -fdata-sections -D__wiiu__ -D__wut__
    STATIC_LINKING = 1
    TILED_RENDERING=1
 

@@ -126,6 +126,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         LogDebug("  cmd: RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO");
         memcpy(&gEmulator->_av_info, data, sizeof(retro_system_av_info));
         gEmulator->_audio.SetSampleRate(gEmulator->_av_info.timing.sample_rate);
+        gEmulator->SetSpeed(gEmulator->_speed);
         break;
 
     case RETRO_ENVIRONMENT_GET_LANGUAGE:
@@ -215,15 +216,17 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
 {
     LogFunctionNameLimited;
 
-    if (!data)
+    if ((!data) || pitch == 0)
     {
         LogDebug("video data is NULL");
+        gEmulator->_delay.Wait();
         return;
     }
 
     if (width == 0 || height == 0)
     {
         LogDebug("invalid size: %d %d", width, height);
+        gEmulator->_delay.Wait();
         return;
     }
 
@@ -282,6 +285,7 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
 
     gEmulator->_texture_buf->Unlock();
     sceKernelSignalSema(gEmulator->_video_semaid, 1);
+    gEmulator->_delay.Wait();
 }
 
 size_t AudioSampleBatchCallback(const int16_t *data, size_t frames)
