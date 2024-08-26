@@ -24,7 +24,7 @@ public:
     virtual ~Emulator();
 
     void Init();
-    bool LoadGame(const char *path, const char *entry_name, uint32_t crc32);
+    bool LoadRom(const char *path, const char *entry_name, uint32_t crc32);
     void UnloadGame();
     void Reset();
     void Run();
@@ -43,6 +43,7 @@ public:
     uint64_t GetMsPerFrame() { return _delay.GetInterval(); };
     void ChangeGraphicsConfig() { _graphics_config_changed = true; };
     void ChangeRewindConfig();
+    uint32_t GetFrameCount() { return _frame_count; };
 
     friend bool EnvironmentCallback(unsigned cmd, void *data);
     friend void VideoRefreshCallback(const void *data, unsigned width, unsigned height, size_t pitch);
@@ -85,6 +86,7 @@ private:
     Delay _delay;
     bool _soft_frame_buf_render;
     vita2d_texture *_current_tex;
+    uint32_t _frame_count;
 
     SceKernelLwMutexWork _run_mutex;
     SceUID _video_semaid;

@@ -24,8 +24,7 @@ RewindManager::RewindManager()
       _contens(nullptr),
       _block_count(0),
       _tmp_buf(nullptr),
-      _last_full_block(nullptr),
-      _frame_count(0)
+      _last_full_block(nullptr)
 {
     LogFunctionName;
 }
@@ -110,9 +109,8 @@ int RewindManager::_RewindThread(SceSize args, void *argp)
         }
 
         // skip first 100 frames
-        if (rewind->_frame_count < 100)
+        if (gEmulator->GetFrameCount() < 100)
         {
-            rewind->_frame_count++;
             continue;
         }
 

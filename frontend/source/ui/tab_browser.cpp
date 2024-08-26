@@ -117,7 +117,7 @@ void TabBrowser::_OnActive(Input *input)
     }
     else
     {
-        if (gEmulator->LoadGame((_directory->GetCurrentPath() + "/" + item.name).c_str(), item.entry_name.c_str(), item.crc32))
+        if (gEmulator->LoadRom((_directory->GetCurrentPath() + "/" + item.name).c_str(), item.entry_name.c_str(), item.crc32))
         {
             UnsetInputHooks(input);
         }

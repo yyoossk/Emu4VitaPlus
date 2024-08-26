@@ -28,7 +28,8 @@ Emulator::Emulator()
       _current_tex(nullptr),
       _info{0},
       _av_info{0},
-      _graphics_config_changed(false)
+      _graphics_config_changed(false),
+      _frame_count(0)
 {
     sceKernelCreateLwMutex(&_run_mutex, "run_mutex", 0, 0, NULL);
     _video_semaid = sceKernelCreateSema("video_sema", 0, 0, 1, NULL);
@@ -65,7 +66,7 @@ void Emulator::Init()
     _SetupKeys();
 }
 
-bool Emulator::LoadGame(const char *path, const char *entry_name, uint32_t crc32)
+bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
 {
     LogFunctionName;
 
@@ -113,6 +114,7 @@ bool Emulator::LoadGame(const char *path, const char *entry_name, uint32_t crc32
         retro_get_system_av_info(&_av_info);
         retro_set_controller_port_device(0, RETRO_DEVICE_JOYPAD);
         SetSpeed(1.0);
+        gUi->ClearLogs();
         gStatus = APP_STATUS_RUN_GAME;
         if (!_audio.Inited())
         {
@@ -123,6 +125,7 @@ bool Emulator::LoadGame(const char *path, const char *entry_name, uint32_t crc32
         gConfig->Save();
 
         Load();
+        retro_run();
 
         if (gConfig->rewind)
         {
@@ -131,16 +134,16 @@ bool Emulator::LoadGame(const char *path, const char *entry_name, uint32_t crc32
     }
     else
     {
-        LogError("load rom failed: %s", _current_name.c_str());
+        LogError("  load rom failed: %s", _current_name.c_str());
         gStatus = APP_STATUS_SHOW_UI;
     }
 
-    gUi->ClearLogs();
     if (buf)
     {
         delete[] buf;
     }
 
+    LogDebug("  LoadRom result: %d", result);
     return result;
 }
 
@@ -159,9 +162,10 @@ void Emulator::UnloadGame()
 
 void Emulator::Run()
 {
+    LogFunctionNameLimited;
     _input.Poll();
 
-    if (gStatus == APP_STATUS_SHOW_UI)
+    if (gStatus != APP_STATUS_RUN_GAME)
     {
         return;
     }
@@ -331,6 +335,7 @@ void Emulator::Save()
 {
     LogFunctionName;
 
+    Lock();
     std::string path = _SaveDirPath();
     if (!File::Exist(path.c_str()))
     {
@@ -341,27 +346,40 @@ void Emulator::Save()
     {
         size_t size = retro_get_memory_size(id);
         void *data = retro_get_memory_data(id);
-        if (size > 0 && data)
+        if (size == 0 || data == NULL)
         {
-            FILE *fp = fopen(_SaveNamePath(id).c_str(), "wb");
-            if (fp)
-            {
-                fwrite(data, size, 1, fp);
-                fclose(fp);
-            }
+            LogDebug("failed to save: %d", id);
+            continue;
+        }
+
+        FILE *fp = fopen(_SaveNamePath(id).c_str(), "wb");
+        if (fp)
+        {
+            fwrite(data, size, 1, fp);
+            fclose(fp);
+            LogDebug("%s saved", _SaveNamePath(id).c_str());
         }
     }
+    Unlock();
 }
 
 void Emulator::Load()
 {
     LogFunctionName;
+
+    Lock();
     for (auto id : RETRO_MEMORY_IDS)
     {
         size_t size = retro_get_memory_size(id);
         void *data = retro_get_memory_data(id);
+        if (size == 0 || data == NULL)
+        {
+            LogDebug("failed to load: %d", id);
+            continue;
+        }
+
         FILE *fp = fopen(_SaveNamePath(id).c_str(), "rb");
-        if (fp && size > 0 && data)
+        if (fp)
         {
             fseek(fp, 0, SEEK_END);
 
@@ -369,10 +387,12 @@ void Emulator::Load()
             {
                 fseek(fp, 0, SEEK_SET);
                 fread(data, size, 1, fp);
+                LogDebug("%s loaded", _SaveNamePath(id).c_str());
             }
             fclose(fp);
         }
     }
+    Unlock();
 }
 
 void Emulator::ChangeRewindConfig()

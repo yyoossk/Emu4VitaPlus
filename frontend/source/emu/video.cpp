@@ -9,8 +9,10 @@ extern float _vita2d_ortho_matrix[4 * 4];
 
 void Emulator::Show()
 {
-    if (_texture_buf == nullptr)
+    LogFunctionNameLimited;
+    if (_texture_buf == nullptr || (!(gStatus == APP_STATUS_RUN_GAME) || (gStatus == APP_STATUS_SHOW_UI_IN_GAME)))
     {
+        sceKernelDelayThread(100000);
         return;
     }
 

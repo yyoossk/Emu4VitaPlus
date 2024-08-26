@@ -286,6 +286,7 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
     gEmulator->_texture_buf->Unlock();
     sceKernelSignalSema(gEmulator->_video_semaid, 1);
     gEmulator->_delay.Wait();
+    gEmulator->_frame_count++;
 }
 
 size_t AudioSampleBatchCallback(const int16_t *data, size_t frames)

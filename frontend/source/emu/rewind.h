@@ -201,7 +201,6 @@ private:
     uint32_t _block_count;
     uint8_t *_tmp_buf;
     RewindBlock *_last_full_block;
-    uint32_t _frame_count;
     Delay _delay;
 
     RewindBlocks _blocks{BLOCK_SIZE};

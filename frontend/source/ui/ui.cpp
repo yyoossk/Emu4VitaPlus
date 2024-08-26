@@ -318,9 +318,9 @@ void Ui::Run()
 {
     _input.Poll(true);
     static APP_STATUS last_status = APP_STATUS_SHOW_UI;
-    if (gStatus != last_status)
+    if (gStatus != last_status && (gStatus == APP_STATUS_SHOW_UI_IN_GAME || gStatus == APP_STATUS_SHOW_UI))
     {
-        LogDebug("  status change to: %d last status: %d", gStatus, last_status);
+        LogDebug("  status changed: to %d", gStatus);
         LogDebug("  _tab_index: %d", _tab_index);
         gVideo->Lock();
 
