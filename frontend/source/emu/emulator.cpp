@@ -127,6 +127,8 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
         Load();
         retro_run();
 
+        _frame_count = 0;
+
         if (gConfig->rewind)
         {
             _rewind_manager.Init();

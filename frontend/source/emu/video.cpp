@@ -18,8 +18,9 @@ void Emulator::Show()
 
     if (gStatus == APP_STATUS_RUN_GAME)
     {
-        SceUInt time = 15000;
-        sceKernelWaitSema(_video_semaid, 1, &time);
+        // SceUInt time = 15000;
+        // sceKernelWaitSema(_video_semaid, 1, &time);
+        sceKernelWaitSema(_video_semaid, 1, NULL);
     }
 
     // size_t count = 0;
