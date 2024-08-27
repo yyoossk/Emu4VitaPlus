@@ -89,10 +89,11 @@ size_t Audio::SendAudioSample(const int16_t *data, size_t frames)
         _resampler->Process(data, frames);
         if (_buf_status_callback)
         {
-            if (status_count & 0xf == 0)
+            if (status_count & 0x7f == 0)
             {
                 size_t occupancy = _resampler->GetInBufOccupancy();
                 _buf_status_callback(gConfig->mute, occupancy, occupancy < 25);
+                LogDebug("  _buf_status_callback: %d %d %d", gConfig->mute, occupancy, occupancy < 25);
             }
             status_count++;
         }
