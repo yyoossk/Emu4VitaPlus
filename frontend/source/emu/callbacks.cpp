@@ -293,7 +293,7 @@ size_t AudioSampleBatchCallback(const int16_t *data, size_t frames)
 {
     LogFunctionNameLimited;
 
-    if (!gEmulator->_rewind_manager.InRewinding())
+    if ((!gConfig->mute) && (!gEmulator->_rewind_manager.InRewinding()))
     {
         gEmulator->_audio.SendAudioSample(data, frames);
     }

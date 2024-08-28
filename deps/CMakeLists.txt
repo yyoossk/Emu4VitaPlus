@@ -127,6 +127,8 @@ target_include_directories(7zip PRIVATE ${SEVENZIP_PATH})
 # ----------------------
 add_subdirectory(simpleini)
 
+# minizip-ng
+# ----------------------
 option(MZ_BZIP2 OFF)
 option(MZ_LZMA OFF)
 option(MZ_ZSTD OFF)

@@ -75,9 +75,12 @@ bool Audio::_GetSuitableSampleRate(uint32_t sample_rate, uint32_t *out_sample_ra
             *out_sample_rate = SAMPLE_RATES[i];
             return true;
         }
+        else if (SAMPLE_RATES[i] < sample_rate)
+        {
+            *out_sample_rate = SAMPLE_RATES[i];
+        }
     }
 
-    *out_sample_rate = AUDIO_DEFAULT_SAMPLE_RATE;
     return false;
 }
 

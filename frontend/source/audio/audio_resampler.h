@@ -7,10 +7,16 @@
 #include "audio_buf.h"
 #include "log.h"
 
+#define RESAMPLER SPEEX
+
+#if RESAMPLER == SWR
 extern "C"
 {
 #include <libswresample/swresample.h>
 }
+#elif RESAMPLER == SPEEX
+#include <speex/speex_resampler.h>
+#endif
 
 class AudioResampler : public ThreadBase
 {
@@ -28,9 +34,14 @@ public:
 private:
     static int _ResampleThread(SceSize args, void *argp);
 
-    SwrContext *_swr_ctx;
     uint32_t _in_rate, _out_rate;
     CircleBuf<int16_t> _in_buf{0x10000};
     AudioOutput *_output;
     AudioBuf *_out_buf;
+
+#if RESAMPLER == SWR
+    SwrContext *_swr_ctx;
+#elif RESAMPLER == SPEEX
+    SpeexResamplerState *_speex;
+#endif
 };

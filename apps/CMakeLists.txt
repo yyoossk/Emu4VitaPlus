@@ -56,6 +56,7 @@ target_link_libraries(
     imgui_vita2d
     swresample
     swscale
+    speexdsp
     avutil
     SimpleIni
     png
