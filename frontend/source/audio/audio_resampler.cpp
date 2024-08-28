@@ -1,8 +1,6 @@
 #include <stdint.h>
 #include "audio_resampler.h"
 
-#define SOUND_QUALITY 1
-
 AudioResampler::AudioResampler(uint32_t in_rate, uint32_t out_rate, AudioOutput *output, AudioBuf *out_buf)
     : ThreadBase(_ResampleThread),
       _in_rate(in_rate),
@@ -97,15 +95,15 @@ int AudioResampler::_ResampleThread(SceSize args, void *argp)
             in = resampler->_in_buf.ReadBegin(&in_size);
         }
 
-        size_t out_size = resampler->GetOutSize(in_size / 2); // swr_get_out_samples(resampler->_swr_ctx, in_size / 2);
-        int16_t *out = resampler->_out_buf->WriteBegin(out_size * 2);
+        size_t out_size = resampler->GetOutSize(in_size); // swr_get_out_samples(resampler->_swr_ctx, in_size / 2);
+        int16_t *out = resampler->_out_buf->WriteBegin(out_size);
 #if RESAMPLER == SWR
-        out_size = swr_convert(resampler->_swr_ctx, (uint8_t **)&out, out_size, (const uint8_t **)&in, in_size / 2);
+        out_size = swr_convert(resampler->_swr_ctx, (uint8_t **)&out, out_size / 2, (const uint8_t **)&in, in_size / 2);
 #elif RESAMPLER == SPEEX
-        speex_resampler_process_int(_speex, 0, in, in_size, out, out_size);
+        speex_resampler_process_int(resampler->_speex, 0, in, &in_size, out, &out_size);
 #endif
         resampler->_in_buf.ReadEnd(in_size);
-        resampler->_out_buf->WriteEnd(out_size * 2);
+        resampler->_out_buf->WriteEnd(out_size);
         resampler->_output->Signal();
 
         resampler->LogCpuId("AudioResampler");
