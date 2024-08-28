@@ -40,6 +40,8 @@ void Audio::SetSampleRate(uint32_t sample_rate)
     _in_sample_rate = sample_rate;
 
     bool need_resample = !_GetSuitableSampleRate(sample_rate, &_out_sample_rate);
+    LogDebug("  need_resample: %d _out_sample_rate: %d", need_resample, _out_sample_rate);
+
     if (_output == nullptr)
     {
         _output = new AudioOutput(AUDIO_OUTPUT_COUNT, _out_sample_rate, &_out_buf);

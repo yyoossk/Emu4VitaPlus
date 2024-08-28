@@ -10,7 +10,7 @@ extern float _vita2d_ortho_matrix[4 * 4];
 void Emulator::Show()
 {
     LogFunctionNameLimited;
-    if (_texture_buf == nullptr || (!(gStatus == APP_STATUS_RUN_GAME) || (gStatus == APP_STATUS_SHOW_UI_IN_GAME)))
+    if (_texture_buf == nullptr || !(gStatus == APP_STATUS_RUN_GAME || gStatus == APP_STATUS_SHOW_UI_IN_GAME))
     {
         sceKernelDelayThread(100000);
         return;
@@ -22,7 +22,6 @@ void Emulator::Show()
         // sceKernelWaitSema(_video_semaid, 1, &time);
         sceKernelWaitSema(_video_semaid, 1, NULL);
     }
-
     // size_t count = 0;
     // while (_current_tex == _texture_buf->Current() && count < 10)
     // {

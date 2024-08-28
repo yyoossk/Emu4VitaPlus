@@ -348,6 +348,8 @@ void Ui::Run()
         gVideo->Unlock();
 
         last_status = gStatus;
+
+        LogDebug("  changed");
     }
 
     // sceKernelSignalSema(_update_sema, 1);

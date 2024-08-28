@@ -116,7 +116,7 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
         SetSpeed(1.0);
         gUi->ClearLogs();
         gStatus = APP_STATUS_RUN_GAME;
-        if (!_audio.Inited())
+        if ((!gConfig->mute) && (!_audio.Inited()))
         {
             _audio.SetSampleRate(_av_info.timing.sample_rate);
         }
