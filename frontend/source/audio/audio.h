@@ -11,7 +11,8 @@ public:
     Audio();
     virtual ~Audio();
 
-    void SetSampleRate(uint32_t sample_rate);
+    void Init(uint32_t sample_rate);
+    void Deinit();
     size_t SendAudioSample(const int16_t *data, size_t frames);
     bool Inited() { return _output != nullptr; };
     void SetBufStatusCallback(retro_audio_buffer_status_callback_t callback) { _buf_status_callback = callback; };

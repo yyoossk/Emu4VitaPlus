@@ -16,7 +16,7 @@ ItemConfig::ItemConfig(LanguageString text,
       _config_texts(std::move(config_texts)),
       _actived(false)
 {
-    if (*_config >= _config_texts.size())
+    if (_config_texts.size() > 0 && *_config >= _config_texts.size())
     {
         *_config = 0;
     }
@@ -149,14 +149,15 @@ void ItemConfig::UnsetInputHooks(Input *input)
 
 ItemIntConfig::ItemIntConfig(LanguageString text,
                              LanguageString info,
-                             uint32_t *config,
+                             uint32_t *value,
                              size_t start,
                              size_t end,
                              size_t step,
                              CallbackFunc active_callback,
                              CallbackFunc option_callback)
     : ItemBase(text, info, active_callback, option_callback),
-      ItemConfig(text, info, config, {}, active_callback, option_callback),
+      ItemConfig(text, info, &_index, {}, active_callback, option_callback),
+      _value(value),
       _step(step)
 {
     _config_texts.reserve(end - start + 1);
@@ -164,26 +165,12 @@ ItemIntConfig::ItemIntConfig(LanguageString text,
     {
         _config_texts.emplace_back(LanguageString(std::to_string(i)));
     }
-    if (GetConfig() < start || GetConfig() > end)
-    {
-        SetConfig(0);
-    }
-}
 
-uint32_t ItemIntConfig::GetConfig() const
-{
-    std::string s = std::to_string(*_config);
-    for (size_t i = 0; i < _config_texts.size(); i++)
-    {
-        if (s == _config_texts[i].Get())
-        {
-            return i;
-        }
-    }
-    return 0;
+    _index = (*value - start) / step;
 }
 
 void ItemIntConfig::SetConfig(uint32_t value)
 {
-    *_config = std::stoi(_config_texts[value].Get());
+    ItemConfig::SetConfig(value);
+    *_value = std::stoi(_config_texts[value].Get());
 }

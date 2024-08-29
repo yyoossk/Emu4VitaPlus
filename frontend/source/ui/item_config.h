@@ -50,16 +50,17 @@ class ItemIntConfig : public ItemConfig
 public:
     ItemIntConfig(LanguageString text,
                   LanguageString info,
-                  uint32_t *config,
+                  uint32_t *value,
                   size_t start,
                   size_t end,
                   size_t step = 1,
                   CallbackFunc active_callback = nullptr,
                   CallbackFunc option_callback = nullptr);
 
-    virtual uint32_t GetConfig() const;
     virtual void SetConfig(uint32_t value);
 
 private:
     size_t _step;
+    uint32_t *_value;
+    uint32_t _index;
 };

@@ -6,11 +6,14 @@ ThreadBase::ThreadBase(SceKernelThreadEntry entry, int priority, int stack_size)
     : _entry(entry),
       _priority(priority),
       _stack_size(stack_size),
-      _thread_id(-1)
+      _thread_id(-1),
+      _block_time(0),
+      _start_time(0),
+      _next_log_time(0)
 {
     LogFunctionName;
     sceKernelCreateLwMutex(&_mutex, "thread_mutex", 0, 0, NULL);
-    sceKernelCreateLwCond(&_cond, "thread_cond", 0, &_mutex, NULL);
+    _semaid = sceKernelCreateSema("thread_sema", 0, 0, 1, NULL);
 }
 
 ThreadBase::~ThreadBase()
@@ -21,7 +24,7 @@ ThreadBase::~ThreadBase()
         Stop(true);
     }
     sceKernelDeleteLwMutex(&_mutex);
-    sceKernelDeleteLwCond(&_cond);
+    sceKernelDeleteSema(_semaid);
 }
 
 bool ThreadBase::Start()
@@ -104,26 +107,35 @@ void ThreadBase::Unlock()
 
 void ThreadBase::Wait()
 {
-    sceKernelWaitLwCond(&_cond, NULL);
+    sceKernelWaitSema(_semaid, 1, NULL);
 }
 
 void ThreadBase::Signal()
 {
-    sceKernelSignalLwCond(&_cond);
+    sceKernelSignalSema(_semaid, 1);
 }
 
-void ThreadBase::LogCpuId(const char *str)
+#if LOG_LEVEL <= LOG_LEVEL_DEBUG
+void ThreadBase::_LogCpu(const char *str)
 {
-#ifdef LOG_CPU_ID
-    static uint64_t next_time = 0;
     uint64_t current = sceKernelGetProcessTimeWide();
-    if (current >= next_time)
+    if (current >= _next_log_time)
     {
         SceKernelThreadInfo info{0};
         info.size = sizeof(SceKernelThreadInfo);
         sceKernelGetThreadInfo(_thread_id, &info);
-        LogDebug("%s CPU: %d", str, info.currentCpuId);
-        next_time = current + LOG_CPU_ID_INTERVAL;
+        LogDebug("%s CPU: %d %0.4f", str, info.currentCpuId, _block_time / 1000000.0);
+        _next_log_time = current + LOG_CPU_ID_INTERVAL;
     }
-#endif
 }
+
+void ThreadBase::_BeginBlock()
+{
+    _start_time = sceKernelGetProcessTimeWide();
+}
+
+void ThreadBase::_EndBlock()
+{
+    _block_time += sceKernelGetProcessTimeWide() - _start_time;
+}
+#endif

@@ -10,13 +10,13 @@ extern float _vita2d_ortho_matrix[4 * 4];
 void Emulator::Show()
 {
     LogFunctionNameLimited;
-    if (_texture_buf == nullptr || !(gStatus == APP_STATUS_RUN_GAME || gStatus == APP_STATUS_SHOW_UI_IN_GAME))
+    if (_texture_buf == nullptr)
     {
         sceKernelDelayThread(100000);
         return;
     }
 
-    if (gStatus == APP_STATUS_RUN_GAME)
+    if (gStatus.Get() == APP_STATUS_RUN_GAME)
     {
         // SceUInt time = 15000;
         // sceKernelWaitSema(_video_semaid, 1, &time);

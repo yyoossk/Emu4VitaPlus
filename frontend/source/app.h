@@ -1,5 +1,7 @@
 #pragma once
 
+#include "video.h"
+
 enum APP_STATUS
 {
     APP_STATUS_BOOT,
@@ -10,7 +12,25 @@ enum APP_STATUS
     APP_STATUS_EXIT
 };
 
-extern APP_STATUS gStatus;
+class AppStatus
+{
+public:
+    AppStatus() : _status(APP_STATUS_BOOT) {};
+    virtual ~AppStatus() {};
+
+    APP_STATUS Get() { return _status; };
+    void Set(APP_STATUS status)
+    {
+        gVideo->Lock();
+        _status = status;
+        gVideo->Unlock();
+    };
+
+private:
+    APP_STATUS _status;
+};
+
+extern AppStatus gStatus;
 
 class App
 {

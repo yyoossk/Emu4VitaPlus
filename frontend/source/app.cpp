@@ -16,7 +16,7 @@
 #include "defines.h"
 #include "shader.h"
 
-APP_STATUS gStatus = APP_STATUS_BOOT;
+AppStatus gStatus;
 
 App::App(int argc, char *const argv[])
 {
@@ -118,10 +118,10 @@ App::~App()
 void App::Run()
 {
     LogFunctionName;
-    gStatus = APP_STATUS_SHOW_UI;
-    while (gStatus != APP_STATUS_EXIT)
+    gStatus.Set(APP_STATUS_SHOW_UI);
+    while (gStatus.Get() != APP_STATUS_EXIT)
     {
-        switch (gStatus)
+        switch (gStatus.Get())
         {
         case APP_STATUS_SHOW_UI:
         case APP_STATUS_SHOW_UI_IN_GAME:
@@ -136,7 +136,7 @@ void App::Run()
         {
             char *argv[] = {NULL};
             sceAppMgrLoadExec("app0:eboot.bin", argv, NULL);
-            gStatus = APP_STATUS_EXIT;
+            gStatus.Set(APP_STATUS_EXIT);
         }
         break;
 

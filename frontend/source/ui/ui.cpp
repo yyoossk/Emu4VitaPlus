@@ -25,33 +25,33 @@ Ui *gUi = nullptr;
 static void ResumeGame()
 {
     LogFunctionName;
-    gStatus = APP_STATUS_RUN_GAME;
+    gStatus.Set(APP_STATUS_RUN_GAME);
 }
 
 static void ResetGame()
 {
     LogFunctionName;
     gEmulator->Reset();
-    gStatus = APP_STATUS_BOOT;
+    gStatus.Set(APP_STATUS_BOOT);
 }
 
 static void ExitGame()
 {
     LogFunctionName;
     gEmulator->UnloadGame();
-    gStatus = APP_STATUS_SHOW_UI;
+    gStatus.Set(APP_STATUS_SHOW_UI);
 }
 
 static void ReturnToArch()
 {
     LogFunctionName;
-    gStatus = APP_STATUS_RETURN_ARCH;
+    gStatus.Set(APP_STATUS_RETURN_ARCH);
 }
 
 static void ExitApp()
 {
     LogFunctionName;
-    gStatus = APP_STATUS_EXIT;
+    gStatus.Set(APP_STATUS_EXIT);
 }
 
 static void ChangeLanguage()
@@ -259,11 +259,13 @@ void Ui::CreateTables(const char *path)
                                                                                 &gConfig->rewind_buf_size,
                                                                                 MIN_REWIND_BUF_SIZE,
                                                                                 MAX_REWIND_BUF_SIZE,
-                                                                                REWIND_BUF_SIZE_STEP),
+                                                                                REWIND_BUF_SIZE_STEP,
+                                                                                std::bind(&Emulator::ChangeRewindConfig, gEmulator)),
                                                               new ItemConfig(OPTIONS_MENU_MUTE,
                                                                              "",
                                                                              (uint32_t *)&gConfig->mute,
-                                                                             {NO, YES})});
+                                                                             {NO, YES},
+                                                                             std::bind(&Emulator::ChangeAudioConfig, gEmulator))});
 
     _tabs[TAB_INDEX_ABOUT] = new TabAbout();
 
@@ -318,21 +320,22 @@ void Ui::Run()
 {
     _input.Poll(true);
     static APP_STATUS last_status = APP_STATUS_SHOW_UI;
-    if (gStatus != last_status && (gStatus == APP_STATUS_SHOW_UI_IN_GAME || gStatus == APP_STATUS_SHOW_UI))
+    APP_STATUS status = gStatus.Get();
+    if (status != last_status && (status == APP_STATUS_SHOW_UI_IN_GAME || status == APP_STATUS_SHOW_UI))
     {
-        LogDebug("  status changed: to %d", gStatus);
+        LogDebug("  status changed: to %d", status);
         LogDebug("  _tab_index: %d", _tab_index);
         gVideo->Lock();
 
-        _tabs[TAB_INDEX_STATE]->SetVisable(gStatus == APP_STATUS_SHOW_UI_IN_GAME);
-        _tabs[TAB_INDEX_BROWSER]->SetVisable(gStatus == APP_STATUS_SHOW_UI);
+        _tabs[TAB_INDEX_STATE]->SetVisable(status == APP_STATUS_SHOW_UI_IN_GAME);
+        _tabs[TAB_INDEX_BROWSER]->SetVisable(status == APP_STATUS_SHOW_UI);
 
         TabSeletable *system_tab = (TabSeletable *)(_tabs[TAB_INDEX_SYSTEM]);
-        system_tab->SetItemVisable(0, gStatus == APP_STATUS_SHOW_UI_IN_GAME);
-        system_tab->SetItemVisable(1, gStatus == APP_STATUS_SHOW_UI_IN_GAME);
-        system_tab->SetItemVisable(2, gStatus == APP_STATUS_SHOW_UI_IN_GAME);
+        system_tab->SetItemVisable(0, status == APP_STATUS_SHOW_UI_IN_GAME);
+        system_tab->SetItemVisable(1, status == APP_STATUS_SHOW_UI_IN_GAME);
+        system_tab->SetItemVisable(2, status == APP_STATUS_SHOW_UI_IN_GAME);
 
-        if (gStatus == APP_STATUS_SHOW_UI_IN_GAME)
+        if (status == APP_STATUS_SHOW_UI_IN_GAME)
         {
             system_tab->SetIndex(0);
             _input.SetKeyUpCallback(gConfig->hotkeys[MENU_TOGGLE], std::bind(&Ui::_OnPsButton, this, &_input));
@@ -347,7 +350,7 @@ void Ui::Run()
 
         gVideo->Unlock();
 
-        last_status = gStatus;
+        last_status = status;
 
         LogDebug("  changed");
     }
@@ -426,7 +429,7 @@ void Ui::Show()
     ImGui::Begin(_title.c_str(), NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs);
     ShowTimePower();
 
-    gStatus == APP_STATUS_BOOT ? _ShowBoot() : _ShowNormal();
+    (gStatus.Get() == APP_STATUS_BOOT) ? _ShowBoot() : _ShowNormal();
 
     ImGui::End();
     ImGui::Render();

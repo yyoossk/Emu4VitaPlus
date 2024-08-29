@@ -57,9 +57,7 @@ void Emulator::_OnPsButton(Input *input)
     LogFunctionName;
 
     sceKernelSignalSema(gEmulator->_video_semaid, 1);
-    gVideo->Lock();
-    gStatus = APP_STATUS_SHOW_UI_IN_GAME;
-    gVideo->Unlock();
+    gStatus.Set(APP_STATUS_SHOW_UI_IN_GAME);
     Save();
 }
 
@@ -120,7 +118,5 @@ void Emulator::_OnHotkeyCtrlPortDown(Input *input)
 void Emulator::_OnHotkeyExitGame(Input *input)
 {
     LogFunctionName;
-    gVideo->Lock();
     UnloadGame();
-    gVideo->Unlock();
 }

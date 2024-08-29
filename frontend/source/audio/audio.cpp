@@ -20,15 +20,10 @@ Audio::Audio()
 
 Audio::~Audio()
 {
-    LogFunctionName;
-    if (_resampler)
-    {
-        delete _resampler;
-    }
-    delete _output;
+    Deinit();
 }
 
-void Audio::SetSampleRate(uint32_t sample_rate)
+void Audio::Init(uint32_t sample_rate)
 {
     LogFunctionName;
     LogDebug("  sample_rate: %d", sample_rate);
@@ -63,6 +58,20 @@ void Audio::SetSampleRate(uint32_t sample_rate)
         {
             _resampler->SetRate(sample_rate, _out_sample_rate);
         }
+    }
+}
+
+void Audio::Deinit()
+{
+    LogFunctionName;
+    if (_resampler != nullptr)
+    {
+        delete _resampler;
+    }
+
+    if (_output != nullptr)
+    {
+        delete _output;
     }
 }
 

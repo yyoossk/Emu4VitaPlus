@@ -208,7 +208,7 @@ void ItemState::_OnRun(Input *input, int index)
       break;
     case POPUP_LOAD:
       _state->Load();
-      gStatus = APP_STATUS_RUN_GAME;
+      gStatus.Set(APP_STATUS_RUN_GAME);
       break;
     case POPUP_DELETE:
       _state->Remove();

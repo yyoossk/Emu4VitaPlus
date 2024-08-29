@@ -43,6 +43,7 @@ public:
     uint64_t GetMsPerFrame() { return _delay.GetInterval(); };
     void ChangeGraphicsConfig() { _graphics_config_changed = true; };
     void ChangeRewindConfig();
+    void ChangeAudioConfig();
     uint32_t GetFrameCount() { return _frame_count; };
 
     friend bool EnvironmentCallback(unsigned cmd, void *data);

@@ -95,6 +95,8 @@ int AudioResampler::_ResampleThread(SceSize args, void *argp)
             in = resampler->_in_buf.ReadBegin(&in_size);
         }
 
+        BeginBlock(resampler);
+
         size_t out_size = resampler->GetOutSize(in_size); // swr_get_out_samples(resampler->_swr_ctx, in_size / 2);
         int16_t *out = resampler->_out_buf->WriteBegin(out_size);
 #if RESAMPLER == SWR
@@ -106,7 +108,8 @@ int AudioResampler::_ResampleThread(SceSize args, void *argp)
         resampler->_out_buf->WriteEnd(out_size);
         resampler->_output->Signal();
 
-        resampler->LogCpuId("AudioResampler");
+        EndBlock(resampler);
+        LogCpu(resampler, "AudioResampler");
     }
 
     LogDebug("_Audio_ResempleThreadThread exit");

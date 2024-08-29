@@ -38,11 +38,12 @@ int Video::_DrawThread(SceSize args, void *argp)
     while (video->IsRunning())
     {
         video->Lock();
+        BeginBlock(video);
         vita2d_pool_reset();
         vita2d_start_drawing_advanced(NULL, 0);
         vita2d_clear_screen();
 
-        switch (gStatus)
+        switch (gStatus.Get())
         {
         case APP_STATUS_BOOT:
         case APP_STATUS_SHOW_UI:
@@ -65,7 +66,8 @@ int Video::_DrawThread(SceSize args, void *argp)
         vita2d_end_drawing();
         vita2d_swap_buffers();
         video->Unlock();
-        video->LogCpuId("Video");
+        EndBlock(video);
+        LogCpu(video, "Video");
     }
 
     LogDebug("_DrawThread exit");

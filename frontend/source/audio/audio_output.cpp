@@ -35,9 +35,11 @@ int AudioOutput::_AudioThread(SceSize args, void *argp)
             if (!output->IsRunning())
                 break;
         }
-        sceAudioOutOutput(output->_port, buf);
 
-        output->LogCpuId("AudioOutput");
+        BeginBlock(output);
+        sceAudioOutOutput(output->_port, buf);
+        EndBlock(output);
+        LogCpu(output, "AudioOutput");
     }
 
     LogDebug("_AudioThread exit");

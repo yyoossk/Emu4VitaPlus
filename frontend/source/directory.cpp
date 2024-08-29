@@ -10,7 +10,7 @@
 #include "log.h"
 #include "file.h"
 
-std::unordered_set<std::string> Directory::_ext_archives{"zip", "7z"};
+std::unordered_set<std::string> Directory::_ext_archives{"zip"}; //, "7z"};
 
 Directory::Directory(const char *path, const char *ext_filters, char split)
 {

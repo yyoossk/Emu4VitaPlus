@@ -75,7 +75,7 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
         return false;
     }
 
-    gStatus = APP_STATUS_BOOT;
+    gStatus.Set(APP_STATUS_BOOT);
 
     _current_name = File::GetStem(path);
     gStateManager->Init(_current_name.c_str());
@@ -115,10 +115,9 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
         retro_set_controller_port_device(0, RETRO_DEVICE_JOYPAD);
         SetSpeed(1.0);
         gUi->ClearLogs();
-        gStatus = APP_STATUS_RUN_GAME;
         if ((!gConfig->mute) && (!_audio.Inited()))
         {
-            _audio.SetSampleRate(_av_info.timing.sample_rate);
+            _audio.Init(_av_info.timing.sample_rate);
         }
 
         gConfig->last_rom = path;
@@ -133,11 +132,13 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
         {
             _rewind_manager.Init();
         }
+
+        gStatus.Set(APP_STATUS_RUN_GAME);
     }
     else
     {
         LogError("  load rom failed: %s", _current_name.c_str());
-        gStatus = APP_STATUS_SHOW_UI;
+        gStatus.Set(APP_STATUS_SHOW_UI);
     }
 
     if (buf)
@@ -152,7 +153,7 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
 void Emulator::UnloadGame()
 {
     LogFunctionName;
-    gStatus = APP_STATUS_SHOW_UI;
+    gStatus.Set(APP_STATUS_SHOW_UI);
     _rewind_manager.Deinit();
 
     Lock();
@@ -167,7 +168,7 @@ void Emulator::Run()
     LogFunctionNameLimited;
     _input.Poll();
 
-    if (gStatus != APP_STATUS_RUN_GAME)
+    if (gStatus.Get() != APP_STATUS_RUN_GAME)
     {
         return;
     }
@@ -399,7 +400,7 @@ void Emulator::Load()
 
 void Emulator::ChangeRewindConfig()
 {
-    if (gStatus == APP_STATUS_RUN_GAME || gStatus == APP_STATUS_SHOW_UI_IN_GAME)
+    if (gStatus.Get() == APP_STATUS_RUN_GAME || gStatus.Get() == APP_STATUS_SHOW_UI_IN_GAME)
     {
         if (gConfig->rewind)
         {
@@ -409,5 +410,17 @@ void Emulator::ChangeRewindConfig()
         {
             _rewind_manager.Deinit();
         }
+    }
+}
+
+void Emulator::ChangeAudioConfig()
+{
+    if (gConfig->mute)
+    {
+        _audio.Deinit();
+    }
+    else
+    {
+        _audio.Init(gEmulator->_av_info.timing.sample_rate);
     }
 }
