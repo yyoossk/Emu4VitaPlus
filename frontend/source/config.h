@@ -9,7 +9,12 @@
 #include "language_define.h"
 #include "defines.h"
 
+#if defined(ARC_BUILD)
+#define DEFAULT_REWIND_BUF_SIZE 30
+#else
 #define DEFAULT_REWIND_BUF_SIZE 10
+#endif
+
 #define MIN_REWIND_BUF_SIZE 5
 #define MAX_REWIND_BUF_SIZE 50
 #define REWIND_BUF_SIZE_STEP 5
