@@ -97,11 +97,14 @@ int AudioResampler::_ResampleThread(SceSize args, void *argp)
 
         BeginBlock(resampler);
 
-        size_t out_size = resampler->GetOutSize(in_size); // swr_get_out_samples(resampler->_swr_ctx, in_size / 2);
-        int16_t *out = resampler->_out_buf->WriteBegin(out_size);
 #if RESAMPLER == SWR
-        out_size = swr_convert(resampler->_swr_ctx, (uint8_t **)&out, out_size / 2, (const uint8_t **)&in, in_size / 2);
+        size_t out_size = swr_get_out_samples(resampler->_swr_ctx, in_size / 2);
+        int16_t *out = resampler->_out_buf->WriteBegin(out_size * 2);
+        out_size = swr_convert(resampler->_swr_ctx, (uint8_t **)&out, out_size, (const uint8_t **)&in, in_size / 2);
+        out_size *= 2;
 #elif RESAMPLER == SPEEX
+        size_t out_size = resampler->GetOutSize(in_size);
+        int16_t *out = resampler->_out_buf->WriteBegin(out_size);
         speex_resampler_process_int(resampler->_speex, 0, in, &in_size, out, &out_size);
 #endif
         resampler->_in_buf.ReadEnd(in_size);
