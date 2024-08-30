@@ -91,7 +91,6 @@ private:
     uint32_t _frame_count;
 
     SceKernelLwMutexWork _run_mutex;
-    SceUID _video_semaid;
 
     ArchiveManager _archive_manager{DEFAULT_CACHE_SIZE};
     RewindManager _rewind_manager;

@@ -32,7 +32,6 @@ Emulator::Emulator()
       _frame_count(0)
 {
     sceKernelCreateLwMutex(&_run_mutex, "run_mutex", 0, 0, NULL);
-    _video_semaid = sceKernelCreateSema("video_sema", 0, 0, 1, NULL);
 }
 
 Emulator::~Emulator()
@@ -45,7 +44,6 @@ Emulator::~Emulator()
     }
 
     sceKernelDeleteLwMutex(&_run_mutex);
-    sceKernelDeleteSema(_video_semaid);
 
     retro_deinit();
 }
@@ -186,7 +184,6 @@ void Emulator::Run()
     if (_soft_frame_buf_render && _texture_buf)
     {
         _texture_buf->Unlock();
-        sceKernelSignalSema(_video_semaid, 1);
     }
 }
 

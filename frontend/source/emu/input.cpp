@@ -55,8 +55,6 @@ void Emulator::_SetupKeys()
 void Emulator::_OnPsButton(Input *input)
 {
     LogFunctionName;
-
-    sceKernelSignalSema(gEmulator->_video_semaid, 1);
     gStatus.Set(APP_STATUS_SHOW_UI_IN_GAME);
     Save();
 }
@@ -99,7 +97,6 @@ void Emulator::_OnHotkeyRewind(Input *input)
 {
     if (gConfig->rewind)
     {
-        sceKernelSignalSema(gEmulator->_video_semaid, 1);
         gStatus.Set(APP_STATUS_REWIND_GAME);
     }
 }
@@ -108,7 +105,6 @@ void Emulator::_OnHotkeyRewindUp(Input *input)
 {
     if (gConfig->rewind)
     {
-        sceKernelSignalSema(gEmulator->_video_semaid, 1);
         gStatus.Set(APP_STATUS_RUN_GAME);
     }
 }

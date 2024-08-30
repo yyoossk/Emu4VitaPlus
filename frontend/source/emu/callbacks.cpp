@@ -264,7 +264,6 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
     }
     else if (gEmulator->_soft_frame_buf_render)
     {
-        sceKernelSignalSema(gEmulator->_video_semaid, 1);
         return;
     }
 
@@ -290,7 +289,6 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
     }
 
     gEmulator->_texture_buf->Unlock();
-    sceKernelSignalSema(gEmulator->_video_semaid, 1);
     gEmulator->_delay.Wait();
     gEmulator->_frame_count++;
 }

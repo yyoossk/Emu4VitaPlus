@@ -11,18 +11,12 @@ extern float _vita2d_ortho_matrix[4 * 4];
 void Emulator::Show()
 {
     LogFunctionNameLimited;
-    if (_texture_buf == nullptr)
+    if (gEmulator->_graphics_config_changed || gEmulator->_texture_buf == nullptr || !(gStatus.Get() & (APP_STATUS_RUN_GAME | APP_STATUS_REWIND_GAME | APP_STATUS_SHOW_UI_IN_GAME)))
     {
         sceKernelDelayThread(100000);
         return;
     }
 
-    if (gStatus.Get() & (APP_STATUS_RUN_GAME | APP_STATUS_REWIND_GAME))
-    {
-        // SceUInt time = 15000;
-        // sceKernelWaitSema(_video_semaid, 1, &time);
-        sceKernelWaitSema(_video_semaid, 1, NULL);
-    }
     // size_t count = 0;
     // while (_current_tex == _texture_buf->Current() && count < 10)
     // {
