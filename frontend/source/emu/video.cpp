@@ -16,7 +16,7 @@ void Emulator::Show()
         return;
     }
 
-    if (gStatus.Get() == APP_STATUS_RUN_GAME)
+    if (gStatus.Get() & (APP_STATUS_RUN_GAME | APP_STATUS_REWIND_GAME))
     {
         // SceUInt time = 15000;
         // sceKernelWaitSema(_video_semaid, 1, &time);

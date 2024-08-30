@@ -4,12 +4,13 @@
 
 enum APP_STATUS
 {
-    APP_STATUS_BOOT,
-    APP_STATUS_SHOW_UI,
-    APP_STATUS_RUN_GAME,
-    APP_STATUS_SHOW_UI_IN_GAME,
-    APP_STATUS_RETURN_ARCH,
-    APP_STATUS_EXIT
+    APP_STATUS_BOOT = 1,
+    APP_STATUS_SHOW_UI = 1 << 2,
+    APP_STATUS_RUN_GAME = 1 << 3,
+    APP_STATUS_SHOW_UI_IN_GAME = 1 << 4,
+    APP_STATUS_REWIND_GAME = 1 << 5,
+    APP_STATUS_RETURN_ARCH = 1 << 6,
+    APP_STATUS_EXIT = 1 << 7,
 };
 
 class AppStatus
@@ -21,9 +22,12 @@ public:
     APP_STATUS Get() { return _status; };
     void Set(APP_STATUS status)
     {
-        gVideo->Lock();
-        _status = status;
-        gVideo->Unlock();
+        if (_status != status)
+        {
+            gVideo->Lock();
+            _status = status;
+            gVideo->Unlock();
+        }
     };
 
 private:

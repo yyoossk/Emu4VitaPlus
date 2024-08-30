@@ -168,14 +168,15 @@ void Emulator::Run()
     LogFunctionNameLimited;
     _input.Poll();
 
-    if (gStatus.Get() != APP_STATUS_RUN_GAME)
+    switch (gStatus.Get())
     {
-        return;
-    }
-
-    if (_rewind_manager.InRewinding())
-    {
+    case APP_STATUS_REWIND_GAME:
         _rewind_manager.Wait();
+        break;
+    case APP_STATUS_RUN_GAME:
+        break;
+    default:
+        return;
     }
 
     Lock();

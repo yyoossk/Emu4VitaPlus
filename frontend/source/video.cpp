@@ -51,6 +51,7 @@ int Video::_DrawThread(SceSize args, void *argp)
             break;
 
         case APP_STATUS_RUN_GAME:
+        case APP_STATUS_REWIND_GAME:
             gEmulator->Show();
             break;
 

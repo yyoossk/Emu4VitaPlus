@@ -129,6 +129,7 @@ void App::Run()
             break;
 
         case APP_STATUS_RUN_GAME:
+        case APP_STATUS_REWIND_GAME:
             gEmulator->Run();
             break;
 

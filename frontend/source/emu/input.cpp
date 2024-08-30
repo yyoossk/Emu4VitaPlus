@@ -97,12 +97,20 @@ void Emulator::_OnHotkeySpeedDown(Input *input)
 
 void Emulator::_OnHotkeyRewind(Input *input)
 {
-    _rewind_manager.StartRewind();
+    if (gConfig->rewind)
+    {
+        sceKernelSignalSema(gEmulator->_video_semaid, 1);
+        gStatus.Set(APP_STATUS_REWIND_GAME);
+    }
 }
 
 void Emulator::_OnHotkeyRewindUp(Input *input)
 {
-    _rewind_manager.StopRewind();
+    if (gConfig->rewind)
+    {
+        sceKernelSignalSema(gEmulator->_video_semaid, 1);
+        gStatus.Set(APP_STATUS_RUN_GAME);
+    }
 }
 
 void Emulator::_OnHotkeyCtrlPortUp(Input *input)

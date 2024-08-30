@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdint.h>
+#include "app.h"
 #include "emulator.h"
 #include "video.h"
 #include "ui.h"
@@ -293,7 +294,7 @@ size_t AudioSampleBatchCallback(const int16_t *data, size_t frames)
 {
     LogFunctionNameLimited;
 
-    if ((!gConfig->mute) && (!gEmulator->_rewind_manager.InRewinding()))
+    if ((!gConfig->mute) && gStatus.Get() == APP_STATUS_RUN_GAME)
     {
         gEmulator->_audio.SendAudioSample(data, frames);
     }

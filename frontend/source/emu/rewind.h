@@ -179,9 +179,6 @@ public:
 
     bool Init();
     void Deinit();
-    void StartRewind();
-    void StopRewind();
-    bool InRewinding() { return _rewinding; };
 
 private:
     void _SaveState();
@@ -194,7 +191,6 @@ private:
     bool _Serialize(void *data, size_t size);
     bool _UnSerialize(void *data, size_t size);
 
-    bool _rewinding;
     size_t _state_size;
     size_t _full_content_size;
     size_t _threshold_size;

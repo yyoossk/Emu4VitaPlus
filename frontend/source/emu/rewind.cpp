@@ -20,7 +20,6 @@
 
 RewindManager::RewindManager()
     : ThreadBase(_RewindThread),
-      _rewinding(false),
       _contens(nullptr),
       _block_count(0),
       _tmp_buf(nullptr),
@@ -56,7 +55,6 @@ bool RewindManager::Init()
     _tmp_buf = new uint8_t[_state_size];
     _contens = new RewindContens(buf_size);
     _delay.SetInterval(gEmulator->GetMsPerFrame());
-    StopRewind();
 
     Start();
     LogDebug("  _contens.size: %08x _state_size: %08x _full_content_size:%08x _threshold_size:%08x",
@@ -83,18 +81,6 @@ void RewindManager::Deinit()
     }
 }
 
-void RewindManager::StartRewind()
-{
-    LogFunctionName;
-    _rewinding = true;
-}
-
-void RewindManager::StopRewind()
-{
-    LogFunctionName;
-    _rewinding = false;
-}
-
 int RewindManager::_RewindThread(SceSize args, void *argp)
 {
     CLASS_POINTER(RewindManager, rewind, argp);
@@ -106,17 +92,20 @@ int RewindManager::_RewindThread(SceSize args, void *argp)
 
     while (rewind->IsRunning())
     {
-        if (gStatus.Get() != APP_STATUS_RUN_GAME)
-        {
-            sceKernelDelayThread(20000);
-            // LogDebug("RewindManager delay");
-            continue;
-        }
-
         rewind->_delay.Wait();
 
         BeginBlock(rewind);
-        rewind->_rewinding ? rewind->_Rewind() : rewind->_SaveState();
+        switch (gStatus.Get())
+        {
+        case APP_STATUS_REWIND_GAME:
+            rewind->_Rewind();
+            break;
+        case APP_STATUS_RUN_GAME:
+            rewind->_SaveState();
+            break;
+        default:
+            break;
+        }
         EndBlock(rewind);
         LogCpu(rewind, "RewindManager");
         // LogDebug("_RewindThread loop");
