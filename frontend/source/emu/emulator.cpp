@@ -339,7 +339,6 @@ void Emulator::Save()
 {
     LogFunctionName;
 
-    Lock();
     std::string path = _SaveDirPath();
     if (!File::Exist(path.c_str()))
     {
@@ -364,14 +363,12 @@ void Emulator::Save()
             LogDebug("%s saved", _SaveNamePath(id).c_str());
         }
     }
-    Unlock();
 }
 
 void Emulator::Load()
 {
     LogFunctionName;
 
-    Lock();
     for (auto id : RETRO_MEMORY_IDS)
     {
         size_t size = retro_get_memory_size(id);
@@ -396,12 +393,11 @@ void Emulator::Load()
             fclose(fp);
         }
     }
-    Unlock();
 }
 
 void Emulator::ChangeRewindConfig()
 {
-    if (gStatus.Get() == APP_STATUS_RUN_GAME || gStatus.Get() == APP_STATUS_SHOW_UI_IN_GAME)
+    if (gStatus.Get() & (APP_STATUS_RUN_GAME | APP_STATUS_SHOW_UI_IN_GAME))
     {
         if (gConfig->rewind)
         {

@@ -55,6 +55,7 @@ public:
 private:
     void _SetPixelFormat(retro_pixel_format format);
     void _SetVideoSize(uint32_t width, uint32_t height);
+    void _SetVertices(float tex_x, float tex_y, float tex_w, float tex_h, float x_scale, float y_scale, float rad);
     void _SetupKeys();
     void _OnPsButton(Input *input);
     void _OnHotkeySave(Input *input);
@@ -94,6 +95,7 @@ private:
 
     ArchiveManager _archive_manager{DEFAULT_CACHE_SIZE};
     RewindManager _rewind_manager;
+    vita2d_texture_vertex _vertices[4];
 };
 
 extern Emulator *gEmulator;

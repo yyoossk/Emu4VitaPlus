@@ -321,7 +321,7 @@ void Ui::Run()
     _input.Poll(true);
     static APP_STATUS last_status = APP_STATUS_SHOW_UI;
     APP_STATUS status = gStatus.Get();
-    if (status != last_status && (status == APP_STATUS_SHOW_UI_IN_GAME || status == APP_STATUS_SHOW_UI))
+    if (status != last_status && (status & (APP_STATUS_SHOW_UI_IN_GAME | APP_STATUS_SHOW_UI)))
     {
         LogDebug("  status changed: to %d", status);
         LogDebug("  _tab_index: %d", _tab_index);

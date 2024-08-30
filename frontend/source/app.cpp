@@ -119,7 +119,8 @@ void App::Run()
 {
     LogFunctionName;
     gStatus.Set(APP_STATUS_SHOW_UI);
-    while (gStatus.Get() != APP_STATUS_EXIT)
+    bool running = true;
+    while (running)
     {
         switch (gStatus.Get())
         {
@@ -140,6 +141,10 @@ void App::Run()
             gStatus.Set(APP_STATUS_EXIT);
         }
         break;
+
+        case APP_STATUS_EXIT:
+            running = false;
+            break;
 
         case APP_STATUS_BOOT:
         default:

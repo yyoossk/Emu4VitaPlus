@@ -1,6 +1,6 @@
 #pragma once
-
 #include "video.h"
+#include "log.h"
 
 enum APP_STATUS
 {
@@ -27,6 +27,7 @@ public:
             gVideo->Lock();
             _status = status;
             gVideo->Unlock();
+            LogDebug("Status from %d to %d", _status, status);
         }
     };
 

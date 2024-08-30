@@ -1,4 +1,5 @@
 #include <imgui_vita2d/imgui_impl_vita2d.h>
+#include <shared.h>
 #include "emulator.h"
 #include "config.h"
 #include "app.h"
@@ -67,24 +68,40 @@ void Emulator::Show()
         vita2d_set_fragment_uniform(shader, "IN.video_size", texture_size, 2);
         vita2d_set_fragment_uniform(shader, "IN.output_size", output_size, 2);
         vita2d_set_wvp_uniform(shader, _vita2d_ortho_matrix);
-        vita2d_draw_texture_part_scale_rotate_generic(_current_tex,
-                                                      VITA_WIDTH / 2, VITA_HEIGHT / 2,
-                                                      _video_rect.x, _video_rect.y,
-                                                      _texture_buf->GetWidth(), _texture_buf->GetHeight(),
-                                                      _video_rect.width / _texture_buf->GetWidth(),
-                                                      _video_rect.height / _texture_buf->GetHeight(),
-                                                      0.f);
+        // vita2d_draw_texture_part_scale_rotate_generic(_current_tex,
+        //                                               VITA_WIDTH / 2, VITA_HEIGHT / 2,
+        //                                               _video_rect.x, _video_rect.y,
+        //                                               _texture_buf->GetWidth(), _texture_buf->GetHeight(),
+        //                                               _video_rect.width / _texture_buf->GetWidth(),
+        //                                               _video_rect.height / _texture_buf->GetHeight(),
+        //                                               0.f);
     }
     else
     {
-        vita2d_draw_texture_part_scale_rotate(_current_tex,
-                                              VITA_WIDTH / 2, VITA_HEIGHT / 2,
-                                              _video_rect.x, _video_rect.y,
-                                              _texture_buf->GetWidth(), _texture_buf->GetHeight(),
-                                              _video_rect.width / _texture_buf->GetWidth(),
-                                              _video_rect.height / _texture_buf->GetHeight(),
-                                              0.f);
+        sceGxmSetVertexProgram(vita2d_get_context(), _vita2d_textureVertexProgram);
+        sceGxmSetFragmentProgram(vita2d_get_context(), _vita2d_textureFragmentProgram);
+
+        void *vertex_wvp_buffer;
+        sceGxmReserveVertexDefaultUniformBuffer(vita2d_get_context(), &vertex_wvp_buffer);
+        sceGxmSetUniformDataF(vertex_wvp_buffer, _vita2d_textureWvpParam, 0, 16, _vita2d_ortho_matrix);
+
+        // vita2d_draw_texture_part_scale_rotate(_current_tex,
+        //                                       VITA_WIDTH / 2, VITA_HEIGHT / 2,
+        //                                       _video_rect.x, _video_rect.y,
+        //                                       _texture_buf->GetWidth(), _texture_buf->GetHeight(),
+        //                                       _video_rect.width / _texture_buf->GetWidth(),
+        //                                       _video_rect.height / _texture_buf->GetHeight(),
+        //                                       0.f);
     }
+
+    vita2d_texture_vertex *vertices = (vita2d_texture_vertex *)vita2d_pool_memalign(4 * sizeof(vita2d_texture_vertex), // 4 vertices
+                                                                                    sizeof(vita2d_texture_vertex));
+    memcpy(vertices, _vertices, 4 * sizeof(vita2d_texture_vertex));
+
+    sceGxmSetFragmentTexture(vita2d_get_context(), 0, &_current_tex->gxm_tex);
+    sceGxmSetVertexStream(vita2d_get_context(), 0, vertices);
+    sceGxmDraw(vita2d_get_context(), SCE_GXM_PRIMITIVE_TRIANGLE_STRIP, SCE_GXM_INDEX_FORMAT_U16, vita2d_get_linear_indices(), 4);
+
     // LogDebug("%f %f %f %f", _video_rect.x, _video_rect.y, _video_rect.width, _video_rect.height);
     // LogDebug("%f %f", _video_rect.width / _texture_buf->GetWidth(), _video_rect.height / _texture_buf->GetHeight());
 
@@ -234,4 +251,51 @@ void Emulator::_SetVideoSize(uint32_t width, uint32_t height)
 
     _video_rect.width = width;
     _video_rect.height = height;
+}
+
+void Emulator::_SetVertices(float tex_x, float tex_y, float tex_w, float tex_h, float x_scale, float y_scale, float rad)
+{
+    LogFunctionName;
+
+    const float w_half = (tex_w * x_scale) / 2.0f;
+    const float h_half = (tex_h * y_scale) / 2.0f;
+
+    const float u0 = tex_x / tex_w;
+    const float v0 = tex_y / tex_h;
+    const float u1 = (tex_x + tex_w) / tex_w;
+    const float v1 = (tex_y + tex_h) / tex_h;
+
+    _vertices[0].x = -w_half;
+    _vertices[0].y = -h_half;
+    _vertices[0].z = +0.5f;
+    _vertices[0].u = u0;
+    _vertices[0].v = v0;
+
+    _vertices[1].x = w_half;
+    _vertices[1].y = -h_half;
+    _vertices[1].z = +0.5f;
+    _vertices[1].u = u1;
+    _vertices[1].v = v0;
+
+    _vertices[2].x = -w_half;
+    _vertices[2].y = h_half;
+    _vertices[2].z = +0.5f;
+    _vertices[2].u = u0;
+    _vertices[2].v = v1;
+
+    _vertices[3].x = w_half;
+    _vertices[3].y = h_half;
+    _vertices[3].z = +0.5f;
+    _vertices[3].u = u1;
+    _vertices[3].v = v1;
+
+    const float c = cosf(rad);
+    const float s = sinf(rad);
+    for (int i = 0; i < 4; ++i)
+    { // Rotate and translate
+        float _x = _vertices[i].x;
+        float _y = _vertices[i].y;
+        _vertices[i].x = _x * c - _y * s + VITA_WIDTH / 2;
+        _vertices[i].y = _x * s + _y * c + VITA_HEIGHT / 2;
+    }
 }
