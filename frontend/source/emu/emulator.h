@@ -87,7 +87,6 @@ private:
     double _speed;
     Delay _delay;
     bool _soft_frame_buf_render;
-    vita2d_texture *_current_tex;
     uint32_t _frame_count;
 
     SceKernelLwMutexWork _run_mutex;

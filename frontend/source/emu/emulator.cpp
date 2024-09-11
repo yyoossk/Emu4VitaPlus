@@ -25,7 +25,6 @@ Emulator::Emulator()
     : _texture_buf(nullptr),
       _keys{0},
       _soft_frame_buf_render(false),
-      _current_tex(nullptr),
       _info{0},
       _av_info{0},
       _graphics_config_changed(false),

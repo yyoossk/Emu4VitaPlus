@@ -17,20 +17,12 @@ void Emulator::Show()
         return;
     }
 
-    // size_t count = 0;
-    // while (_current_tex == _texture_buf->Current() && count < 10)
-    // {
-    //     SceUInt timeout = 1000;
-    //     sceKernelWaitSema(_video_semaid, 1, &timeout);
-    //     count++;
-    // }
-
-    // if (count >= 10 && gStatus == APP_STATUS_RUN_GAME)
-    // {
-    //     LogDebug("skip frame");
-    //     return;
-    // }
-    // sceKernelWaitSema(_video_semaid, 1, NULL);
+    static vita2d_texture *last_tex = nullptr;
+    vita2d_texture *current_tex = _texture_buf->Current();
+    if (current_tex == last_tex)
+    {
+        return;
+    }
 
     if (gConfig->graphics[GRAPHICS_OVERLAY] > 0 && gConfig->graphics[GRAPHICS_OVERLAY_MODE] == CONFIG_GRAPHICS_OVERLAY_MODE_BACKGROUND)
     {
@@ -43,7 +35,6 @@ void Emulator::Show()
 
     // _texture_buf->Lock();
     // LogDebug("Show _texture_buf->Current() %08x", _texture_buf->Current());
-    _current_tex = _texture_buf->Current();
 
     vita2d_shader *shader = gConfig->graphics[GRAPHICS_SHADER] > 0 ? (*gShaders)[gConfig->graphics[GRAPHICS_SHADER] - 1].Get() : nullptr;
     if (shader)
@@ -92,7 +83,7 @@ void Emulator::Show()
                                                                                     sizeof(vita2d_texture_vertex));
     memcpy(vertices, _vertices, 4 * sizeof(vita2d_texture_vertex));
 
-    sceGxmSetFragmentTexture(vita2d_get_context(), 0, &_current_tex->gxm_tex);
+    sceGxmSetFragmentTexture(vita2d_get_context(), 0, &current_tex->gxm_tex);
     sceGxmSetVertexStream(vita2d_get_context(), 0, vertices);
     sceGxmDraw(vita2d_get_context(), SCE_GXM_PRIMITIVE_TRIANGLE_STRIP, SCE_GXM_INDEX_FORMAT_U16, vita2d_get_linear_indices(), 4);
 
