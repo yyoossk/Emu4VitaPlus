@@ -51,6 +51,12 @@ static void ReturnToArch()
 static void ExitApp()
 {
     LogFunctionName;
+
+    if (gStatus.Get() & (APP_STATUS_RUN_GAME | APP_STATUS_SHOW_UI_IN_GAME))
+    {
+        gEmulator->UnloadGame();
+    }
+
     gStatus.Set(APP_STATUS_EXIT);
 }
 

@@ -37,12 +37,12 @@ void Emulator::Show()
     // LogDebug("Show _texture_buf->Current() %08x", _texture_buf->Current());
 
     // vita2d_shader *shader = gConfig->graphics[GRAPHICS_SHADER] > 0 ? (*gShaders)[gConfig->graphics[GRAPHICS_SHADER] - 1].Get() : nullptr;
-    Shader *shader = gConfig->graphics[GRAPHICS_SHADER] > 0 ? &(*gShaders)[gConfig->graphics[GRAPHICS_SHADER] - 1] : nullptr;
+    uint32_t index = gConfig->graphics[GRAPHICS_SHADER];
+    Shader *shader = (index > 0 && index < gShaders->size()) ? &(*gShaders)[index - 1] : nullptr;
 
     if (shader && shader->Valid())
     {
         vita2d_shader *_shader = shader->Get();
-
         vita2d_set_shader(_shader);
         float *texture_size = (float *)vita2d_pool_memalign(2 * sizeof(float), sizeof(float));
         texture_size[0] = _texture_buf->GetWidth();
@@ -50,7 +50,6 @@ void Emulator::Show()
         float *output_size = (float *)vita2d_pool_memalign(2 * sizeof(float), sizeof(float));
         output_size[0] = _video_rect.width;
         output_size[1] = _video_rect.height;
-
         shader->SetUniformData(texture_size, output_size);
         vita2d_set_wvp_uniform(_shader, _vita2d_ortho_matrix);
     }

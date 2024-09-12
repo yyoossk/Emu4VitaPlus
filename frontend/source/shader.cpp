@@ -74,12 +74,12 @@ void Shader::_Load()
     if (_shader)
     {
         const SceGxmProgram *program = sceGxmVertexProgramGetProgram(_shader->vertexProgram);
-        _vertex_parms.Init(program);
+        bool b0 = _vertex_parms.Init(program);
 
         program = sceGxmFragmentProgramGetProgram(_shader->fragmentProgram);
-        _fragment_parms.Init(program);
+        bool b1 = _fragment_parms.Init(program);
 
-        LogDebug("  shader %s loaded: %08x", _name.c_str(), _shader);
+        LogDebug("  shader %s loaded: %08x %d %d", _name.c_str(), _shader, b0, b1);
         return;
     }
 
@@ -101,13 +101,19 @@ void Shader::SetUniformData(const float *texture_size, const float *output_size)
     sceGxmReserveVertexDefaultUniformBuffer(_vita2d_ext_context, &vertex_wvp_buffer);
     sceGxmReserveFragmentDefaultUniformBuffer(_vita2d_ext_context, &fragment_wvp_buffer);
 
-    sceGxmSetUniformDataF(vertex_wvp_buffer, _vertex_parms.texture_size, 0, 2, texture_size);
-    sceGxmSetUniformDataF(vertex_wvp_buffer, _vertex_parms.video_size, 0, 2, texture_size);
-    sceGxmSetUniformDataF(vertex_wvp_buffer, _vertex_parms.output_size, 0, 2, output_size);
+    if (_vertex_parms.texture_size)
+        sceGxmSetUniformDataF(vertex_wvp_buffer, _vertex_parms.texture_size, 0, 2, texture_size);
+    if (_vertex_parms.video_size)
+        sceGxmSetUniformDataF(vertex_wvp_buffer, _vertex_parms.video_size, 0, 2, texture_size);
+    if (_vertex_parms.output_size)
+        sceGxmSetUniformDataF(vertex_wvp_buffer, _vertex_parms.output_size, 0, 2, output_size);
 
-    sceGxmSetUniformDataF(fragment_wvp_buffer, _fragment_parms.texture_size, 0, 2, texture_size);
-    sceGxmSetUniformDataF(fragment_wvp_buffer, _fragment_parms.video_size, 0, 2, texture_size);
-    sceGxmSetUniformDataF(fragment_wvp_buffer, _fragment_parms.output_size, 0, 2, texture_size);
+    if (_fragment_parms.texture_size)
+        sceGxmSetUniformDataF(fragment_wvp_buffer, _fragment_parms.texture_size, 0, 2, texture_size);
+    if (_fragment_parms.video_size)
+        sceGxmSetUniformDataF(fragment_wvp_buffer, _fragment_parms.video_size, 0, 2, texture_size);
+    if (_fragment_parms.output_size)
+        sceGxmSetUniformDataF(fragment_wvp_buffer, _fragment_parms.output_size, 0, 2, output_size);
 }
 
 Shaders::Shaders()
