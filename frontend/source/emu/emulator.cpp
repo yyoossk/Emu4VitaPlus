@@ -94,12 +94,10 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
     else
     {
         LogDebug("  load rom from memory");
-        game_info.size = File::GetSize(_path);
-        buf = new char[game_info.size];
-        if (!File::ReadFile(_path, buf, game_info.size))
+        game_info.size = File::ReadFile(_path, (void **)&buf);
+        if (game_info.size == 0)
         {
             LogError("failed to read rom: %s", _path);
-            delete[] buf;
             return false;
         }
         game_info.data = buf;

@@ -36,30 +36,23 @@ void Emulator::Show()
     // _texture_buf->Lock();
     // LogDebug("Show _texture_buf->Current() %08x", _texture_buf->Current());
 
-    vita2d_shader *shader = gConfig->graphics[GRAPHICS_SHADER] > 0 ? (*gShaders)[gConfig->graphics[GRAPHICS_SHADER] - 1].Get() : nullptr;
-    if (shader)
+    // vita2d_shader *shader = gConfig->graphics[GRAPHICS_SHADER] > 0 ? (*gShaders)[gConfig->graphics[GRAPHICS_SHADER] - 1].Get() : nullptr;
+    Shader *shader = gConfig->graphics[GRAPHICS_SHADER] > 0 ? &(*gShaders)[gConfig->graphics[GRAPHICS_SHADER] - 1] : nullptr;
+
+    if (shader && shader->Valid())
     {
-        vita2d_set_shader(shader);
+        vita2d_shader *_shader = shader->Get();
+
+        vita2d_set_shader(_shader);
         float *texture_size = (float *)vita2d_pool_memalign(2 * sizeof(float), sizeof(float));
         texture_size[0] = _texture_buf->GetWidth();
         texture_size[1] = _texture_buf->GetHeight();
         float *output_size = (float *)vita2d_pool_memalign(2 * sizeof(float), sizeof(float));
         output_size[0] = _video_rect.width;
         output_size[1] = _video_rect.height;
-        vita2d_set_vertex_uniform(shader, "IN.texture_size", texture_size, 2);
-        vita2d_set_vertex_uniform(shader, "IN.video_size", texture_size, 2);
-        vita2d_set_vertex_uniform(shader, "IN.output_size", output_size, 2);
-        vita2d_set_fragment_uniform(shader, "IN.texture_size", texture_size, 2);
-        vita2d_set_fragment_uniform(shader, "IN.video_size", texture_size, 2);
-        vita2d_set_fragment_uniform(shader, "IN.output_size", output_size, 2);
-        vita2d_set_wvp_uniform(shader, _vita2d_ortho_matrix);
-        // vita2d_draw_texture_part_scale_rotate_generic(_current_tex,
-        //                                               VITA_WIDTH / 2, VITA_HEIGHT / 2,
-        //                                               _video_rect.x, _video_rect.y,
-        //                                               _texture_buf->GetWidth(), _texture_buf->GetHeight(),
-        //                                               _video_rect.width / _texture_buf->GetWidth(),
-        //                                               _video_rect.height / _texture_buf->GetHeight(),
-        //                                               0.f);
+
+        shader->SetUniformData(texture_size, output_size);
+        vita2d_set_wvp_uniform(_shader, _vita2d_ortho_matrix);
     }
     else
     {
@@ -69,14 +62,6 @@ void Emulator::Show()
         void *vertex_wvp_buffer;
         sceGxmReserveVertexDefaultUniformBuffer(vita2d_get_context(), &vertex_wvp_buffer);
         sceGxmSetUniformDataF(vertex_wvp_buffer, _vita2d_textureWvpParam, 0, 16, _vita2d_ortho_matrix);
-
-        // vita2d_draw_texture_part_scale_rotate(_current_tex,
-        //                                       VITA_WIDTH / 2, VITA_HEIGHT / 2,
-        //                                       _video_rect.x, _video_rect.y,
-        //                                       _texture_buf->GetWidth(), _texture_buf->GetHeight(),
-        //                                       _video_rect.width / _texture_buf->GetWidth(),
-        //                                       _video_rect.height / _texture_buf->GetHeight(),
-        //                                       0.f);
     }
 
     vita2d_texture_vertex *vertices = (vita2d_texture_vertex *)vita2d_pool_memalign(4 * sizeof(vita2d_texture_vertex), // 4 vertices

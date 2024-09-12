@@ -11,6 +11,7 @@ namespace File
     bool GetCreateTime(const char *name, time_t *time);
     size_t GetSize(const char *name);
     bool ReadFile(const char *name, void *buf, SceSSize size);
+    size_t ReadFile(const char *name, void **buf);
     void MakeDirs(const char *path, SceIoMode mode = (SceIoMode)0777);
     bool Remove(const char *path);
     std::string GetName(const char *path);

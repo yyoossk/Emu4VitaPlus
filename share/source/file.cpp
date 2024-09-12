@@ -40,6 +40,27 @@ namespace File
         return s == size;
     }
 
+    size_t ReadFile(const char *name, void **buf)
+    {
+        size_t size = GetSize(name);
+        if (size == 0)
+        {
+            return 0;
+        }
+
+        *buf = new uint8_t[size];
+        if (ReadFile(name, *buf, size))
+        {
+            return size;
+        }
+        else
+        {
+            delete[] (uint8_t *)*buf;
+            *buf = nullptr;
+            return 0;
+        }
+    }
+
     bool GetCreateTime(const char *name, SceDateTime *time)
     {
         SceIoStat stat;
