@@ -1,5 +1,6 @@
 #include <psp2/io/dirent.h>
 #include <algorithm>
+#include <cctype>
 #include <string.h>
 #include <minizip/mz.h>
 #include <minizip/mz_zip.h>
@@ -11,6 +12,15 @@
 #include "file.h"
 
 std::unordered_set<std::string> Directory::_ext_archives{"zip"}; //, "7z"};
+
+static void SortDirItemsByNameIgnoreCase(std::vector<DirItem> &items)
+{
+    std::sort(items.begin(), items.end(), [](const DirItem &a, const DirItem &b)
+              { return std::lexicographical_compare(
+                    a.name.begin(), a.name.end(), b.name.begin(), b.name.end(),
+                    [](unsigned char ch1, unsigned char ch2)
+                    { return std::tolower(ch1) < std::tolower(ch2); }); });
+}
 
 Directory::Directory(const char *path, const char *ext_filters, char split)
 {
@@ -162,6 +172,9 @@ bool Directory::SetCurrentPath(const std::string &path)
         }
     }
     sceIoDclose(dfd);
+
+    SortDirItemsByNameIgnoreCase(_items);
+    SortDirItemsByNameIgnoreCase(files);
 
     _items.insert(_items.end(), files.begin(), files.end());
 
