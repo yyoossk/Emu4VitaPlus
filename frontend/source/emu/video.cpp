@@ -21,6 +21,7 @@ void Emulator::Show()
     vita2d_texture *current_tex = _texture_buf->Current();
     if (current_tex == last_tex)
     {
+        sceKernelDelayThread(1000);
         return;
     }
 

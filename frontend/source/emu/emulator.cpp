@@ -148,14 +148,18 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
 void Emulator::UnloadGame()
 {
     LogFunctionName;
+    APP_STATUS status = gStatus.Get();
     gStatus.Set(APP_STATUS_SHOW_UI);
-    _rewind_manager.Deinit();
 
-    Lock();
-    gStateManager->states[0]->Save();
-    Save();
-    retro_unload_game();
-    Unlock();
+    if (status & (APP_STATUS_RUN_GAME | APP_STATUS_SHOW_UI_IN_GAME))
+    {
+        _rewind_manager.Deinit();
+        Lock();
+        gStateManager->states[0]->Save();
+        Save();
+        retro_unload_game();
+        Unlock();
+    }
 }
 
 void Emulator::Run()
@@ -197,7 +201,11 @@ void Emulator::Unlock()
 void Emulator::Reset()
 {
     LogFunctionName;
-    retro_reset();
+    if (gStatus.Get() & (APP_STATUS_RUN_GAME | APP_STATUS_SHOW_UI_IN_GAME))
+    {
+        gStatus.Set(APP_STATUS_BOOT);
+        retro_reset();
+    }
 }
 
 void Emulator::SetSpeed(double speed)
