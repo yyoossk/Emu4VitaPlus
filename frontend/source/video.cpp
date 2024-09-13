@@ -4,6 +4,7 @@
 #include "app.h"
 #include "ui.h"
 #include "log.h"
+#include "profiler.h"
 
 Video *gVideo = nullptr;
 
@@ -38,7 +39,7 @@ int Video::_DrawThread(SceSize args, void *argp)
     while (video->IsRunning())
     {
         video->Lock();
-        BeginBlock(video);
+
         vita2d_pool_reset();
         vita2d_start_drawing_advanced(NULL, 0);
         vita2d_clear_screen();
@@ -52,7 +53,9 @@ int Video::_DrawThread(SceSize args, void *argp)
 
         case APP_STATUS_RUN_GAME:
         case APP_STATUS_REWIND_GAME:
+            BeginProfile("Video");
             gEmulator->Show();
+            EndProfile("Video");
             break;
 
         case APP_STATUS_SHOW_UI_IN_GAME:
@@ -67,8 +70,6 @@ int Video::_DrawThread(SceSize args, void *argp)
         vita2d_end_drawing();
         vita2d_swap_buffers();
         video->Unlock();
-        EndBlock(video);
-        LogCpu(video, "Video");
     }
 
     LogDebug("_DrawThread exit");

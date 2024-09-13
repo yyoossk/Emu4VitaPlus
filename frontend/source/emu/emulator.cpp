@@ -13,6 +13,7 @@
 #include "ui.h"
 #include "log.h"
 #include "file.h"
+#include "profiler.h"
 
 extern "C"
 {
@@ -178,14 +179,20 @@ void Emulator::Run()
         return;
     }
 
+    BeginProfile("retro_run");
+
     Lock();
     retro_run();
     Unlock();
+
+    EndProfile("retro_run");
 
     if (_soft_frame_buf_render && _texture_buf)
     {
         _texture_buf->Unlock();
     }
+
+    _delay.Wait();
 }
 
 void Emulator::Lock()
@@ -205,6 +212,7 @@ void Emulator::Reset()
     {
         gStatus.Set(APP_STATUS_BOOT);
         retro_reset();
+        gStatus.Set(APP_STATUS_RETURN_ARCH);
     }
 }
 

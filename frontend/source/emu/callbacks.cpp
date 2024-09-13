@@ -289,7 +289,6 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
     }
 
     gEmulator->_texture_buf->Unlock();
-    gEmulator->_delay.Wait();
     gEmulator->_frame_count++;
 }
 

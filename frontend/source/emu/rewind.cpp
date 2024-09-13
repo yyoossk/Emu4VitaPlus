@@ -8,6 +8,7 @@
 #include "emulator.h"
 #include "app.h"
 #include "file.h"
+#include "profiler.h"
 
 #define MIN_STATE_RATE 5
 #define NEXT_STATE_PERIOD 50000
@@ -94,7 +95,7 @@ int RewindManager::_RewindThread(SceSize args, void *argp)
     {
         rewind->_delay.Wait();
 
-        BeginBlock(rewind);
+        BeginProfile("RewindManager");
         switch (gStatus.Get())
         {
         case APP_STATUS_REWIND_GAME:
@@ -106,8 +107,7 @@ int RewindManager::_RewindThread(SceSize args, void *argp)
         default:
             break;
         }
-        EndBlock(rewind);
-        LogCpu(rewind, "RewindManager");
+        EndProfile("RewindManager");
         // LogDebug("_RewindThread loop");
     }
 

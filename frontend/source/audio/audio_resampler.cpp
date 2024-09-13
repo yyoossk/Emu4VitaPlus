@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include "audio_resampler.h"
+#include "profiler.h"
 
 AudioResampler::AudioResampler(uint32_t in_rate, uint32_t out_rate, AudioOutput *output, AudioBuf *out_buf)
     : ThreadBase(_ResampleThread),
@@ -95,7 +96,7 @@ int AudioResampler::_ResampleThread(SceSize args, void *argp)
             in = resampler->_in_buf.ReadBegin(&in_size);
         }
 
-        BeginBlock(resampler);
+        BeginProfile("AudioResampler");
 
 #if RESAMPLER == SWR
         size_t out_size = swr_get_out_samples(resampler->_swr_ctx, in_size / 2);
@@ -111,8 +112,7 @@ int AudioResampler::_ResampleThread(SceSize args, void *argp)
         resampler->_out_buf->WriteEnd(out_size);
         resampler->_output->Signal();
 
-        EndBlock(resampler);
-        LogCpu(resampler, "AudioResampler");
+        EndProfile("AudioResampler");
     }
 
     LogDebug("_Audio_ResempleThreadThread exit");

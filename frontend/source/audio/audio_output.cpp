@@ -1,6 +1,7 @@
 #include <psp2/audioout.h>
 #include "audio_output.h"
 #include "log.h"
+#include "profiler.h"
 
 AudioOutput::AudioOutput(uint32_t sample_size, uint32_t sample_rate, AudioBuf *buf)
     : ThreadBase(_AudioThread),
@@ -36,10 +37,9 @@ int AudioOutput::_AudioThread(SceSize args, void *argp)
                 break;
         }
 
-        BeginBlock(output);
+        BeginProfile("AudioOutput");
         sceAudioOutOutput(output->_port, buf);
-        EndBlock(output);
-        LogCpu(output, "AudioOutput");
+        EndProfile("AudioOutput");
     }
 
     LogDebug("_AudioThread exit");

@@ -1,15 +1,11 @@
 #include <stdint.h>
 #include "thread_base.h"
-#include "log.h"
 
 ThreadBase::ThreadBase(SceKernelThreadEntry entry, int priority, int stack_size)
     : _entry(entry),
       _priority(priority),
       _stack_size(stack_size),
-      _thread_id(-1),
-      _block_time(0),
-      _start_time(0),
-      _next_log_time(0)
+      _thread_id(-1)
 {
     LogFunctionName;
     sceKernelCreateLwMutex(&_mutex, "thread_mutex", 0, 0, NULL);
@@ -114,28 +110,3 @@ void ThreadBase::Signal()
 {
     sceKernelSignalSema(_semaid, 1);
 }
-
-#if LOG_LEVEL <= LOG_LEVEL_DEBUG
-void ThreadBase::_LogCpu(const char *str)
-{
-    uint64_t current = sceKernelGetProcessTimeWide();
-    if (current >= _next_log_time)
-    {
-        SceKernelThreadInfo info{0};
-        info.size = sizeof(SceKernelThreadInfo);
-        sceKernelGetThreadInfo(_thread_id, &info);
-        LogDebug("%s CPU: %d %0.4f", str, info.currentCpuId, _block_time / 1000000.0);
-        _next_log_time = current + LOG_CPU_ID_INTERVAL;
-    }
-}
-
-void ThreadBase::_BeginBlock()
-{
-    _start_time = sceKernelGetProcessTimeWide();
-}
-
-void ThreadBase::_EndBlock()
-{
-    _block_time += sceKernelGetProcessTimeWide() - _start_time;
-}
-#endif
