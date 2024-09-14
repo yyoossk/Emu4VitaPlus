@@ -212,7 +212,7 @@ void Emulator::Reset()
     {
         gStatus.Set(APP_STATUS_BOOT);
         retro_reset();
-        gStatus.Set(APP_STATUS_RETURN_ARCH);
+        gStatus.Set(APP_STATUS_RUN_GAME);
     }
 }
 

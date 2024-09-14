@@ -74,12 +74,12 @@ void Shader::_Load()
     if (_shader)
     {
         const SceGxmProgram *program = sceGxmVertexProgramGetProgram(_shader->vertexProgram);
-        bool b0 = _vertex_parms.Init(program);
+        _vertex_parms.Init(program);
 
         program = sceGxmFragmentProgramGetProgram(_shader->fragmentProgram);
-        bool b1 = _fragment_parms.Init(program);
+        _fragment_parms.Init(program);
 
-        LogDebug("  shader %s loaded: %08x %d %d", _name.c_str(), _shader, b0, b1);
+        LogDebug("  shader %s loaded: %08x", _name.c_str(), _shader);
         return;
     }
 

@@ -105,6 +105,7 @@ int RewindManager::_RewindThread(SceSize args, void *argp)
             rewind->_SaveState();
             break;
         default:
+            sceKernelDelayThread(20000);
             break;
         }
         EndProfile("RewindManager");

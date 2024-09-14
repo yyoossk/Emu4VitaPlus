@@ -332,7 +332,7 @@ void Ui::Run()
 
         TabSeletable *system_tab = (TabSeletable *)(_tabs[TAB_INDEX_SYSTEM]);
         system_tab->SetItemVisable(0, status == APP_STATUS_SHOW_UI_IN_GAME);
-        system_tab->SetItemVisable(1, status == APP_STATUS_SHOW_UI_IN_GAME);
+        system_tab->SetItemVisable(1, status == APP_STATUS_SHOW_UI_IN_GAME && retro_serialize_size() > 0);
         system_tab->SetItemVisable(2, status == APP_STATUS_SHOW_UI_IN_GAME);
 
         if (status == APP_STATUS_SHOW_UI_IN_GAME)
