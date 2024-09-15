@@ -45,6 +45,7 @@ public:
     void ChangeRewindConfig();
     void ChangeAudioConfig();
     uint32_t GetFrameCount() { return _frame_count; };
+    void CoreOptionUpdate();
 
     friend bool EnvironmentCallback(unsigned cmd, void *data);
     friend void VideoRefreshCallback(const void *data, unsigned width, unsigned height, size_t pitch);
@@ -94,6 +95,8 @@ private:
     ArchiveManager _archive_manager{DEFAULT_CACHE_SIZE};
     RewindManager _rewind_manager;
     vita2d_texture_vertex _vertices[4];
+
+    retro_core_options_update_display_callback_t _core_options_update_display_callback;
 };
 
 extern Emulator *gEmulator;

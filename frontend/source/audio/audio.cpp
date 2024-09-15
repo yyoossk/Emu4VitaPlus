@@ -4,6 +4,8 @@
 #include "config.h"
 #include "log.h"
 
+#define AUDIO_SKIP_THRESHOLD 25
+
 const uint32_t SAMPLE_RATES[] = {8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000};
 
 Audio::Audio()
@@ -97,20 +99,9 @@ bool Audio::_GetSuitableSampleRate(uint32_t sample_rate, uint32_t *out_sample_ra
 
 size_t Audio::SendAudioSample(const int16_t *data, size_t frames)
 {
-    static uint32_t status_count = 0;
     if (_resampler != nullptr)
     {
         _resampler->Process(data, frames);
-        if (_buf_status_callback)
-        {
-            if (status_count & 0x7f == 0)
-            {
-                size_t occupancy = _resampler->GetInBufOccupancy();
-                _buf_status_callback(gConfig->mute, occupancy, occupancy < 25);
-                LogDebug("  _buf_status_callback: %d %d %d", gConfig->mute, occupancy, occupancy < 25);
-            }
-            status_count++;
-        }
     }
     else
     {
@@ -119,4 +110,14 @@ size_t Audio::SendAudioSample(const int16_t *data, size_t frames)
     }
 
     return frames;
+}
+
+void Audio::NotifyBufStatus()
+{
+    if (_buf_status_callback)
+    {
+        size_t occupancy = _resampler == nullptr ? _out_buf.OccupancySize() : _resampler->GetInBufOccupancy();
+        _buf_status_callback(gConfig->mute, occupancy, occupancy < AUDIO_SKIP_THRESHOLD);
+        // LogDebug("  _buf_status_callback: %d %d %d", gConfig->mute, occupancy, occupancy < AUDIO_SKIP_THRESHOLD);
+    }
 }

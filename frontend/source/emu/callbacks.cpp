@@ -6,6 +6,7 @@
 #include "ui.h"
 #include "config.h"
 #include "file.h"
+#include "profiler.h"
 
 #define CORE_OPTIONS_VERSION 2
 
@@ -181,6 +182,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
 
     case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_UPDATE_DISPLAY_CALLBACK:
         LogDebug("  cmd: RETRO_ENVIRONMENT_SET_CORE_OPTIONS_UPDATE_DISPLAY_CALLBACK");
+        gEmulator->_core_options_update_display_callback = data ? ((const retro_core_options_update_display_callback *)data)->callback : nullptr;
         break;
 
     case RETRO_ENVIRONMENT_GET_CURRENT_SOFTWARE_FRAMEBUFFER:
@@ -267,6 +269,7 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
         return;
     }
 
+    BeginProfile("VideoRefreshCallback");
     gEmulator->_texture_buf->Lock();
     vita2d_texture *texture = gEmulator->_texture_buf->Next();
 
@@ -290,6 +293,7 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
 
     gEmulator->_texture_buf->Unlock();
     gEmulator->_frame_count++;
+    EndProfile("VideoRefreshCallback");
 }
 
 size_t AudioSampleBatchCallback(const int16_t *data, size_t frames)
@@ -298,7 +302,9 @@ size_t AudioSampleBatchCallback(const int16_t *data, size_t frames)
 
     if ((!gConfig->mute) && gStatus.Get() == APP_STATUS_RUN_GAME)
     {
+        BeginProfile("AudioSampleBatchCallback");
         gEmulator->_audio.SendAudioSample(data, frames);
+        EndProfile("AudioSampleBatchCallback");
     }
 
     return frames;

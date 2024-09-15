@@ -1,9 +1,10 @@
 #include <stdint.h>
 #include "thread_base.h"
 
-ThreadBase::ThreadBase(SceKernelThreadEntry entry, int priority, int stack_size)
+ThreadBase::ThreadBase(SceKernelThreadEntry entry, int priority, int cpu_affinity, int stack_size)
     : _entry(entry),
       _priority(priority),
+      _cpu_affinity(cpu_affinity),
       _stack_size(stack_size),
       _thread_id(-1)
 {
@@ -48,7 +49,7 @@ bool ThreadBase::Start(void *data, SceSize size)
 {
     LogFunctionName;
 
-    _thread_id = sceKernelCreateThread(__PRETTY_FUNCTION__, _entry, _priority, _stack_size, 0, 0, NULL);
+    _thread_id = sceKernelCreateThread(__PRETTY_FUNCTION__, _entry, _priority, _stack_size, 0, _cpu_affinity, NULL);
     if (_thread_id < 0)
     {
         LogError("failed to create thread: %s", __PRETTY_FUNCTION__);

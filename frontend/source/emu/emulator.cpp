@@ -29,7 +29,8 @@ Emulator::Emulator()
       _info{0},
       _av_info{0},
       _graphics_config_changed(false),
-      _frame_count(0)
+      _frame_count(0),
+      _core_options_update_display_callback(nullptr)
 {
     sceKernelCreateLwMutex(&_run_mutex, "run_mutex", 0, 0, NULL);
 }
@@ -182,6 +183,7 @@ void Emulator::Run()
     BeginProfile("retro_run");
 
     Lock();
+    _audio.NotifyBufStatus();
     retro_run();
     Unlock();
 
@@ -407,6 +409,8 @@ void Emulator::Load()
 
 void Emulator::ChangeRewindConfig()
 {
+    LogFunctionName;
+
     if (gStatus.Get() & (APP_STATUS_RUN_GAME | APP_STATUS_SHOW_UI_IN_GAME))
     {
         if (gConfig->rewind)
@@ -422,6 +426,8 @@ void Emulator::ChangeRewindConfig()
 
 void Emulator::ChangeAudioConfig()
 {
+    LogFunctionName;
+
     if (gConfig->mute)
     {
         _audio.Deinit();
@@ -429,5 +435,15 @@ void Emulator::ChangeAudioConfig()
     else
     {
         _audio.Init(gEmulator->_av_info.timing.sample_rate);
+    }
+}
+
+void Emulator::CoreOptionUpdate()
+{
+    LogFunctionName;
+
+    if (_core_options_update_display_callback != nullptr)
+    {
+        _core_options_update_display_callback();
     }
 }

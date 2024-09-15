@@ -14,7 +14,7 @@ public:
         _index = _option->GetValueIndex();
     };
 
-    virtual ~ItemCore(){};
+    virtual ~ItemCore() {};
 
 private:
     size_t _GetTotalCount() override
@@ -37,6 +37,7 @@ private:
     {
         ItemSelectable::_OnClick(input);
         gConfig->Save();
+        gEmulator->CoreOptionUpdate();
     };
 
     CoreOption *_option;

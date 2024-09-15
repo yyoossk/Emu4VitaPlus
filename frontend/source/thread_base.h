@@ -12,8 +12,12 @@
 class ThreadBase
 {
 public:
-    ThreadBase(SceKernelThreadEntry entry, int priority = SCE_KERNEL_DEFAULT_PRIORITY_USER, int stack_size = 0x10000);
+    ThreadBase(SceKernelThreadEntry entry,
+               int priority = SCE_KERNEL_DEFAULT_PRIORITY_USER,
+               int cpu_affinity = SCE_KERNEL_THREAD_CPU_AFFINITY_MASK_DEFAULT,
+               int stack_size = 0x10000);
     virtual ~ThreadBase();
+
     bool Start(); // the point of class will be sent
     bool Start(void *data, SceSize size);
     void Stop(bool force = false);
@@ -26,6 +30,7 @@ public:
 protected:
     SceKernelThreadEntry _entry;
     int _priority;
+    int _cpu_affinity;
     SceSize _stack_size;
     bool _keep_running;
     SceUID _thread_id;

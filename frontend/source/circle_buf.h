@@ -177,6 +177,11 @@ public:
         return _total_size;
     }
 
+    size_t OccupancySize()
+    {
+        return AvailableSize() * 100 / _total_size;
+    }
+
 protected:
     T *_GetTmpBuf(size_t size)
     {

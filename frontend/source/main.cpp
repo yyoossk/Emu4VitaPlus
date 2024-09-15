@@ -13,6 +13,9 @@ unsigned int sceLibcHeapSize = SCE_LIBC_HEAP_SIZE_EXTENDED_ALLOC_NO_LIMIT;
 
 int main(int argc, char *const argv[])
 {
+
+    sceKernelChangeThreadCpuAffinityMask(sceKernelGetThreadId(), SCE_KERNEL_CPU_MASK_USER_0);
+
     File::MakeDirs(APP_DATA_DIR);
     File::MakeDirs(CORE_SYSTEM_DIR);
     gLog = new Log(APP_LOG_PATH);
