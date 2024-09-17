@@ -192,7 +192,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         // LogDebug("  cmd: RETRO_ENVIRONMENT_GET_AUDIO_VIDEO_ENABLE");
         if (data)
         {
-            *(int *)data = (gConfig->mute ? RETRO_AV_ENABLE_VIDEO : RETRO_AV_ENABLE_VIDEO | RETRO_AV_ENABLE_AUDIO);
+            *(int *)data = (gConfig->mute ? RETRO_AV_ENABLE_VIDEO : (RETRO_AV_ENABLE_VIDEO | RETRO_AV_ENABLE_AUDIO));
         }
         break;
 

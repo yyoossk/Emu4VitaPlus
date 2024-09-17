@@ -3,7 +3,7 @@
 #include "profiler.h"
 
 AudioResampler::AudioResampler(uint32_t in_rate, uint32_t out_rate, AudioOutput *output, AudioBuf *out_buf)
-    : ThreadBase(_ResampleThread, SCE_KERNEL_DEFAULT_PRIORITY_USER, SCE_KERNEL_CPU_MASK_USER_1),
+    : ThreadBase(_ResampleThread),
       _in_rate(in_rate),
       _out_rate(out_rate),
       _output(output),

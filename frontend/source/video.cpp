@@ -8,7 +8,7 @@
 
 Video *gVideo = nullptr;
 
-Video::Video() : ThreadBase(_DrawThread, SCE_KERNEL_DEFAULT_PRIORITY_USER, SCE_KERNEL_CPU_MASK_USER_1)
+Video::Video() : ThreadBase(_DrawThread)
 {
     LogFunctionName;
     vita2d_init();

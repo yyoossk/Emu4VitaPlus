@@ -4,7 +4,7 @@
 #include "profiler.h"
 
 AudioOutput::AudioOutput(uint32_t sample_size, uint32_t sample_rate, AudioBuf *buf)
-    : ThreadBase(_AudioThread, SCE_KERNEL_DEFAULT_PRIORITY_USER, SCE_KERNEL_CPU_MASK_USER_2),
+    : ThreadBase(_AudioThread),
       _sample_size(sample_size * 2),
       _out_buf(buf)
 {

@@ -6,6 +6,8 @@
 #include "defines.h"
 #include "config.h"
 
+static char *const _argv[] = {"arch", NULL};
+
 int main(int argc, char *const argv[])
 {
     File::MakeDirs(APP_DATA_DIR);
@@ -19,15 +21,14 @@ int main(int argc, char *const argv[])
     }
 
     LogDebug("Exit");
-    LogDebug("gCorePath: %s", gCorePath);
+    LogInfo("gCorePath: %s", gCorePath);
 
     delete gConfig;
     delete gLog;
 
     if (*gCorePath)
     {
-        char *const argv[] = {"arch", NULL};
-        sceAppMgrLoadExec(gCorePath, argv, NULL);
+        sceAppMgrLoadExec(gCorePath, _argv, NULL);
     }
 
     sceAppUtilShutdown();
