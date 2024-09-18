@@ -24,13 +24,17 @@ int main(int argc, char *const argv[])
     LogInfo("gCorePath: %s", gCorePath);
 
     delete gConfig;
-    delete gLog;
 
     if (*gCorePath)
     {
-        sceAppMgrLoadExec(gCorePath, _argv, NULL);
+        SceInt32 result = sceAppMgrLoadExec(gCorePath, _argv, NULL);
+        if (result != SCE_OK)
+        {
+            LogError("sceAppMgrLoadExec failed: %08x", result);
+        }
     }
 
+    delete gLog;
     sceAppUtilShutdown();
     sceKernelExitProcess(0);
     return 0;
