@@ -59,6 +59,10 @@ bool EnvironmentCallback(unsigned cmd, void *data)
             *(bool *)data = true;
         }
         break;
+    case RETRO_ENVIRONMENT_SHUTDOWN:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_SHUTDOWN");
+        gEmulator->UnloadGame();
+        break;
     case RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY:
         LogDebug("  cmd: RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY");
         if (data)

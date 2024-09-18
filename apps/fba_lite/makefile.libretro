@@ -219,7 +219,7 @@ else ifeq ($(platform), vita)
    CC_AS = arm-vita-eabi-gcc$(EXE_EXT)
    CXX = arm-vita-eabi-g++$(EXE_EXT)
    AR = arm-vita-eabi-ar$(EXE_EXT)
-   PLATFORM_DEFINES += -DVITA
+   PLATFORM_DEFINES += -DVITA -DHAVE_ARM_NEON_ASM_OPTIMIZATIONS
    ENDIANNESS_DEFINES := -DLSB_FIRST
    CFLAGS += -mfloat-abi=hard -fsingle-precision-constant \
     -marm -mcpu=cortex-a9 -mfpu=neon -DVITA -D__vita__ \
