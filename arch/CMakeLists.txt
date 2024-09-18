@@ -16,8 +16,6 @@ endforeach()
 
 project("Arch")
 
-set(BUILD_SELF ON)
-
 set(CORE_SHORTS
     gpSP
     mGBA

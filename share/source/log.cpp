@@ -22,6 +22,7 @@ Log::Log(const char *name, int buf_len)
 
 Log::~Log()
 {
+	sceKernelLockLwMutex(&_mutex, 1, NULL);
 	delete[] _buf;
 	sceKernelDeleteLwMutex(&_mutex);
 }
