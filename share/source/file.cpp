@@ -179,7 +179,7 @@ namespace File
         const char *end = _GetDirEndPos(path);
         if (end)
         {
-            return std::string(path, end - path);
+            return std::string(path, end - path - 1);
         }
         else
         {

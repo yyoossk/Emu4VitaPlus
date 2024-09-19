@@ -142,6 +142,8 @@ void TabBrowser::_OnKeyCross(Input *input)
             _directory->SetCurrentPath(path);
         }
     }
+
+    _index = 0;
 }
 
 void TabBrowser::_OnKeyUp(Input *input)
