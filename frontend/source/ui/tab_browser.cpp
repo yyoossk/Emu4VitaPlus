@@ -136,10 +136,7 @@ void TabBrowser::_OnKeyCross(Input *input)
         size_t pos = path.rfind('/');
         if (pos != std::string::npos)
         {
-            LogDebug(path.c_str());
-            path = path.substr(0, pos);
-            LogDebug(path.c_str());
-            _directory->SetCurrentPath(path);
+            _directory->SetCurrentPath(path.substr(0, pos));
         }
     }
 
