@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 set(CORE_NAME "genesis_plus_gx")
 set(CORE_SHORT_NAME "GenesisPlusGX")
 set(CORE_FULL_NAME "Genesis Plus GX")
+set(CONSOLE "MD")
 
 if(TARGET ${CORE_NAME}_build)
   return()
@@ -29,6 +30,6 @@ foreach(file ${PKG_FILES})
   list(APPEND PRIVATE_PKG_FILES FILE ${file} ${rel})
 endforeach()
 
-add_compile_definitions(GENESIS_PLUS_GX_BUILD MD_BUILD CONSOLE="MD")
+add_compile_definitions(GENESIS_PLUS_GX_BUILD MD_BUILD)
 
 add_subdirectory(.. ${CMAKE_CURRENT_BINARY_DIR}/app)

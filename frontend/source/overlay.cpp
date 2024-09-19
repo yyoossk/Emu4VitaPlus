@@ -27,7 +27,7 @@ vita2d_texture *Overlay::Get()
 {
     if (_texture == nullptr && image_name.size() > 0)
     {
-        for (auto const &path : {"app0:assets", APP_DATA_DIR})
+        for (auto const &path : {"app0:assets", CONSOLE_DIR, APP_DATA_DIR})
         {
             const std::string name = std::string(path) + "/" OVERLAYS_DIR_NAME "/" + image_name;
 
@@ -44,10 +44,9 @@ vita2d_texture *Overlay::Get()
 
 Overlays::Overlays()
 {
-    if (!Load("app0:assets/" OVERLAYS_DIR_NAME))
-    {
-        Load((std::string(APP_DATA_DIR) + "/" OVERLAYS_DIR_NAME).c_str());
-    }
+    Load("app0:assets/" OVERLAYS_DIR_NAME);
+    Load((std::string(CONSOLE_DIR) + "/" + OVERLAYS_DIR_NAME).c_str());
+    Load((std::string(APP_DATA_DIR) + "/" OVERLAYS_DIR_NAME).c_str());
 }
 
 Overlays::~Overlays()
@@ -68,7 +67,7 @@ bool Overlays::Load(const char *path)
 
     CSimpleIniA::TNamesDepend sections;
     ini.GetAllSections(sections);
-    this->reserve(sections.size());
+    this->reserve(this->size() + sections.size());
     for (const auto &section : sections)
     {
         Overlay overlay;

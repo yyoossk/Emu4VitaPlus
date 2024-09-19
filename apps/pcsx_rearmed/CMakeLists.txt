@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 set(CORE_NAME "pcsx_rearmed")
 set(CORE_SHORT_NAME "PCSXReARMed")
 set(CORE_FULL_NAME "PCSX ReARMed")
+set(CONSOLE "PS")
 
 if(TARGET ${CORE_NAME}_build)
   return()
@@ -29,6 +30,6 @@ foreach(file ${PKG_FILES})
   list(APPEND PRIVATE_PKG_FILES FILE ${file} ${rel})
 endforeach()
 
-add_compile_definitions(PCSX_REARMED_BUILD PS_BUILD CONSOLE="PS")
+add_compile_definitions(PCSX_REARMED_BUILD PS_BUILD)
 
 add_subdirectory(.. ${CMAKE_CURRENT_BINARY_DIR}/app)

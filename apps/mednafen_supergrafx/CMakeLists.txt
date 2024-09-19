@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 set(CORE_NAME "mednafen_supergrafx")
 set(CORE_SHORT_NAME "MednafenPCESuperGrafx")
 set(CORE_FULL_NAME "Mednafen PCE SuperGrafx")
+set(CONSOLE "PCE")
 
 if(TARGET ${CORE_NAME}_build)
   return()
@@ -29,6 +30,6 @@ foreach(file ${PKG_FILES})
   list(APPEND PRIVATE_PKG_FILES FILE ${file} ${rel})
 endforeach()
 
-add_compile_definitions(MEDNAFEN_SUPERGRAFX_BUILD PCE_BUILD CONSOLE="PCE")
+add_compile_definitions(MEDNAFEN_SUPERGRAFX_BUILD PCE_BUILD)
 
 add_subdirectory(.. ${CMAKE_CURRENT_BINARY_DIR}/app)

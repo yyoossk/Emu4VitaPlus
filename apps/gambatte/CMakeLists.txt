@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 set(CORE_NAME "gambatte")
 set(CORE_SHORT_NAME "Gambatte")
 set(CORE_FULL_NAME "Gambatte")
+set(CONSOLE "GBC")
 
 if(TARGET ${CORE_NAME}_build)
   return()
@@ -29,6 +30,6 @@ foreach(file ${PKG_FILES})
   list(APPEND PRIVATE_PKG_FILES FILE ${file} ${rel})
 endforeach()
 
-add_compile_definitions(GAMEBATTE_BUILD GBC_BUILD CONSOLE="GBC")
+add_compile_definitions(GAMEBATTE_BUILD GBC_BUILD)
 
 add_subdirectory(.. ${CMAKE_CURRENT_BINARY_DIR}/app)

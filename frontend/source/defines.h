@@ -18,6 +18,8 @@ extern const char CORE_SAVESTATES_DIR[];
 extern const char APP_TITLE_NAME[];
 extern const char CORE_FULL_NAME[];
 extern const char APP_VER_STR[];
+extern const char CONSOLE[];
+extern const char CONSOLE_DIR[];
 
 extern const uint8_t RETRO_KEYS[];
 extern const size_t RETRO_KEYS_SIZE;

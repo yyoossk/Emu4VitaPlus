@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 set(CORE_NAME "picodrive")
 set(CORE_SHORT_NAME "PicoDrive")
 set(CORE_FULL_NAME "PicoDrive")
+set(CONSOLE "MD")
 
 if(TARGET ${CORE_NAME}_build)
   return()
@@ -29,6 +30,6 @@ foreach(file ${PKG_FILES})
   list(APPEND PRIVATE_PKG_FILES FILE ${file} ${rel})
 endforeach()
 
-add_compile_definitions(PICODRIVE_BUILD SMS_BUILD MD_BUILD MDCD_BUILD MD32X_BUILD CONSOLE="MD")
+add_compile_definitions(PICODRIVE_BUILD SMS_BUILD MD_BUILD MDCD_BUILD MD32X_BUILD)
 
 add_subdirectory(.. ${CMAKE_CURRENT_BINARY_DIR}/app)

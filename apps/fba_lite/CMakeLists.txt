@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 set(CORE_NAME "fba_lite")
 set(CORE_SHORT_NAME "FBALite")
 set(CORE_FULL_NAME "FBA Lite")
+set(CONSOLE "ARC")
 
 if(TARGET ${CORE_NAME}_build)
   return()
@@ -29,6 +30,6 @@ foreach(file ${PKG_FILES})
   list(APPEND PRIVATE_PKG_FILES FILE ${file} ${rel})
 endforeach()
 
-add_compile_definitions(FBA_LITE_BUILD ARC_BUILD FBA_BUILD CONSOLE="ARC")
+add_compile_definitions(FBA_LITE_BUILD ARC_BUILD FBA_BUILD)
 
 add_subdirectory(.. ${CMAKE_CURRENT_BINARY_DIR}/app)

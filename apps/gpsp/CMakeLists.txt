@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 set(CORE_NAME "gpsp")
 set(CORE_SHORT_NAME "gpSP")
 set(CORE_FULL_NAME "gpSP")
+set(CONSOLE "GBA")
 
 if(TARGET ${CORE_NAME}_build)
   return()
@@ -29,6 +30,6 @@ foreach(file ${PKG_FILES})
   list(APPEND PRIVATE_PKG_FILES FILE ${file} ${rel})
 endforeach()
 
-add_compile_definitions(GPSP_BUILD GBA_BUILD CONSOLE="GBA")
+add_compile_definitions(GPSP_BUILD GBA_BUILD)
 
 add_subdirectory(.. ${CMAKE_CURRENT_BINARY_DIR}/app)

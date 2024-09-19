@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 set(CORE_NAME "mednafen_pce_fast")
 set(CORE_SHORT_NAME "MednafenPCEFast")
 set(CORE_FULL_NAME "Mednafen PCE Fast")
+set(CONSOLE "PCE")
 
 if(TARGET ${CORE_NAME}_build)
   return()
@@ -29,6 +30,6 @@ foreach(file ${PKG_FILES})
   list(APPEND PRIVATE_PKG_FILES FILE ${file} ${rel})
 endforeach()
 
-add_compile_definitions(MEDNAFEN_PCE_FAST_BUILD PCE_BUILD CONSOLE="PCE")
+add_compile_definitions(MEDNAFEN_PCE_FAST_BUILD PCE_BUILD)
 
 add_subdirectory(.. ${CMAKE_CURRENT_BINARY_DIR}/app)

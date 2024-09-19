@@ -22,6 +22,8 @@ const char CORE_SAVESTATES_DIR[] = _APP_DATA_DIR "/savestates";
 const char APP_TITLE_NAME[] = _APP_TITLE_NAME;
 const char CORE_FULL_NAME[] = _CORE_FULL_NAME;
 const char APP_VER_STR[] = _APP_VER_STR;
+const char CONSOLE[] = _CONSOLE;
+const char CONSOLE_DIR[] = "app0:data/" _CONSOLE;
 
 const uint8_t RETRO_KEYS[] = {
     RETRO_DEVICE_ID_NONE,

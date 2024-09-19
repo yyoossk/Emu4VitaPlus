@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 set(CORE_NAME "snes9x2005")
 set(CORE_SHORT_NAME "Snes9x2005")
 set(CORE_FULL_NAME "Snes9x 2005")
+set(CONSOLE "SNES")
 
 if(TARGET ${CORE_NAME}_build)
   return()
@@ -29,6 +30,6 @@ foreach(file ${PKG_FILES})
   list(APPEND PRIVATE_PKG_FILES FILE ${file} ${rel})
 endforeach()
 
-add_compile_definitions(SNES9X2005_BUILD SFC_BUILD CONSOLE="SNES")
+add_compile_definitions(SNES9X2005_BUILD SFC_BUILD)
 
 add_subdirectory(.. ${CMAKE_CURRENT_BINARY_DIR}/app)

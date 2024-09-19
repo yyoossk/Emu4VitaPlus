@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 set(CORE_NAME "nestopia")
 set(CORE_SHORT_NAME "Nestopia")
 set(CORE_FULL_NAME "Nestopia")
+set(CONSOLE "NES")
 
 if(TARGET ${CORE_NAME}_build)
   return()
@@ -29,6 +30,6 @@ foreach(file ${PKG_FILES})
   list(APPEND PRIVATE_PKG_FILES FILE ${file} ${rel})
 endforeach()
 
-add_compile_definitions(NESTOPIA_BUILD FC_BUILD CONSOLE="NES")
+add_compile_definitions(NESTOPIA_BUILD FC_BUILD)
 
 add_subdirectory(.. ${CMAKE_CURRENT_BINARY_DIR}/app)

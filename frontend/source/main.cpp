@@ -33,6 +33,5 @@ int main(int argc, char *const argv[])
 #endif
     delete gLog;
 
-    sceKernelExitProcess(0);
     return 0;
 }

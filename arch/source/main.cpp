@@ -6,8 +6,6 @@
 #include "defines.h"
 #include "config.h"
 
-static char *const _argv[] = {"arch", NULL};
-
 int main(int argc, char *const argv[])
 {
     File::MakeDirs(APP_DATA_DIR);
@@ -15,10 +13,9 @@ int main(int argc, char *const argv[])
     gConfig = new Config();
     LogInfo("updated on " __DATE__ " " __TIME__);
     LogDebug("Start");
-    {
-        App app;
-        app.Run();
-    }
+
+    App app;
+    app.Run();
 
     LogDebug("Exit");
     LogInfo("gCorePath: %s", gCorePath);
@@ -27,6 +24,7 @@ int main(int argc, char *const argv[])
 
     if (*gCorePath)
     {
+        char *const _argv[] = {"arch", NULL};
         SceInt32 result = sceAppMgrLoadExec(gCorePath, _argv, NULL);
         if (result != SCE_OK)
         {
@@ -35,7 +33,6 @@ int main(int argc, char *const argv[])
     }
 
     delete gLog;
-    sceAppUtilShutdown();
-    sceKernelExitProcess(0);
+
     return 0;
 }
