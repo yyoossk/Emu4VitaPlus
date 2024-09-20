@@ -367,33 +367,29 @@ void Ui::_ShowBoot()
     static size_t count = 0;
     static uint64_t next_ms = 0;
 
-    bool need_pop = false;
-
     for (const auto &log : _logs)
     {
         if (&log == &_logs.back())
         {
             ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
-            need_pop = true;
         }
         ImGui::Text(log.c_str());
     }
 
-    if (_logs.size() > 0)
+    if (_logs.size() == 0)
     {
-        uint64_t current_ms = sceKernelGetProcessTimeWide();
-        if (next_ms <= current_ms)
-        {
-            LOOP_PLUS_ONE(count, sizeof(frames) / sizeof(*frames));
-            next_ms = current_ms + 200000;
-        }
-        ImGui::Text(frames[count]);
+        ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
     }
 
-    if (need_pop)
+    uint64_t current_ms = sceKernelGetProcessTimeWide();
+    if (next_ms <= current_ms)
     {
-        ImGui::PopStyleColor();
+        LOOP_PLUS_ONE(count, sizeof(frames) / sizeof(*frames));
+        next_ms = current_ms + 200000;
     }
+    ImGui::Text(frames[count]);
+
+    ImGui::PopStyleColor();
 
     if (ImGui::GetScrollMaxY() > 0.f)
     {

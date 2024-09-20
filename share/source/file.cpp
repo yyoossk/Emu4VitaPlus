@@ -133,10 +133,7 @@ namespace File
 
     static const char *_GetDirEndPos(const char *path)
     {
-        char *p = strrchr(path, '/');
-        if (p)
-            return p;
-        return strrchr(path, ':');
+        return strrchr(path, '/');
     }
 
     static char *_GetDotPos(const char *path)
@@ -176,14 +173,9 @@ namespace File
 
     std::string GetDir(const char *path)
     {
-        const char *end = _GetDirEndPos(path);
-        if (end)
-        {
-            return std::string(path, end - path - 1);
-        }
-        else
-        {
-            return path;
-        }
+        std::string p(path);
+
+        size_t pos = p.rfind('/');
+        return pos == std::string::npos ? p : p.substr(0, pos);
     }
 }
