@@ -1,28 +1,26 @@
 /*
- * sharp-bilinear.cg
+* sharp-bilinear.cg
  * Author: Themaister
  * License: Public domain
  *
  * Does a bilinear stretch, with a preapplied Nx nearest-neighbor scale, giving a
  * sharper image than plain bilinear.
  */
- 
+
 /* COMPATIBILITY 
-   - HLSL compilers
-   - Cg   compilers
-   - FX11 compilers
+- HLSL compilers
+- Cg   compilers
+- FX11 compilers
 */
 
-struct out_vertex
-{
-	float4 position : POSITION;
-	float2 texCoord : TEXCOORD0;
-	float2 precalc_texel : TEXCOORD1;
-	float2 precalc_scale : TEXCOORD2;
+struct out_vertex {
+    float4 position : POSITION;
+    float2 texCoord : TEXCOORD0;
+    float2 precalc_texel : TEXCOORD1;
+    float2 precalc_scale : TEXCOORD2;
 };
 
-struct input
-{
+struct input {
     float2 video_size;
     float2 texture_size;
     float2 output_size;
@@ -32,17 +30,15 @@ struct input
 };
 
 #if defined(VERTEX)
-void main(  float2 aTexcoord : TEXCOORD0,
-  float4 aPosition : POSITION,
-  uniform float4x4 wvp,
-  uniform input IN,
-  out_vertex out OUT
-  )
-{
-	OUT.position = mul(aPosition, wvp);
-	OUT.texCoord = aTexcoord;
-	OUT.precalc_texel = aTexcoord * IN.texture_size.xy;
-	OUT.precalc_scale = max(floor(IN.output_size.xy / IN.video_size.xy), float2(1.0, 1.0));
+void main(float2 aTexcoord : TEXCOORD0,
+    float4 aPosition : POSITION,
+    uniform float4x4 wvp,
+    uniform input IN,
+    out_vertex out OUT) {
+    OUT.position = mul(aPosition, wvp);
+    OUT.texCoord = aTexcoord;
+    OUT.precalc_texel = aTexcoord * IN.texture_size.xy;
+    OUT.precalc_scale = max(floor(IN.output_size.xy / IN.video_size.xy), float2(1.0, 1.0));
 }
 
 #elif defined(FRAGMENT)
@@ -50,30 +46,28 @@ void main(  float2 aTexcoord : TEXCOORD0,
 #define SHARP_BILINEAR_PRE_SCALE 4.0
 #define AUTO_PRESCALE 1.0
 
-float4 sharp_bilinear(float2 texture_size, float2 video_size, float2 output_size, float2 texCoord, sampler2D decal, float2 precalc_texel, float2 precalc_scale)
-{
-   float2 texel = precalc_texel;//texCoord * texture_size;
-//   float2 texel_floored = floor(texel);
-//   float scale = (AUTO_PRESCALE > 0.5) ? floor(output_size.y / video_size.y) : SHARP_BILINEAR_PRE_SCALE;
-   float2 scale = precalc_scale;
-   float2 texel_floored = floor(texel);
-   float2 s = frac(texel);
-   float2 region_range = 0.5 - 0.5 / scale;
-
-   // Figure out where in the texel to sample to get correct pre-scaled bilinear.
-   // Uses the hardware bilinear interpolator to avoid having to sample 4 times manually.
-
-   float2 center_dist = s - 0.5;
-   float2 f = (center_dist - clamp(center_dist, -region_range, region_range)) * scale + 0.5;
-
-   float2 mod_texel = texel_floored + f;
-   return tex2D(decal, mod_texel / texture_size);
+float4 sharp_bilinear(float2 texture_size, float2 video_size, float2 output_size, float2 texCoord, sampler2D decal, float2 precalc_texel, float2 precalc_scale) {
+    float2 texel = precalc_texel;//texCoord * texture_size;
+    //   float2 texel_floored = floor(texel);
+    //   float scale = (AUTO_PRESCALE > 0.5) ? floor(output_size.y / video_size.y) : SHARP_BILINEAR_PRE_SCALE;
+    float2 scale = precalc_scale;
+    float2 texel_floored = floor(texel);
+    float2 s = frac(texel);
+    float2 region_range = 0.5 - 0.5 / scale;
+    
+    // Figure out where in the texel to sample to get correct pre-scaled bilinear.
+    // Uses the hardware bilinear interpolator to avoid having to sample 4 times manually.
+    
+    float2 center_dist = s - 0.5;
+    float2 f = (center_dist - clamp(center_dist, -region_range, region_range)) * scale + 0.5;
+    
+    float2 mod_texel = texel_floored + f;
+    return tex2D(decal, mod_texel / texture_size);
 }
 
 float4 main(uniform sampler2D decal : TEXUNIT0,
-  uniform input IN,
-  in out_vertex VOUT) : COLOR
-{
-	return sharp_bilinear(IN.texture_size, IN.video_size, IN.output_size, VOUT.texCoord, decal, VOUT.precalc_texel, VOUT.precalc_scale);
+    uniform input IN,
+    in out_vertex VOUT) : COLOR {
+    return sharp_bilinear(IN.texture_size, IN.video_size, IN.output_size, VOUT.texCoord, decal, VOUT.precalc_texel, VOUT.precalc_scale);
 }
 #endif
