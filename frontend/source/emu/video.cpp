@@ -39,7 +39,7 @@ void Emulator::Show()
 
     // vita2d_shader *shader = gConfig->graphics[GRAPHICS_SHADER] > 0 ? (*gShaders)[gConfig->graphics[GRAPHICS_SHADER] - 1].Get() : nullptr;
     uint32_t index = gConfig->graphics[GRAPHICS_SHADER];
-    Shader *shader = (index > 0 && index < gShaders->size()) ? &(*gShaders)[index - 1] : nullptr;
+    Shader *shader = (index > 0 && index <= gShaders->size()) ? &(*gShaders)[index - 1] : nullptr;
 
     if (shader && shader->Valid())
     {
