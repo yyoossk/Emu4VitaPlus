@@ -436,7 +436,7 @@ void Ui::Show()
 
 void Ui::AppendLog(const char *log)
 {
-    LogDebug("boot log: %s", log);
+    LogInfo("boot log: %s", log);
 
     gVideo->Lock();
     _logs.emplace_back(log);

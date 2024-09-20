@@ -26,7 +26,7 @@ int main(int argc, char *const argv[])
         app.Run();
     }
 
-    LogDebug("Exit");
+    LogInfo("Exit main()");
 
 #if LOG_LEVEL <= LOG_LEVEL_DEBUG
     delete gProfiler;

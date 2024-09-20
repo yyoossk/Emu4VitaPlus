@@ -93,7 +93,7 @@ App::App(int argc, char *const argv[])
     }
 
     gUi->ClearLogs();
-    LogInfo("App() End");
+
     sceShellUtilLock((SceShellUtilLockType)(SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN |
                                             SCE_SHELL_UTIL_LOCK_TYPE_QUICK_MENU |
                                             SCE_SHELL_UTIL_LOCK_TYPE_USB_CONNECTION |
@@ -104,13 +104,13 @@ App::~App()
 {
     LogFunctionName;
 
-    delete gVideo;
-    delete gUi;
+    delete gConfig;
     delete gEmulator;
     delete gStateManager;
     delete gShaders;
     delete gOverlays;
-    delete gConfig;
+    delete gUi;
+    delete gVideo;
 
     sceAppUtilShutdown();
 }

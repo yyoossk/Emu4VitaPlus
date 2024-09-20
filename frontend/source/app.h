@@ -24,7 +24,7 @@ public:
     {
         if (_status != status)
         {
-            LogDebug("Status from %d to %d", _status, status);
+            LogInfo("Status from %d to %d", _status, status);
             gVideo->Lock();
             _status = status;
             gVideo->Unlock();
