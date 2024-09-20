@@ -20,10 +20,10 @@ App::App() : _index(0)
 {
     LogFunctionName;
 
-    scePowerSetArmClockFrequency(444);
-    scePowerSetBusClockFrequency(222);
-    scePowerSetGpuClockFrequency(222);
-    scePowerSetGpuXbarClockFrequency(166);
+    // scePowerSetArmClockFrequency(444);
+    // scePowerSetBusClockFrequency(222);
+    // scePowerSetGpuClockFrequency(222);
+    // scePowerSetGpuXbarClockFrequency(166);
 
     sceShellUtilInitEvents(0);
 
