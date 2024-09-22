@@ -5,6 +5,17 @@
 #include "utils.h"
 #include "config.h"
 
+static const char *AppTitle[] = {
+    // " _____                      ___  _   _  _  _                        ",
+    // "|  ___|                    /   || | | |(_)| |            _      _   ",
+    // "| |__   _ __ ___   _   _  / /| || | | | _ | |_   __ _  _| |_  _| |_ ",
+    // "|  __| | '_ ` _ \\ | | | |/ /_| || | | || || __| / _` ||_   _||_   _|",
+    // "| |___ | | | | | || |_| |\\___  |\\ \\_/ /| || |_ | (_| |  |_|    |_|  ",
+    // "\\____/ |_| |_| |_| \\__,_|    |_/ \\___/ |_| \\__| \\__,_|              ",
+};
+
+static const size_t AppTitleSize = sizeof(AppTitle) / sizeof(*AppTitle);
+
 TabAbout::TabAbout() : TabBase(TAB_ABOUT),
                        _index(0)
 {
@@ -13,6 +24,11 @@ TabAbout::TabAbout() : TabBase(TAB_ABOUT),
 
 TabAbout::~TabAbout()
 {
+}
+
+size_t TabAbout::_GetItemCount()
+{
+    return _texts.size() + AppTitleSize;
 }
 
 void TabAbout::Show(bool selected)
@@ -27,12 +43,21 @@ void TabAbout::Show(bool selected)
         ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
         ImGui::BeginChild("ChildAbout", {0, 0}, false, window_flags);
 
+        for (size_t i = 0; i < AppTitleSize; i++)
+        {
+            ImGui::TextUnformatted(AppTitle[i]);
+            if (i == _index && ImGui::GetScrollMaxY() > 0.f)
+            {
+                ImGui::SetScrollHereY((float)_index / (float)_GetItemCount());
+            }
+        }
+
         for (size_t i = 0; i < _texts.size(); i++)
         {
             My_Imgui_CenteredText(_texts[i].c_str());
-            if (i == _index && ImGui::GetScrollMaxY() > 0.f)
+            if (i + AppTitleSize == _index && ImGui::GetScrollMaxY() > 0.f)
             {
-                ImGui::SetScrollHereY((float)_index / (float)_texts.size());
+                ImGui::SetScrollHereY((float)_index / (float)_GetItemCount());
             }
         }
 
@@ -100,10 +125,10 @@ void TabAbout::_InitTexts()
 
 void TabAbout::_OnKeyUp(Input *input)
 {
-    LOOP_MINUS_ONE(_index, _texts.size());
+    LOOP_MINUS_ONE(_index, _texts.size() + AppTitleSize);
 }
 
 void TabAbout::_OnKeyDown(Input *input)
 {
-    LOOP_PLUS_ONE(_index, _texts.size());
+    LOOP_PLUS_ONE(_index, _texts.size() + AppTitleSize);
 }

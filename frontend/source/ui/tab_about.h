@@ -17,6 +17,7 @@ private:
     void _InitTexts();
     void _OnKeyUp(Input *input);
     void _OnKeyDown(Input *input);
+    size_t _GetItemCount();
 
     size_t _index;
     std::vector<std::string> _texts;

@@ -252,7 +252,7 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
 
         if (gEmulator->_texture_buf != nullptr)
         {
-
+            vita2d_wait_rendering_done();
             delete gEmulator->_texture_buf;
             gEmulator->_texture_buf = nullptr;
         }
