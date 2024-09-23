@@ -1,5 +1,5 @@
-#include "string.h"
-#include "SimpleIni.h"
+#include <string.h>
+#include <SimpleIni.h>
 #include "core_options.h"
 #include "log.h"
 

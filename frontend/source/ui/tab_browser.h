@@ -18,7 +18,9 @@ private:
     void _OnKeyUp(Input *input) override;
     void _OnKeyDown(Input *input) override;
     void _OnKeyCross(Input *input);
+    void _OnKeyStart(Input *input);
     void _UpdateTexture();
+    void _UpdateStatus();
 
     Directory *_directory;
     vita2d_texture *_texture;
