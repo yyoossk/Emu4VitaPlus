@@ -173,9 +173,7 @@ namespace File
 
     std::string GetDir(const char *path)
     {
-        std::string p(path);
-
-        size_t pos = p.rfind('/');
-        return pos == std::string::npos ? p : p.substr(0, pos);
+        const char *end = _GetDirEndPos(path);
+        return end ? std::string(path, end - path) : std::string(path);
     }
 }

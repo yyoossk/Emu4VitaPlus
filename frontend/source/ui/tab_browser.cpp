@@ -23,6 +23,7 @@ TabBrowser::TabBrowser(const char *path)
         if (_directory->GetItemName(i) == name)
         {
             _index = i;
+            _UpdateStatus();
             break;
         }
     }
@@ -38,19 +39,28 @@ void TabBrowser::SetInputHooks(Input *input)
 {
     TabSeletable::SetInputHooks(input);
     input->SetKeyUpCallback(SCE_CTRL_CROSS, std::bind(&TabBrowser::_OnKeyCross, this, input));
+    input->SetKeyUpCallback(SCE_CTRL_START, std::bind(&TabBrowser::_OnKeyStart, this, input));
 }
 
 void TabBrowser::UnsetInputHooks(Input *input)
 {
     TabSeletable::UnsetInputHooks(input);
     input->UnsetKeyUpCallback(SCE_CTRL_CROSS);
+    input->UnsetKeyUpCallback(SCE_CTRL_START);
 }
 
 void TabBrowser::Show(bool selected)
 {
     if (ImGui::BeginTabItem(TEXT(_title_id), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
     {
-        ImGui::BeginChild(TEXT(_title_id));
+        ImVec2 size = {0.f, 0.f};
+        if (_status_text.size() > 0)
+        {
+            ImVec2 s = ImGui::CalcTextSize(_status_text.c_str());
+            size.y = -s.y * (s.x / ImGui::GetContentRegionAvailWidth() + 1);
+        }
+
+        ImGui::BeginChild(TEXT(_title_id), size);
         ImGui::Columns(2, NULL, false);
 
         ImGui::Text(_directory->GetCurrentPath().c_str());
@@ -94,6 +104,13 @@ void TabBrowser::Show(bool selected)
         }
         ImGui::EndChild();
 
+        if (_status_text.size() > 0)
+        {
+            ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0xcc, 0xcc, 0xcc, 255));
+            ImGui::TextWrapped(_status_text.c_str());
+            ImGui::PopStyleColor();
+        }
+
         ImGui::EndTabItem();
     }
 }
@@ -114,6 +131,7 @@ void TabBrowser::_OnActive(Input *input)
             _directory->SetCurrentPath(_directory->GetCurrentPath() + "/" + item.name);
         }
         _index = 0;
+        _UpdateStatus();
     }
     else
     {
@@ -141,23 +159,31 @@ void TabBrowser::_OnKeyCross(Input *input)
     }
 
     _index = 0;
+    _UpdateStatus();
+}
+
+void TabBrowser::_OnKeyStart(Input *input)
+{
+    _UpdateStatus();
 }
 
 void TabBrowser::_OnKeyUp(Input *input)
 {
     TabSeletable::_OnKeyUp(input);
+    _UpdateStatus();
     _UpdateTexture();
 }
 
 void TabBrowser::_OnKeyDown(Input *input)
 {
     TabSeletable::_OnKeyDown(input);
+    _UpdateStatus();
     _UpdateTexture();
 }
 
 void TabBrowser::_UpdateTexture()
 {
-    LogFunctionName;
+    // LogFunctionName;
 
     if (_texture != nullptr)
     {
@@ -205,5 +231,28 @@ void TabBrowser::_UpdateTexture()
 
         _texture_width = width * zoom;
         _texture_height = height * zoom;
+    }
+}
+
+void TabBrowser::_UpdateStatus()
+{
+    if (_index >= _directory->GetSize())
+    {
+        _status_text.clear();
+        return;
+    }
+
+    const DirItem &item = _directory->GetItem(_index);
+
+    _status_text = TEXT(BUTTON_CIRCLE);
+    _status_text += item.is_dir ? TEXT(BROWSER_ENTER_DIR) : TEXT(BROWSER_START_GAME);
+    _status_text += "\t";
+    _status_text += TEXT(BUTTON_CROSS);
+    _status_text += TEXT(BROWSER_BACK_DIR);
+    _status_text += "\t";
+    if (!item.is_dir)
+    {
+        _status_text += TEXT(BUTTON_START);
+        _status_text += TEXT(BROWSER_ADD_FAVORITE);
     }
 }

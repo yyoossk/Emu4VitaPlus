@@ -1,7 +1,8 @@
-#include "string.h"
-#include "SimpleIni.h"
+#include <string.h>
+#include <SimpleIni.h>
 #include "core_options.h"
 #include "log.h"
+#include "file.h"
 
 #define CORE_SECTION "CORE"
 
@@ -22,7 +23,7 @@ size_t CoreOption::GetValueIndex()
     size_t count = 0;
     for (const auto &v : values)
     {
-        if (value == (v.label ? v.label : v.value))
+        if ((v.value && value == v.value) || (v.label && value == v.label))
         {
             return count;
         }
@@ -100,11 +101,10 @@ void CoreOptions::_Load(const T *define)
     CoreOption *option;
     if (iter == this->end())
     {
-        option = &((*this)[define->key] = CoreOption{define->desc ? define->desc : emptry_string,
+        option = &((*this)[define->key] = CoreOption{define->default_value,
+                                                     define->desc ? define->desc : emptry_string,
                                                      define->info ? define->info : emptry_string,
-                                                     define->default_value,
                                                      define->default_value});
-        // LogDebug("xx %x %s %x %s", define->key, define->key, define->values, define->values->value);
     }
     else
     {
@@ -153,6 +153,22 @@ bool CoreOptions::Get(retro_variable *var)
 bool CoreOptions::Load(const char *path)
 {
     LogFunctionName;
+    CSimpleIniA ini;
+    if (ini.LoadFile(path) != SI_OK)
+    {
+        LogWarn("Load %s failed", path);
+        return false;
+    }
+
+    CSimpleIniA::TNamesDepend keys;
+    ini.GetAllKeys(CORE_SECTION, keys);
+    for (auto const &key : keys)
+    {
+        const char *value = ini.GetValue(CORE_SECTION, key.pItem, "NULL");
+        this->emplace(key.pItem, CoreOption{value});
+        LogDebug("  %s = %s", key.pItem, value);
+    }
+
     return true;
 }
 
@@ -165,28 +181,29 @@ bool CoreOptions::Save(const char *path)
         const char *key = iter.first.c_str();
         const CoreOption *option = &iter.second;
         ini.SetValue(CORE_SECTION, key, option->value.c_str());
-        LogDebug("key %s", key);
-        ini.SetValue(key, "desc", option->desc);
-        LogDebug("desc %s", option->desc);
-        ini.SetValue(key, "info", option->info);
-        LogDebug("info %s", option->info);
-        ini.SetValue(key, "default_value", option->default_value);
-        LogDebug("default_value %s", option->default_value);
+        // LogDebug("key %s", key);
+        // ini.SetValue(key, "desc", option->desc);
+        // LogDebug("desc %s", option->desc);
+        // ini.SetValue(key, "info", option->info);
+        // LogDebug("info %s", option->info);
+        // ini.SetValue(key, "default_value", option->default_value);
+        // LogDebug("default_value %s", option->default_value);
 
         // for (auto vv : option->GetValues())
         // {
         //     LogDebug(" %s", vv.Get());
         // }
-        size_t count = 0;
-        for (const auto &v : option->values)
-        {
-            char vs[32];
-            snprintf(vs, 32, "value_%d", count);
-            ini.SetValue(key, vs, v.value);
-            count++;
-        }
+        // size_t count = 0;
+        // for (const auto &v : option->values)
+        // {
+        //     char vs[32];
+        //     snprintf(vs, 32, "value_%d", count);
+        //     ini.SetValue(key, vs, v.value);
+        //     count++;
+        // }
     }
 
+    File::Remove(path);
     return ini.SaveFile(path) == SI_OK;
 }
 

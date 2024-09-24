@@ -12,6 +12,7 @@
 #include "item_core.h"
 #include "item_state.h"
 #include "tab_browser.h"
+#include "tab_favorite.h"
 #include "tab_about.h"
 #include "utils.h"
 #include "overlay.h"
@@ -168,6 +169,7 @@ void Ui::CreateTables(const char *path)
     _tabs[TAB_INDEX_STATE]->SetVisable(false);
 
     _tabs[TAB_INDEX_BROWSER] = new TabBrowser(path);
+    _tabs[TAB_INDEX_FAVORITE] = new TabFavorite();
 
     _tabs[TAB_INDEX_GRAPHICS] = new TabSeletable(TAB_GRAPHICS,
                                                  {new ItemConfig(GRAPHICS_MENU_DISPLAY_SIZE,
