@@ -280,7 +280,8 @@ bool Config::Load(const char *path)
         graphics[i] = ini.GetLongValue(GRAPHICS_SECTION, GraphicsStr.at(i), graphics[i]);
     }
 
-    LogDebug("load end");
+    core_options.Load();
+
     return true;
 }
 

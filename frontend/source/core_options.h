@@ -8,10 +8,10 @@
 
 struct CoreOption
 {
+    std::string value;
     const char *desc = nullptr;
     const char *info = nullptr;
     const char *default_value = nullptr;
-    std::string value;
     std::vector<retro_core_option_value> values;
     bool visible = true;
 
