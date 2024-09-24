@@ -1,7 +1,7 @@
 #pragma once
-#include "tab_base.h"
+#include "tab_selectable.h"
 
-class TabFavorite : virtual public TabBase
+class TabFavorite : virtual public TabSeletable
 {
 public:
     TabFavorite();

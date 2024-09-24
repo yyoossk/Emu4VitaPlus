@@ -23,7 +23,7 @@ size_t CoreOption::GetValueIndex()
     size_t count = 0;
     for (const auto &v : values)
     {
-        if ((v.value && value == v.value) || value == v.label)
+        if ((v.value && value == v.value) || (v.label && value == v.label))
         {
             return count;
         }
