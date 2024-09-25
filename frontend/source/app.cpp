@@ -15,6 +15,7 @@
 #include "log.h"
 #include "defines.h"
 #include "shader.h"
+#include "favorite.h"
 
 AppStatus gStatus;
 
@@ -74,14 +75,12 @@ App::App(int argc, char *const argv[])
 
     gUi->AppendLog("Load shaders");
     gShaders = new Shaders;
-    // for (auto &shader : *gShaders)
-    // {
-    //     shader.Get();
-    // }
+
+    gUi->AppendLog("Load Favorites");
+    gFavorites = new Favorites;
 
     gUi->AppendLog("Create tables of UI");
-
-    gUi->CreateTables(gConfig->last_rom.c_str());
+    gUi->CreateTables();
 
     if (gConfig->language != LANGUAGE::LANGUAGE_ENGLISH)
     {

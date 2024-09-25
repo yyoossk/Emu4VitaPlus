@@ -134,10 +134,9 @@ void Ui::_ClearTabs()
     }
 }
 
-void Ui::CreateTables(const char *path)
+void Ui::CreateTables()
 {
     LogFunctionName;
-    LogDebug("  path: %s", path);
 
     if (gEmulator == nullptr)
     {
@@ -168,7 +167,7 @@ void Ui::CreateTables(const char *path)
     _tabs[TAB_INDEX_STATE] = new TabSeletable(TAB_STATE, states, 1);
     _tabs[TAB_INDEX_STATE]->SetVisable(false);
 
-    _tabs[TAB_INDEX_BROWSER] = new TabBrowser(path);
+    _tabs[TAB_INDEX_BROWSER] = new TabBrowser();
     _tabs[TAB_INDEX_FAVORITE] = new TabFavorite();
 
     _tabs[TAB_INDEX_GRAPHICS] = new TabSeletable(TAB_GRAPHICS,
@@ -401,6 +400,8 @@ void Ui::_ShowBoot()
 
 void Ui::_ShowNormal()
 {
+    _tabs[TAB_INDEX_FAVORITE]->SetVisable(gFavorites->size() > 0);
+
     if (ImGui::BeginTabBar("MyTabBar", ImGuiTabBarFlags_None))
     {
         for (size_t i = 0; i < TAB_INDEX_COUNT; i++)

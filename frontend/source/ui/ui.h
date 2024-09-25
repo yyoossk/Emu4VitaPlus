@@ -29,7 +29,7 @@ public:
     Ui();
     virtual ~Ui();
 
-    void CreateTables(const char *path); // don't call it before gEmulator initialized
+    void CreateTables(); // don't call it before gEmulator initialized
     void Show();
     void Run();
     void SetInputHooks();

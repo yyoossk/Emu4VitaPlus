@@ -25,6 +25,7 @@ const static ImWchar GamePadCharset[] = {0x219c, 0x21a1,
                                          0x21d0, 0x21d3,
                                          0x21e0, 0x21e3,
                                          0x21f7, 0x21f8,
+                                         0x2605, 0x2607,
                                          0xe000, 0xe000,
                                          0x0000};
 const static ImWchar BatteryCharset[] = {0xe800, 0xe805, 0x0000};

@@ -2,6 +2,17 @@
 #include "favorite.h"
 #include "log.h"
 
+Favorites *gFavorites = nullptr;
+
+Favorites::Favorites()
+{
+    Load();
+}
+
+Favorites::~Favorites()
+{
+}
+
 bool Favorites::Load(const char *path)
 {
     LogFunctionName;
@@ -23,7 +34,7 @@ bool Favorites::Load(const char *path)
         fav.item.name = ini.GetValue(sec, "name");
         fav.item.entry_name = ini.GetValue(sec, "entry");
         fav.item.crc32 = ini.GetLongValue(sec, "crc32");
-        this->emplace(fav);
+        this->emplace(fav.item.name, fav);
     }
 
     return true;
@@ -39,12 +50,12 @@ bool Favorites::Save(const char *path)
 
     for (const auto &fav : *this)
     {
-        snprintf(section, 8, "%04d", section);
+        snprintf(section, 8, "%04d", count);
 
-        ini.SetValue(section, "path", fav.path.c_str());
-        ini.SetValue(section, "name", fav.item.name.c_str());
-        ini.SetValue(section, "entry", fav.item.entry_name.c_str());
-        ini.SetLongValue(section, "crc32", fav.item.crc32);
+        ini.SetValue(section, "path", fav.second.path.c_str());
+        ini.SetValue(section, "name", fav.second.item.name.c_str());
+        ini.SetValue(section, "entry", fav.second.item.entry_name.c_str());
+        ini.SetLongValue(section, "crc32", fav.second.item.crc32);
 
         count++;
     }
