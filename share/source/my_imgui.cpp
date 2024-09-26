@@ -12,12 +12,13 @@
 #define APP_ASSETS_DIR "app0:assets"
 #define TEXT_FONT_NAME "wqy-microhei.ttf"
 #define GAMEPAD_FONT_NAME "promptfont.ttf"
-#define BATTERY_FONT_NAME "fontello.ttf"
+#define ICON_FONT_NAME "fontello.ttf"
 #define FONT_CACHE_VERSION 1
 
 extern SceGxmProgram _binary_assets_imgui_v_cg_gxp_start;
 extern SceGxmProgram _binary_assets_imgui_f_cg_gxp_start;
 static vita2d_texture *gFontTexture = nullptr;
+
 const static ImWchar GamePadCharset[] = {0x219c, 0x21a1,
                                          0x21b0, 0x21b3,
                                          0x21bc, 0x21c3,
@@ -25,10 +26,14 @@ const static ImWchar GamePadCharset[] = {0x219c, 0x21a1,
                                          0x21d0, 0x21d3,
                                          0x21e0, 0x21e3,
                                          0x21f7, 0x21f8,
-                                         0x2605, 0x2607,
                                          0xe000, 0xe000,
                                          0x0000};
-const static ImWchar BatteryCharset[] = {0xe800, 0xe805, 0x0000};
+
+const static ImWchar IconCharset[] = {0xe800, 0xe80d,
+                                      0xf0fb, 0xf0fb,
+                                      0xf11b, 0xf11b,
+                                      0xf1de, 0xf1de,
+                                      0x0000};
 
 static void matrix_init_orthographic(float *m,
                                      float left,
@@ -255,10 +260,10 @@ void My_Imgui_Create_Font(uint32_t language, const char *cache_path)
                                  25.0f,
                                  &font_config,
                                  GamePadCharset);
-    io.Fonts->AddFontFromFileTTF(APP_ASSETS_DIR "/" BATTERY_FONT_NAME,
+    io.Fonts->AddFontFromFileTTF(APP_ASSETS_DIR "/" ICON_FONT_NAME,
                                  25.0f,
                                  &font_config,
-                                 BatteryCharset);
+                                 IconCharset);
     gen_font_texture(io.Fonts);
 
     if (cache_path)

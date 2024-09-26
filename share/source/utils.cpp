@@ -5,24 +5,27 @@
 #include "my_imgui.h"
 #include "utils.h"
 #include "log.h"
+#include "icons.h"
 
 #define TIME_X (VITA_WIDTH - 320)
 #define BATTERY_X (VITA_WIDTH - 100)
 #define BATTERY_PERCENT_X (BATTERY_X + 30)
 #define TOP_RIGHT_Y 13
 
+const char *BATTERY_ICONS[] = {ICON_BATTERY_25, ICON_BATTERY_50, ICON_BATTERY_75, ICON_BATTERY_100};
+
 void ShowTimePower()
 {
     int percent = scePowerGetBatteryLifePercent();
     ImU32 color = percent <= 25 ? IM_COL32_RED : IM_COL32_GREEN;
-    char battery[] = "\xee\xa0\x81";
+    const char *battery;
     if (scePowerIsBatteryCharging())
     {
-        battery[2] = '\x85';
+        battery = ICON_BATTERY_CHARGE;
     }
     else
     {
-        battery[2] += std::max(percent - 1, 0) / 25;
+        battery = BATTERY_ICONS[(percent + 25) / 25 - 1];
     }
 
     char percent_str[64];

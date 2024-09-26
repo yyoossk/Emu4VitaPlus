@@ -8,23 +8,23 @@
     },
     {
         "No.": "2",
-        "Tag": "TAB_BROWSER",
-        "English": "Browser",
-        "Chinese": "浏览",
-        "Comments": ""
-    },
-    {
-        "No.": "3",
         "Tag": "TAB_STATE",
         "English": "State",
         "Chinese": "即时存档",
         "Comments": ""
     },
     {
+        "No.": "3",
+        "Tag": "TAB_BROWSER",
+        "English": "Browser",
+        "Chinese": "浏览",
+        "Comments": ""
+    },
+    {
         "No.": "4",
         "Tag": "TAB_FAVORITE",
-        "English": "★ Favorite",
-        "Chinese": "★ 收藏夹",
+        "English": "Favorite",
+        "Chinese": "收藏夹",
         "Comments": ""
     },
     {

@@ -1,4 +1,5 @@
 #include <vita2d.h>
+#include <string>
 #include "tab_browser.h"
 #include "emulator.h"
 #include "video.h"
@@ -7,6 +8,7 @@
 #include "log.h"
 #include "favorite.h"
 #include "config.h"
+#include "icons.h"
 
 #define TEXTURE_MAX_WIDTH 446
 #define TEXTURE_MAX_HEIGHT 442
@@ -52,7 +54,9 @@ void TabBrowser::UnsetInputHooks(Input *input)
 
 void TabBrowser::Show(bool selected)
 {
-    if (ImGui::BeginTabItem(TEXT(_title_id), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
+    std::string title = std::string(TAB_ICONS[_title_id]) + TEXT(_title_id);
+
+    if (ImGui::BeginTabItem(title.c_str(), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
     {
         ImVec2 size = {0.f, 0.f};
         if (_status_text.size() > 0)
@@ -79,7 +83,7 @@ void TabBrowser::Show(bool selected)
 
             if (gFavorites->find(name) != gFavorites->end())
             {
-                name.insert(0, "☆ ");
+                name.insert(0, ICON_EMPTY_STAR_SPACE);
             }
 
             ImGui::Selectable(name.c_str(), i == _index);

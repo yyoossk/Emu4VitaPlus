@@ -1,3 +1,4 @@
+#include <string>
 #include "tab_selectable.h"
 #include "defines.h"
 #include "utils.h"
@@ -50,7 +51,8 @@ void TabSeletable::UnsetInputHooks(Input *input)
 
 void TabSeletable::Show(bool selected)
 {
-    if (ImGui::BeginTabItem(TEXT(_title_id), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
+    std::string title = std::string(TAB_ICONS[_title_id]) + TEXT(_title_id);
+    if (ImGui::BeginTabItem(title.c_str(), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
     {
         ImVec2 size = {0.f, 0.f};
         if (ItemVisable(_index))

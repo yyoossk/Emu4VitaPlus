@@ -1,4 +1,19 @@
+#include <string>
 #include "tab_base.h"
+#include "icons.h"
+
+const char *TAB_ICONS[] = {
+    ICON_HOME_SPACE,
+    ICON_SAVE_SPACE,
+    ICON_FOLDER_SPACE,
+    ICON_STAR_SPACE,
+    ICON_IMAGE_SPACE,
+    ICON_GAMEPAD_SPACE,
+    ICON_JET_SPACE,
+    ICON_SLIDER_SPACE,
+    ICON_OPTIONS_SPACE,
+    ICON_INFO_SPACE,
+};
 
 TabBase::TabBase(TEXT_ENUM title_id, bool visable)
     : _title_id(title_id),
@@ -12,7 +27,9 @@ TabBase::~TabBase()
 
 void TabBase::Show(bool selected)
 {
-    if (ImGui::BeginTabItem(TEXT(_title_id), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
+    std::string title = std::string(TAB_ICONS[_title_id]) + TEXT(_title_id);
+
+    if (ImGui::BeginTabItem(title.c_str(), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
     {
         ImGui::EndTabItem();
     }

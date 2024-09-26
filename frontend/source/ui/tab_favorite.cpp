@@ -1,3 +1,4 @@
+#include <string>
 #include "tab_favorite.h"
 #include "file.h"
 #include "config.h"
@@ -23,7 +24,8 @@ TabFavorite::~TabFavorite()
 
 void TabFavorite::Show(bool selected)
 {
-    if (ImGui::BeginTabItem(TEXT(_title_id), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
+    std::string title = std::string(TAB_ICONS[_title_id]) + TEXT(_title_id);
+    if (ImGui::BeginTabItem(title.c_str(), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
     {
         if (_index >= gFavorites->size())
         {

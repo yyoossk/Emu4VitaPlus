@@ -6,21 +6,6 @@
 #include "input.h"
 #include "tab_base.h"
 
-enum
-{
-    TAB_INDEX_SYSTEM = 0,
-    TAB_INDEX_STATE,
-    TAB_INDEX_BROWSER,
-    TAB_INDEX_FAVORITE,
-    TAB_INDEX_GRAPHICS,
-    TAB_INDEX_CONTROL,
-    TAB_INDEX_HOTKEY,
-    TAB_INDEX_CORE,
-    TAB_INDEX_OPTIONS,
-    TAB_INDEX_ABOUT,
-    TAB_INDEX_COUNT
-};
-
 class Ui
 {
     friend class App;

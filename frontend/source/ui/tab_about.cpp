@@ -22,7 +22,8 @@ void TabAbout::Show(bool selected)
         _InitTexts();
     }
 
-    if (ImGui::BeginTabItem(TEXT(TAB_ABOUT), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
+    std::string title = std::string(TAB_ICONS[_title_id]) + TEXT(_title_id);
+    if (ImGui::BeginTabItem(title.c_str(), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
     {
         ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
         ImGui::BeginChild("ChildAbout", {0, 0}, false, window_flags);
