@@ -110,10 +110,6 @@ void TabBrowser::Show(bool selected)
         ImGui::NextColumn();
 
         ImGui::Columns(1);
-        if (_status_text.size() > 0)
-        {
-            ImGui::Text(_status_text.c_str());
-        }
         ImGui::EndChild();
 
         if (_status_text.size() > 0)
@@ -282,14 +278,13 @@ void TabBrowser::_UpdateStatus()
     if (!item.is_dir)
     {
         _status_text += TEXT(BUTTON_START);
-    }
-
-    if (gFavorites->find(item.name) == gFavorites->end())
-    {
-        _status_text += TEXT(BROWSER_ADD_FAVORITE);
-    }
-    else
-    {
-        _status_text += TEXT(BROWSER_REMOVE_FAVORITE);
+        if (gFavorites->find(item.name) == gFavorites->end())
+        {
+            _status_text += TEXT(BROWSER_ADD_FAVORITE);
+        }
+        else
+        {
+            _status_text += TEXT(BROWSER_REMOVE_FAVORITE);
+        }
     }
 }

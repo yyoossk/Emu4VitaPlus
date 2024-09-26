@@ -16,4 +16,5 @@ private:
     bool _ItemVisable(size_t index) override { return true; };
     void _OnActive(Input *input) override;
     void _OnKeyCross(Input *input);
+    void _UpdateStatus();
 };

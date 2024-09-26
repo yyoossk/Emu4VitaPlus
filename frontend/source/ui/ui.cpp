@@ -48,6 +48,11 @@ static void ReturnToArch()
     gStatus.Set(APP_STATUS_RETURN_ARCH);
 }
 
+static void CleanCache()
+{
+    LogFunctionName;
+}
+
 static void ExitApp()
 {
     LogFunctionName;
@@ -154,6 +159,7 @@ void Ui::CreateTables()
     {
         items.emplace_back(new ItemBase(SYSTEM_MENU_BACK_TO_ARCH, "", ReturnToArch));
     }
+    items.emplace_back(new ItemBase(SYSTEM_MENU_CLEAN_CACHE, "", CleanCache));
     items.emplace_back(new ItemBase(SYSTEM_MENU_EXIT, "", ExitApp));
 
     _tabs[TAB_INDEX_SYSTEM] = new TabSeletable(TAB_SYSTEM, items);
