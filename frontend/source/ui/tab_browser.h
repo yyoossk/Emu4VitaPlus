@@ -5,7 +5,7 @@
 class TabBrowser : public TabSeletable
 {
 public:
-    TabBrowser(const char *path);
+    TabBrowser();
     virtual ~TabBrowser();
     void SetInputHooks(Input *input);
     void UnsetInputHooks(Input *input);

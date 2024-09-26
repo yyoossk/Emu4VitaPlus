@@ -1,32 +1,35 @@
 #include <vita2d.h>
+#include <string>
 #include "tab_browser.h"
 #include "emulator.h"
 #include "video.h"
 #include "app.h"
 #include "file.h"
 #include "log.h"
+#include "favorite.h"
+#include "config.h"
+#include "icons.h"
 
 #define TEXTURE_MAX_WIDTH 446
 #define TEXTURE_MAX_HEIGHT 442
 
-TabBrowser::TabBrowser(const char *path)
-    : TabSeletable(TAB_BROWSER),
-      _texture(nullptr)
+TabBrowser::TabBrowser() : TabSeletable(TAB_BROWSER),
+                           _texture(nullptr)
 {
     LogFunctionName;
 
+    const char *path = gConfig->last_rom.c_str();
     _directory = new Directory(File::GetDir(path).c_str(), gEmulator->GetValidExtensions());
-
     std::string name = File::GetName(path);
     for (size_t i = 0; i < _directory->GetSize(); i++)
     {
         if (_directory->GetItemName(i) == name)
         {
             _index = i;
-            _UpdateStatus();
             break;
         }
     }
+    _UpdateStatus();
 }
 
 TabBrowser::~TabBrowser()
@@ -51,7 +54,9 @@ void TabBrowser::UnsetInputHooks(Input *input)
 
 void TabBrowser::Show(bool selected)
 {
-    if (ImGui::BeginTabItem(TEXT(_title_id), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
+    std::string title = std::string(TAB_ICONS[_title_id]) + TEXT(_title_id);
+
+    if (ImGui::BeginTabItem(title.c_str(), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
     {
         ImVec2 size = {0.f, 0.f};
         if (_status_text.size() > 0)
@@ -69,12 +74,19 @@ void TabBrowser::Show(bool selected)
         {
             const DirItem &item = _directory->GetItem(i);
 
+            std::string name(item.name);
             if (!item.is_dir)
             {
+
                 ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
             }
 
-            ImGui::Selectable(item.name.c_str(), i == _index);
+            if (gFavorites->find(name) != gFavorites->end())
+            {
+                name.insert(0, ICON_EMPTY_STAR_SPACE);
+            }
+
+            ImGui::Selectable(name.c_str(), i == _index);
 
             if (!item.is_dir)
             {
@@ -98,10 +110,6 @@ void TabBrowser::Show(bool selected)
         ImGui::NextColumn();
 
         ImGui::Columns(1);
-        if (_status_text.size() > 0)
-        {
-            ImGui::Text(_status_text.c_str());
-        }
         ImGui::EndChild();
 
         if (_status_text.size() > 0)
@@ -164,6 +172,23 @@ void TabBrowser::_OnKeyCross(Input *input)
 
 void TabBrowser::_OnKeyStart(Input *input)
 {
+    DirItem item = _directory->GetItem(_index);
+    if (item.is_dir)
+    {
+        return;
+    }
+
+    const auto &iter = gFavorites->find(item.name);
+    if (iter == gFavorites->end())
+    {
+        gFavorites->emplace(item.name, Favorite{item, _directory->GetCurrentPath()});
+    }
+    else
+    {
+        gFavorites->erase(item.name);
+    }
+
+    gFavorites->Save();
     _UpdateStatus();
 }
 
@@ -253,6 +278,13 @@ void TabBrowser::_UpdateStatus()
     if (!item.is_dir)
     {
         _status_text += TEXT(BUTTON_START);
-        _status_text += TEXT(BROWSER_ADD_FAVORITE);
+        if (gFavorites->find(item.name) == gFavorites->end())
+        {
+            _status_text += TEXT(BROWSER_ADD_FAVORITE);
+        }
+        else
+        {
+            _status_text += TEXT(BROWSER_REMOVE_FAVORITE);
+        }
     }
 }
