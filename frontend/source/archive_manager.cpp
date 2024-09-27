@@ -10,8 +10,6 @@
 #include "defines.h"
 #include "log.h"
 
-#define ARCHIVE_CACHE_DIR CACHE_DIR "/archives"
-
 ArchiveManager::ArchiveManager(size_t max_size)
 {
     LogFunctionName;

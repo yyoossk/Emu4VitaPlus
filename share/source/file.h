@@ -14,6 +14,7 @@ namespace File
     size_t ReadFile(const char *name, void **buf);
     void MakeDirs(const char *path, SceIoMode mode = (SceIoMode)0777);
     bool Remove(const char *path);
+    void RemoveAllFiles(const char *path);
     std::string GetName(const char *path);
     std::string GetStem(const char *path);
     std::string GetDir(const char *path);

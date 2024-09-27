@@ -1,4 +1,5 @@
 #include <psp2/io/fcntl.h>
+#include <psp2/io/dirent.h>
 #include <psp2/rtc.h>
 #include <string.h>
 #include "file.h"
@@ -129,6 +130,29 @@ namespace File
     bool Remove(const char *path)
     {
         return sceIoRemove(path) == SCE_OK;
+    }
+
+    void RemoveAllFiles(const char *path)
+    {
+        SceUID dfd = sceIoDopen(path);
+        if (dfd < 0)
+        {
+            return;
+        }
+
+        SceIoDirent dir;
+        while (sceIoDread(dfd, &dir) > 0)
+        {
+            if (*dir.d_name == '.')
+            {
+                continue;
+            }
+            else if (SCE_S_ISREG(dir.d_stat.st_mode))
+            {
+                sceIoRemove(dir.d_name);
+            }
+        }
+        sceIoDclose(dfd);
     }
 
     static const char *_GetDirEndPos(const char *path)
