@@ -288,3 +288,9 @@ void TabBrowser::_UpdateStatus()
         }
     }
 }
+
+void TabBrowser::ChangeLanguage(uint32_t language)
+{
+    LogFunctionName;
+    _UpdateStatus();
+}

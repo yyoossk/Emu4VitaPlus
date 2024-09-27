@@ -29,8 +29,9 @@ const static ImWchar GamePadCharset[] = {0x219c, 0x21a1,
                                          0xe000, 0xe000,
                                          0x0000};
 
-const static ImWchar IconCharset[] = {0xe800, 0xe80d,
-                                      0xf0fb, 0xf0fb,
+const static ImWchar IconCharset[] = {0xe800, 0xe80c,
+                                      0xf08e, 0xf08e,
+                                      0xf0c9, 0xf0c9,
                                       0xf11b, 0xf11b,
                                       0xf1de, 0xf1de,
                                       0x0000};
@@ -257,11 +258,11 @@ void My_Imgui_Create_Font(uint32_t language, const char *cache_path)
                                  glyph_ranges);
     font_config.MergeMode = true;
     io.Fonts->AddFontFromFileTTF(APP_ASSETS_DIR "/" GAMEPAD_FONT_NAME,
-                                 25.0f,
+                                 26.0f,
                                  &font_config,
                                  GamePadCharset);
     io.Fonts->AddFontFromFileTTF(APP_ASSETS_DIR "/" ICON_FONT_NAME,
-                                 25.0f,
+                                 24.0f,
                                  &font_config,
                                  IconCharset);
     gen_font_texture(io.Fonts);

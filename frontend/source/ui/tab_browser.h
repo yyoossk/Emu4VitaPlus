@@ -10,6 +10,7 @@ public:
     void SetInputHooks(Input *input);
     void UnsetInputHooks(Input *input);
     void Show(bool selected);
+    virtual void ChangeLanguage(uint32_t language) override;
 
 private:
     size_t _GetItemCount() override { return _directory->GetSize(); };

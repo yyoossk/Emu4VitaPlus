@@ -21,6 +21,7 @@ public:
     void AppendLog(const char *log);
     void ClearLogs();
     void UpdateCoreOptions();
+    void ChangeLanguage();
 
 private:
     void _InitImgui();

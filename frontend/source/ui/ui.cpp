@@ -60,16 +60,6 @@ static void ExitApp()
     gStatus.Set(APP_STATUS_EXIT);
 }
 
-static void ChangeLanguage()
-{
-    LogFunctionName;
-    gVideo->Lock();
-    My_Imgui_Destroy_Font();
-    My_Imgui_Create_Font(gConfig->language, CACHE_DIR);
-    gVideo->Unlock();
-    gConfig->Save();
-}
-
 static void ResetGraphics()
 {
     LogFunctionName;
@@ -255,7 +245,7 @@ void Ui::CreateTables()
                                                                              (uint32_t *)&gConfig->language,
                                                                              {LanguageString(gLanguageNames[LANGUAGE_ENGLISH]),
                                                                               LanguageString(gLanguageNames[LANGUAGE_CHINESE])},
-                                                                             ChangeLanguage),
+                                                                             std::bind(&Ui::ChangeLanguage, gUi)),
                                                               new ItemConfig(OPTIONS_MENU_REWIND,
                                                                              "",
                                                                              &gConfig->rewind,
@@ -408,7 +398,7 @@ void Ui::_ShowNormal()
 {
     _tabs[TAB_INDEX_FAVORITE]->SetVisable(gFavorites->size() > 0);
 
-    if (ImGui::BeginTabBar("MyTabBar", ImGuiTabBarFlags_None))
+    if (ImGui::BeginTabBar("MyTabBar", ImGuiTabBarFlags_FittingPolicyScroll))
     {
         for (size_t i = 0; i < TAB_INDEX_COUNT; i++)
         {
@@ -479,4 +469,18 @@ void Ui::UpdateCoreOptions()
     _tabs[TAB_INDEX_CORE] = new TabSeletable(TAB_CORE, options);
 
     gVideo->Unlock();
+}
+
+void Ui::ChangeLanguage()
+{
+    LogFunctionName;
+    gVideo->Lock();
+    My_Imgui_Destroy_Font();
+    My_Imgui_Create_Font(gConfig->language, CACHE_DIR);
+    for (auto tab : _tabs)
+    {
+        tab->ChangeLanguage(gConfig->language);
+    }
+    gVideo->Unlock();
+    gConfig->Save();
 }

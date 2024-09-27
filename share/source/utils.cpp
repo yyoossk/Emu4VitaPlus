@@ -25,7 +25,7 @@ void ShowTimePower()
     }
     else
     {
-        battery = BATTERY_ICONS[(percent + 25) / 25 - 1];
+        battery = BATTERY_ICONS[(percent + 24) / 25 - 1];
     }
 
     char percent_str[64];
