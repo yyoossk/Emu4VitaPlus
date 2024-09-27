@@ -108,11 +108,14 @@ Ui::Ui() : _tab_index(TAB_INDEX_BROWSER), _tabs{nullptr}
     LogFunctionName;
     _title = std::string("Emu4Vita++ (") + CORE_FULL_NAME + ") v" + APP_VER_STR;
     _InitImgui();
+    _dialog = new Dialog("", {DIALOG_OK, DIALOG_CANCEL},
+                         std::bind(&Ui::_OnDialog, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 Ui::~Ui()
 {
     LogFunctionName;
+    delete _dialog;
     _ClearTabs();
     _DeinitImgui();
 }
@@ -483,4 +486,9 @@ void Ui::ChangeLanguage()
     }
     gVideo->Unlock();
     gConfig->Save();
+}
+
+void Ui::_OnDialog(Input *input, int index)
+{
+    LogFunctionName;
 }

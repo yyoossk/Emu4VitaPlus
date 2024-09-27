@@ -1,5 +1,4 @@
 #pragma once
-#include <stdint.h>
 #include "tab_selectable.h"
 #include "favorite.h"
 #include "dialog.h"
