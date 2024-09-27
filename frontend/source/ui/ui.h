@@ -5,6 +5,7 @@
 #include "emulator.h"
 #include "input.h"
 #include "tab_base.h"
+#include "dialog.h"
 
 class Ui
 {
@@ -21,6 +22,7 @@ public:
     void AppendLog(const char *log);
     void ClearLogs();
     void UpdateCoreOptions();
+    void ChangeLanguage();
 
 private:
     void _InitImgui();
@@ -29,6 +31,8 @@ private:
     void _OnKeyL2(Input *input);
     void _OnKeyR2(Input *input);
     void _OnPsButton(Input *input);
+    void _OnDialog(Input *input, int index);
+    void _OnCleanCache(Input *input);
 
     void _ShowBoot();
     void _ShowNormal();
@@ -42,6 +46,8 @@ private:
 
     TabBase *_tabs[TAB_INDEX_COUNT];
     std::vector<std::string> _logs;
+    Dialog *_dialog;
+    int _current_dialog;
 };
 
 extern Ui *gUi;

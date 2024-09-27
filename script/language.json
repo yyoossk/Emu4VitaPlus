@@ -771,41 +771,55 @@
     },
     {
         "No.": "111",
+        "Tag": "DIALOG_REMOVE_FAVORITE",
+        "English": "Are you sure you want to remove this game from your favorites?",
+        "Chinese": "你确定要从收藏夹中移除此游戏吗？",
+        "Comments": ""
+    },
+    {
+        "No.": "112",
+        "Tag": "DIALOG_CLEAN_CACHE",
+        "English": "Are you sure you want to clean the cached files?",
+        "Chinese": "你确定要清理缓存文件吗？",
+        "Comments": ""
+    },
+    {
+        "No.": "113",
         "Tag": "EXTERNAL_COMPONENTS",
         "English": "External components used by Emu4Vita++",
         "Chinese": "使用的外部组件",
         "Comments": ""
     },
     {
-        "No.": "112",
+        "No.": "114",
         "Tag": "BROWSER_ENTER_DIR",
         "English": "Enter dir ",
         "Chinese": "进入目录",
         "Comments": ""
     },
     {
-        "No.": "113",
+        "No.": "115",
         "Tag": "BROWSER_BACK_DIR",
         "English": "Back dir",
         "Chinese": "返回上级目标",
         "Comments": ""
     },
     {
-        "No.": "114",
+        "No.": "116",
         "Tag": "BROWSER_START_GAME",
         "English": "Start game",
         "Chinese": "开始游戏",
         "Comments": ""
     },
     {
-        "No.": "115",
+        "No.": "117",
         "Tag": "BROWSER_ADD_FAVORITE",
         "English": "Add to favorites",
         "Chinese": "添加到收藏夹",
         "Comments": ""
     },
     {
-        "No.": "116",
+        "No.": "118",
         "Tag": "BROWSER_REMOVE_FAVORITE",
         "English": "Remove from favorites",
         "Chinese": "移出收藏夹",

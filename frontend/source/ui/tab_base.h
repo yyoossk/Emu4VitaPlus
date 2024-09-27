@@ -1,5 +1,6 @@
 #pragma once
 #include <imgui_vita2d/imgui_vita.h>
+#include <stdint.h>
 #include "language_define.h"
 #include "language_string.h"
 #include "input.h"
@@ -31,6 +32,7 @@ public:
 
     virtual void Show(bool selected);
     virtual void SetInputHooks(Input *input) {};
+    virtual void ChangeLanguage(uint32_t language) {};
     void UnsetInputHooks(Input *input) {};
 
     void SetVisable(bool visable) { _visable = visable; };

@@ -48,26 +48,11 @@ static void ReturnToArch()
     gStatus.Set(APP_STATUS_RETURN_ARCH);
 }
 
-static void CleanCache()
-{
-    LogFunctionName;
-}
-
 static void ExitApp()
 {
     LogFunctionName;
     gEmulator->UnloadGame();
     gStatus.Set(APP_STATUS_EXIT);
-}
-
-static void ChangeLanguage()
-{
-    LogFunctionName;
-    gVideo->Lock();
-    My_Imgui_Destroy_Font();
-    My_Imgui_Create_Font(gConfig->language, CACHE_DIR);
-    gVideo->Unlock();
-    gConfig->Save();
 }
 
 static void ResetGraphics()
@@ -118,11 +103,14 @@ Ui::Ui() : _tab_index(TAB_INDEX_BROWSER), _tabs{nullptr}
     LogFunctionName;
     _title = std::string("Emu4Vita++ (") + CORE_FULL_NAME + ") v" + APP_VER_STR;
     _InitImgui();
+    _dialog = new Dialog("", {DIALOG_OK, DIALOG_CANCEL},
+                         std::bind(&Ui::_OnDialog, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 Ui::~Ui()
 {
     LogFunctionName;
+    delete _dialog;
     _ClearTabs();
     _DeinitImgui();
 }
@@ -159,7 +147,7 @@ void Ui::CreateTables()
     {
         items.emplace_back(new ItemBase(SYSTEM_MENU_BACK_TO_ARCH, "", ReturnToArch));
     }
-    items.emplace_back(new ItemBase(SYSTEM_MENU_CLEAN_CACHE, "", CleanCache));
+    items.emplace_back(new ItemBase(SYSTEM_MENU_CLEAN_CACHE, "", std::bind(&Ui::_OnCleanCache, this, &_input)));
     items.emplace_back(new ItemBase(SYSTEM_MENU_EXIT, "", ExitApp));
 
     _tabs[TAB_INDEX_SYSTEM] = new TabSeletable(TAB_SYSTEM, items);
@@ -255,7 +243,7 @@ void Ui::CreateTables()
                                                                              (uint32_t *)&gConfig->language,
                                                                              {LanguageString(gLanguageNames[LANGUAGE_ENGLISH]),
                                                                               LanguageString(gLanguageNames[LANGUAGE_CHINESE])},
-                                                                             ChangeLanguage),
+                                                                             std::bind(&Ui::ChangeLanguage, gUi)),
                                                               new ItemConfig(OPTIONS_MENU_REWIND,
                                                                              "",
                                                                              &gConfig->rewind,
@@ -408,7 +396,7 @@ void Ui::_ShowNormal()
 {
     _tabs[TAB_INDEX_FAVORITE]->SetVisable(gFavorites->size() > 0);
 
-    if (ImGui::BeginTabBar("MyTabBar", ImGuiTabBarFlags_None))
+    if (ImGui::BeginTabBar("MyTabBar", ImGuiTabBarFlags_FittingPolicyScroll))
     {
         for (size_t i = 0; i < TAB_INDEX_COUNT; i++)
         {
@@ -418,6 +406,11 @@ void Ui::_ShowNormal()
             }
         }
         ImGui::EndTabBar();
+    }
+
+    if (_dialog->IsActived())
+    {
+        _dialog->Show();
     }
 }
 
@@ -479,4 +472,40 @@ void Ui::UpdateCoreOptions()
     _tabs[TAB_INDEX_CORE] = new TabSeletable(TAB_CORE, options);
 
     gVideo->Unlock();
+}
+
+void Ui::ChangeLanguage()
+{
+    LogFunctionName;
+    gVideo->Lock();
+    My_Imgui_Destroy_Font();
+    My_Imgui_Create_Font(gConfig->language, CACHE_DIR);
+    for (auto tab : _tabs)
+    {
+        tab->ChangeLanguage(gConfig->language);
+    }
+    gVideo->Unlock();
+    gConfig->Save();
+}
+
+void Ui::_OnCleanCache(Input *input)
+{
+    LogFunctionName;
+    _current_dialog = DIALOG_CLEAN_CACHE;
+    _dialog->SetText(TEXT(DIALOG_CLEAN_CACHE));
+    _dialog->OnActive(input);
+}
+
+void Ui::_OnDialog(Input *input, int index)
+{
+    LogFunctionName;
+
+    switch (_current_dialog)
+    {
+    case DIALOG_CLEAN_CACHE:
+    default:
+        File::RemoveAllFiles(ARCHIVE_CACHE_DIR);
+        File::RemoveAllFiles(CACHE_DIR);
+        break;
+    }
 }

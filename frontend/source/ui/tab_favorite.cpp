@@ -3,6 +3,7 @@
 #include "file.h"
 #include "config.h"
 #include "emulator.h"
+#include "video.h"
 
 TabFavorite::TabFavorite() : TabSeletable(TAB_FAVORITE)
 {
@@ -17,11 +18,17 @@ TabFavorite::TabFavorite() : TabSeletable(TAB_FAVORITE)
         }
         count++;
     }
+
     _UpdateStatus();
+
+    _dialog = new Dialog{DIALOG_REMOVE_FAVORITE,
+                         {DIALOG_OK, DIALOG_CANCEL},
+                         std::bind(&TabFavorite::_OnRemove, this, std::placeholders::_1, std::placeholders::_2)};
 }
 
 TabFavorite::~TabFavorite()
 {
+    delete _dialog;
 }
 
 void TabFavorite::Show(bool selected)
@@ -66,6 +73,11 @@ void TabFavorite::Show(bool selected)
 
         ImGui::EndTabItem();
     }
+
+    if (_dialog->IsActived())
+    {
+        _dialog->Show();
+    }
 }
 
 void TabFavorite::SetInputHooks(Input *input)
@@ -97,13 +109,31 @@ void TabFavorite::_OnActive(Input *input)
 void TabFavorite::_OnKeyCross(Input *input)
 {
     LogFunctionName;
+    _dialog->OnActive(input);
 }
 
 void TabFavorite::_UpdateStatus()
 {
     _status_text = TEXT(BUTTON_CIRCLE);
-    _status_text += TEXT(BROWSER_ENTER_DIR);
+    _status_text += TEXT(BROWSER_START_GAME);
     _status_text += "\t";
     _status_text += TEXT(BUTTON_CROSS);
     _status_text += TEXT(BROWSER_REMOVE_FAVORITE);
+}
+
+void TabFavorite::_OnRemove(Input *input, int index)
+{
+    LogFunctionName;
+    gVideo->Lock();
+    auto iter = gFavorites->begin();
+    std::advance(iter, _index);
+    gFavorites->erase(iter);
+    gFavorites->Save();
+    gVideo->Unlock();
+}
+
+void TabFavorite::ChangeLanguage(uint32_t language)
+{
+    LogFunctionName;
+    _UpdateStatus();
 }

@@ -19,6 +19,7 @@ public:
     void UnsetInputHooks(Input *input);
     void OnActive(Input *input);
     void SetText(LanguageString text);
+    bool IsActived() { return _actived; };
 
 private:
     void _OnKeyLeft(Input *input);
