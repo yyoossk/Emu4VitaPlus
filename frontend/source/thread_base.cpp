@@ -67,6 +67,8 @@ bool ThreadBase::Start(void *data, SceSize size)
         return false;
     }
 
+    LogInfo("Thread started. id: %08x function: %08x", _thread_id, _entry);
+
     return true;
 }
 
@@ -78,8 +80,8 @@ void ThreadBase::Stop(bool force)
         return;
     }
 
-    Signal();
     _keep_running = false;
+    Signal();
     if (force)
     {
         sceKernelDelayThread(10000);
@@ -88,7 +90,13 @@ void ThreadBase::Stop(bool force)
     {
         sceKernelWaitThreadEnd(_thread_id, NULL, NULL);
     }
-    sceKernelDeleteThread(_thread_id);
+
+    int result = sceKernelDeleteThread(_thread_id);
+    if (result != SCE_OK)
+    {
+        LogError("sceKernelDeleteThread error: %08x %08x", _thread_id, result);
+    }
+
     _thread_id = -1;
 }
 

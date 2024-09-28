@@ -20,12 +20,11 @@ Video::Video() : ThreadBase(_DrawThread)
 Video::~Video()
 {
     LogFunctionName;
-    if (IsRunning())
+    if (_thread_id >= 0)
     {
         Stop();
     }
 
-    vita2d_wait_rendering_done();
     vita2d_ext_fini();
     vita2d_fini();
 }
@@ -36,7 +35,8 @@ int Video::_DrawThread(SceSize args, void *argp)
 
     CLASS_POINTER(Video, video, argp);
 
-    while (video->IsRunning())
+    APP_STATUS status = gStatus.Get();
+    while (video->IsRunning() && (status & (APP_STATUS_EXIT | APP_STATUS_RETURN_ARCH)) == 0)
     {
         video->Lock();
 
@@ -44,7 +44,8 @@ int Video::_DrawThread(SceSize args, void *argp)
         vita2d_start_drawing_advanced(NULL, 0);
         vita2d_clear_screen();
 
-        switch (gStatus.Get())
+        status = gStatus.Get();
+        switch (status)
         {
         case APP_STATUS_BOOT:
         case APP_STATUS_SHOW_UI:

@@ -111,8 +111,8 @@ Ui::~Ui()
 {
     LogFunctionName;
     delete _dialog;
-    _ClearTabs();
     _DeinitImgui();
+    _ClearTabs();
 }
 
 void Ui::_ClearTabs()

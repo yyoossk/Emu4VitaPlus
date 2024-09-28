@@ -90,10 +90,15 @@ int AudioResampler::_ResampleThread(SceSize args, void *argp)
         size_t in_size;
         int16_t *in = resampler->_in_buf.ReadBegin(&in_size);
 
-        while (in == nullptr)
+        while (in == nullptr && resampler->IsRunning())
         {
             resampler->Wait();
             in = resampler->_in_buf.ReadBegin(&in_size);
+        }
+
+        if (!resampler->IsRunning())
+        {
+            break;
         }
 
         BeginProfile("AudioResampler");

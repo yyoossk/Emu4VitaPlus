@@ -140,6 +140,9 @@ namespace File
             return;
         }
 
+        std::string p(path);
+        p.push_back('/');
+
         SceIoDirent dir;
         while (sceIoDread(dfd, &dir) > 0)
         {
@@ -149,7 +152,7 @@ namespace File
             }
             else if (SCE_S_ISREG(dir.d_stat.st_mode))
             {
-                sceIoRemove(dir.d_name);
+                sceIoRemove((p + dir.d_name).c_str());
             }
         }
         sceIoDclose(dfd);

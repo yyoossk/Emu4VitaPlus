@@ -103,13 +103,16 @@ App::~App()
 {
     LogFunctionName;
 
-    delete gConfig;
-    delete gEmulator;
+    gVideo->Stop();
+    vita2d_wait_rendering_done();
+
     delete gStateManager;
     delete gShaders;
     delete gOverlays;
+    delete gEmulator;
     delete gUi;
     delete gVideo;
+    delete gConfig;
 
     sceAppUtilShutdown();
 }
