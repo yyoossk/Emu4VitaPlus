@@ -23,6 +23,7 @@ public:
     void ClearLogs();
     void UpdateCoreOptions();
     void ChangeLanguage();
+    void UpdateCheatOptions();
 
 private:
     void _InitImgui();

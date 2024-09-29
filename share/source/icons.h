@@ -18,6 +18,7 @@
 #define ICON_LINK "\xef\x82\x8e"
 #define ICON_MENU "\xef\x83\x89"
 #define ICON_GAMEPAD "\xef\x84\x9b"
+#define ICON_ROCKET "\xef\x84\xb5"
 #define ICON_SLIDER "\xef\x87\x9e"
 #define ICON_PS "\xee\x80\x80"
 
@@ -37,5 +38,6 @@
 #define ICON_LINK_SPACE ICON_LINK " "
 #define ICON_MENU_SPACE ICON_MENU " "
 #define ICON_GAMEPAD_SPACE ICON_GAMEPAD " "
+#define ICON_ROCKET_SPACE ICON_ROCKET " "
 #define ICON_SLIDER_SPACE ICON_SLIDER " "
 #define ICON_PS_SPACE ICON_PS " "

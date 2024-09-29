@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <unordered_map>
 #include <string>
-#include "SimpleIni.h"
+#include <SimpleIni.h>
 #include "config.h"
 #include "input.h"
 #include "file.h"

@@ -33,6 +33,7 @@ const static ImWchar IconCharset[] = {0xe800, 0xe80c,
                                       0xf08e, 0xf08e,
                                       0xf0c9, 0xf0c9,
                                       0xf11b, 0xf11b,
+                                      0xf135, 0xf135,
                                       0xf1de, 0xf1de,
                                       0x0000};
 

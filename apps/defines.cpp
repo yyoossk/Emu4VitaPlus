@@ -20,6 +20,7 @@ const char APP_FAVOURITE_PATH[] = _APP_DATA_DIR "/favourite.ini";
 const char CORE_SYSTEM_DIR[] = _APP_DATA_DIR "/system";
 const char CORE_SAVEFILES_DIR[] = _APP_DATA_DIR "/savefiles";
 const char CORE_SAVESTATES_DIR[] = _APP_DATA_DIR "/savestates";
+const char CORE_CHEATS_DIR[] = _APP_DATA_DIR "/cheats";
 const char APP_TITLE_NAME[] = _APP_TITLE_NAME;
 const char CORE_FULL_NAME[] = _CORE_FULL_NAME;
 const char APP_VER_STR[] = _APP_VER_STR;

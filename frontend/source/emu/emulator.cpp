@@ -144,6 +144,8 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
     }
 
     LogDebug("  LoadRom result: %d", result);
+
+    _LoadCheats(path);
     return result;
 }
 
@@ -446,4 +448,17 @@ void Emulator::CoreOptionUpdate()
     {
         _core_options_update_display_callback();
     }
+}
+
+void Emulator::_LoadCheats(const char *path)
+{
+    LogFunctionName;
+    std::string p = File::GetDir(path) + "/" + File::GetStem(path) + ".cht";
+    if (_cheats.Load(p.c_str()))
+    {
+        return;
+    }
+
+    p = std::string(CORE_CHEATS_DIR) + "/" + File::GetStem(path) + ".cht";
+    _cheats.Load(p.c_str());
 }

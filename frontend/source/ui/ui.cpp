@@ -161,6 +161,8 @@ void Ui::CreateTables()
     _tabs[TAB_INDEX_STATE] = new TabSeletable(TAB_STATE, states, 1);
     _tabs[TAB_INDEX_STATE]->SetVisable(false);
 
+    _tabs[TAB_INDEX_CHEAT] = new TabSeletable(TAB_CHEAT);
+
     _tabs[TAB_INDEX_BROWSER] = new TabBrowser();
     _tabs[TAB_INDEX_FAVORITE] = new TabFavorite();
 
@@ -323,7 +325,9 @@ void Ui::Run()
         gVideo->Lock();
 
         _tabs[TAB_INDEX_STATE]->SetVisable(status == APP_STATUS_SHOW_UI_IN_GAME);
+        _tabs[TAB_INDEX_CHEAT]->SetVisable(status == APP_STATUS_SHOW_UI_IN_GAME && gEmulator->GetCheats()->size() > 0);
         _tabs[TAB_INDEX_BROWSER]->SetVisable(status == APP_STATUS_SHOW_UI);
+        _tabs[TAB_INDEX_FAVORITE]->SetVisable(status == APP_STATUS_SHOW_UI);
 
         TabSeletable *system_tab = (TabSeletable *)(_tabs[TAB_INDEX_SYSTEM]);
         system_tab->SetItemVisable(0, status == APP_STATUS_SHOW_UI_IN_GAME);
@@ -472,6 +476,10 @@ void Ui::UpdateCoreOptions()
     _tabs[TAB_INDEX_CORE] = new TabSeletable(TAB_CORE, options);
 
     gVideo->Unlock();
+}
+
+void Ui::UpdateCheatOptions()
+{
 }
 
 void Ui::ChangeLanguage()

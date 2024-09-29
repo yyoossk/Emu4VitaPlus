@@ -8,6 +8,7 @@
 #include "input.h"
 #include "archive_manager.h"
 #include "rewind.h"
+#include "cheat.h"
 
 struct Rect
 {
@@ -46,6 +47,7 @@ public:
     void ChangeAudioConfig();
     uint32_t GetFrameCount() { return _frame_count; };
     void CoreOptionUpdate();
+    Cheats *GetCheats() { return &_cheats; };
 
     friend bool EnvironmentCallback(unsigned cmd, void *data);
     friend void VideoRefreshCallback(const void *data, unsigned width, unsigned height, size_t pitch);
@@ -70,6 +72,7 @@ private:
     void _OnHotkeyExitGame(Input *input);
     std::string _SaveDirPath();
     std::string _SaveNamePath(uint32_t id);
+    void _LoadCheats(const char *path);
 
     std::string _current_name;
     retro_system_info _info;
@@ -94,6 +97,8 @@ private:
 
     ArchiveManager _archive_manager{DEFAULT_CACHE_SIZE};
     RewindManager _rewind_manager;
+    Cheats _cheats;
+
     vita2d_texture_vertex _vertices[4];
 
     retro_core_options_update_display_callback_t _core_options_update_display_callback;
