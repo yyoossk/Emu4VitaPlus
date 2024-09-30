@@ -175,12 +175,12 @@ class RewindManager : public ThreadBase
 public:
     RewindManager();
     virtual ~RewindManager();
-    static int _RewindThread(SceSize args, void *argp);
 
     bool Init();
     void Deinit();
 
 private:
+    static int _RewindThread(SceSize args, void *argp);
     void _SaveState();
     void *_GetState();
     void _Rewind();

@@ -9,3 +9,4 @@
 
 void ShowTimePower();
 void Lower(std::string *s);
+void StripQuotes(std::string *s);

@@ -162,6 +162,7 @@ void Ui::CreateTables()
     _tabs[TAB_INDEX_STATE]->SetVisable(false);
 
     _tabs[TAB_INDEX_CHEAT] = new TabSeletable(TAB_CHEAT);
+    _tabs[TAB_INDEX_CHEAT]->SetVisable(false);
 
     _tabs[TAB_INDEX_BROWSER] = new TabBrowser();
     _tabs[TAB_INDEX_FAVORITE] = new TabFavorite();
@@ -325,7 +326,7 @@ void Ui::Run()
         gVideo->Lock();
 
         _tabs[TAB_INDEX_STATE]->SetVisable(status == APP_STATUS_SHOW_UI_IN_GAME);
-        _tabs[TAB_INDEX_CHEAT]->SetVisable(status == APP_STATUS_SHOW_UI_IN_GAME && gEmulator->GetCheats()->size() > 0);
+        _tabs[TAB_INDEX_CHEAT]->SetVisable(status == APP_STATUS_SHOW_UI_IN_GAME && (gEmulator->GetCheats()->size() > 0));
         _tabs[TAB_INDEX_BROWSER]->SetVisable(status == APP_STATUS_SHOW_UI);
         _tabs[TAB_INDEX_FAVORITE]->SetVisable(status == APP_STATUS_SHOW_UI);
 
@@ -480,6 +481,27 @@ void Ui::UpdateCoreOptions()
 
 void Ui::UpdateCheatOptions()
 {
+    LogFunctionName;
+    std::vector<ItemBase *> options;
+    Cheats *cheats = gEmulator->GetCheats();
+    options.reserve(cheats->size());
+    for (Cheat &cheat : *cheats)
+    {
+        options.emplace_back(new ItemConfig(cheat.desc,
+                                            "",
+                                            &cheat.enable,
+                                            {NO, YES},
+                                            std::bind(&Emulator::ChangeCheatConfig, gEmulator)));
+    }
+
+    gVideo->Lock();
+    if (_tabs[TAB_INDEX_CHEAT] != nullptr)
+    {
+        delete _tabs[TAB_INDEX_CHEAT];
+    }
+
+    _tabs[TAB_INDEX_CHEAT] = new TabSeletable(TAB_CHEAT, options);
+    gVideo->Unlock();
 }
 
 void Ui::ChangeLanguage()

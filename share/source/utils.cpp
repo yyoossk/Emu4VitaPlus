@@ -60,3 +60,16 @@ void Lower(std::string *s)
                    [](unsigned char c)
                    { return std::tolower(c); });
 }
+
+void StripQuotes(std::string *s)
+{
+    if (!s->empty() && s->front() == '"')
+    {
+        s->erase(s->begin());
+    }
+
+    if (!s->empty() && s->back() == '"')
+    {
+        s->erase(s->end() - 1);
+    }
+}

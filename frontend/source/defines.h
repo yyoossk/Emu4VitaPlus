@@ -8,6 +8,7 @@
 #define ARCHIVE_CACHE_DIR CACHE_DIR "/archives"
 #define OVERLAYS_DIR_NAME "overlays"
 #define PREVIEW_DIR_NAME ".previews"
+#define CHEAT_DIR_NAME ".cheats"
 
 extern const char APP_DATA_DIR[];
 extern const char APP_LOG_PATH[];

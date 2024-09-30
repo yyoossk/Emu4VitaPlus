@@ -48,6 +48,7 @@ public:
     uint32_t GetFrameCount() { return _frame_count; };
     void CoreOptionUpdate();
     Cheats *GetCheats() { return &_cheats; };
+    void ChangeCheatConfig();
 
     friend bool EnvironmentCallback(unsigned cmd, void *data);
     friend void VideoRefreshCallback(const void *data, unsigned width, unsigned height, size_t pitch);
@@ -72,7 +73,7 @@ private:
     void _OnHotkeyExitGame(Input *input);
     std::string _SaveDirPath();
     std::string _SaveNamePath(uint32_t id);
-    void _LoadCheats(const char *path);
+    bool _LoadCheats(const char *path);
 
     std::string _current_name;
     retro_system_info _info;

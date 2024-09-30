@@ -7,9 +7,9 @@ class Video : public ThreadBase
 public:
     Video();
     virtual ~Video();
-    static int _DrawThread(SceSize args, void *argp);
 
 private:
+    static int _DrawThread(SceSize args, void *argp);
 };
 
 extern Video *gVideo;

@@ -69,6 +69,8 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
 {
     LogFunctionName;
 
+    LogDebug(" %s %s %08x", path, entry_name, crc32);
+
     if (!File::Exist(path))
     {
         return false;
@@ -145,7 +147,12 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
 
     LogDebug("  LoadRom result: %d", result);
 
-    _LoadCheats(path);
+    if (_LoadCheats(path))
+    {
+        gUi->UpdateCheatOptions();
+        _cheats.Start();
+    }
+
     return result;
 }
 
@@ -450,15 +457,40 @@ void Emulator::CoreOptionUpdate()
     }
 }
 
-void Emulator::_LoadCheats(const char *path)
+bool Emulator::_LoadCheats(const char *path)
 {
     LogFunctionName;
-    std::string p = File::GetDir(path) + "/" + File::GetStem(path) + ".cht";
-    if (_cheats.Load(p.c_str()))
+
+    char p[SCE_FIOS_PATH_MAX];
+    std::string dir = File::GetDir(path);
+    std::string stem = File::GetStem(path);
+
+    snprintf(p, SCE_FIOS_PATH_MAX, "%s/%s.cht", dir.c_str(), stem.c_str());
+    LogDebug(p);
+    if (_cheats.Load(p))
     {
-        return;
+        return true;
     }
 
-    p = std::string(CORE_CHEATS_DIR) + "/" + File::GetStem(path) + ".cht";
-    _cheats.Load(p.c_str());
+    snprintf(p, SCE_FIOS_PATH_MAX, "%s/%s/%s.cht", dir.c_str(), CHEAT_DIR_NAME, stem.c_str());
+    LogDebug(p);
+    if (_cheats.Load(p))
+    {
+        return true;
+    }
+
+    snprintf(p, SCE_FIOS_PATH_MAX, "%s/%s.cht", CORE_CHEATS_DIR, stem.c_str());
+    LogDebug(p);
+    if (_cheats.Load(p))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+void Emulator::ChangeCheatConfig()
+{
+    LogFunctionName;
+    _cheats.Signal();
 }

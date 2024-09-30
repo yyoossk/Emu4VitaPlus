@@ -1,7 +1,9 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <stdint.h>
 #include <SimpleIni.h>
+#include "thread_base.h"
 
 enum cheat_handler_type
 {
@@ -12,23 +14,25 @@ enum cheat_handler_type
 
 struct Cheat
 {
-    bool enable;
-    int cheat_type;
+    uint32_t enable;
+    uint32_t cheat_type;
+    uint32_t handler;
     std::string desc;
     std::string code;
-    bool big_endian;
-    int address;
-    int value;
-    int address_bit_position;
-    int repeat_count;
-    int repeat_add_to_address;
-    int repeat_add_to_value;
-    int memory_search_size;
+    uint32_t big_endian;
+    uint32_t address;
+    uint32_t value;
+    uint32_t address_bit_position;
+    uint32_t repeat_count;
+    uint32_t repeat_add_to_address;
+    uint32_t repeat_add_to_value;
+    uint32_t memory_search_size;
 
     bool Load(CSimpleIniA *ini, size_t index);
+    void Apply() const;
 };
 
-class Cheats : public std::vector<Cheat>
+class Cheats : public std::vector<Cheat>, public ThreadBase
 {
 public:
     Cheats();
@@ -37,4 +41,5 @@ public:
     bool Load(const char *path);
 
 private:
+    static int _CheatThread(SceSize args, void *argp);
 };
