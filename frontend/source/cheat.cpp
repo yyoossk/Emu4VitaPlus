@@ -71,9 +71,14 @@ bool Cheat::Load(CSimpleIniA *ini, size_t index)
     return true;
 }
 
-void Cheat::Apply() const
+void Cheat::Apply(int index) const
 {
     LogFunctionName;
+    if (code.size() > 0)
+    {
+        retro_cheat_set(index, 1, code.c_str());
+        return;
+    }
 }
 
 Cheats::Cheats() : ThreadBase(_CheatThread)
@@ -109,7 +114,7 @@ bool Cheats::Load(const char *path)
         Cheat cheat;
         if (cheat.Load(&ini, count))
         {
-            // LogDebug("  cheat %d %s", count, cheat.desc.c_str());
+            LogDebug("  cheat %d %s", count, cheat.desc.c_str());
             this->emplace_back(cheat);
         }
         else
@@ -134,21 +139,29 @@ int Cheats::_CheatThread(SceSize args, void *argp)
         sceKernelDelayThread(20000);
     }
 
+    cheats->_delay.SetInterval(gEmulator->GetMsPerFrame());
+
     while (gStatus.Get() & (APP_STATUS_RUN_GAME | APP_STATUS_SHOW_UI_IN_GAME) != 0)
     {
         bool applied = false;
+        int index = 0;
         for (const Cheat &cheat : *cheats)
         {
             if (cheat.enable)
             {
-                cheat.Apply();
+                cheat.Apply(index);
                 applied = true;
             }
+            index++;
         }
 
         if (!applied)
         {
             cheats->Wait();
+        }
+        else
+        {
+            cheats->_delay.Wait();
         }
     }
 

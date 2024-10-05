@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <SimpleIni.h>
 #include "thread_base.h"
+#include "delay.h"
 
 enum cheat_handler_type
 {
@@ -29,7 +30,7 @@ struct Cheat
     uint32_t memory_search_size;
 
     bool Load(CSimpleIniA *ini, size_t index);
-    void Apply() const;
+    void Apply(int index) const;
 };
 
 class Cheats : public std::vector<Cheat>, public ThreadBase
@@ -42,4 +43,6 @@ public:
 
 private:
     static int _CheatThread(SceSize args, void *argp);
+
+    Delay _delay;
 };

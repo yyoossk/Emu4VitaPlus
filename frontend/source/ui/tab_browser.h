@@ -7,10 +7,11 @@ class TabBrowser : public TabSeletable
 public:
     TabBrowser();
     virtual ~TabBrowser();
-    void SetInputHooks(Input *input);
-    void UnsetInputHooks(Input *input);
+    virtual void SetInputHooks(Input *input) override;
+    virtual void UnsetInputHooks(Input *input) override;
     void Show(bool selected);
     virtual void ChangeLanguage(uint32_t language) override;
+    virtual bool Visable() { return _visable; };
 
 private:
     size_t _GetItemCount() override { return _directory->GetSize(); };

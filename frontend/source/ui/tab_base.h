@@ -33,11 +33,11 @@ public:
 
     virtual void Show(bool selected);
     virtual void SetInputHooks(Input *input) {};
+    virtual void UnsetInputHooks(Input *input) {};
     virtual void ChangeLanguage(uint32_t language) {};
-    void UnsetInputHooks(Input *input) {};
 
     void SetVisable(bool visable) { _visable = visable; };
-    bool Visable() { return _visable; };
+    virtual bool Visable() { return _visable; };
 
 protected:
     TEXT_ENUM _title_id;

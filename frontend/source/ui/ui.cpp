@@ -234,7 +234,7 @@ void Ui::CreateTables()
     std::vector<ItemBase *> options;
     for (auto &iter : gConfig->core_options)
     {
-        if (iter.second.visible)
+        if (iter.second.values.size() > 0 && iter.second.visible)
         {
             options.emplace_back(new ItemCore(&iter.second));
         }

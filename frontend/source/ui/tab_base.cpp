@@ -20,6 +20,8 @@ TabBase::TabBase(TEXT_ENUM title_id, bool visable)
     : _title_id(title_id),
       _visable(visable)
 {
+    LogFunctionName;
+    LogDebug(TEXT(_title_id));
 }
 
 TabBase::~TabBase()
