@@ -6,31 +6,34 @@
 #include "thread_base.h"
 #include "delay.h"
 
-enum cheat_handler_type
-{
-    CHEAT_HANDLER_TYPE_EMU = 0,
-    CHEAT_HANDLER_TYPE_RETRO,
-    CHEAT_HANDLER_TYPE_END
-};
-
 struct Cheat
 {
-    uint32_t enable;
-    uint32_t cheat_type;
-    uint32_t handler;
+    uint32_t enable = 0;
+    uint32_t cheat_type = 1;
+    uint32_t handler = 0;
     std::string desc;
     std::string code;
-    uint32_t big_endian;
+    uint32_t big_endian = 0;
     uint32_t address;
     uint32_t value;
     uint32_t address_bit_position;
-    uint32_t repeat_count;
-    uint32_t repeat_add_to_address;
+    uint32_t repeat_count = 1;
+    uint32_t repeat_add_to_address = 1;
     uint32_t repeat_add_to_value;
     uint32_t memory_search_size;
 
     bool Load(CSimpleIniA *ini, size_t index);
-    void Apply(int index) const;
+    void Apply(int index, bool *run_cheat);
+    static void CleanMemory();
+
+private:
+    void _ApplyRetro(bool *run_cheat);
+    bool _SetupRetroCheatMeta(uint32_t *bytes_per_item, uint32_t *bits, uint32_t *mask);
+    uint32_t _GetCurrentValue(uint32_t bytes_per_item);
+    void _SetCurrentValue(uint32_t address, uint32_t bytes_per_item, uint32_t bits, uint32_t value);
+
+    static uint8_t *_memory_data;
+    static size_t _memory_size;
 };
 
 class Cheats : public std::vector<Cheat>, public ThreadBase
