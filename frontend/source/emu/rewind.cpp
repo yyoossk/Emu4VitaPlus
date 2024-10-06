@@ -86,7 +86,7 @@ int RewindManager::_RewindThread(SceSize args, void *argp)
 {
     CLASS_POINTER(RewindManager, rewind, argp);
 
-    while (gEmulator->GetFrameCount() < 100)
+    while (gEmulator->GetFrameCount() < 100 && rewind->IsRunning())
     {
         sceKernelDelayThread(20000);
     }

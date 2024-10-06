@@ -98,7 +98,7 @@ void Ui::_DeinitImgui()
     ImGui::DestroyContext();
 }
 
-Ui::Ui() : _tab_index(TAB_INDEX_BROWSER), _tabs{nullptr}
+Ui::Ui() : _tab_index(TAB_INDEX_BROWSER), _tabs{nullptr}, _last_status(APP_STATUS_BOOT)
 {
     LogFunctionName;
     _title = std::string("Emu4Vita++ (") + CORE_FULL_NAME + ") v" + APP_VER_STR;
@@ -317,14 +317,12 @@ void Ui::_OnPsButton(Input *input)
 void Ui::Run()
 {
     _input.Poll(true);
-    static APP_STATUS last_status = APP_STATUS_SHOW_UI;
     APP_STATUS status = gStatus.Get();
-    if (status != last_status && (status & (APP_STATUS_SHOW_UI_IN_GAME | APP_STATUS_SHOW_UI)))
+    if (status != _last_status && (status & (APP_STATUS_SHOW_UI_IN_GAME | APP_STATUS_SHOW_UI)))
     {
         LogDebug("  status changed: to %d", status);
         LogDebug("  _tab_index: %d", _tab_index);
         gVideo->Lock();
-
         _tabs[TAB_INDEX_STATE]->SetVisable(status == APP_STATUS_SHOW_UI_IN_GAME);
         _tabs[TAB_INDEX_CHEAT]->SetVisable(status == APP_STATUS_SHOW_UI_IN_GAME && (gEmulator->GetCheats()->size() > 0));
         _tabs[TAB_INDEX_BROWSER]->SetVisable(status == APP_STATUS_SHOW_UI);
@@ -345,17 +343,14 @@ void Ui::Run()
             _tab_index = TAB_INDEX_BROWSER;
             _input.UnsetKeyUpCallback(gConfig->hotkeys[MENU_TOGGLE]);
         }
-
-        SetInputHooks();
-
         gVideo->Unlock();
 
-        last_status = status;
+        SetInputHooks();
 
         LogDebug("  changed");
     }
 
-    // sceKernelSignalSema(_update_sema, 1);
+    _last_status = status;
 }
 
 void Ui::_ShowBoot()

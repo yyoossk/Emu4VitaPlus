@@ -400,7 +400,7 @@ int Cheats::_CheatThread(SceSize args, void *argp)
 
     CLASS_POINTER(Cheats, cheats, argp);
 
-    while (gEmulator->GetFrameCount() < 100)
+    while (gEmulator->GetFrameCount() < 100 && cheats->IsRunning())
     {
         sceKernelDelayThread(20000);
     }
@@ -408,7 +408,7 @@ int Cheats::_CheatThread(SceSize args, void *argp)
     cheats->_delay.SetInterval(gEmulator->GetMsPerFrame());
     Cheat::CleanMemory();
 
-    while ((gStatus.Get() & (APP_STATUS_RUN_GAME | APP_STATUS_SHOW_UI_IN_GAME)) != 0)
+    while (cheats->IsRunning() && (gStatus.Get() & (APP_STATUS_RUN_GAME | APP_STATUS_SHOW_UI_IN_GAME)) != 0)
     {
         bool applied = false;
         int index = 0;

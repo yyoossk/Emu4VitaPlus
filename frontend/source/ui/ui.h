@@ -6,6 +6,7 @@
 #include "input.h"
 #include "tab_base.h"
 #include "dialog.h"
+#include "app.h"
 
 class Ui
 {
@@ -49,6 +50,7 @@ private:
     std::vector<std::string> _logs;
     Dialog *_dialog;
     int _current_dialog;
+    APP_STATUS _last_status;
 };
 
 extern Ui *gUi;
