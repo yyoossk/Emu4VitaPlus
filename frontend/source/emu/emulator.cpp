@@ -166,7 +166,7 @@ void Emulator::UnloadGame()
     {
         _rewind_manager.Deinit();
         Lock();
-        _cheats.Stop();
+        _cheats.Stop(true);
         gStateManager->states[0]->Save();
         Save();
         retro_unload_game();

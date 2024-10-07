@@ -52,6 +52,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         LogDebug("  *data: %d", *(unsigned *)data);
         // TODO: Support Rotation
         break;
+
     case RETRO_ENVIRONMENT_GET_CAN_DUPE:
         LogDebug("  cmd: RETRO_ENVIRONMENT_GET_CAN_DUPE");
         if (data)
@@ -59,10 +60,12 @@ bool EnvironmentCallback(unsigned cmd, void *data)
             *(bool *)data = true;
         }
         break;
+
     case RETRO_ENVIRONMENT_SHUTDOWN:
         LogDebug("  cmd: RETRO_ENVIRONMENT_SHUTDOWN");
         gEmulator->UnloadGame();
         break;
+
     case RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY:
         LogDebug("  cmd: RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY");
         if (data)

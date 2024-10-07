@@ -98,6 +98,7 @@ void ThreadBase::Stop(bool force)
         LogError("sceKernelDeleteThread error: %08x %08x", _thread_id, result);
     }
 
+    LogDebug("thread %08x exited", _thread_id);
     _thread_id = -1;
 }
 

@@ -120,10 +120,19 @@ App::~App()
 void App::Run()
 {
     LogFunctionName;
-    gStatus.Set(APP_STATUS_SHOW_UI);
     bool running = true;
+    APP_STATUS last_status = APP_STATUS_SHOW_UI;
+    gStatus.Set(APP_STATUS_SHOW_UI);
+
     while (running)
     {
+        APP_STATUS status = gStatus.Get();
+        if (status != last_status)
+        {
+            gUi->OnStatusChanged(status);
+            last_status = status;
+        }
+
         switch (gStatus.Get())
         {
         case APP_STATUS_SHOW_UI:

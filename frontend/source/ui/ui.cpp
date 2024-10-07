@@ -98,7 +98,7 @@ void Ui::_DeinitImgui()
     ImGui::DestroyContext();
 }
 
-Ui::Ui() : _tab_index(TAB_INDEX_BROWSER), _tabs{nullptr}, _last_status(APP_STATUS_BOOT)
+Ui::Ui() : _tab_index(TAB_INDEX_BROWSER), _tabs{nullptr}
 {
     LogFunctionName;
     _title = std::string("Emu4Vita++ (") + CORE_FULL_NAME + ") v" + APP_VER_STR;
@@ -317,8 +317,12 @@ void Ui::_OnPsButton(Input *input)
 void Ui::Run()
 {
     _input.Poll(true);
-    APP_STATUS status = gStatus.Get();
-    if (status != _last_status && (status & (APP_STATUS_SHOW_UI_IN_GAME | APP_STATUS_SHOW_UI)))
+}
+
+void Ui::OnStatusChanged(APP_STATUS status)
+{
+    LogFunctionName;
+    if (status & (APP_STATUS_SHOW_UI_IN_GAME | APP_STATUS_SHOW_UI))
     {
         LogDebug("  status changed: to %d", status);
         LogDebug("  _tab_index: %d", _tab_index);
@@ -346,11 +350,7 @@ void Ui::Run()
         gVideo->Unlock();
 
         SetInputHooks();
-
-        LogDebug("  changed");
     }
-
-    _last_status = status;
 }
 
 void Ui::_ShowBoot()
@@ -459,7 +459,10 @@ void Ui::UpdateCoreOptions()
     options.reserve(gConfig->core_options.size());
     for (auto &iter : gConfig->core_options)
     {
-        options.emplace_back(new ItemCore(&iter.second));
+        if (iter.second.values.size() > 0)
+        {
+            options.emplace_back(new ItemCore(&iter.second));
+        }
     }
 
     gVideo->Lock();

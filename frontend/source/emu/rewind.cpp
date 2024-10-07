@@ -66,7 +66,7 @@ bool RewindManager::Init()
 void RewindManager::Deinit()
 {
     LogFunctionName;
-    Stop();
+    Stop(true);
 
     _blocks.Reset();
     if (_contens != nullptr)

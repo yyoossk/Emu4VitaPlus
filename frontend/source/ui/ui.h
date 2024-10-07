@@ -25,9 +25,11 @@ public:
     void UpdateCoreOptions();
     void ChangeLanguage();
     void UpdateCheatOptions();
+    void OnStatusChanged(APP_STATUS status);
 
 private:
-    void _InitImgui();
+    void
+    _InitImgui();
     void _DeinitImgui();
 
     void _OnKeyL2(Input *input);
@@ -50,7 +52,6 @@ private:
     std::vector<std::string> _logs;
     Dialog *_dialog;
     int _current_dialog;
-    APP_STATUS _last_status;
 };
 
 extern Ui *gUi;
