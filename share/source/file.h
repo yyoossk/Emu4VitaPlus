@@ -17,5 +17,6 @@ namespace File
     void RemoveAllFiles(const char *path);
     std::string GetName(const char *path);
     std::string GetStem(const char *path);
+    std::string GetExt(const char *path, bool lower = true);
     std::string GetDir(const char *path);
 }

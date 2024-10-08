@@ -14,62 +14,65 @@
 
 const char *BATTERY_ICONS[] = {ICON_BATTERY_25, ICON_BATTERY_50, ICON_BATTERY_75, ICON_BATTERY_100};
 
-void ShowTimePower()
+namespace Utils
 {
-    int percent = scePowerGetBatteryLifePercent();
-    ImU32 color = percent <= 25 ? IM_COL32_RED : IM_COL32_GREEN;
-    const char *battery;
-    if (scePowerIsBatteryCharging())
+    void ShowTimePower()
     {
-        battery = ICON_BATTERY_CHARGE;
-    }
-    else
-    {
-        battery = BATTERY_ICONS[(percent + 24) / 25 - 1];
-    }
+        int percent = scePowerGetBatteryLifePercent();
+        ImU32 color = percent <= 25 ? IM_COL32_RED : IM_COL32_GREEN;
+        const char *battery;
+        if (scePowerIsBatteryCharging())
+        {
+            battery = ICON_BATTERY_CHARGE;
+        }
+        else
+        {
+            battery = BATTERY_ICONS[(percent + 24) / 25 - 1];
+        }
 
-    char percent_str[64];
-    snprintf(percent_str, 64, "%02d%%", scePowerGetBatteryLifePercent());
+        char percent_str[64];
+        snprintf(percent_str, 64, "%02d%%", scePowerGetBatteryLifePercent());
 
-    SceDateTime time;
-    sceRtcGetCurrentClock(&time, 0);
-    SceDateTime time_local;
-    SceRtcTick tick;
-    sceRtcGetTick(&time, &tick);
-    sceRtcConvertUtcToLocalTime(&tick, &tick);
-    sceRtcSetTick(&time_local, &tick);
+        SceDateTime time;
+        sceRtcGetCurrentClock(&time, 0);
+        SceDateTime time_local;
+        SceRtcTick tick;
+        sceRtcGetTick(&time, &tick);
+        sceRtcConvertUtcToLocalTime(&tick, &tick);
+        sceRtcSetTick(&time_local, &tick);
 
-    char time_str[64];
-    snprintf(time_str, 64, "%04d/%02d/%02d %02d:%02d:%02d",
-             time_local.year, time_local.month, time_local.day,
-             time_local.hour, time_local.minute, time_local.second);
+        char time_str[64];
+        snprintf(time_str, 64, "%04d/%02d/%02d %02d:%02d:%02d",
+                 time_local.year, time_local.month, time_local.day,
+                 time_local.hour, time_local.minute, time_local.second);
 
-    ImDrawList *draw_list = ImGui::GetWindowDrawList();
+        ImDrawList *draw_list = ImGui::GetWindowDrawList();
 
-    draw_list->PushClipRectFullScreen();
-    draw_list->AddText({TIME_X, TOP_RIGHT_Y}, IM_COL32_WHITE, time_str);
-    draw_list->AddText({BATTERY_X, TOP_RIGHT_Y}, IM_COL32_GREEN, battery);
-    draw_list->AddText({BATTERY_PERCENT_X, TOP_RIGHT_Y}, color, percent_str);
+        draw_list->PushClipRectFullScreen();
+        draw_list->AddText({TIME_X, TOP_RIGHT_Y}, IM_COL32_WHITE, time_str);
+        draw_list->AddText({BATTERY_X, TOP_RIGHT_Y}, IM_COL32_GREEN, battery);
+        draw_list->AddText({BATTERY_PERCENT_X, TOP_RIGHT_Y}, color, percent_str);
 
-    draw_list->PopClipRect();
-}
-
-void Lower(std::string *s)
-{
-    std::transform(s->begin(), s->end(), s->begin(),
-                   [](unsigned char c)
-                   { return std::tolower(c); });
-}
-
-void StripQuotes(std::string *s)
-{
-    if (!s->empty() && s->front() == '"')
-    {
-        s->erase(s->begin());
+        draw_list->PopClipRect();
     }
 
-    if (!s->empty() && s->back() == '"')
+    void Lower(std::string *s)
     {
-        s->erase(s->end() - 1);
+        std::transform(s->begin(), s->end(), s->begin(),
+                       [](unsigned char c)
+                       { return std::tolower(c); });
     }
-}
+
+    void StripQuotes(std::string *s)
+    {
+        if (!s->empty() && s->front() == '"')
+        {
+            s->erase(s->begin());
+        }
+
+        if (!s->empty() && s->back() == '"')
+        {
+            s->erase(s->end() - 1);
+        }
+    }
+};

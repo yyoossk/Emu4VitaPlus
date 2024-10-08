@@ -425,7 +425,7 @@ void Ui::Show()
     ImGui::SetNextWindowSize({VITA_WIDTH - MAIN_WINDOW_PADDING * 2, VITA_HEIGHT - MAIN_WINDOW_PADDING * 2});
 
     ImGui::Begin(_title.c_str(), NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs);
-    ShowTimePower();
+    Utils::ShowTimePower();
 
     (gStatus.Get() == APP_STATUS_BOOT) ? _ShowBoot() : _ShowNormal();
 

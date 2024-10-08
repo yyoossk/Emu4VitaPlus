@@ -34,7 +34,7 @@ size_t Cheat::_memory_size = 0;
 static std::string GetValue(CSimpleIniA *ini, const char *key)
 {
     std::string s(ini->GetValue("", key, ""));
-    StripQuotes(&s);
+    Utils::StripQuotes(&s);
     return s;
 }
 

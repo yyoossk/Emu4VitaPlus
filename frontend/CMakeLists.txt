@@ -10,7 +10,8 @@ include_directories(
     ../deps/libvita2d/libvita2d/include
     ../deps/libvita2d_ext/libvita2d_ext/include
     ../deps/simpleini
-    ../deps/minizip-ng)
+    ../deps/minizip-ng
+    ../deps/7-Zip/C)
 
 file(GLOB SRC
     source/*.c

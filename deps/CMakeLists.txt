@@ -120,6 +120,8 @@ set(SEVEN_SRC ${SEVENZIP_PATH}/7zAlloc.c
     ${SEVENZIP_PATH}/MtCoder.c
     ${SEVENZIP_PATH}/MtDec.c
     ${SEVENZIP_PATH}/Threads.c)
+
+# add_compile_definitions(USE_FOPEN)
 add_library(7zip ${SEVEN_SRC})
 target_include_directories(7zip PRIVATE ${SEVENZIP_PATH})
 

@@ -4,6 +4,7 @@
 #include <string.h>
 #include "file.h"
 #include "log.h"
+#include "utils.h"
 
 #define SCE_STM_RWU (00600)
 #define SCE_STM_RU (00400)
@@ -196,6 +197,24 @@ namespace File
             end = path + strlen(path);
 
         return std::string(start, end - start);
+    }
+
+    std::string GetExt(const char *path, bool lower)
+    {
+        const char *dot = _GetDotPos(path);
+        if (!dot)
+        {
+            std::string s(dot);
+            if (lower)
+            {
+                Utils::Lower(&s);
+            }
+            return s;
+        }
+        else
+        {
+            return "";
+        }
     }
 
     std::string GetDir(const char *path)

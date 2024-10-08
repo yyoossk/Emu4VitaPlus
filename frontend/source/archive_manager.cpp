@@ -73,6 +73,7 @@ const char *ArchiveManager::GetCachedPath(uint32_t crc32, const char *name, cons
 
         LogDebug(" extract: %s", p);
         _Set(crc32, p);
+        _CheckSize();
     }
     mz_zip_reader_delete(&handle);
 

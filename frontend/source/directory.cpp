@@ -6,12 +6,15 @@
 #include <minizip/mz_zip.h>
 #include <minizip/mz_strm.h>
 #include <minizip/mz_zip_rw.h>
+#include <7z.h>
+#include <7zFile.h>
+#include <7zAlloc.h>
 #include "directory.h"
 #include "utils.h"
 #include "log.h"
 #include "file.h"
 
-std::unordered_set<std::string> Directory::_ext_archives{"zip"}; //, "7z"};
+std::unordered_set<std::string> Directory::_ext_archives{".zip", ".7z"};
 
 static void SortDirItemsByNameIgnoreCase(std::vector<DirItem> &items)
 {
@@ -76,20 +79,70 @@ void Directory::SetExtensionFilter(const char *exts, char split)
     delete[] exts_string;
 }
 
+bool Directory::_LeagleTestZip(const char *name, DirItem *item)
+{
+    bool result = false;
+    if (mz_zip_reader_open_file(_zip_handle, (_current_path + "/" + name).c_str()) == MZ_OK)
+    {
+        mz_zip_reader_goto_first_entry(_zip_handle);
+        do
+        {
+            mz_zip_file *info;
+            mz_zip_reader_entry_get_info(_zip_handle, &info);
+            result = _LeagleTest(info->filename);
+            if (result)
+            {
+                item->entry_name = info->filename;
+                item->crc32 = info->crc;
+            }
+        } while ((!result) && mz_zip_reader_goto_next_entry(_zip_handle) == MZ_OK);
+
+        mz_zip_reader_close(_zip_handle);
+    }
+    else
+    {
+        LogError("failed to open %s/%s", _current_path.c_str(), name);
+    }
+
+    return result;
+}
+
+bool Directory::_LeagleTest7z(const char *name, DirItem *item)
+{
+    CSzArEx db;
+    CFileInStream archiveStream;
+    CLookToRead2 lookStream;
+    ISzAlloc allocImp{SzAlloc, SzFree};
+
+    if (InFile_Open(&archiveStream.file, (_current_path + "/" + name).c_str()) != 0)
+    {
+        LogError("failed to open %s/%s", _current_path.c_str(), name);
+        return false;
+    }
+
+    SzArEx_Init(&db);
+    bool result = (SzArEx_Open(&db, &lookStream.vt, &allocImp, &allocImp) == SZ_OK);
+    if (!result)
+    {
+        goto END;
+    }
+
+END:
+    SzArEx_Free(&db, &allocImp);
+    File_Close(&archiveStream.file);
+    return result;
+}
+
 bool Directory::_LeagleTest(const char *name, DirItem *item)
 {
-    char *ext = strrchr(name, '.');
-    if (!ext)
+    std::string ext = File::GetExt(name);
+
+    if (ext.size() == 0)
     {
         return false;
     }
 
-    ext++;
-
-    std::string n(ext);
-    Lower(&n);
-
-    if (_ext_filters.find(n) != _ext_filters.end())
+    if (_ext_filters.find(ext) != _ext_filters.end())
     {
         return true;
     }
@@ -99,35 +152,18 @@ bool Directory::_LeagleTest(const char *name, DirItem *item)
         return false;
     }
 
-    if (_ext_archives.find(n) != _ext_archives.end())
+    auto iter = _ext_archives.find(ext);
+    bool result = false;
+    if (*iter == ".zip")
     {
-        bool result = false;
-        if (mz_zip_reader_open_file(_zip_handle, (_current_path + "/" + name).c_str()) == MZ_OK)
-        {
-            mz_zip_reader_goto_first_entry(_zip_handle);
-            do
-            {
-                mz_zip_file *info;
-                mz_zip_reader_entry_get_info(_zip_handle, &info);
-                result = _LeagleTest(info->filename);
-                if (result)
-                {
-                    item->entry_name = info->filename;
-                    item->crc32 = info->crc;
-                }
-            } while ((!result) && mz_zip_reader_goto_next_entry(_zip_handle) == MZ_OK);
-
-            mz_zip_reader_close(_zip_handle);
-        }
-        else
-        {
-            LogError("failed to open %s/%s", _current_path.c_str(), name);
-        }
-
-        return result;
+        result = _LeagleTestZip(name, item);
+    }
+    else if (*iter == ".7z")
+    {
+        result = _LeagleTest7z(name, item);
     }
 
-    return false;
+    return result;
 }
 
 bool Directory::SetCurrentPath(const std::string &path)
