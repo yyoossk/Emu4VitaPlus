@@ -64,9 +64,10 @@ set(CMAKE_C_FLAGS "-marm -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard \
 -mword-relocations -fno-optimize-sibling-calls -fsingle-precision-constant \
 -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables \
 -ffast-math -ftree-vectorize -O3 \
+-fdata-sections -ffunction-sections \
 -DLOG_LEVEL=${LOG_LEVEL}")
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fno-rtti -std=gnu++17 -fno-exceptions")
-set(CMAKE_EXE_LINKER_FLAGS "-Wl,-q,-no-enum-size-warning,--as-needed") # ,--no-undefined,--as-needed,--hash-style=gnu")
+set(CMAKE_EXE_LINKER_FLAGS "-Wl,-q,-no-enum-size-warning,--as-needed,--gc-sections") # ,--no-undefined,--as-needed,--hash-style=gnu")
 
 set(OUT_PATH "${CMAKE_BINARY_DIR}/out")
 file(MAKE_DIRECTORY ${OUT_PATH})

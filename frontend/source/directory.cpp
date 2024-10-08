@@ -9,6 +9,8 @@
 #include <7z.h>
 #include <7zFile.h>
 #include <7zAlloc.h>
+#include <7zCrc.h>
+#include <7zVersion.h>
 #include "directory.h"
 #include "utils.h"
 #include "log.h"
@@ -119,7 +121,7 @@ bool Directory::_LeagleTest7z(const char *name, DirItem *item)
         LogError("failed to open %s/%s", _current_path.c_str(), name);
         return false;
     }
-
+    LookToRead2_INIT(&lookStream);
     SzArEx_Init(&db);
     bool result = (SzArEx_Open(&db, &lookStream.vt, &allocImp, &allocImp) == SZ_OK);
     if (!result)
