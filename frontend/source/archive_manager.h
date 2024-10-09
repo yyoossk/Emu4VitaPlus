@@ -24,6 +24,8 @@ public:
 private:
     void _Set(uint32_t crc32, const std::string &name, SceDateTime sdtime = {0});
     void _CheckSize();
+    bool _ExtractZip(uint32_t crc32, const char *name, const char *entry_name);
+    bool _Extract7z(uint32_t crc32, const char *name, const char *entry_name);
 
     std::unordered_map<uint32_t, CachedItem> _cache;
     size_t _max_size;

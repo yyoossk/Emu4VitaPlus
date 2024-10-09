@@ -12,4 +12,6 @@ namespace Utils
     void ShowTimePower();
     void Lower(std::string *s);
     void StripQuotes(std::string *s);
+    int Utf16leToUtf8(uint16_t utf16_char, char *utf8_char);
+    std::string Utf16leToUtf8(uint16_t *utf16le_str);
 };

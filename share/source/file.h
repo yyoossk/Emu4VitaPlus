@@ -12,6 +12,7 @@ namespace File
     size_t GetSize(const char *name);
     bool ReadFile(const char *name, void *buf, SceSSize size);
     size_t ReadFile(const char *name, void **buf);
+    bool WriteFile(const char *name, void *buf, SceSSize size);
     void MakeDirs(const char *path, SceIoMode mode = (SceIoMode)0777);
     bool Remove(const char *path);
     void RemoveAllFiles(const char *path);

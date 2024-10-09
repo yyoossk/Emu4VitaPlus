@@ -63,6 +63,18 @@ namespace File
         }
     }
 
+    bool WriteFile(const char *name, void *buf, SceSSize size)
+    {
+        SceUID fd = sceIoOpen(name, SCE_O_CREAT | SCE_O_WRONLY, SCE_STM_RWU);
+        if (fd <= 0)
+        {
+            return false;
+        }
+        SceSSize s = sceIoWrite(fd, buf, size);
+        sceIoClose(fd);
+        return s == size;
+    }
+
     bool GetCreateTime(const char *name, SceDateTime *time)
     {
         SceIoStat stat;
@@ -202,9 +214,9 @@ namespace File
     std::string GetExt(const char *path, bool lower)
     {
         const char *dot = _GetDotPos(path);
-        if (!dot)
+        if (dot)
         {
-            std::string s(dot);
+            std::string s(dot + 1);
             if (lower)
             {
                 Utils::Lower(&s);

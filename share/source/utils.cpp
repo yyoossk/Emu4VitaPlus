@@ -75,4 +75,41 @@ namespace Utils
             s->erase(s->end() - 1);
         }
     }
+
+    int Utf16leToUtf8(uint16_t utf16_char, char *utf8_char)
+    {
+        if (utf16_char < 0x80)
+        {
+            utf8_char[0] = (char)utf16_char;
+            return 1;
+        }
+        else if (utf16_char < 0x800)
+        {
+            utf8_char[0] = 0xC0 | (utf16_char >> 6);
+            utf8_char[1] = 0x80 | (utf16_char & 0x3F);
+            return 2;
+        }
+        else
+        {
+            utf8_char[0] = 0xE0 | (utf16_char >> 12);
+            utf8_char[1] = 0x80 | ((utf16_char >> 6) & 0x3F);
+            utf8_char[2] = 0x80 | (utf16_char & 0x3F);
+            return 3;
+        }
+    }
+
+    std::string Utf16leToUtf8(uint16_t *utf16le_str)
+    {
+        std::string utf8_str;
+        char utf8_char[4]; // Buffer to hold UTF-8 characters (max 4 bytes)
+
+        while (*utf16le_str)
+        {
+            int bytes = Utf16leToUtf8(*utf16le_str, utf8_char);
+            utf8_str.append(utf8_char, bytes);
+            utf16le_str++;
+        }
+
+        return utf8_str;
+    }
 };

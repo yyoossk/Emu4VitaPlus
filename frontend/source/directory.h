@@ -30,10 +30,10 @@ public:
 private:
     std::vector<DirItem> _items;
     std::unordered_set<std::string> _ext_filters;
-    static std::unordered_set<std::string> _ext_archives;
     std::string _current_path;
 
     void *_zip_handle;
+    uint8_t *_7z_buf;
 
     bool _LeagleTest(const char *name, DirItem *item = nullptr);
     bool _LeagleTestZip(const char *name, DirItem *item = nullptr);

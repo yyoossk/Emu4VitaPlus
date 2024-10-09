@@ -2,6 +2,23 @@ cmake_minimum_required(VERSION 3.12)
 
 set(CORE_TAG ${CORE_NAME}_build)
 
+add_custom_command(
+    OUTPUT
+    ${CMAKE_CURRENT_SOURCE_DIR}/arc_dat.cpp
+
+    COMMAND python grab_arc_dat.py
+    COMMAND mv arc_dat.cpp ${CMAKE_CURRENT_SOURCE_DIR}
+
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../script
+
+    DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/../script/grab_arc_dat.py
+    ${CMAKE_CURRENT_SOURCE_DIR}/../cores/libretro-fbneo/dats/*
+)
+add_custom_target(arc_dat
+    DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/arc_dat.cpp)
+
 add_custom_target(
     ${CORE_TAG} ALL
     COMMAND make -f ${CORE_MAKEFILE_NAME} ${CORE_ARGS} -j4
@@ -44,8 +61,8 @@ include_directories(
     ../deps/libretro-common/include
     ../share/source)
 
-add_executable(${ELF_NAME} defines.cpp)
-add_dependencies(${ELF_NAME} ${CORE_TAG})
+add_executable(${ELF_NAME} defines.cpp arc_dat.cpp)
+add_dependencies(${ELF_NAME} ${CORE_TAG} arc_dat)
 target_link_libraries(
     ${ELF_NAME}
     frontend

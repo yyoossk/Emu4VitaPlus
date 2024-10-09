@@ -16,7 +16,7 @@
 #include "log.h"
 #include "file.h"
 
-std::unordered_set<std::string> Directory::_ext_archives{".zip", ".7z"};
+static const size_t INPUT_7Z_BUF_SIZE = 1 << 18;
 
 static void SortDirItemsByNameIgnoreCase(std::vector<DirItem> &items)
 {
@@ -32,6 +32,8 @@ Directory::Directory(const char *path, const char *ext_filters, char split)
     LogFunctionName;
 
     _zip_handle = mz_zip_reader_create();
+    _7z_buf = new uint8_t[INPUT_7Z_BUF_SIZE];
+    CrcGenerateTable();
 
     if (ext_filters)
     {
@@ -48,6 +50,7 @@ Directory::~Directory()
 {
     LogFunctionName;
     mz_zip_reader_delete(&_zip_handle);
+    delete[] _7z_buf;
 }
 
 void Directory::SetExtensionFilter(const char *exts, char split)
@@ -115,18 +118,48 @@ bool Directory::_LeagleTest7z(const char *name, DirItem *item)
     CFileInStream archiveStream;
     CLookToRead2 lookStream;
     ISzAlloc allocImp{SzAlloc, SzFree};
+    uint16_t tmp[SCE_FIOS_PATH_MAX];
 
     if (InFile_Open(&archiveStream.file, (_current_path + "/" + name).c_str()) != 0)
     {
         LogError("failed to open %s/%s", _current_path.c_str(), name);
         return false;
     }
+
+    FileInStream_CreateVTable(&archiveStream);
+    archiveStream.wres = 0;
+
+    LookToRead2_CreateVTable(&lookStream, False);
+    lookStream.buf = _7z_buf;
+    lookStream.bufSize = INPUT_7Z_BUF_SIZE;
+    lookStream.realStream = &archiveStream.vt;
     LookToRead2_INIT(&lookStream);
+
     SzArEx_Init(&db);
+
     bool result = (SzArEx_Open(&db, &lookStream.vt, &allocImp, &allocImp) == SZ_OK);
     if (!result)
     {
+        LogError("SzArEx_Open failed: %s/%s", _current_path.c_str(), name);
         goto END;
+    }
+
+    result = false;
+    for (uint32_t i = 0; (!result) && i < db.NumFiles; i++)
+    {
+        if (SzArEx_IsDir(&db, i))
+        {
+            continue;
+        }
+
+        SzArEx_GetFileNameUtf16(&db, i, tmp);
+        std::string n = Utils::Utf16leToUtf8(tmp);
+        result = _LeagleTest(n.c_str());
+        if (result)
+        {
+            item->entry_name = n;
+            item->crc32 = db.CRCs.Vals[i];
+        }
     }
 
 END:
@@ -154,13 +187,12 @@ bool Directory::_LeagleTest(const char *name, DirItem *item)
         return false;
     }
 
-    auto iter = _ext_archives.find(ext);
     bool result = false;
-    if (*iter == ".zip")
+    if (ext == "zip")
     {
         result = _LeagleTestZip(name, item);
     }
-    else if (*iter == ".7z")
+    else if (ext == "7z")
     {
         result = _LeagleTest7z(name, item);
     }
