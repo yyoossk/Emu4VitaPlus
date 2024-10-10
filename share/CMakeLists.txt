@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.12)
 
 set(PUBLIC_PKG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pkg)
 
-message(${PUBLIC_PKG_DIR})
-
 file(GLOB_RECURSE PKG_FILES ${PUBLIC_PKG_DIR}/*)
 set(PUBLIC_PKG_FILES "")
 

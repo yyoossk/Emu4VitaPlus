@@ -2,23 +2,6 @@ cmake_minimum_required(VERSION 3.12)
 
 set(CORE_TAG ${CORE_NAME}_build)
 
-add_custom_command(
-    OUTPUT
-    ${CMAKE_CURRENT_SOURCE_DIR}/arc_dat.cpp
-
-    COMMAND python grab_arc_dat.py
-    COMMAND mv arc_dat.cpp ${CMAKE_CURRENT_SOURCE_DIR}
-
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../script
-
-    DEPENDS
-    ${CMAKE_CURRENT_SOURCE_DIR}/../script/grab_arc_dat.py
-    ${CMAKE_CURRENT_SOURCE_DIR}/../cores/libretro-fbneo/dats/*
-)
-add_custom_target(arc_dat
-    DEPENDS
-    ${CMAKE_CURRENT_SOURCE_DIR}/arc_dat.cpp)
-
 add_custom_target(
     ${CORE_TAG} ALL
     COMMAND make -f ${CORE_MAKEFILE_NAME} ${CORE_ARGS} -j4
@@ -58,11 +41,12 @@ add_compile_definitions(
 
 include_directories(
     ../frontend/source
+    ../frontend/source/emu
     ../deps/libretro-common/include
     ../share/source)
 
-add_executable(${ELF_NAME} defines.cpp arc_dat.cpp)
-add_dependencies(${ELF_NAME} ${CORE_TAG} arc_dat)
+add_executable(${ELF_NAME} defines.cpp)
+add_dependencies(${ELF_NAME} ${CORE_TAG})
 target_link_libraries(
     ${ELF_NAME}
     frontend
@@ -121,10 +105,15 @@ if(NOT BUILD_SELF)
 
     add_custom_target(VPK_${APP_NAME} ALL
         COMMAND ${CMAKE_COMMAND} -E rename ${VPK_NAME} ${OUT_PATH}/${VPK_NAME})
+    
+    get_directory_property(DEFINES COMPILE_DEFINITIONS)
+    if("ARC_BUILD" IN_LIST DEFINES)
+        gen_arc_dat(${PRIVATE_PKG_DIR})
+    endif()
 
     if(${CMAKE_VERSION} VERSION_LESS "3.20.0")
-        add_dependencies(VPK_${APP_NAME} ${VPK_NAME})
+        add_dependencies(VPK_${APP_NAME} ${VPK_NAME} ${ARC_TAG})
     else()
-        add_dependencies(VPK_${APP_NAME} ${VPK_NAME}-vpk)
+        add_dependencies(VPK_${APP_NAME} ${VPK_NAME}-vpk ${ARC_TAG})
     endif()
 endif()

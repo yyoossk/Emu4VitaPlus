@@ -5,6 +5,7 @@ set(CMAKE_TOOLCHAIN_FILE
     "$ENV{VITASDK}/share/vita.toolchain.cmake"
     CACHE PATH "toolchain file")
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
+include("script/arcade_dat.cmake" REQUIRED)
 
 option(WITH_LOG "log ouputting" OFF)
 

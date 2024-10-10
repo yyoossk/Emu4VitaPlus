@@ -6,6 +6,7 @@
 #define ROOT_DIR "ux0:data/EMU4VITAPLUS"
 #define CACHE_DIR ROOT_DIR "/cache"
 #define ARCHIVE_CACHE_DIR CACHE_DIR "/archives"
+#define ARCADE_CACHE_DIR CACHE_DIR "/arcades"
 #define OVERLAYS_DIR_NAME "overlays"
 #define PREVIEW_DIR_NAME ".previews"
 #define CHEAT_DIR_NAME ".cheats"

@@ -77,6 +77,8 @@ foreach(index RANGE ${length})
     list(APPEND CORE_FILES FILE "${CMAKE_CURRENT_BINARY_DIR}/../apps/${core}/app/eboot_${core_short}.bin" "eboot_${core_short}.self")
 endforeach()
 
+gen_arc_dat(${PKG_DIR})
+
 include_directories(
     source
     ../share/source
@@ -151,8 +153,8 @@ add_custom_target(VPK_${APP_NAME} ALL
 
 if(${CMAKE_VERSION} VERSION_LESS "3.20.0")
     add_dependencies(${VPK_NAME} ${CORE_EBOOTS})
-    add_dependencies(VPK_${APP_NAME} ${VPK_NAME})
+    add_dependencies(VPK_${APP_NAME} ${VPK_NAME} ${ARC_TAG})
 else()
     add_dependencies(${VPK_NAME}-vpk ${CORE_EBOOTS})
-    add_dependencies(VPK_${APP_NAME} ${VPK_NAME}-vpk)
+    add_dependencies(VPK_${APP_NAME} ${VPK_NAME}-vpk ${ARC_TAG})
 endif()
