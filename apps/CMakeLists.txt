@@ -42,10 +42,11 @@ add_compile_definitions(
 include_directories(
     ../frontend/source
     ../frontend/source/emu
+    ../frontend/source/audio
     ../deps/libretro-common/include
     ../share/source)
 
-add_executable(${ELF_NAME} defines.cpp)
+add_executable(${ELF_NAME} defines.cpp arcade_manager.cpp)
 add_dependencies(${ELF_NAME} ${CORE_TAG})
 target_link_libraries(
     ${ELF_NAME}

@@ -30,9 +30,11 @@ Emulator::Emulator()
       _av_info{0},
       _graphics_config_changed(false),
       _frame_count(0),
-      _core_options_update_display_callback(nullptr)
+      _core_options_update_display_callback(nullptr),
+      _arcade_manager(nullptr)
 {
     sceKernelCreateLwMutex(&_run_mutex, "run_mutex", 0, 0, NULL);
+    _InitArcadeManager();
 }
 
 Emulator::~Emulator()
@@ -42,6 +44,11 @@ Emulator::~Emulator()
     if (_texture_buf)
     {
         delete _texture_buf;
+    }
+
+    if (_arcade_manager)
+    {
+        delete _arcade_manager;
     }
 
     sceKernelDeleteLwMutex(&_run_mutex);

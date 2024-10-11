@@ -15,36 +15,10 @@
 #include "defines.h"
 #include "log.h"
 
-ArchiveManager::ArchiveManager(size_t max_size)
+#define DEFAULT_CACHE_SIZE 10
+
+ArchiveManager::ArchiveManager() : CacheManager(ARCHIVE_CACHE_DIR, DEFAULT_CACHE_SIZE)
 {
-    LogFunctionName;
-    if (File::Exist(ARCHIVE_CACHE_DIR))
-    {
-        SceUID dfd = sceIoDopen(ARCHIVE_CACHE_DIR);
-        SceIoDirent dir;
-        while (sceIoDread(dfd, &dir) > 0)
-        {
-            if (SCE_S_ISREG(dir.d_stat.st_mode))
-            {
-                char *p;
-                uint32_t crc = strtoul(dir.d_name, &p, 16);
-                if (*p == '.')
-                {
-                    time_t time;
-                    std::string name = std::string(ARCHIVE_CACHE_DIR) + "/" + dir.d_name;
-                    File::GetCreateTime(name.c_str(), &time);
-                    _cache[crc] = {time, name};
-                    LogDebug("  cached: %s %08x %u", name.c_str(), crc, time);
-                }
-            }
-        }
-        sceIoDclose(dfd);
-        _CheckSize();
-    }
-    else
-    {
-        File::MakeDirs(ARCHIVE_CACHE_DIR);
-    }
 }
 
 ArchiveManager::~ArchiveManager()
@@ -54,12 +28,12 @@ ArchiveManager::~ArchiveManager()
 const char *ArchiveManager::GetCachedPath(uint32_t crc32, const char *name, const char *entry_name)
 {
     LogFunctionName;
-
-    auto iter = _cache.find(crc32);
-    if (iter != _cache.end())
+    static std::string full_path;
+    if (IsInCache(_GetCachedName(crc32, entry_name).c_str()))
     {
-        LogDebug("  return: %s", iter->second.name.c_str());
-        return iter->second.name.c_str();
+        full_path = _GetCachedFullName(crc32, entry_name);
+        LogDebug("  return: %s", full_path.c_str());
+        return full_path.c_str();
     }
 
     if (!name || !entry_name)
@@ -83,8 +57,9 @@ const char *ArchiveManager::GetCachedPath(uint32_t crc32, const char *name, cons
         }
     }
 
-    _CheckSize();
-    return GetCachedPath(crc32);
+    full_path = _GetCachedFullName(crc32, entry_name);
+    LogDebug("  return: %s", full_path.c_str());
+    return full_path.c_str();
 }
 
 bool ArchiveManager::_ExtractZip(uint32_t crc32, const char *name, const char *entry_name)
@@ -101,13 +76,11 @@ bool ArchiveManager::_ExtractZip(uint32_t crc32, const char *name, const char *e
     result = mz_zip_reader_locate_entry(handle, entry_name, true);
     if (result)
     {
-        char p[SCE_FIOS_PATH_MAX];
-        snprintf(p, SCE_FIOS_PATH_MAX, "%s/%08x%s", ARCHIVE_CACHE_DIR, crc32, strrchr(entry_name, '.'));
-        result = mz_zip_reader_entry_save_file(handle, p);
+        result = mz_zip_reader_entry_save_file(handle, _GetCachedFullName(crc32, entry_name).c_str());
+        LogDebug("  extract %s", _GetCachedFullName(crc32, entry_name).c_str());
         if (result)
         {
-            LogDebug(" extract: %s", p);
-            _Set(crc32, p);
+            Set(_GetCachedName(crc32, entry_name).c_str());
         }
     }
 
@@ -171,14 +144,16 @@ bool ArchiveManager::_Extract7z(uint32_t crc32, const char *name, const char *en
                                  &allocImp, &allocImp) == SZ_OK);
         if (result)
         {
-            char p[SCE_FIOS_PATH_MAX];
-            snprintf(p, SCE_FIOS_PATH_MAX, "%s/%08x%s", ARCHIVE_CACHE_DIR, crc32, strrchr(entry_name, '.'));
-            result = File::WriteFile(p, buf, buf_size);
+            result = File::WriteFile(_GetCachedFullName(crc32, entry_name).c_str(), buf, buf_size);
             if (result)
             {
-                LogDebug(" extract: %s", p);
-                _Set(crc32, p);
+                LogDebug("  extract %s", _GetCachedFullName(crc32, entry_name).c_str());
+                Set(_GetCachedName(crc32, entry_name).c_str());
             }
+        }
+        else
+        {
+            LogError("Extract failed");
         }
         ISzAlloc_Free(&allocImp, buf);
         break;
@@ -192,36 +167,14 @@ END:
     return result;
 }
 
-void ArchiveManager::_CheckSize()
+std::string ArchiveManager::_GetCachedName(uint32_t crc32, const char *entry_name)
 {
-    LogFunctionName;
-    if (_cache.size() > _max_size)
-    {
-        uint32_t earliest_crc32 = _cache.begin()->first;
-        time_t earliest_time = _cache.begin()->second.time;
-        for (const auto &iter : _cache)
-        {
-            if (iter.second.time < earliest_time)
-            {
-                earliest_crc32 = iter.first;
-                earliest_time = iter.second.time;
-            }
-        }
-
-        sceIoRemove(_cache[earliest_crc32].name.c_str());
-        _cache.erase(earliest_crc32);
-    }
+    char path[SCE_FIOS_PATH_MAX];
+    snprintf(path, SCE_FIOS_PATH_MAX, "%08x%s", crc32, strrchr(entry_name, '.'));
+    return std::string(path);
 }
 
-void ArchiveManager::_Set(uint32_t crc32, const std::string &name, SceDateTime sdtime)
+std::string ArchiveManager::_GetCachedFullName(uint32_t crc32, const char *entry_name)
 {
-    LogFunctionName;
-    if (sdtime.year == 0)
-    {
-        sceRtcGetCurrentClockLocalTime(&sdtime);
-    }
-
-    time_t time;
-    sceRtcGetTime_t(&sdtime, &time);
-    _cache[crc32] = {time, name};
+    return GetDirPath() + "/" + _GetCachedName(crc32, entry_name);
 }

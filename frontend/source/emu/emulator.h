@@ -9,6 +9,7 @@
 #include "archive_manager.h"
 #include "rewind.h"
 #include "cheat.h"
+#include "arcade_manager.h"
 
 struct Rect
 {
@@ -74,6 +75,7 @@ private:
     std::string _SaveDirPath();
     std::string _SaveNamePath(uint32_t id);
     bool _LoadCheats(const char *path);
+    void _InitArcadeManager();
 
     std::string _current_name;
     retro_system_info _info;
@@ -96,13 +98,15 @@ private:
 
     SceKernelLwMutexWork _run_mutex;
 
-    ArchiveManager _archive_manager{DEFAULT_CACHE_SIZE};
+    ArchiveManager _archive_manager;
     RewindManager _rewind_manager;
     Cheats _cheats;
 
     vita2d_texture_vertex _vertices[4];
 
     retro_core_options_update_display_callback_t _core_options_update_display_callback;
+
+    ArcadeManager *_arcade_manager;
 };
 
 extern Emulator *gEmulator;
