@@ -10,6 +10,7 @@ class ArcadeManager : public CacheManager
 public:
     ArcadeManager();
     virtual ~ArcadeManager();
+    const char *GetCachedPath(const char *path);
 
 private:
     void _Load();

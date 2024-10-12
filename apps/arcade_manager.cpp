@@ -5,6 +5,7 @@
 #include "file.h"
 #include "log.h"
 #include "emulator.h"
+#include "7zCrc.h"
 
 #define ARC_CACHE_MAX_SIZE 10
 
@@ -60,4 +61,26 @@ void ArcadeManager::_Load()
     LogDebug("%08x %08x", _name_hash.size(), _roms.size());
 
     delete buf;
+}
+
+const char *ArcadeManager::GetCachedPath(const char *path)
+{
+    LogFunctionName;
+    std::string stem = File::GetStem(path);
+
+    if (_name_hash.find(CrcCalc(stem.c_str(), stem.size())) != _name_hash.end())
+    {
+        return path;
+    }
+
+    std::string ext = File::GetExt(path);
+    static std::string full_path;
+
+    full_path.clear();
+    if (ext == 'zip')
+    {
+    }
+    else if (ext == '7z')
+    {
+    }
 }

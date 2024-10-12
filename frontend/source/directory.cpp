@@ -99,6 +99,7 @@ bool Directory::_LeagleTestZip(const char *name, DirItem *item)
             {
                 item->entry_name = info->filename;
                 item->crc32 = info->crc;
+                break;
             }
         } while ((!result) && mz_zip_reader_goto_next_entry(_zip_handle) == MZ_OK);
 
