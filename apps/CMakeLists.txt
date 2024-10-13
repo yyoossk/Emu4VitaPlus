@@ -44,6 +44,7 @@ include_directories(
     ../frontend/source/emu
     ../frontend/source/audio
     ../deps/libretro-common/include
+    ../deps/7-Zip/C
     ../share/source)
 
 add_executable(${ELF_NAME} defines.cpp arcade_manager.cpp)
@@ -106,8 +107,9 @@ if(NOT BUILD_SELF)
 
     add_custom_target(VPK_${APP_NAME} ALL
         COMMAND ${CMAKE_COMMAND} -E rename ${VPK_NAME} ${OUT_PATH}/${VPK_NAME})
-    
+
     get_directory_property(DEFINES COMPILE_DEFINITIONS)
+
     if("ARC_BUILD" IN_LIST DEFINES)
         gen_arc_dat(${PRIVATE_PKG_DIR})
     endif()

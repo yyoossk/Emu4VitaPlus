@@ -77,10 +77,10 @@ const char *ArcadeManager::GetCachedPath(const char *path)
     static std::string full_path;
 
     full_path.clear();
-    if (ext == 'zip')
+    if (ext == "zip")
     {
     }
-    else if (ext == '7z')
+    else if (ext == "7z")
     {
     }
 }

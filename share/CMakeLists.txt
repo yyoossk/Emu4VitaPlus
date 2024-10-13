@@ -39,7 +39,8 @@ if(NOT ${CMAKE_CURRENT_SOURCE_DIR}/source/language_define.cpp IN_LIST SRC)
     list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/source/language_define.cpp)
 endif()
 
-include_directories(../deps/libretro-common/include)
+include_directories(../deps/libretro-common/include
+    ../deps/7-zip/C)
 
 add_library(share STATIC ${SRC})
 add_dependencies(share lang_cpp)

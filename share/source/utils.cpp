@@ -98,18 +98,34 @@ namespace Utils
         }
     }
 
-    std::string Utf16leToUtf8(uint16_t *utf16le_str)
+    std::string Utf16leToUtf8(uint16_t *utf16_str)
     {
         std::string utf8_str;
         char utf8_char[4]; // Buffer to hold UTF-8 characters (max 4 bytes)
 
-        while (*utf16le_str)
+        while (*utf16_str)
         {
-            int bytes = Utf16leToUtf8(*utf16le_str, utf8_char);
+            int bytes = Utf16leToUtf8(*utf16_str, utf8_char);
             utf8_str.append(utf8_char, bytes);
-            utf16le_str++;
+            utf16_str++;
         }
 
         return utf8_str;
+    }
+
+    int Utf16leToUtf8(uint16_t *utf16_str, char *utf8_str, size_t utf8_size)
+    {
+        char *p = utf8_str;
+        char utf8_char[4];
+
+        while (*utf16_str && p - utf8_str < utf8_size)
+        {
+            char utf8_char[4];
+            int bytes = Utf16leToUtf8(*utf16_str, utf8_char);
+            memcpy(p, utf8_char, bytes);
+            p += bytes;
+        }
+        *p = 0;
+        return p - utf8_str;
     }
 };
