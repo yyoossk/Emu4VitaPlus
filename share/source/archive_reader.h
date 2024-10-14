@@ -1,13 +1,14 @@
 #pragma once
 #include <stdint.h>
+#include "file.h"
 
 // libarchive is too bloated and does not support crc32
 
 class ArchiveReader
 {
 public:
-    ArchiveReader();
-    virtual ~ArchiveReader();
+    ArchiveReader() {};
+    virtual ~ArchiveReader() {};
 
     virtual bool Open(const char *path) = 0;
     virtual void Close() = 0;

@@ -13,7 +13,7 @@ ArchiveReaderZip::~ArchiveReaderZip()
 
 bool ArchiveReaderZip::Open(const char *path)
 {
-    return mz_zip_reader_open_file(_handle, path) == MZ_OK;
+    return mz_zip_reader_open_file(_handle, path) == MZ_OK && First();
 }
 
 void ArchiveReaderZip::Close()
@@ -23,7 +23,7 @@ void ArchiveReaderZip::Close()
 
 bool ArchiveReaderZip::First()
 {
-    return mz_zip_reader_goto_first_entry(_handle) != MZ_OK;
+    return mz_zip_reader_goto_first_entry(_handle) == MZ_OK;
 }
 
 bool ArchiveReaderZip::Next()

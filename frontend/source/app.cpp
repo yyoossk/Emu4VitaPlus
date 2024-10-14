@@ -16,6 +16,7 @@
 #include "defines.h"
 #include "shader.h"
 #include "favorite.h"
+#include "archive_reader_factory.h"
 
 AppStatus gStatus;
 
@@ -70,6 +71,9 @@ App::App(int argc, char *const argv[])
     gUi->AppendLog("Initialize state manager");
     gStateManager = new StateManager();
 
+    gUi->AppendLog("Initialize archive reader factory");
+    gArchiveReaderFactory = new ArchiveReaderFactory();
+
     gUi->AppendLog("Load overlays");
     gOverlays = new Overlays;
 
@@ -109,6 +113,7 @@ App::~App()
     delete gStateManager;
     delete gShaders;
     delete gOverlays;
+    delete gArchiveReaderFactory;
     delete gEmulator;
     delete gUi;
     delete gVideo;

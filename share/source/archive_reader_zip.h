@@ -1,3 +1,4 @@
+#pragma once
 #include <minizip/mz.h>
 #include <minizip/mz_zip.h>
 #include <minizip/mz_strm.h>

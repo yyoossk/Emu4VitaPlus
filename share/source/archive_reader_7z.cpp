@@ -42,7 +42,7 @@ bool ArchiveReader7z::Open(const char *path)
         Close();
     }
 
-    return result;
+    return result && First();
 }
 
 void ArchiveReader7z::Close()

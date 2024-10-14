@@ -121,7 +121,7 @@ namespace Utils
         while (*utf16_str && p - utf8_str < utf8_size)
         {
             char utf8_char[4];
-            int bytes = Utf16leToUtf8(*utf16_str, utf8_char);
+            int bytes = Utf16leToUtf8(*utf16_str++, utf8_char);
             memcpy(p, utf8_char, bytes);
             p += bytes;
         }
