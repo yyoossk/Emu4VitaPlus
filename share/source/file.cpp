@@ -8,6 +8,7 @@
 
 #define SCE_STM_RWU (00600)
 #define SCE_STM_RU (00400)
+#define FILE_BUF_SIZE 0x1000000
 
 namespace File
 {
@@ -77,14 +78,33 @@ namespace File
 
     bool CopyFile(const char *src_path, const char *dst_path)
     {
-        char *buf;
-        SceSSize size = ReadFile(src_path, (void **)&buf);
         bool result = false;
-        if (size > 0)
+        SceUID src_fd = sceIoOpen(src_path, SCE_O_RDONLY, SCE_STM_RU);
+        SceUID dst_fd = sceIoOpen(dst_path, SCE_O_CREAT | SCE_O_WRONLY, SCE_STM_RWU);
+        if (src_fd <= 0 || dst_fd <= 0)
+            goto END;
+
+        char *buf = new char[FILE_BUF_SIZE];
+
+        SceSSize size;
+        do
         {
-            result = WriteFile(dst_path, buf, size);
-            delete[] buf;
-        }
+            size = sceIoRead(src_fd, buf, FILE_BUF_SIZE);
+            if (size == 0)
+            {
+                break;
+            }
+            bool result = (sceIoWrite(dst_fd, buf, size) == size);
+        } while (result && size == FILE_BUF_SIZE);
+
+    END:
+        if (src_fd > 0)
+            sceIoClose(src_fd);
+
+        if (dst_fd > 0)
+            sceIoClose(dst_fd);
+
+        delete[] buf;
         return result;
     }
 
