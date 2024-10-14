@@ -75,6 +75,19 @@ namespace File
         return s == size;
     }
 
+    bool CopyFile(const char *src_path, const char *dst_path)
+    {
+        char *buf;
+        SceSSize size = ReadFile(src_path, (void **)&buf);
+        bool result = false;
+        if (size > 0)
+        {
+            result = WriteFile(dst_path, buf, size);
+            delete[] buf;
+        }
+        return result;
+    }
+
     bool GetCreateTime(const char *name, SceDateTime *time)
     {
         SceIoStat stat;

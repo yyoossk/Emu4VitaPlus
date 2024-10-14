@@ -91,15 +91,29 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
     retro_game_info game_info = {0};
     _soft_frame_buf_render = false;
     char *buf = nullptr;
-    const char *_path = path;
+    const char *_path;
     if (*entry_name)
     {
         _path = _archive_manager.GetCachedPath(crc32, path, entry_name);
     }
+    else if (_arcade_manager != nullptr)
+    {
+        _path = _arcade_manager->GetCachedPath(path);
+    }
+    else
+    {
+        _path = path;
+    }
+
+    if (_path == nullptr)
+    {
+        gStatus.Set(APP_STATUS_SHOW_UI);
+        return false;
+    }
 
     if (_info.need_fullpath)
     {
-        LogDebug("  load rom from path");
+        LogDebug("  load rom from path %s", _path);
         game_info.path = _path;
     }
     else

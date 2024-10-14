@@ -50,6 +50,12 @@ names, roms, name_data = Grab('../cores/libretro-fbneo/dats/')
 names_crcs = ',\n'.join([f'0x{n:08x}' for n in names])
 data_array = ','.join([hex(d) for d in name_data])
 
+with open('roms.txt', 'w') as fp:
+    for crc, ns in roms.items():
+        fp.write(f'{int(crc, 16):08x} : ')
+        fp.write(', '.join([f'{n:08x}' for n in ns]))
+        fp.write('\n')
+
 with open('arcade_dat.bin', 'wb') as fp:
     fp.write(pack('I', len(name_data)))
     fp.write(name_data)

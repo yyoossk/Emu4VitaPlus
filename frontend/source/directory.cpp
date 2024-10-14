@@ -94,7 +94,6 @@ bool Directory::_LeagleTest(const char *name, DirItem *item)
     do
     {
         const char *entry_name = reader->GetCurrentName();
-        LogDebug("%s %s", name, entry_name);
         result = _LeagleTest(entry_name);
         if (result)
         {
