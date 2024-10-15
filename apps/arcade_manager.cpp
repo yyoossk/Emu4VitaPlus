@@ -67,7 +67,6 @@ void ArcadeManager::_Load()
 const char *ArcadeManager::GetCachedPath(const char *path)
 {
     LogFunctionName;
-    static char cached_path[SCE_FIOS_PATH_MAX];
 
     std::string stem = File::GetStem(path);
 
@@ -123,7 +122,24 @@ const char *ArcadeManager::GetCachedPath(const char *path)
         }
     }
 
-    snprintf(cached_path, SCE_FIOS_PATH_MAX, "%s/%s.%s", ARCADE_CACHE_DIR, _names + offset, File::GetExt(path).c_str());
+    char cached_path[SCE_FIOS_PATH_MAX];
+    static char cached_full_path[SCE_FIOS_PATH_MAX];
+    snprintf(cached_path, SCE_FIOS_PATH_MAX, "%s.%s", _names + offset, File::GetExt(path).c_str());
+    snprintf(cached_full_path, SCE_FIOS_PATH_MAX, "%s/%s ", ARCADE_CACHE_DIR, cached_path);
 
-    return File::CopyFile(path, cached_path) ? cached_path : nullptr;
+    if (this->IsInCache(cached_path))
+    {
+        LogDebug("  %s in cache", cached_path);
+        return cached_full_path;
+    }
+    else if (File::CopyFile(path, cached_full_path))
+    {
+        LogDebug("  copy %s to %s", path, cached_full_path);
+        Set(cached_path);
+        return cached_full_path;
+    }
+    else
+    {
+        return nullptr;
+    }
 }

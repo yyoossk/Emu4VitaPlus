@@ -79,12 +79,13 @@ namespace File
     bool CopyFile(const char *src_path, const char *dst_path)
     {
         bool result = false;
+        char *buf = nullptr;
         SceUID src_fd = sceIoOpen(src_path, SCE_O_RDONLY, SCE_STM_RU);
         SceUID dst_fd = sceIoOpen(dst_path, SCE_O_CREAT | SCE_O_WRONLY, SCE_STM_RWU);
         if (src_fd <= 0 || dst_fd <= 0)
             goto END;
 
-        char *buf = new char[FILE_BUF_SIZE];
+        buf = new char[FILE_BUF_SIZE];
 
         SceSSize size;
         do
@@ -104,7 +105,9 @@ namespace File
         if (dst_fd > 0)
             sceIoClose(dst_fd);
 
-        delete[] buf;
+        if (buf)
+            delete[] buf;
+
         return result;
     }
 
