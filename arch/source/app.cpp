@@ -60,6 +60,7 @@ App::App() : _index(0)
                                         {"Snes9x 2005", "Snes9x2005"},
                                         {"Snes9x 2010", "Snes9x2010"}}),
                 new CoreButton("MD", {{"Genesis Plus GX", "GenesisPlusGX"},
+                                      {"Genesis Plus GX Wide", "GenesisPlusGXWide"},
                                       {"PicoDrive", "PicoDrive"}}),
                 new CoreButton("GBA", {{"gpSP", "gpSP"},
                                        {"VBA Next", "VBANext"}}),

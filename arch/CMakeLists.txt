@@ -30,6 +30,7 @@ set(CORE_SHORTS
     FCEUmm
     Nestopia
     GenesisPlusGX
+    GenesisPlusGXWide
     PicoDrive
     MednafenPCEFast
     MednafenPCESuperGrafx
@@ -51,6 +52,7 @@ set(CORES
     fceumm
     nestopia
     genesis_plus_gx
+    genesis_plus_gx_wide
     picodrive
     mednafen_pce_fast
     mednafen_supergrafx
