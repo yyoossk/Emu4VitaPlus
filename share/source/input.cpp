@@ -14,7 +14,9 @@ Input::Input() : _last_key(0ull),
                  _turbo_start_ms(DEFAULT_TURBO_START_TIME),
                  _turbo_interval_ms(DEFAULT_TURBO_INTERVAL),
                  _next_key_up_called_ms(0),
-                 _enable_key_up(true)
+                 _enable_key_up(true),
+                 _left{0},
+                 _right{0}
 {
 }
 
@@ -99,6 +101,11 @@ bool Input::Poll(bool waiting)
         key |= SCE_CTRL_RSTICK_UP;
     else if (ctrl_data.ry > (ANALOG_CENTER + ANALOG_THRESHOLD))
         key |= SCE_CTRL_RSTICK_DOWN;
+
+    _left.x = ctrl_data.lx;
+    _left.y = ctrl_data.ly;
+    _right.x = ctrl_data.rx;
+    _right.y = ctrl_data.ry;
 
     _ProcTurbo(key);
     _ProcCallbacks(key);

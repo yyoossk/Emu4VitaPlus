@@ -32,6 +32,12 @@ struct CompareKey
 
 using InputMap = std::map<uint32_t, InputFunc, CompareKey>;
 
+struct AnalogAxis
+{
+    uint8_t x;
+    uint8_t y;
+};
+
 class Input
 {
 public:
@@ -54,7 +60,8 @@ public:
     void Reset();
 
     uint32_t GetKeyStates() { return _last_key; };
-    // void ClearKeyStates(uint32_t mask);
+    const AnalogAxis &GetLeftAnalogAxis() const { return _left; };
+    const AnalogAxis &GetRightAnalogAxis() const { return _right; };
 
     void PushCallbacks();
     void PopCallbacks();
@@ -69,6 +76,8 @@ private:
     uint64_t _turbo_interval_ms;
     uint64_t _next_key_up_called_ms;
     bool _enable_key_up;
+    AnalogAxis _left;
+    AnalogAxis _right;
 
     std::stack<InputMap> _callback_stack;
 
