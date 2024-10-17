@@ -2,6 +2,7 @@
 #include <psp2/io/fcntl.h>
 #include <psp2/rtc.h>
 #include <zlib.h>
+#include <string.h>
 #include "arcade_manager.h"
 #include "file.h"
 #include "log.h"
@@ -21,6 +22,22 @@ void Emulator::_InitArcadeManager()
 ArcadeManager::ArcadeManager() : CacheManager(ARCADE_CACHE_DIR, ARC_CACHE_MAX_SIZE), _names(nullptr)
 {
     _Load();
+}
+
+bool ArcadeManager::NeedReplace(const char *path)
+{
+    char tmp[SCE_FIOS_PATH_MAX];
+    strncpy(tmp, path, SCE_FIOS_PATH_MAX);
+    char *p = strrchr(tmp, '.');
+    if (p)
+    {
+        strcpy(p, ".dat");
+        return !File::Exist(tmp);
+    }
+    else
+    {
+        return true;
+    }
 }
 
 ArcadeManager::~ArcadeManager()

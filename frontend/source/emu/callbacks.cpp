@@ -325,34 +325,51 @@ void InputPollCallback()
 int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsigned id)
 {
     LogFunctionNameLimited;
-    if (device != RETRO_DEVICE_JOYPAD || port != 0)
+    if (port != 0)
     {
         return 0;
     }
-    // LogDebug("%d %d %d %d", port, device, index, id);
-    uint32_t key_states = gEmulator->_input.GetKeyStates();
 
-    if (id == RETRO_DEVICE_ID_JOYPAD_MASK)
+    switch (device)
     {
-        // gEmulator->_input.ClearKeyStates(gEmulator->_keys_mask);
-        int16_t state = 0;
-        for (size_t i = 0; i < 16; i++)
+    case RETRO_DEVICE_JOYPAD:
+    {
+        const uint32_t key_states = gEmulator->_input.GetKeyStates();
+
+        if (id == RETRO_DEVICE_ID_JOYPAD_MASK)
         {
-            if (key_states & gEmulator->_keys[i])
+            // gEmulator->_input.ClearKeyStates(gEmulator->_keys_mask);
+            int16_t state = 0;
+            for (size_t i = 0; i < 16; i++)
             {
-                state |= (1 << i);
+                if (key_states & gEmulator->_keys[i])
+                {
+                    state |= (1 << i);
+                }
             }
+            return state;
         }
-        return state;
+        else if (id >= 16)
+        {
+            LogError("  InputStateCallback, wrong id %d", id);
+            return 0;
+        }
+        else
+        {
+            // gEmulator->_input.ClearKeyStates(gEmulator->_keys[id]);
+            return key_states & gEmulator->_keys[id];
+        }
     }
-    else if (id >= 16)
+    break;
+
+    case RETRO_DEVICE_ANALOG:
     {
-        LogError("  InputStateCallback, wrong id %d", id);
+        const AnalogAxis aa = index == RETRO_DEVICE_INDEX_ANALOG_LEFT ? gEmulator->_input.GetLeftAnalogAxis() : gEmulator->_input.GetRightAnalogAxis();
+        return id == RETRO_DEVICE_ID_ANALOG_X ? aa.x * 0x101 - 0x7fff : aa.y * 0x101 - 0x7fff;
+    }
+    break;
+
+    default:
         return 0;
-    }
-    else
-    {
-        // gEmulator->_input.ClearKeyStates(gEmulator->_keys[id]);
-        return key_states & gEmulator->_keys[id];
     }
 }

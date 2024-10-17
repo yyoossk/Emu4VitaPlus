@@ -9,6 +9,7 @@
 #include "favorite.h"
 #include "config.h"
 #include "icons.h"
+#include "state_manager.h"
 
 #define TEXTURE_MAX_WIDTH 446
 #define TEXTURE_MAX_HEIGHT 442
@@ -30,6 +31,7 @@ TabBrowser::TabBrowser() : TabSeletable(TAB_BROWSER),
         }
     }
     _UpdateStatus();
+    _UpdateTexture();
 }
 
 TabBrowser::~TabBrowser()
@@ -225,37 +227,30 @@ void TabBrowser::_UpdateTexture()
         return;
     }
 
-    size_t node_pos = item.name.rfind('.');
-    if (node_pos == std::string::npos)
-    {
-        return;
-    }
-
-    std::string path = _directory->GetCurrentPath() + "/" PREVIEW_DIR_NAME "/" + item.name.substr(0, node_pos);
+    std::string stem = File::GetStem(item.name.c_str());
+    std::string path = _directory->GetCurrentPath() + "/" PREVIEW_DIR_NAME "/" + stem;
     _texture = vita2d_load_PNG_file((path + ".png").c_str());
     if (_texture == nullptr)
     {
         _texture = vita2d_load_JPEG_file((path + ".jpg").c_str());
     }
 
+    if (_texture == nullptr)
+    {
+        _texture = GetNewestStateScreenshot(stem.c_str());
+    }
+
     if (_texture)
     {
         float width = vita2d_texture_get_width(_texture);
         float height = vita2d_texture_get_height(_texture);
-        float zoom = 1.0;
-
-        if (width > TEXTURE_MAX_WIDTH)
+        _texture_width = TEXTURE_MAX_WIDTH;
+        _texture_height = height * TEXTURE_MAX_WIDTH / width;
+        if (_texture_height > TEXTURE_MAX_HEIGHT)
         {
-            zoom = TEXTURE_MAX_WIDTH / width;
+            _texture_height = TEXTURE_MAX_HEIGHT;
+            _texture_width = width * TEXTURE_MAX_HEIGHT / height;
         }
-
-        if (height * zoom > TEXTURE_MAX_HEIGHT)
-        {
-            zoom = TEXTURE_MAX_HEIGHT / height;
-        }
-
-        _texture_width = width * zoom;
-        _texture_height = height * zoom;
     }
 }
 
@@ -293,4 +288,45 @@ void TabBrowser::ChangeLanguage(uint32_t language)
 {
     LogFunctionName;
     _UpdateStatus();
+}
+
+vita2d_texture *TabBrowser::GetNewestStateScreenshot(const char *name)
+{
+    vita2d_texture *texture = nullptr;
+    std::string path = std::string(CORE_SAVESTATES_DIR) + "/" + name + "/";
+    time_t newest;
+    for (int i = 0; i < MAX_STATES; i++)
+    {
+        char tmp[8];
+        if (i == 0)
+        {
+            strcpy(tmp, "auto");
+        }
+        else
+        {
+            snprintf(tmp, 8, "%02d", i);
+        }
+        std::string jpg_path = path + "state_" + tmp + ".jpg";
+        if (File::Exist(jpg_path.c_str()))
+        {
+            if (texture == nullptr)
+            {
+                texture = vita2d_load_JPEG_file(jpg_path.c_str());
+                File::GetCreateTime(jpg_path.c_str(), &newest);
+            }
+            else
+            {
+                time_t time;
+                File::GetCreateTime(jpg_path.c_str(), &time);
+                if (time > newest)
+                {
+                    vita2d_free_texture(texture);
+                    texture = vita2d_load_JPEG_file(jpg_path.c_str());
+                    newest = time;
+                }
+            }
+        }
+    }
+
+    return texture;
 }

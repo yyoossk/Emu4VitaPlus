@@ -5,8 +5,6 @@
 #include "log.h"
 #include "emulator.h"
 
-#define STATE_SCREENSHOT_HEIGHT 96
-
 StateManager *gStateManager = nullptr;
 vita2d_texture *State::_empty_texture = nullptr;
 
@@ -36,6 +34,7 @@ void State::Init(const char *game_name)
     if (!File::Exist(path))
     {
         File::MakeDirs(path);
+        return;
     }
 
     snprintf(name, SCE_FIOS_PATH_MAX, "%s/state_%s.bin", path, _slot_name.c_str());
@@ -87,7 +86,7 @@ bool State::Save()
 END:
     delete[] buf;
 
-    result &= gEmulator->SaveScreenShot(_image_path.c_str(), STATE_SCREENSHOT_HEIGHT);
+    result &= gEmulator->SaveScreenShot(_image_path.c_str());
 
     if (result)
     {
@@ -190,4 +189,32 @@ void StateManager::Init(const char *name)
     {
         states[i]->Init(name);
     }
+}
+
+State *StateManager::GetNewest()
+{
+    State *newest = nullptr;
+    time_t newest_time;
+    for (auto state : states)
+    {
+        if (state->Valid())
+        {
+            if (newest == nullptr)
+            {
+                newest = state;
+                sceRtcGetTime_t(&state->CreateTime(), &newest_time);
+            }
+            else
+            {
+                time_t time;
+                sceRtcGetTime_t(&state->CreateTime(), &time);
+                if (time > newest_time)
+                {
+                    newest = state;
+                    newest_time = time;
+                }
+            }
+        }
+    }
+    return newest;
 }

@@ -11,6 +11,7 @@ public:
     ArcadeManager();
     virtual ~ArcadeManager();
     const char *GetCachedPath(const char *path);
+    bool NeedReplace(const char *path);
 
 private:
     void _Load();

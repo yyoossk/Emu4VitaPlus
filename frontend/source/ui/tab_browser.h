@@ -23,6 +23,7 @@ private:
     void _OnKeyStart(Input *input);
     void _UpdateTexture();
     void _UpdateStatus();
+    vita2d_texture *GetNewestStateScreenshot(const char *name);
 
     Directory *_directory;
     vita2d_texture *_texture;

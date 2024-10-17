@@ -5,6 +5,7 @@
 
 #define MAX_STATES 6
 #define AUTO_STATE_INDEX 0
+#define STATE_SCREENSHOT_HEIGHT 96
 
 class State
 {
@@ -38,6 +39,7 @@ struct StateManager
     StateManager();
     virtual ~StateManager();
     void Init(const char *name);
+    State *GetNewest();
     State *states[MAX_STATES];
 };
 

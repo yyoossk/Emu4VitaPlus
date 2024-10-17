@@ -59,7 +59,7 @@ public:
 
     void Reset();
 
-    uint32_t GetKeyStates() { return _last_key; };
+    const uint32_t &GetKeyStates() { return _last_key; };
     const AnalogAxis &GetLeftAnalogAxis() const { return _left; };
     const AnalogAxis &GetRightAnalogAxis() const { return _right; };
 

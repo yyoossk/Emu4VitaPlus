@@ -96,7 +96,7 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
     {
         _path = _archive_manager.GetCachedPath(crc32, path, entry_name);
     }
-    else if (_arcade_manager != nullptr)
+    else if (_arcade_manager != nullptr && _arcade_manager->NeedReplace(path))
     {
         _path = _arcade_manager->GetCachedPath(path);
     }
