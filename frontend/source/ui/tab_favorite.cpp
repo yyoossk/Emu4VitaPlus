@@ -4,8 +4,9 @@
 #include "config.h"
 #include "emulator.h"
 #include "video.h"
+#include "misc.h"
 
-TabFavorite::TabFavorite() : TabSeletable(TAB_FAVORITE)
+TabFavorite::TabFavorite() : TabSeletable(TAB_FAVORITE), _texture(nullptr)
 {
     std::string name = File::GetName(gConfig->last_rom.c_str());
     size_t count = 0;
@@ -20,6 +21,7 @@ TabFavorite::TabFavorite() : TabSeletable(TAB_FAVORITE)
     }
 
     _UpdateStatus();
+    _UpdateTexture();
 
     _dialog = new Dialog{DIALOG_REMOVE_FAVORITE,
                          {DIALOG_OK, DIALOG_CANCEL},
@@ -64,6 +66,11 @@ void TabFavorite::Show(bool selected)
         ImGui::ListBoxFooter();
 
         ImGui::NextColumn();
+        if (_texture != nullptr)
+        {
+            ImGui::Image(_texture, {_texture_width, _texture_height});
+        }
+
         ImGui::NextColumn();
         ImGui::EndChild();
 
@@ -90,6 +97,18 @@ void TabFavorite::UnsetInputHooks(Input *input)
 {
     TabSeletable::UnsetInputHooks(input);
     input->UnsetKeyUpCallback(SCE_CTRL_CROSS);
+}
+
+void TabFavorite::_OnKeyUp(Input *input)
+{
+    TabSeletable::_OnKeyUp(input);
+    _UpdateTexture();
+}
+
+void TabFavorite::_OnKeyDown(Input *input)
+{
+    TabSeletable::_OnKeyDown(input);
+    _UpdateTexture();
 }
 
 void TabFavorite::_OnActive(Input *input)
@@ -136,4 +155,37 @@ void TabFavorite::ChangeLanguage(uint32_t language)
 {
     LogFunctionName;
     _UpdateStatus();
+}
+
+void TabFavorite::_UpdateTexture()
+{
+    if (_texture != nullptr)
+    {
+        gVideo->Lock();
+        vita2d_wait_rendering_done();
+        vita2d_free_texture(_texture);
+        _texture = nullptr;
+        gVideo->Unlock();
+    }
+
+    if (gFavorites->size() == 0)
+    {
+        return;
+    }
+
+    auto iter = gFavorites->begin();
+    std::advance(iter, _index);
+    const Favorite &fav = iter->second;
+
+    _texture = GetRomPreviewImage(fav.path.c_str(), fav.item.name.c_str());
+
+    if (_texture)
+    {
+        CalcFitSize(vita2d_texture_get_width(_texture),
+                    vita2d_texture_get_height(_texture),
+                    BROWSER_TEXTURE_MAX_WIDTH,
+                    BROWSER_TEXTURE_MAX_HEIGHT,
+                    &_texture_width,
+                    &_texture_height);
+    }
 }

@@ -11,7 +11,6 @@ public:
     virtual void UnsetInputHooks(Input *input) override;
     void Show(bool selected);
     virtual void ChangeLanguage(uint32_t language) override;
-    virtual bool Visable() { return _visable; };
 
 private:
     size_t _GetItemCount() override { return _directory->GetSize(); };
@@ -23,7 +22,6 @@ private:
     void _OnKeyStart(Input *input);
     void _UpdateTexture();
     void _UpdateStatus();
-    vita2d_texture *GetNewestStateScreenshot(const char *name);
 
     Directory *_directory;
     vita2d_texture *_texture;

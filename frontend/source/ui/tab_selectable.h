@@ -18,7 +18,7 @@ public:
     bool ItemVisable(size_t index);
     void SetColumns(int columns);
     void SetIndex(size_t index);
-    bool Visable() override { return _visable && _items.size() > 0; };
+    bool Visable() override { return _visable && _GetItemCount() > 0; };
 
 protected:
     virtual void _OnKeyUp(Input *input);
