@@ -68,6 +68,11 @@ void TabFavorite::Show(bool selected)
         ImGui::NextColumn();
         if (_texture != nullptr)
         {
+            ImVec2 avail_size = ImGui::GetContentRegionAvail();
+            ImVec2 pos = ImGui::GetCursorScreenPos();
+            pos.x += ceilf(fmax(0.0f, (avail_size.x - _texture_width) * 0.5f));
+            pos.y += ceilf(fmax(0.0f, (avail_size.y - _texture_height) * 0.5f));
+            ImGui::SetCursorScreenPos(pos);
             ImGui::Image(_texture, {_texture_width, _texture_height});
         }
 

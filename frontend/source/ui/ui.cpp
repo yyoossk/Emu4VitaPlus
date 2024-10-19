@@ -89,6 +89,8 @@ void Ui::_InitImgui()
 
     ImGuiStyle *style = &ImGui::GetStyle();
     style->Colors[ImGuiCol_TitleBg] = style->Colors[ImGuiCol_TitleBgActive];
+    ImVec4 c = style->Colors[ImGuiCol_Tab];
+    style->Colors[ImGuiCol_Tab] = {c.x * 0.6, c.y * 0.6, c.z * 0.6, c.w};
 }
 
 void Ui::_DeinitImgui()
@@ -395,7 +397,6 @@ void Ui::_ShowBoot()
 void Ui::_ShowNormal()
 {
     _tabs[TAB_INDEX_FAVORITE]->SetVisable(gFavorites->size() > 0);
-
     if (ImGui::BeginTabBar("MyTabBar", ImGuiTabBarFlags_FittingPolicyScroll))
     {
         for (size_t i = 0; i < TAB_INDEX_COUNT; i++)
