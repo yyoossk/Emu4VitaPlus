@@ -31,7 +31,8 @@ Emulator::Emulator()
       _graphics_config_changed(false),
       _frame_count(0),
       _core_options_update_display_callback(nullptr),
-      _arcade_manager(nullptr)
+      _arcade_manager(nullptr),
+      _video_rotation(VIDEO_ROTATION_0)
 {
     sceKernelCreateLwMutex(&_run_mutex, "run_mutex", 0, 0, NULL);
     _InitArcadeManager();

@@ -19,6 +19,14 @@ struct Rect
     float height = 0.f;
 };
 
+enum VIDEO_ROTATION
+{
+    VIDEO_ROTATION_0 = 0,
+    VIDEO_ROTATION_90,
+    VIDEO_ROTATION_180,
+    VIDEO_ROTATION_270
+};
+
 class Emulator
 {
 public:
@@ -86,6 +94,7 @@ private:
     TextureBuf *_texture_buf;
     Rect _video_rect;
     bool _graphics_config_changed;
+    VIDEO_ROTATION _video_rotation;
 
     Audio _audio;
     Input _input;

@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdint.h>
+#include <math.h>
 #include "app.h"
 #include "emulator.h"
 #include "video.h"
@@ -50,6 +51,13 @@ bool EnvironmentCallback(unsigned cmd, void *data)
     case RETRO_ENVIRONMENT_SET_ROTATION:
         LogDebug("  cmd: RETRO_ENVIRONMENT_SET_ROTATION");
         LogDebug("  *data: %d", *(unsigned *)data);
+        if (gEmulator->_video_rotation != *(VIDEO_ROTATION *)data)
+        {
+
+            gEmulator->_video_rotation = *(VIDEO_ROTATION *)data;
+            gEmulator->ChangeGraphicsConfig();
+        }
+
         // TODO: Support Rotation
         break;
 
@@ -266,7 +274,7 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
                                 width, height,
                                 gEmulator->_video_rect.width / width,
                                 gEmulator->_video_rect.height / height,
-                                0.f);
+                                gEmulator->_video_rotation == VIDEO_ROTATION_90 ? M_PI : 0.f);
         gEmulator->_graphics_config_changed = false;
 
         gVideo->Unlock();
@@ -364,8 +372,16 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
 
     case RETRO_DEVICE_ANALOG:
     {
-        const AnalogAxis aa = index == RETRO_DEVICE_INDEX_ANALOG_LEFT ? gEmulator->_input.GetLeftAnalogAxis() : gEmulator->_input.GetRightAnalogAxis();
-        return id == RETRO_DEVICE_ID_ANALOG_X ? aa.x * 0x101 - 0x7fff : aa.y * 0x101 - 0x7fff;
+        if (gEmulator->_video_rotation == VIDEO_ROTATION_0)
+        {
+            const AnalogAxis aa = index == RETRO_DEVICE_INDEX_ANALOG_LEFT ? gEmulator->_input.GetLeftAnalogAxis() : gEmulator->_input.GetRightAnalogAxis();
+            return id == RETRO_DEVICE_ID_ANALOG_X ? aa.x * 0x101 - 0x8000 : aa.y * 0x101 - 0x8000;
+        }
+        else
+        {
+            const AnalogAxis aa = index == RETRO_DEVICE_INDEX_ANALOG_LEFT ? gEmulator->_input.GetRightAnalogAxis() : gEmulator->_input.GetLeftAnalogAxis();
+            return id == RETRO_DEVICE_ID_ANALOG_X ? -(aa.y * 0x101 - 0x7fff) : aa.x * 0x101 - 0x8000;
+        }
     }
     break;
 
