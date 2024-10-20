@@ -90,7 +90,9 @@ void Ui::_InitImgui()
     ImGuiStyle *style = &ImGui::GetStyle();
     style->Colors[ImGuiCol_TitleBg] = style->Colors[ImGuiCol_TitleBgActive];
     ImVec4 c = style->Colors[ImGuiCol_Tab];
-    style->Colors[ImGuiCol_Tab] = {c.x * 0.6, c.y * 0.6, c.z * 0.6, c.w};
+    style->Colors[ImGuiCol_Tab] = {c.x * 0.7, c.y * 0.7, c.z * 0.7, c.w};
+    c = style->Colors[ImGuiCol_TabActive];
+    style->Colors[ImGuiCol_TabActive] = {c.x * 1.2, c.y * 1.2, c.z * 1.2, c.w};
 }
 
 void Ui::_DeinitImgui()

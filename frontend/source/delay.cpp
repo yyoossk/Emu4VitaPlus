@@ -43,7 +43,6 @@ void Delay::Wait()
     }
     else
     {
-        // LogDebug("%lld %lld", current, _next_ms);
         _next_ms = current + _interval_ms;
     }
 }

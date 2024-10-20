@@ -85,6 +85,7 @@ void Emulator::Show()
             vita2d_draw_texture(tex, 0.f, 0.f);
         }
     }
+    _video_delay.Wait();
 }
 
 bool Emulator::GetCurrentSoftwareFramebuffer(retro_framebuffer *fb)

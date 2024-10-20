@@ -259,7 +259,9 @@ void Emulator::SetSpeed(double speed)
     LogFunctionName;
     LogDebug("  fps: %f", _av_info.timing.fps);
     _speed = speed;
-    _delay.SetInterval(1000000ull / (uint64_t)(_av_info.timing.fps * speed));
+    uint64_t interval = 1000000ull / (uint64_t)(_av_info.timing.fps * speed);
+    _delay.SetInterval(interval);
+    _video_delay.SetInterval(interval);
 }
 
 static void ConvertTextureToRGB888(vita2d_texture *texture, uint8_t *dst, size_t width = 0, size_t height = 0)

@@ -95,6 +95,7 @@ private:
     Rect _video_rect;
     bool _graphics_config_changed;
     VIDEO_ROTATION _video_rotation;
+    Delay _video_delay;
 
     Audio _audio;
     Input _input;
