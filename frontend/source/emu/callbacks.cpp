@@ -50,14 +50,17 @@ bool EnvironmentCallback(unsigned cmd, void *data)
     {
     case RETRO_ENVIRONMENT_SET_ROTATION:
         LogDebug("  cmd: RETRO_ENVIRONMENT_SET_ROTATION");
-        LogDebug("  *data: %d", *(unsigned *)data);
-        if (gEmulator->_video_rotation != *(VIDEO_ROTATION *)data)
         {
+            VIDEO_ROTATION *rotation = (VIDEO_ROTATION *)data;
+            LogDebug("  *data: %d", *rotation);
+            if (gEmulator->_video_rotation != *rotation)
+            {
 
-            gEmulator->_video_rotation = *(VIDEO_ROTATION *)data;
-            gEmulator->ChangeGraphicsConfig();
+                gEmulator->_video_rotation = *rotation;
+                gEmulator->ChangeGraphicsConfig();
+                gEmulator->_SetupKeys();
+            }
         }
-
         // TODO: Support Rotation
         break;
 
