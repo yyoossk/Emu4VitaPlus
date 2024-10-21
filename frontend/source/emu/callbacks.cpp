@@ -364,8 +364,7 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
         }
         else
         {
-            // gEmulator->_input.ClearKeyStates(gEmulator->_keys[id]);
-            return key_states & gEmulator->_keys[id];
+            return key_states & gEmulator->_keys[id] ? 1 : 0;
         }
     }
     break;
