@@ -292,7 +292,7 @@ static void ConvertTextureToRGB888(vita2d_texture *texture, uint8_t *dst, size_t
         break;
 
     case SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1RGB:
-        src_format = AV_PIX_FMT_ARGB;
+        src_format = AV_PIX_FMT_BGRA;
         break;
 
     case SCE_GXM_TEXTURE_FORMAT_U5U6U5_RGB:

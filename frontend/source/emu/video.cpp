@@ -143,7 +143,7 @@ void Emulator::_SetPixelFormat(retro_pixel_format format)
         break;
     }
 
-    LogDebug("  _video_pixel_format: %d", _video_pixel_format);
+    LogDebug("  _video_pixel_format: %d", format);
     if (_texture_buf != nullptr && old_format != _video_pixel_format)
     {
         delete _texture_buf;
