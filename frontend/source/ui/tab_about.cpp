@@ -102,12 +102,15 @@ void TabAbout::_InitTexts()
         "",
         TEXT(TAB_CORE),
         "https://gitee.com/yizhigai/libretro-fba-lite",
+        "https://github.com/libretro/FBNeo.git",
+        "https://github.com/libretro/fbalpha2012.git",
         "https://github.com/libretro/gpsp",
         "https://github.com/libretro/libretro-fceumm",
         "https://github.com/libretro/gambatte-libretro",
         "https://github.com/libretro/beetle-ngp-libretro",
         "https://github.com/libretro/beetle-pce-fast-libretro",
         "https://github.com/libretro/Genesis-Plus-GX",
+        "https://github.com/libretro/Genesis-Plus-GX-Wide.git",
         "https://github.com/libretro/beetle-supergrafx-libretro",
         "https://github.com/libretro/beetle-wswan-libretro",
         "https://github.com/libretro/nestopia",
@@ -117,10 +120,7 @@ void TabAbout::_InitTexts()
         "https://github.com/libretro/snes9x2005",
         "https://github.com/libretro/snes9x2010",
         "https://github.com/libretro/vba-next",
-        "https://github.com/libretro/FBNeo.git",
-        "https://github.com/libretro/fbalpha2012.git",
         "https://github.com/libretro/mgba.git",
-        "https://github.com/libretro/Genesis-Plus-GX-Wide.git",
     };
 }
 
