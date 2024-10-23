@@ -46,3 +46,10 @@ make
 
 # Scripts
 [Go](script/README.md)
+
+# Special thanks
+[yizhigai](https://gitee.com/yizhigai/Emu4Vita)
+
+[KyleBing](https://github.com/KyleBing/retro-game-console-icons)
+
+The developers of all open source software used in this project

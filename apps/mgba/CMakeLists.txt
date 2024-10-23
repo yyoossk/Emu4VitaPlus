@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 set(CORE_NAME "mgba")
 set(CORE_SHORT_NAME "mGBA")
 set(CORE_FULL_NAME "mGBA")
-set(CONSOLE "GBC")
+set(CONSOLE "GBA")
 
 if(TARGET ${CORE_NAME}_build)
   return()
@@ -19,7 +19,7 @@ set(SFO_TITLE_NAME "Emu4Vita++ (${CORE_FULL_NAME})")
 set(SFO_TITLE_ID "MGBA4VITA")
 
 set(CORE_ARGS platform=vita EXTERNAL_ZLIB=1)
-set(CORE_SOFTWARE "Nintendo - Game Boy Color")
+set(CORE_SOFTWARE "Nintendo - Game Boy Advance")
 
 set(PRIVATE_PKG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pkg)
 file(GLOB_RECURSE PKG_FILES ${PRIVATE_PKG_DIR}/*)
@@ -30,6 +30,6 @@ foreach(file ${PKG_FILES})
   list(APPEND PRIVATE_PKG_FILES FILE ${file} ${rel})
 endforeach()
 
-add_compile_definitions(MGBA_BUILD GBC_BUILD)
+add_compile_definitions(MGBA_BUILD GBA_BUILD)
 
 add_subdirectory(.. ${CMAKE_CURRENT_BINARY_DIR}/app)

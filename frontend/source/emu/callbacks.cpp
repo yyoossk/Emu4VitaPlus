@@ -13,6 +13,18 @@
 
 void RetroLog(retro_log_level level, const char *fmt, ...)
 {
+    static int disable = -1;
+    if (disable == -1)
+    {
+        disable = strcmp(CORE_FULL_NAME, "mGBA") == 0;
+        // mgba will output a large number of logs when running gba rom
+    }
+
+    if (disable)
+    {
+        return;
+    }
+
     LogFunctionName;
 
     va_list list;

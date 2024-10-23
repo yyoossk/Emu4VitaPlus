@@ -63,17 +63,10 @@ App::App() : _index(0)
                                       {"Genesis Plus GX Wide", "GenesisPlusGXWide"},
                                       {"PicoDrive", "PicoDrive"}}),
                 new CoreButton("GBA", {{"gpSP", "gpSP"},
-                                       {"VBA Next", "VBANext"}}),
-                new CoreButton("GBC", {{"Gambatte", "Gambatte"},
+                                       {"VBA Next", "VBANext"},
                                        {"mGBA", "mGBA"}}),
-                new CoreButton("PCE", {{"Mednafen PCE Fast", "MednafenPCEFast"},
-                                       {"Mednafen SuperGrafx", "MednafenPCESuperGrafx"}}),
-                new CoreButton("PS1", {{"PCSX ReARMed", "PCSXReARMed"}}),
-                new CoreButton("WSC", {{"Mednafen Wswan", "MednafenWswan"}}),
-                new CoreButton("NGP", {{"Mednafen NeoPop", "MednafenNgp"}}),
-                new CoreButton("ARC", {{"FBA Lite", "FBALite"},
-                                       {"FBA 2012", "FBA2012"},
-                                       {"FinalBurn Neo", "FBNeo"}})};
+                new CoreButton("GBC", {{"Gambatte", "Gambatte"}}),
+                new CoreButton("PCE", {{"Mednafen PCE Fast", "MednafenPCEFast"}, {"Mednafen SuperGrafx", "MednafenPCESuperGrafx"}}), new CoreButton("PS1", {{"PCSX ReARMed", "PCSXReARMed"}}), new CoreButton("WSC", {{"Mednafen Wswan", "MednafenWswan"}}), new CoreButton("NGP", {{"Mednafen NeoPop", "MednafenNgp"}}), new CoreButton("ARC", {{"FBA Lite", "FBALite"}, {"FBA 2012", "FBA2012"}, {"FinalBurn Neo", "FBNeo"}})};
 
     SetInputHooks(&_input);
 

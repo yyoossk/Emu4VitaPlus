@@ -104,11 +104,6 @@ bool Emulator::GetCurrentSoftwareFramebuffer(retro_framebuffer *fb)
     // LogDebug("GetCurrentSoftwareFramebuffer _texture_buf->Current() %08x", _texture_buf->Current());
     _soft_frame_buf_render = true;
     vita2d_texture *texture = _texture_buf->Current();
-    // if (texture == _current_tex)
-    // {
-    //     // LogWarn("same texture: %x %x", texture, _current_tex);
-    //     texture = _texture_buf->Next();
-    // }
 
     fb->data = vita2d_texture_get_datap(texture);
     fb->width = vita2d_texture_get_width(texture);

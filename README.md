@@ -44,3 +44,10 @@ make
 
 # 相关脚本
 [跳转](script/README.md)
+
+# 特别感谢
+[一直改](https://gitee.com/yizhigai/Emu4Vita)
+
+[KyleBing](https://github.com/KyleBing/retro-game-console-icons)
+
+以及本项目中用到的所有开源软件的开发者们
