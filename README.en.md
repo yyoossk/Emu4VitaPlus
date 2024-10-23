@@ -86,7 +86,7 @@ make
 ```
 
 # Scripts
-[Jmp](script/README.md)
+[Jmp](script/README.en.md)
 
 # Special thanks
 [yizhigai](https://gitee.com/yizhigai/Emu4Vita)
