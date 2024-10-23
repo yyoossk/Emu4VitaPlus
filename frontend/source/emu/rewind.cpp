@@ -141,7 +141,7 @@ void *RewindManager::_GetState()
 
     if (block->type == BLOCK_FULL)
     {
-        LogDebug("BLOCK_FULL %x %x", block, block->content);
+        // LogDebug("BLOCK_FULL %x %x", block, block->content);
         _blocks.Prev();
         return ((RewindFullContent *)block->content)->buf;
     }
@@ -151,7 +151,7 @@ void *RewindManager::_GetState()
     {
         return nullptr;
     }
-    LogDebug("BLOCK_DIFF %x %x", block, diff);
+    // LogDebug("BLOCK_DIFF %x %x", block, diff);
     _blocks.Prev();
     const uint8_t *buf = diff->GetBuf();
     const DiffArea *area = diff->areas;
@@ -168,15 +168,18 @@ void *RewindManager::_GetState()
 
 void RewindManager::_Rewind()
 {
-    void *data = _GetState();
+    if (_last_full_block != nullptr)
+    {
+        void *data = _GetState();
 
-    if (data == nullptr)
-    {
-        _last_full_block = nullptr;
-    }
-    else
-    {
-        _UnSerialize(data, _state_size);
+        if (data == nullptr)
+        {
+            _last_full_block = nullptr;
+        }
+        else
+        {
+            _UnSerialize(data, _state_size);
+        }
     }
 
     Signal();
