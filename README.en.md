@@ -34,13 +34,13 @@ PCE
   - [Mednafen SuperGrafx](https://github.com/libretro/beetle-supergrafx-libretro)
 
 PS1
-  -[PCSX ReARMed](https://github.com/libretro/pcsx_rearmed)
+  - [PCSX ReARMed](https://github.com/libretro/pcsx_rearmed)
 
 WSC
-  -[Mednafen Wonderswan](https://github.com/libretro/beetle-wswan-libretro)
+  - [Mednafen Wonderswan](https://github.com/libretro/beetle-wswan-libretro)
 
 NGP
-  -[Mednafen NeoPop](https://github.com/libretro/beetle-ngp-libretro)
+  - [Mednafen NeoPop](https://github.com/libretro/beetle-ngp-libretro)
 
 # Pre-Compilation Preparation
 ## Windows
@@ -86,7 +86,7 @@ make
 ```
 
 # Scripts
-[Go](script/README.md)
+[Jmp](script/README.md)
 
 # Special thanks
 [yizhigai](https://gitee.com/yizhigai/Emu4Vita)

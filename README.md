@@ -36,13 +36,13 @@ PCE
   - [Mednafen SuperGrafx](https://github.com/libretro/beetle-supergrafx-libretro)
 
 PS1
-  -[PCSX ReARMed](https://github.com/libretro/pcsx_rearmed)
+  - [PCSX ReARMed](https://github.com/libretro/pcsx_rearmed)
 
 WSC
-  -[Mednafen Wonderswan](https://github.com/libretro/beetle-wswan-libretro)
+  - [Mednafen Wonderswan](https://github.com/libretro/beetle-wswan-libretro)
 
 NGP
-  -[Mednafen NeoPop](https://github.com/libretro/beetle-ngp-libretro)
+  - [Mednafen NeoPop](https://github.com/libretro/beetle-ngp-libretro)
 
 # 编译前准备
 ## Windows
@@ -91,4 +91,4 @@ make
 
 [KyleBing](https://github.com/KyleBing/retro-game-console-icons)
 
-以及本项目中用到的所有开源软件的开发者们
+以及在本项目中用到的所有开源项目的开发者们
