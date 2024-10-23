@@ -20,7 +20,7 @@ void RetroLog(retro_log_level level, const char *fmt, ...)
         // mgba will output a large number of logs when running gba rom
     }
 
-    if (disable)
+    if (disable && gStatus.Get() == APP_STATUS_RUN_GAME)
     {
         return;
     }
@@ -70,7 +70,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
 
                 gEmulator->_video_rotation = *rotation;
                 gEmulator->ChangeGraphicsConfig();
-                gEmulator->_SetupKeys();
+                gEmulator->SetupKeys();
             }
         }
         // TODO: Support Rotation

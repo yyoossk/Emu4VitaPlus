@@ -211,19 +211,21 @@ bool Config::Save(const char *path)
     {
         ini.SetLongValue(PsvKeyStr.at(control.psv), "retro", control.retro);
         ini.SetBoolValue(PsvKeyStr.at(control.psv), "turbo", control.turbo);
+        // LogDebug("%d %s", control.psv, PsvKeyStr.at(control.psv));
     }
 
     for (size_t i = 0; i < HOT_KEY_COUNT; i++)
     {
-        ini.SetLongValue(HOTKEY_SECTION, HotkeyStr.at(i), hotkeys[i], nullptr, true);
+        ini.SetLongValue(HOTKEY_SECTION, HotkeyStr.at(i), hotkeys[i]);
     }
 
     for (size_t i = 0; i < GRAPHICS_CONFIG_COUNT; i++)
     {
         ini.SetLongValue(GRAPHICS_SECTION, GraphicsStr.at(i), graphics[i]);
+        // LogDebug("%d %s", i, GraphicsStr.at(i));
     }
 
-    return ini.SaveFile(path) == SI_OK && core_options.Save();
+    return ini.SaveFile(path, false) == SI_OK && core_options.Save();
 }
 
 bool Config::Load(const char *path)

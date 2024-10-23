@@ -60,5 +60,5 @@ bool Favorites::Save(const char *path)
         count++;
     }
 
-    return ini.SaveFile(path) == SI_OK;
+    return ini.SaveFile(path, false) == SI_OK;
 }

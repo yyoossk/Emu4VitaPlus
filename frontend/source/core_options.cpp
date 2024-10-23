@@ -181,30 +181,9 @@ bool CoreOptions::Save(const char *path)
         const char *key = iter.first.c_str();
         const CoreOption *option = &iter.second;
         ini.SetValue(CORE_SECTION, key, option->value.c_str());
-        // LogDebug("key %s", key);
-        // ini.SetValue(key, "desc", option->desc);
-        // LogDebug("desc %s", option->desc);
-        // ini.SetValue(key, "info", option->info);
-        // LogDebug("info %s", option->info);
-        // ini.SetValue(key, "default_value", option->default_value);
-        // LogDebug("default_value %s", option->default_value);
-
-        // for (auto vv : option->GetValues())
-        // {
-        //     LogDebug(" %s", vv.Get());
-        // }
-        // size_t count = 0;
-        // for (const auto &v : option->values)
-        // {
-        //     char vs[32];
-        //     snprintf(vs, 32, "value_%d", count);
-        //     ini.SetValue(key, vs, v.value);
-        //     count++;
-        // }
     }
 
-    File::Remove(path);
-    return ini.SaveFile(path) == SI_OK;
+    return ini.SaveFile(path, false) == SI_OK;
 }
 
 void CoreOptions::SetVisable(const struct retro_core_option_display *option_display)

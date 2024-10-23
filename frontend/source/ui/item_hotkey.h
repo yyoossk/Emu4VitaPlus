@@ -39,9 +39,9 @@ class ItemHotkey : public ItemSelectable
 public:
     ItemHotkey(HotKeyConfig index, uint32_t *hotkey)
         : ItemSelectable(index + HOTKEY_SAVESTATE),
-          _hotkey(hotkey){};
+          _hotkey(hotkey) {};
 
-    virtual ~ItemHotkey(){};
+    virtual ~ItemHotkey() {};
 
     void Show(bool selected) override
     {
@@ -137,7 +137,9 @@ private:
         {
             *_hotkey |= k;
         }
+
         gConfig->Save();
+        gEmulator->SetupKeys();
     };
 
     uint32_t *_hotkey;

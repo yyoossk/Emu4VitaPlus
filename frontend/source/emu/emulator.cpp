@@ -70,7 +70,7 @@ void Emulator::Init()
     retro_init();
     retro_get_system_info(&_info);
 
-    _SetupKeys();
+    SetupKeys();
 }
 
 bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)

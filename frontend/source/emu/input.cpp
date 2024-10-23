@@ -4,7 +4,7 @@
 #include "state_manager.h"
 #include "config.h"
 
-void Emulator::_SetupKeys()
+void Emulator::SetupKeys()
 {
     LogFunctionName;
     memset(_keys, 0, sizeof(_keys));

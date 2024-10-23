@@ -3,6 +3,7 @@
 #include "item_selectable.h"
 #include "config.h"
 #include "defines.h"
+#include "emulator.h"
 
 class ItemControl : public ItemSelectable
 {
@@ -56,6 +57,7 @@ private:
     {
         ItemSelectable::_OnClick(input);
         gConfig->Save();
+        gEmulator->SetupKeys();
     };
 
     ControlMapConfig *_control_map;
