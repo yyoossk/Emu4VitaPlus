@@ -6,13 +6,14 @@ macro(gen_arc_dat OUT_PATH)
     list(APPEND PRIVATE_PKG_FILES FILE ${ARC_DAT_PATH} ${rel})
 
     set(ARC_SCRIPT grab_arc_dat.py)
-    set(ARC_TAG ARC_DAT_BUILD)
+    set(ARC_TAG ${APP_NAME}_ARC_DAT)
+
     add_custom_command(
         OUTPUT
         ${ARC_DAT_PATH}
 
         COMMAND python ${ARC_SCRIPT}
-        COMMAND mv arcade_dat.bin ${ARC_DAT_PATH}
+        COMMAND cp arcade_dat.bin ${ARC_DAT_PATH}
 
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/script
 
