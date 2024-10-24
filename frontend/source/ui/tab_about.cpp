@@ -1,3 +1,5 @@
+#include <time.h>
+#include <stdlib.h>
 #include "tab_about.h"
 #include "language_string.h"
 #include "my_imgui.h"
@@ -5,30 +7,25 @@
 #include "utils.h"
 #include "config.h"
 
-static const char *AppTitle[] = {
-    // " _____                      ___  _   _  _  _                        ",
-    // "|  ___|                    /   || | | |(_)| |            _      _   ",
-    // "| |__   _ __ ___   _   _  / /| || | | | _ | |_   __ _  _| |_  _| |_ ",
-    // "|  __| | '_ ` _ \\ | | | |/ /_| || | | || || __| / _` ||_   _||_   _|",
-    // "| |___ | | | | | || |_| |\\___  |\\ \\_/ /| || |_ | (_| |  |_|    |_|  ",
-    // "\\____/ |_| |_| |_| \\__,_|    |_/ \\___/ |_| \\__| \\__,_|              ",
-};
-
-static const size_t AppTitleSize = sizeof(AppTitle) / sizeof(*AppTitle);
+#define TITLE_COUNT 7
+#define TITLE_WIDTH 940
+#define TITLE_HEIGHT 100
+#define INPUT_COUNT_MAX 10
 
 TabAbout::TabAbout() : TabBase(TAB_ABOUT),
-                       _index(0)
+                       _index(0),
+                       _input_count(0)
 {
     _InitTexts();
+    _title_texture = vita2d_load_PNG_file("app0:assets/emu4vita++.png");
+
+    time_t t;
+    srand((unsigned)time(&t));
+    _title_index = rand() % TITLE_COUNT;
 }
 
 TabAbout::~TabAbout()
 {
-}
-
-size_t TabAbout::_GetItemCount()
-{
-    return _texts.size() + AppTitleSize;
 }
 
 void TabAbout::Show(bool selected)
@@ -38,27 +35,37 @@ void TabAbout::Show(bool selected)
         _InitTexts();
     }
 
+    if (_input_count > INPUT_COUNT_MAX)
+    {
+        _input_count = 0;
+        int old = _title_index;
+        int index;
+        while ((index = rand() % TITLE_COUNT) == old)
+        {
+        }
+        _title_index = index;
+    }
+
     std::string title = std::string(TAB_ICONS[_title_id]) + TEXT(_title_id);
     if (ImGui::BeginTabItem(title.c_str(), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
     {
         ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
-        ImGui::BeginChild("ChildAbout", {0, 0}, false, window_flags);
-
-        for (size_t i = 0; i < AppTitleSize; i++)
+        if (_title_texture != nullptr)
         {
-            ImGui::TextUnformatted(AppTitle[i]);
-            if (i == _index && ImGui::GetScrollMaxY() > 0.f)
-            {
-                ImGui::SetScrollHereY((float)_index / (float)_GetItemCount());
-            }
+            ImGui::Image(_title_texture,
+                         {TITLE_WIDTH, TITLE_HEIGHT},
+                         {0, _title_index / TITLE_COUNT},
+                         {1, (_title_index + 1) / TITLE_COUNT});
         }
+
+        ImGui::BeginChild("ChildAbout", {0, 0}, false, window_flags);
 
         for (size_t i = 0; i < _texts.size(); i++)
         {
             My_Imgui_CenteredText(_texts[i].c_str());
-            if (i + AppTitleSize == _index && ImGui::GetScrollMaxY() > 0.f)
+            if (i == _index && ImGui::GetScrollMaxY() > 0.f)
             {
-                ImGui::SetScrollHereY((float)_index / (float)_GetItemCount());
+                ImGui::SetScrollHereY((float)_index / _texts.size());
             }
         }
 
@@ -126,10 +133,12 @@ void TabAbout::_InitTexts()
 
 void TabAbout::_OnKeyUp(Input *input)
 {
-    LOOP_MINUS_ONE(_index, _texts.size() + AppTitleSize);
+    LOOP_MINUS_ONE(_index, _texts.size());
+    _input_count++;
 }
 
 void TabAbout::_OnKeyDown(Input *input)
 {
-    LOOP_PLUS_ONE(_index, _texts.size() + AppTitleSize);
+    LOOP_PLUS_ONE(_index, _texts.size());
+    _input_count++;
 }
