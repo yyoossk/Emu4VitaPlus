@@ -105,6 +105,23 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         // case RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS:
         //     break;
 
+    case RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS");
+        {
+            retro_input_descriptor *descriptors = (retro_input_descriptor *)data;
+            while (descriptors != nullptr && descriptors->description != nullptr)
+            {
+                LogDebug("%d %d %d %d %s",
+                         descriptors->port,
+                         descriptors->device,
+                         descriptors->index,
+                         descriptors->id,
+                         descriptors->description);
+                descriptors++;
+            }
+        }
+        break;
+
     case RETRO_ENVIRONMENT_SET_DISK_CONTROL_INTERFACE:
         LogDebug("  cmd: RETRO_ENVIRONMENT_SET_DISK_CONTROL_INTERFACE");
         break;
