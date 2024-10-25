@@ -38,7 +38,7 @@ set(CORES
     mednafen_wswan
     pcsx_rearmed)
 
-set(BUILD_LIST "ALL" "Arch" ${CORES})
+set(BUILD_LIST "All" "Arch" ${CORES})
 string(REPLACE "|" " " BUILD_LIST_STR ${BUILD_LIST})
 set(BUILD "Arch" CACHE STRING ${BUILD_LIST_STR})
 set_property(CACHE BUILD PROPERTY STRINGS ${BUILD_LIST})
@@ -77,16 +77,19 @@ file(MAKE_DIRECTORY ${OUT_PATH})
 add_subdirectory(deps)
 add_subdirectory(share)
 add_subdirectory(frontend)
+include(script/title_image.cmake)
+
+gen_title_image()
 
 set(APP_VER "0.1")
 set(SFO_APP_VER "00.01")
 
 foreach(core ${CORES})
-    if(BUILD STREQUAL "ALL" OR BUILD STREQUAL "Arch" OR BUILD STREQUAL ${core})
+    if(BUILD STREQUAL "All" OR BUILD STREQUAL "Arch" OR BUILD STREQUAL ${core})
         add_subdirectory(apps/${core})
     endif()
 endforeach()
 
-if(BUILD STREQUAL "ALL" OR BUILD STREQUAL "Arch")
+if(BUILD STREQUAL "All" OR BUILD STREQUAL "Arch")
     add_subdirectory(arch)
 endif()

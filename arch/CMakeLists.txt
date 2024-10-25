@@ -155,8 +155,8 @@ add_custom_target(VPK_${APP_NAME} ALL
 
 if(${CMAKE_VERSION} VERSION_LESS "3.20.0")
     add_dependencies(${VPK_NAME} ${CORE_EBOOTS})
-    add_dependencies(VPK_${APP_NAME} ${VPK_NAME} ${ARC_TAG})
+    add_dependencies(VPK_${APP_NAME} ${VPK_NAME} ${ARC_TAG} TITLE_IMAGE_BUILD)
 else()
     add_dependencies(${VPK_NAME}-vpk ${CORE_EBOOTS})
-    add_dependencies(VPK_${APP_NAME} ${VPK_NAME}-vpk ${ARC_TAG})
+    add_dependencies(VPK_${APP_NAME} ${VPK_NAME}-vpk ${ARC_TAG} TITLE_IMAGE_BUILD)
 endif()

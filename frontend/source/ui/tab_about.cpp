@@ -106,6 +106,7 @@ void TabAbout::_InitTexts()
         "libretro-common (?) https://github.com/libretro/libretro-common",
         "libvita2d (MIT) https://github.com/xerpi/libvita2d",
         "libvita2d_ext (MIT) https://github.com/frangarcj/libvita2d_ext",
+        "imgui-vita2d (MIT) https://github.com/cy33hc/imgui-vita2d",
         "",
         TEXT(TAB_CORE),
         "https://gitee.com/yizhigai/libretro-fba-lite",
@@ -133,12 +134,18 @@ void TabAbout::_InitTexts()
 
 void TabAbout::_OnKeyUp(Input *input)
 {
-    LOOP_MINUS_ONE(_index, _texts.size());
+    if (_index > 0)
+    {
+        _index--;
+    }
     _input_count++;
 }
 
 void TabAbout::_OnKeyDown(Input *input)
 {
-    LOOP_PLUS_ONE(_index, _texts.size());
+    if (_index + 1 < _texts.size())
+    {
+        _index++;
+    }
     _input_count++;
 }

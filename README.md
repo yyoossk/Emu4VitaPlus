@@ -51,11 +51,15 @@ NGP
 * 安装 [vitasdk](https://vitasdk.org/)
 * 安装 cmake, python, ccache(可选)
   
-  `pacman -S cmake python python-pip [ccache]`
+  ```bash
+  pacman -S cmake python python-pip [ccache]
+  ```
 
-* 安装 [openpyxl](https://pypi.org/project/openpyxl/)
+* 安装 [openpyxl](https://pypi.org/project/openpyxl/), [pillow](https://pypi.org/project/pillow/)
 
-  `pip install openpyxl`
+  ```bash
+  pip3 install openpyxl pillow
+  ```
 
 ## Linux
 

@@ -53,10 +53,10 @@ NGP
   pacman -S cmake python python-pip [ccache]
   ```
 
-* Install [openpyxl](https://pypi.org/project/openpyxl/)
+* Install [openpyxl](https://pypi.org/project/openpyxl/), [pillow](https://pypi.org/project/pillow/)
 
   ```bash
-  pip install openpyxl
+  pip install openpyxl pillow
   ```
 
 ## Linux
