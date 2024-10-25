@@ -81,7 +81,7 @@ include(script/title_image.cmake)
 
 gen_title_image()
 
-set(APP_VER "0.1")
+set(APP_VER "0.01")
 set(SFO_APP_VER "00.01")
 
 foreach(core ${CORES})
