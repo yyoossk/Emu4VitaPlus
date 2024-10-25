@@ -3,6 +3,16 @@
 # Emu4Vita++
 这是一个在 PlayStation Vita 使用的, 基于 [Libretro API](https://github.com/libretro/libretro-common) 的模拟器前端。
 
+# [下载](releases)
+
+# 截屏
+![](screenshots/arch.jpg)
+![](screenshots/browser.jpg)
+![](screenshots/control.jpg)
+![](screenshots/hotkey.jpg)
+## [遮罩和着色器](GRAPHICS.md)
+
+
 # 支持的内核
 街机
   - [FinalBurn Lite](https://gitee.com/yizhigai/libretro-fba-lite)
@@ -87,8 +97,7 @@ cmake ../ -DBUILD=gpsp
 make
 ```
 
-# 相关脚本
-[跳转](script/README.md)
+# [相关脚本](script/README.md)
 
 # 特别感谢
 [一直改](https://gitee.com/yizhigai/Emu4Vita)

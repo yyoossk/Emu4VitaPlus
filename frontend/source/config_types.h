@@ -53,16 +53,6 @@ enum DisplayRotateConfig
     CONFIG_DISPLAY_ROTATE_COUNT,
 };
 
-enum GraphicsShaderConfig
-{
-    CONFIG_GRAPHICS_SHADER_DEFAULT = 0,
-    CONFIG_GRAPHICS_SHADER_LCD3X,
-    CONFIG_GRAPHICS_SHADER_SHARP_BILINEAR_SIMPLE,
-    CONFIG_GRAPHICS_SHADER_SHARP_BILINEAR,
-    CONFIG_GRAPHICS_SHADER_ADVANCED_AA,
-    CONFIG_GRAPHICS_SHADER_COUNT,
-};
-
 enum GraphicsSmooth
 {
     CONFIG_GRAPHICS_SMOOTHER_NO = 0,
@@ -88,13 +78,3 @@ enum GraphicsConfig
     GRAPHICS_OVERLAY,
     GRAPHICS_CONFIG_COUNT,
 };
-
-// struct GraphicsConfig
-// {
-//     DisplaySizeConfig size = CONFIG_DISPLAY_SIZE_FULL;
-//     DisplayRatioConfig ratio = CONFIG_DISPLAY_RATIO_BY_GAME_RESOLUTION;
-//     DisplayRotateConfig rotate = CONFIG_DISPLAY_ROTATE_DEFAULT;
-//     GraphicsShaderConfig shader = CONFIG_GRAPHICS_SHADER_DEFAULT;
-//     GraphicsSmooth smooth = CONFIG_GRAPHICS_SMOOTHER_NO;
-//     GraphicsOverlayModeConfig overlay_mode = CONFIG_GRAPHICS_OVERLAY_MODE_OVERLAY;
-// };
