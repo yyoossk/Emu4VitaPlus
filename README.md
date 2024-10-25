@@ -3,13 +3,14 @@
 # Emu4Vita++
 这是一个在 PlayStation Vita 使用的, 基于 [Libretro API](https://github.com/libretro/libretro-common) 的模拟器前端。
 
-# [下载](releases)
+# [下载](https://github.com/noword/Emu4VitaPlus/releases)
 
 # 截屏
 ![](screenshots/arch.jpg)
 ![](screenshots/browser.jpg)
 ![](screenshots/control.jpg)
 ![](screenshots/hotkey.jpg)
+
 ## [遮罩和着色器](GRAPHICS.md)
 
 
