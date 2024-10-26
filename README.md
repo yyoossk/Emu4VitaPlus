@@ -3,7 +3,8 @@
 # Emu4Vita++
 这是一个在 PlayStation Vita 使用的, 基于 [Libretro API](https://github.com/libretro/libretro-common) 的模拟器前端。
 
-# [下载](https://github.com/noword/Emu4VitaPlus/releases)
+# 下载
+[releases](https://github.com/noword/Emu4VitaPlus/releases)
 
 # 截屏
 ![](screenshots/arch.jpg)
@@ -98,7 +99,34 @@ cmake ../ -DBUILD=gpsp
 make
 ```
 
-# [相关脚本](script/README.md)
+# 相关脚本
+## 翻译
+
+```mermaid
+graph TD
+A[./to_exce.py] --> B{{编辑 language.xlsx 和 translation.xlsx}}
+B --> C[./to_json.py]
+```
+
+## 生成 shaders
+```bash
+./compile_shaders.py  #请自行在网上寻找 psp2cgc.exe
+```
+
+# 相关路径
+## 预览图
+程序会在 rom 目录下的 `.previews` 目录中自动寻找同名的 `jpg` 或 `png` 图片，如果未找到，则会搜寻即时存档的截图
+
+## 即时存档
+ux0:/data/EMU4VITAPLUS/[内核]/savestates/[rom]
+
+## 存档
+ux0:/data/EMU4VITAPLUS/[内核]/savefiles
+
+## BIOS
+ux0:/data/EMU4VITAPLUS/[内核]/system
+
+请自行将对应的 BIOS 文件复制到此目录中【重要】
 
 # 特别感谢
 [一直改](https://gitee.com/yizhigai/Emu4Vita)

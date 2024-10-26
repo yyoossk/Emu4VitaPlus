@@ -1,6 +1,17 @@
 # Emu4Vita++
 This is an emulator frontend for the PlayStation Vita, based on the [Libretro API](https://github.com/libretro/libretro-common).
 
+# Download
+[releases](https://github.com/noword/Emu4VitaPlus/releases)
+
+# Screenshots
+![](screenshots/arch.jpg)
+![](screenshots/browser.jpg)
+![](screenshots/control.jpg)
+![](screenshots/hotkey.jpg)
+
+## [overlay and shaders](GRAPHICS.md)
+
 # Supported Cores
 Arcade
   - [FinalBurn Lite](https://gitee.com/yizhigai/libretro-fba-lite)
@@ -86,7 +97,33 @@ make
 ```
 
 # Scripts
-[Jmp](script/README.en.md)
+## Translate
+
+```mermaid
+graph TD
+A[./to_exce.py] --> B{{Edit language.xlsx and translation.xlsx}}
+B --> C[./to_json.py]
+```
+
+## Generate shaders
+```bash
+./compile_shaders.py  # Please search for psp2cgc.exe on the Internet
+```
+
+# Paths
+## Priviews
+The program will automatically search for a `jpg` or `png` image with the same name in the `.previews` directory under the rom directory. If not found, it will search for the screenshots saved in instant state.
+
+## Instant State
+ux0:/data/EMU4VITAPLUS/[core]/savestates/[rom]
+
+## Save
+ux0:/data/EMU4VITAPLUS/[core]/savefiles
+
+## BIOS
+ux0:/data/EMU4VITAPLUS/[core]/system
+
+copy the corresponding BIOS file to this directory【IMPORTANT】
 
 # Special thanks
 [yizhigai](https://gitee.com/yizhigai/Emu4Vita)
