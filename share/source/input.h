@@ -15,6 +15,39 @@ const uint32_t SCE_CTRL_RSTICK_RIGHT = 0x08000000;
 const uint32_t SCE_CTRL_RSTICK_DOWN = 0x10000000;
 const uint32_t SCE_CTRL_RSTICK_LEFT = 0x20000000;
 
+// from https://shinmera.github.io/promptfont/
+#define BUTTON_LEFT "↞"
+#define BUTTON_UP "↟"
+#define BUTTON_RIGHT "↠"
+#define BUTTON_DOWN "↡"
+#define BUTTON_A "⇓"
+#define BUTTON_B "⇒"
+#define BUTTON_X "⇐"
+#define BUTTON_Y "⇑"
+#define BUTTON_L "↜"
+#define BUTTON_R "↝"
+#define BUTTON_L1 "↰"
+#define BUTTON_R1 "↱"
+#define BUTTON_L2 "↲"
+#define BUTTON_R2 "↳"
+#define BUTTON_L3 "⇋"
+#define BUTTON_R3 "⇌"
+#define BUTTON_SELECT "⇷"
+#define BUTTON_START "⇸"
+#define BUTTON_HOME ""
+#define BUTTON_LEFT_ANALOG_LEFT "↼"
+#define BUTTON_LEFT_ANALOG_UP "↾"
+#define BUTTON_LEFT_ANALOG_RIGHT "⇀"
+#define BUTTON_LEFT_ANALOG_DOWN "⇂"
+#define BUTTON_RIGHT_ANALOG_LEFT "↽"
+#define BUTTON_RIGHT_ANALOG_UP "↿"
+#define BUTTON_RIGHT_ANALOG_RIGHT "⇁"
+#define BUTTON_RIGHT_ANALOG_DOWN "⇃"
+#define BUTTON_CROSS "⇣"
+#define BUTTON_CIRCLE "⇢"
+#define BUTTON_SQUARE "⇠"
+#define BUTTON_TRIANGLE "⇡"
+
 #define DEFAULT_TURBO_INTERVAL 100000ull
 #define DEFAULT_TURBO_START_TIME 500000ull
 

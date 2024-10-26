@@ -19,6 +19,7 @@ int main(int argc, char *const argv[])
 #if LOG_LEVEL <= LOG_LEVEL_DEBUG
     gProfiler = new Profiler();
 #endif
+    LogInfo("Emu4Vita++ v%s", APP_VER_STR);
     LogInfo("updated on " __DATE__ " " __TIME__);
     LogDebug("Start");
     {

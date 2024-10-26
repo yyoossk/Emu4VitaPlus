@@ -81,8 +81,8 @@ include(script/title_image.cmake)
 
 gen_title_image()
 
-set(APP_VER "0.01")
-set(SFO_APP_VER "00.01")
+set(APP_VER "0.02")
+set(SFO_APP_VER "00.02")
 
 foreach(core ${CORES})
     if(BUILD STREQUAL "All" OR BUILD STREQUAL "Arch" OR BUILD STREQUAL ${core})

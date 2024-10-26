@@ -254,15 +254,15 @@ void TabBrowser::_UpdateStatus()
 
     const DirItem &item = _directory->GetItem(_index);
 
-    _status_text = TEXT(BUTTON_CIRCLE);
+    _status_text = BUTTON_CIRCLE;
     _status_text += item.is_dir ? TEXT(BROWSER_ENTER_DIR) : TEXT(BROWSER_START_GAME);
     _status_text += "\t";
-    _status_text += TEXT(BUTTON_CROSS);
+    _status_text += BUTTON_CROSS;
     _status_text += TEXT(BROWSER_BACK_DIR);
     _status_text += "\t";
     if (!item.is_dir)
     {
-        _status_text += TEXT(BUTTON_START);
+        _status_text += BUTTON_START;
         if (gFavorites->find(item.name) == gFavorites->end())
         {
             _status_text += TEXT(BROWSER_ADD_FAVORITE);

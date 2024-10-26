@@ -71,7 +71,7 @@ const std::unordered_map<uint32_t, const char *> Config::GraphicsStr = {
     KEY_PAIR(GRAPHICS_OVERLAY_MODE),
 };
 
-const std::unordered_map<uint32_t, TEXT_ENUM> Config::ControlTextMap = {
+const std::unordered_map<uint32_t, LanguageString> Config::ControlTextMap = {
     {SCE_CTRL_CROSS, BUTTON_CROSS},
     {SCE_CTRL_TRIANGLE, BUTTON_TRIANGLE},
     {SCE_CTRL_CIRCLE, BUTTON_CIRCLE},
@@ -99,7 +99,7 @@ const std::unordered_map<uint32_t, TEXT_ENUM> Config::ControlTextMap = {
     {SCE_CTRL_PSBUTTON, BUTTON_HOME},
 };
 
-const std::unordered_map<uint8_t, TEXT_ENUM> Config::RetroTextMap = {
+const std::unordered_map<uint8_t, LanguageString> Config::RetroTextMap = {
     {RETRO_DEVICE_ID_JOYPAD_B, BUTTON_B},
     {RETRO_DEVICE_ID_JOYPAD_Y, BUTTON_Y},
     {RETRO_DEVICE_ID_JOYPAD_SELECT, BUTTON_SELECT},

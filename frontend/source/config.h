@@ -47,9 +47,9 @@ public:
 
     static const std::unordered_map<uint32_t, const char *> PsvKeyStr;
     static const std::unordered_map<uint32_t, const char *> HotkeyStr;
-    static const std::unordered_map<uint32_t, TEXT_ENUM> ControlTextMap;
+    static const std::unordered_map<uint32_t, LanguageString> ControlTextMap;
     static const std::unordered_map<uint32_t, const char *> GraphicsStr;
-    static const std::unordered_map<uint8_t, TEXT_ENUM> RetroTextMap;
+    static const std::unordered_map<uint8_t, LanguageString> RetroTextMap;
 
 private:
 };

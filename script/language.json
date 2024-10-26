@@ -372,461 +372,244 @@
     },
     {
         "No.": "54",
-        "Tag": "BUTTON_LEFT",
-        "English": "↞",
-        "Chinese": "↞",
-        "Comments": ""
-    },
-    {
-        "No.": "55",
-        "Tag": "BUTTON_UP",
-        "English": "↟",
-        "Chinese": "↟",
-        "Comments": ""
-    },
-    {
-        "No.": "56",
-        "Tag": "BUTTON_RIGHT",
-        "English": "↠",
-        "Chinese": "↠",
-        "Comments": ""
-    },
-    {
-        "No.": "57",
-        "Tag": "BUTTON_DOWN",
-        "English": "↡",
-        "Chinese": "↡",
-        "Comments": ""
-    },
-    {
-        "No.": "58",
-        "Tag": "BUTTON_A",
-        "English": "⇓",
-        "Chinese": "⇓",
-        "Comments": ""
-    },
-    {
-        "No.": "59",
-        "Tag": "BUTTON_B",
-        "English": "⇒",
-        "Chinese": "⇒",
-        "Comments": ""
-    },
-    {
-        "No.": "60",
-        "Tag": "BUTTON_X",
-        "English": "⇐",
-        "Chinese": "⇐",
-        "Comments": ""
-    },
-    {
-        "No.": "61",
-        "Tag": "BUTTON_Y",
-        "English": "⇑",
-        "Chinese": "⇑",
-        "Comments": ""
-    },
-    {
-        "No.": "62",
-        "Tag": "BUTTON_L",
-        "English": "↜",
-        "Chinese": "↜",
-        "Comments": ""
-    },
-    {
-        "No.": "63",
-        "Tag": "BUTTON_R",
-        "English": "↝",
-        "Chinese": "↝",
-        "Comments": ""
-    },
-    {
-        "No.": "64",
-        "Tag": "BUTTON_L1",
-        "English": "↰",
-        "Chinese": "↰",
-        "Comments": ""
-    },
-    {
-        "No.": "65",
-        "Tag": "BUTTON_R1",
-        "English": "↱",
-        "Chinese": "↱",
-        "Comments": ""
-    },
-    {
-        "No.": "66",
-        "Tag": "BUTTON_L2",
-        "English": "↲",
-        "Chinese": "↲",
-        "Comments": ""
-    },
-    {
-        "No.": "67",
-        "Tag": "BUTTON_R2",
-        "English": "↳",
-        "Chinese": "↳",
-        "Comments": ""
-    },
-    {
-        "No.": "68",
-        "Tag": "BUTTON_L3",
-        "English": "⇋",
-        "Chinese": "⇋",
-        "Comments": ""
-    },
-    {
-        "No.": "69",
-        "Tag": "BUTTON_R3",
-        "English": "⇌",
-        "Chinese": "⇌",
-        "Comments": ""
-    },
-    {
-        "No.": "70",
-        "Tag": "BUTTON_SELECT",
-        "English": "⇷",
-        "Chinese": "⇷",
-        "Comments": ""
-    },
-    {
-        "No.": "71",
-        "Tag": "BUTTON_START",
-        "English": "⇸",
-        "Chinese": "⇸",
-        "Comments": ""
-    },
-    {
-        "No.": "72",
-        "Tag": "BUTTON_HOME",
-        "English": "",
-        "Chinese": "",
-        "Comments": ""
-    },
-    {
-        "No.": "73",
-        "Tag": "BUTTON_LEFT_ANALOG_LEFT",
-        "English": "↼",
-        "Chinese": "↼",
-        "Comments": ""
-    },
-    {
-        "No.": "74",
-        "Tag": "BUTTON_LEFT_ANALOG_UP",
-        "English": "↾",
-        "Chinese": "↾",
-        "Comments": ""
-    },
-    {
-        "No.": "75",
-        "Tag": "BUTTON_LEFT_ANALOG_RIGHT",
-        "English": "⇀",
-        "Chinese": "⇀",
-        "Comments": ""
-    },
-    {
-        "No.": "76",
-        "Tag": "BUTTON_LEFT_ANALOG_DOWN",
-        "English": "⇂",
-        "Chinese": "⇂",
-        "Comments": ""
-    },
-    {
-        "No.": "77",
-        "Tag": "BUTTON_RIGHT_ANALOG_LEFT",
-        "English": "↽",
-        "Chinese": "↽",
-        "Comments": ""
-    },
-    {
-        "No.": "78",
-        "Tag": "BUTTON_RIGHT_ANALOG_UP",
-        "English": "↿",
-        "Chinese": "↿",
-        "Comments": ""
-    },
-    {
-        "No.": "79",
-        "Tag": "BUTTON_RIGHT_ANALOG_RIGHT",
-        "English": "⇁",
-        "Chinese": "⇁",
-        "Comments": ""
-    },
-    {
-        "No.": "80",
-        "Tag": "BUTTON_RIGHT_ANALOG_DOWN",
-        "English": "⇃",
-        "Chinese": "⇃",
-        "Comments": ""
-    },
-    {
-        "No.": "81",
-        "Tag": "BUTTON_CROSS",
-        "English": "⇣",
-        "Chinese": "⇣",
-        "Comments": ""
-    },
-    {
-        "No.": "82",
-        "Tag": "BUTTON_CIRCLE",
-        "English": "⇢",
-        "Chinese": "⇢",
-        "Comments": ""
-    },
-    {
-        "No.": "83",
-        "Tag": "BUTTON_SQUARE",
-        "English": "⇠",
-        "Chinese": "⇠",
-        "Comments": ""
-    },
-    {
-        "No.": "84",
-        "Tag": "BUTTON_TRIANGLE",
-        "English": "⇡",
-        "Chinese": "⇡",
-        "Comments": ""
-    },
-    {
-        "No.": "85",
         "Tag": "TURBO",
         "English": "Turbo",
         "Chinese": "连发",
         "Comments": ""
     },
     {
-        "No.": "86",
+        "No.": "55",
         "Tag": "NONE",
         "English": "None",
         "Chinese": "无",
         "Comments": ""
     },
     {
-        "No.": "87",
+        "No.": "56",
         "Tag": "HOTKEY_SAVESTATE",
         "English": "Save state",
         "Chinese": "保存存档",
         "Comments": ""
     },
     {
-        "No.": "88",
+        "No.": "57",
         "Tag": "HOTKEY_LOADSTATE",
         "English": "Load state",
         "Chinese": "读取存档",
         "Comments": ""
     },
     {
-        "No.": "89",
+        "No.": "58",
         "Tag": "HOTKEY_GAME_SPEED_UP",
         "English": "Game speed up",
         "Chinese": "加速游戏",
         "Comments": ""
     },
     {
-        "No.": "90",
+        "No.": "59",
         "Tag": "HOTKEY_GAME_SPEED_DOWN",
         "English": "Game speed down",
         "Chinese": "减速游戏",
         "Comments": ""
     },
     {
-        "No.": "91",
+        "No.": "60",
         "Tag": "HOTKEY_GAME_REWIND",
         "English": "Game rewind",
         "Chinese": "回溯游戏",
         "Comments": ""
     },
     {
-        "No.": "92",
+        "No.": "61",
         "Tag": "HOTKEY_CONTROLLER_PORT_UP",
         "English": "Controller port +",
         "Chinese": "控制器端口+",
         "Comments": ""
     },
     {
-        "No.": "93",
+        "No.": "62",
         "Tag": "HOTKEY_CONTROLLER_PORT_DOWN",
         "English": "Controller port -",
         "Chinese": "控制器端口-",
         "Comments": ""
     },
     {
-        "No.": "94",
+        "No.": "63",
         "Tag": "HOTKEY_MENU_TOGGLE",
         "English": "Menu Toggle",
         "Chinese": "切换菜单",
         "Comments": ""
     },
     {
-        "No.": "95",
+        "No.": "64",
         "Tag": "HOTKEY_EXIT_GAME               ",
         "English": "Exit game",
         "Chinese": "退出游戏",
         "Comments": ""
     },
     {
-        "No.": "96",
+        "No.": "65",
         "Tag": "RESET_CONFIGS",
         "English": "Reset configs",
         "Chinese": "恢复默认设置",
         "Comments": ""
     },
     {
-        "No.": "97",
+        "No.": "66",
         "Tag": "COMPILED_ON",
         "English": "Compiled on",
         "Chinese": "编译于",
         "Comments": ""
     },
     {
-        "No.": "98",
+        "No.": "67",
         "Tag": "AUTHOR",
         "English": "Author",
         "Chinese": "作者",
         "Comments": ""
     },
     {
-        "No.": "99",
+        "No.": "68",
         "Tag": "SPECIAL_THANKS",
         "English": "Special Thanks",
         "Chinese": "特别感谢",
         "Comments": ""
     },
     {
-        "No.": "100",
+        "No.": "69",
         "Tag": "SITE",
         "English": "Site",
         "Chinese": "网址",
         "Comments": ""
     },
     {
-        "No.": "101",
+        "No.": "70",
         "Tag": "STATE_AUTO",
         "English": "Auto Save",
         "Chinese": "自动存档",
         "Comments": ""
     },
     {
-        "No.": "102",
+        "No.": "71",
         "Tag": "STATE_EMPTY",
         "English": "Empty",
         "Chinese": "空",
         "Comments": ""
     },
     {
-        "No.": "103",
+        "No.": "72",
         "Tag": "STATE_SAVE",
         "English": "Save",
         "Chinese": "保存",
         "Comments": ""
     },
     {
-        "No.": "104",
+        "No.": "73",
         "Tag": "STATE_LOAD",
         "English": "Load",
         "Chinese": "读取",
         "Comments": ""
     },
     {
-        "No.": "105",
+        "No.": "74",
         "Tag": "STATE_DELETE",
         "English": "Delete",
         "Chinese": "删除",
         "Comments": ""
     },
     {
-        "No.": "106",
+        "No.": "75",
         "Tag": "STATE_CANCEL",
         "English": "Cancel",
         "Chinese": "取消",
         "Comments": ""
     },
     {
-        "No.": "107",
+        "No.": "76",
         "Tag": "DIALOG_OK",
         "English": "OK",
         "Chinese": "确认",
         "Comments": ""
     },
     {
-        "No.": "108",
+        "No.": "77",
         "Tag": "DIALOG_CANCEL",
         "English": "Cancel",
         "Chinese": "取消",
         "Comments": ""
     },
     {
-        "No.": "109",
+        "No.": "78",
         "Tag": "DIALOG_SAVE_CONFIRM",
         "English": "Are you sure you want to overwrite this save state?",
         "Chinese": "你确定要覆盖这个存档吗？",
         "Comments": ""
     },
     {
-        "No.": "110",
+        "No.": "79",
         "Tag": "DIALOG_LOAD_CONFIRM",
         "English": "Are you sure you want to load this save state?",
         "Chinese": "你确定要载入这个存档吗？",
         "Comments": ""
     },
     {
-        "No.": "111",
+        "No.": "80",
         "Tag": "DIALOG_DELETE_CONFIRM",
         "English": "Are you sure you want to delete this save state?",
         "Chinese": "你确定要删除这个存档吗？",
         "Comments": ""
     },
     {
-        "No.": "112",
+        "No.": "81",
         "Tag": "DIALOG_REMOVE_FAVORITE",
         "English": "Are you sure you want to remove this game from your favorites?",
         "Chinese": "你确定要从收藏夹中移除此游戏吗？",
         "Comments": ""
     },
     {
-        "No.": "113",
+        "No.": "82",
         "Tag": "DIALOG_CLEAN_CACHE",
         "English": "Are you sure you want to clean the cached files?",
         "Chinese": "你确定要清理缓存文件吗？",
         "Comments": ""
     },
     {
-        "No.": "114",
+        "No.": "83",
         "Tag": "EXTERNAL_COMPONENTS",
         "English": "External components used by Emu4Vita++",
         "Chinese": "使用的外部组件",
         "Comments": ""
     },
     {
-        "No.": "115",
+        "No.": "84",
         "Tag": "BROWSER_ENTER_DIR",
         "English": "Enter dir ",
         "Chinese": "进入目录",
         "Comments": ""
     },
     {
-        "No.": "116",
+        "No.": "85",
         "Tag": "BROWSER_BACK_DIR",
         "English": "Back dir",
         "Chinese": "返回上级目标",
         "Comments": ""
     },
     {
-        "No.": "117",
+        "No.": "86",
         "Tag": "BROWSER_START_GAME",
         "English": "Start game",
         "Chinese": "开始游戏",
         "Comments": ""
     },
     {
-        "No.": "118",
+        "No.": "87",
         "Tag": "BROWSER_ADD_FAVORITE",
         "English": "Add to favorites",
         "Chinese": "添加到收藏夹",
         "Comments": ""
     },
     {
-        "No.": "119",
+        "No.": "88",
         "Tag": "BROWSER_REMOVE_FAVORITE",
         "English": "Remove from favorites",
         "Chinese": "移出收藏夹",

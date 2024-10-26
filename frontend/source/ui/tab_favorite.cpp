@@ -138,10 +138,10 @@ void TabFavorite::_OnKeyCross(Input *input)
 
 void TabFavorite::_UpdateStatus()
 {
-    _status_text = TEXT(BUTTON_CIRCLE);
+    _status_text = BUTTON_CIRCLE;
     _status_text += TEXT(BROWSER_START_GAME);
     _status_text += "\t";
-    _status_text += TEXT(BUTTON_CROSS);
+    _status_text += BUTTON_CROSS;
     _status_text += TEXT(BROWSER_REMOVE_FAVORITE);
 }
 

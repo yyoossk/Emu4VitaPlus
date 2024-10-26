@@ -33,7 +33,7 @@ private:
 
     const char *_GetOptionString(size_t index) override
     {
-        return TEXT(Config::RetroTextMap.at(RETRO_KEYS[index]));
+        return Config::RetroTextMap.at(RETRO_KEYS[index]).Get();
     };
 
     size_t _GetIndex() override
