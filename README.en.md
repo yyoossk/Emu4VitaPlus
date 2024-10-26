@@ -2,7 +2,9 @@
 This is an emulator frontend for the PlayStation Vita, based on the [Libretro API](https://github.com/libretro/libretro-common).
 
 # Download
-[releases](https://github.com/noword/Emu4VitaPlus/releases)
+[Release](https://github.com/noword/Emu4VitaPlus/releases)
+
+The version with log will output more logs in `ux0:data/EMU4VITAPLUS/[core]/Emu4Vita++.log`
 
 # Screenshots
 ![](screenshots/arch.jpg)

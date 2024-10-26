@@ -4,7 +4,11 @@
 这是一个在 PlayStation Vita 使用的, 基于 [Libretro API](https://github.com/libretro/libretro-common) 的模拟器前端。
 
 # 下载
-[releases](https://github.com/noword/Emu4VitaPlus/releases)
+[Release](https://github.com/noword/Emu4VitaPlus/releases)
+
+[百度网盘](https://pan.baidu.com/s/1chcOOw9G1GBtlkM9K4MtRg?pwd=E4VP)
+
+带log的版本会在 `ux0:data/EMU4VITAPLUS/[core]/Emu4Vita++.log` 中输出更多日志
 
 # 截屏
 ![](screenshots/arch.jpg)
