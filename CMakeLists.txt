@@ -38,7 +38,8 @@ set(CORES
     mednafen_wswan
     pcsx_rearmed
     stella2014
-    prosystem)
+    prosystem
+    atari800)
 
 set(BUILD_LIST "All" "Arch" ${CORES})
 string(REPLACE "|" " " BUILD_LIST_STR ${BUILD_LIST})

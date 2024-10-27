@@ -38,7 +38,8 @@ set(CORE_SHORTS
     MednafenWswan
     PCSXReARMed
     Stella2014
-    ProSystem)
+    ProSystem
+    Atari800)
 
 set(CORES
     gpsp
@@ -62,7 +63,8 @@ set(CORES
     mednafen_wswan
     pcsx_rearmed
     stella2014
-    prosystem)
+    prosystem
+    atari800)
 
 set(CORE_EBOOTS "")
 set(CORE_FILES "")

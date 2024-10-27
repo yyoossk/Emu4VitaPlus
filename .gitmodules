@@ -73,3 +73,6 @@
 [submodule "cores/prosystem-libretro"]
 	path = cores/prosystem-libretro
 	url = https://github.com/libretro/prosystem-libretro
+[submodule "cores/libretro-atari800"]
+	path = cores/libretro-atari800
+	url = https://github.com/libretro/libretro-atari800

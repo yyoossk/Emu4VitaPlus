@@ -56,6 +56,7 @@ App::App() : _index(0)
 
     _buttons = {
         new CoreButton("ATARI", {{"Stella 2014 (Atari 2600)", "Stella2014"},
+                                 {"Atari800 (Atari 5200)", "Atari800"},
                                  {"ProSystem (Atari 7800)", "ProSystem"}}),
         new CoreButton("NES", {{"FCEUmm", "FCEUmm"},
                                {"Nestopia", "Nestopia"}}),
