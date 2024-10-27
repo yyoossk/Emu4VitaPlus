@@ -36,7 +36,9 @@ set(CORE_SHORTS
     MednafenPCESuperGrafx
     MednafenNgp
     MednafenWswan
-    PCSXReARMed)
+    PCSXReARMed
+    Stella2014
+    ProSystem)
 
 set(CORES
     gpsp
@@ -58,7 +60,9 @@ set(CORES
     mednafen_supergrafx
     mednafen_ngp
     mednafen_wswan
-    pcsx_rearmed)
+    pcsx_rearmed
+    stella2014
+    prosystem)
 
 set(CORE_EBOOTS "")
 set(CORE_FILES "")
@@ -155,8 +159,8 @@ add_custom_target(VPK_${APP_NAME} ALL
 
 if(${CMAKE_VERSION} VERSION_LESS "3.20.0")
     add_dependencies(${VPK_NAME} ${CORE_EBOOTS})
-    add_dependencies(VPK_${APP_NAME} ${VPK_NAME} ${ARC_TAG} TITLE_IMAGE_BUILD)
+    add_dependencies(VPK_${APP_NAME} ${VPK_NAME} ${ARC_TAG})
 else()
     add_dependencies(${VPK_NAME}-vpk ${CORE_EBOOTS})
-    add_dependencies(VPK_${APP_NAME} ${VPK_NAME}-vpk ${ARC_TAG} TITLE_IMAGE_BUILD)
+    add_dependencies(VPK_${APP_NAME} ${VPK_NAME}-vpk ${ARC_TAG})
 endif()

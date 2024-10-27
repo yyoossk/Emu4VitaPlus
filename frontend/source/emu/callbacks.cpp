@@ -178,6 +178,11 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         gEmulator->SetSpeed(gEmulator->_speed);
         break;
 
+    case RETRO_ENVIRONMENT_SET_GEOMETRY:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_SET_GEOMETRY");
+        gEmulator->ChangeGraphicsConfig();
+        break;
+
     case RETRO_ENVIRONMENT_GET_LANGUAGE:
         LogDebug("  cmd: RETRO_ENVIRONMENT_GET_LANGUAGE");
         if (data)
@@ -268,14 +273,14 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
 
     if ((!data) || pitch == 0)
     {
-        LogDebug("video data is NULL");
-        gEmulator->_delay.Wait();
+        // LogDebug("video data is NULL");
+        // gEmulator->_delay.Wait();
         return;
     }
 
     if (width == 0 || height == 0)
     {
-        LogDebug("invalid size: %d %d", width, height);
+        LogDebug("  invalid size: %d %d", width, height);
         gEmulator->_delay.Wait();
         return;
     }
@@ -284,11 +289,12 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
     {
         if (gEmulator->_texture_buf)
         {
-            LogDebug("(%d, %d) (%d, %d)",
+            LogDebug("  old: (%d, %d) new: (%d, %d) aspect ratio: %0.4f",
                      gEmulator->_texture_buf->GetWidth(),
                      gEmulator->_texture_buf->GetHeight(),
                      width,
-                     height);
+                     height,
+                     gEmulator->_av_info.geometry.aspect_ratio);
         }
 
         gVideo->Lock();
@@ -347,7 +353,7 @@ size_t AudioSampleBatchCallback(const int16_t *data, size_t frames)
 {
     LogFunctionNameLimited;
 
-    if ((!gConfig->mute) && gStatus.Get() == APP_STATUS_RUN_GAME)
+    if (data && (!gConfig->mute) && gStatus.Get() == APP_STATUS_RUN_GAME)
     {
         BeginProfile("AudioSampleBatchCallback");
         gEmulator->_audio.SendAudioSample(data, frames);

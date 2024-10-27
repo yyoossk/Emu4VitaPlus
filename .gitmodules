@@ -1,69 +1,75 @@
 [submodule "cores/libretro-fba-lite"]
-path = cores/libretro-fba-lite
-url = https://gitee.com/yizhigai/libretro-fba-lite
+	path = cores/libretro-fba-lite
+	url = https://gitee.com/yizhigai/libretro-fba-lite
 [submodule "cores/gpsp"]
-path = cores/gpsp
-url = https://github.com/libretro/gpsp
+	path = cores/gpsp
+	url = https://github.com/libretro/gpsp
 [submodule "cores/libretro-fceumm"]
-path = cores/libretro-fceumm
-url = https://github.com/libretro/libretro-fceumm
+	path = cores/libretro-fceumm
+	url = https://github.com/libretro/libretro-fceumm
 [submodule "cores/gambatte-libretro"]
-path = cores/gambatte-libretro
-url = https://github.com/libretro/gambatte-libretro
+	path = cores/gambatte-libretro
+	url = https://github.com/libretro/gambatte-libretro
 [submodule "cores/beetle-ngp-libretro"]
-path = cores/beetle-ngp-libretro
-url = https://github.com/libretro/beetle-ngp-libretro
+	path = cores/beetle-ngp-libretro
+	url = https://github.com/libretro/beetle-ngp-libretro
 [submodule "cores/beetle-pce-fast-libretro"]
-path = cores/beetle-pce-fast-libretro
-url = https://github.com/libretro/beetle-pce-fast-libretro
+	path = cores/beetle-pce-fast-libretro
+	url = https://github.com/libretro/beetle-pce-fast-libretro
 [submodule "cores/Genesis-Plus-GX"]
-path = cores/Genesis-Plus-GX
-url = https://github.com/libretro/Genesis-Plus-GX
+	path = cores/Genesis-Plus-GX
+	url = https://github.com/libretro/Genesis-Plus-GX
 [submodule "cores/beetle-supergrafx-libretro"]
-path = cores/beetle-supergrafx-libretro
-url = https://github.com/libretro/beetle-supergrafx-libretro
+	path = cores/beetle-supergrafx-libretro
+	url = https://github.com/libretro/beetle-supergrafx-libretro
 [submodule "cores/beetle-wswan-libretro"]
-path = cores/beetle-wswan-libretro
-url = https://github.com/libretro/beetle-wswan-libretro
+	path = cores/beetle-wswan-libretro
+	url = https://github.com/libretro/beetle-wswan-libretro
 [submodule "cores/nestopia"]
-path = cores/nestopia
-url = https://github.com/libretro/nestopia
+	path = cores/nestopia
+	url = https://github.com/libretro/nestopia
 [submodule "cores/pcsx_rearmed"]
-path = cores/pcsx_rearmed
-url = https://github.com/libretro/pcsx_rearmed
+	path = cores/pcsx_rearmed
+	url = https://github.com/libretro/pcsx_rearmed
 [submodule "cores/picodrive"]
-path = cores/picodrive
-url = https://github.com/libretro/picodrive
+	path = cores/picodrive
+	url = https://github.com/libretro/picodrive
 [submodule "cores/snes9x2002"]
-path = cores/snes9x2002
-url = https://github.com/libretro/snes9x2002
+	path = cores/snes9x2002
+	url = https://github.com/libretro/snes9x2002
 [submodule "cores/snes9x2005"]
-path = cores/snes9x2005
-url = https://github.com/libretro/snes9x2005
+	path = cores/snes9x2005
+	url = https://github.com/libretro/snes9x2005
 [submodule "cores/snes9x2010"]
-path = cores/snes9x2010
-url = https://github.com/libretro/snes9x2010
+	path = cores/snes9x2010
+	url = https://github.com/libretro/snes9x2010
 [submodule "cores/vba-next"]
-path = cores/vba-next
-url = https://github.com/libretro/vba-next
+	path = cores/vba-next
+	url = https://github.com/libretro/vba-next
 [submodule "deps/libretro-common"]
-path = deps/libretro-common
-url = https://github.com/libretro/libretro-common
+	path = deps/libretro-common
+	url = https://github.com/libretro/libretro-common
 [submodule "deps/simpleini"]
-path = deps/simpleini
-url = https://github.com/brofield/simpleini
+	path = deps/simpleini
+	url = https://github.com/brofield/simpleini
 [submodule "deps/7-Zip"]
-path = deps/7-Zip
-url = https://github.com/mcmilk/7-Zip.git
+	path = deps/7-Zip
+	url = https://github.com/mcmilk/7-Zip.git
 [submodule "cores/libretro-fbneo"]
-path = cores/libretro-fbneo
-url = https://github.com/libretro/FBNeo.git
+	path = cores/libretro-fbneo
+	url = https://github.com/libretro/FBNeo.git
 [submodule "cores/fbalpha2012"]
-path = cores/fbalpha2012
-url = https://github.com/libretro/fbalpha2012.git
+	path = cores/fbalpha2012
+	url = https://github.com/libretro/fbalpha2012.git
 [submodule "cores/mgba"]
-path = cores/mgba
-url = https://github.com/libretro/mgba.git
+	path = cores/mgba
+	url = https://github.com/libretro/mgba.git
 [submodule "cores/Genesis-Plus-GX-Wide"]
 	path = cores/Genesis-Plus-GX-Wide
 	url = https://github.com/libretro/Genesis-Plus-GX-Wide.git
+[submodule "cores/stella2014-libretro"]
+	path = cores/stella2014-libretro
+	url = https://github.com/libretro/stella2014-libretro
+[submodule "cores/prosystem-libretro"]
+	path = cores/prosystem-libretro
+	url = https://github.com/libretro/prosystem-libretro

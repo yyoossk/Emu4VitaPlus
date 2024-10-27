@@ -5,7 +5,7 @@
 #include "log.h"
 #include "emulator.h"
 
-StateManager *gStateManager = nullptr;
+CoreStateManager *gStateManager = nullptr;
 vita2d_texture *State::_empty_texture = nullptr;
 
 State::State(const char *slot_name)
@@ -140,7 +140,7 @@ bool State::Remove()
     return result;
 }
 
-StateManager::StateManager()
+CoreStateManager::CoreStateManager()
 {
     LogFunctionName;
     states[0] = new State("auto");
@@ -169,7 +169,7 @@ StateManager::StateManager()
     }
 }
 
-StateManager::~StateManager()
+CoreStateManager::~CoreStateManager()
 {
     if (State::_empty_texture != nullptr)
     {
@@ -182,7 +182,7 @@ StateManager::~StateManager()
     }
 }
 
-void StateManager::Init(const char *name)
+void CoreStateManager::Init(const char *name)
 {
     states[0]->Init(name);
     for (int i = 1; i < MAX_STATES; i++)
@@ -191,7 +191,7 @@ void StateManager::Init(const char *name)
     }
 }
 
-State *StateManager::GetNewest()
+State *CoreStateManager::GetNewest()
 {
     State *newest = nullptr;
     time_t newest_time;

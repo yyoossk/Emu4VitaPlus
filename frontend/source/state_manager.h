@@ -22,7 +22,7 @@ public:
     const SceDateTime &CreateTime() { return _create_time; };
     vita2d_texture *Texture() { return _texture == nullptr ? _empty_texture : _texture; };
 
-    friend class StateManager;
+    friend class CoreStateManager;
 
 private:
     bool _valid;
@@ -34,13 +34,13 @@ private:
     static vita2d_texture *_empty_texture;
 };
 
-struct StateManager
+struct CoreStateManager
 {
-    StateManager();
-    virtual ~StateManager();
+    CoreStateManager();
+    virtual ~CoreStateManager();
     void Init(const char *name);
     State *GetNewest();
     State *states[MAX_STATES];
 };
 
-extern StateManager *gStateManager;
+extern CoreStateManager *gStateManager;

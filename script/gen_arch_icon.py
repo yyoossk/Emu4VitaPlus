@@ -3,7 +3,7 @@ from pathlib import Path
 
 for path in Path('icons').glob("*.png"):
     print(path)
-    dst = '../arch/pkg/data/' + str(path).replace('_', '/')
+    dst = '../arch/pkg/data/' + path.name.replace('_', '/')
     im = Image.open(path)
     w, h = im.size
     _im = im.resize((128, h * 128 // w))

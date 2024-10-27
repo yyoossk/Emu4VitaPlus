@@ -36,7 +36,9 @@ set(CORES
     mednafen_supergrafx
     mednafen_ngp
     mednafen_wswan
-    pcsx_rearmed)
+    pcsx_rearmed
+    stella2014
+    prosystem)
 
 set(BUILD_LIST "All" "Arch" ${CORES})
 string(REPLACE "|" " " BUILD_LIST_STR ${BUILD_LIST})
@@ -77,9 +79,6 @@ file(MAKE_DIRECTORY ${OUT_PATH})
 add_subdirectory(deps)
 add_subdirectory(share)
 add_subdirectory(frontend)
-include(script/title_image.cmake)
-
-gen_title_image()
 
 set(APP_VER "0.02")
 set(SFO_APP_VER "00.02")

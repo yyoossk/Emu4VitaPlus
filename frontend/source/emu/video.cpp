@@ -148,6 +148,8 @@ void Emulator::_SetPixelFormat(retro_pixel_format format)
 
 void Emulator::_SetVideoSize(uint32_t width, uint32_t height)
 {
+    LogFunctionName;
+
     if (gConfig->graphics[GRAPHICS_OVERLAY] > 0)
     {
         _video_rect.width = (*gOverlays)[gConfig->graphics[GRAPHICS_OVERLAY] - 1].viewport_width;
@@ -159,8 +161,12 @@ void Emulator::_SetVideoSize(uint32_t width, uint32_t height)
 
     switch (gConfig->graphics[DISPLAY_RATIO])
     {
+    case CONFIG_DISPLAY_RATIO_BY_GAME_RESOLUTION:
+        aspect_ratio = _av_info.geometry.aspect_ratio;
+        break;
+
     case CONFIG_DISPLAY_RATIO_BY_DEVICE_SCREEN:
-        aspect_ratio = (float)VITA_WIDTH / (float)VITA_HEIGHT;
+        aspect_ratio = (float)VITA_WIDTH / VITA_HEIGHT;
         break;
 
     case CONFIG_DISPLAY_RATIO_8_7:
@@ -179,7 +185,6 @@ void Emulator::_SetVideoSize(uint32_t width, uint32_t height)
         aspect_ratio = 16.f / 9.f;
         break;
 
-    case CONFIG_DISPLAY_RATIO_BY_GAME_RESOLUTION:
     default:
         break;
     }
@@ -217,6 +222,8 @@ void Emulator::_SetVideoSize(uint32_t width, uint32_t height)
 
     _video_rect.width = width;
     _video_rect.height = height;
+
+    LogDebug("  width: %d height:%d", width, height);
 }
 
 void Emulator::_SetVertices(float tex_x, float tex_y, float tex_w, float tex_h, float x_scale, float y_scale, float rad)

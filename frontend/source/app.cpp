@@ -69,7 +69,7 @@ App::App(int argc, char *const argv[])
     gEmulator->Init();
 
     gUi->AppendLog("Initialize state manager");
-    gStateManager = new StateManager();
+    gStateManager = new CoreStateManager();
 
     gUi->AppendLog("Initialize archive reader factory");
     gArchiveReaderFactory = new ArchiveReaderFactory();

@@ -12,7 +12,7 @@ JOBS = {
     'PS1': ('pcsx_rearmed',),
     'SNES': ('snes9x2002', 'snes9x2005', 'snes9x2010'),
     'WSC': ('mednafen_wswan',),
-    # 'N64': ('mupen64plus',),
+    'ATARI': ('stella2014', 'prosystem'),
 }
 
 for job, names in JOBS.items():

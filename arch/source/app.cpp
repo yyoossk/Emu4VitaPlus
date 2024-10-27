@@ -54,26 +54,29 @@ App::App() : _index(0)
     ImGuiStyle *style = &ImGui::GetStyle();
     style->Colors[ImGuiCol_TitleBg] = style->Colors[ImGuiCol_TitleBgActive];
 
-    _buttons = {new CoreButton("NES", {{"FCEUmm", "FCEUmm"},
-                                       {"Nestopia", "Nestopia"}}),
-                new CoreButton("SNES", {{"Snes9x 2002", "Snes9x2002"},
-                                        {"Snes9x 2005", "Snes9x2005"},
-                                        {"Snes9x 2010", "Snes9x2010"}}),
-                new CoreButton("MD", {{"Genesis Plus GX", "GenesisPlusGX"},
-                                      {"Genesis Plus GX Wide", "GenesisPlusGXWide"},
-                                      {"PicoDrive", "PicoDrive"}}),
-                new CoreButton("GBA", {{"gpSP", "gpSP"},
-                                       {"VBA Next", "VBANext"},
-                                       {"mGBA", "mGBA"}}),
-                new CoreButton("GBC", {{"Gambatte", "Gambatte"}}),
-                new CoreButton("PCE", {{"Mednafen PCE Fast", "MednafenPCEFast"},
-                                       {"Mednafen SuperGrafx", "MednafenPCESuperGrafx"}}),
-                new CoreButton("PS1", {{"PCSX ReARMed", "PCSXReARMed"}}),
-                new CoreButton("WSC", {{"Mednafen Wswan", "MednafenWswan"}}),
-                new CoreButton("NGP", {{"Mednafen NeoPop", "MednafenNgp"}}),
-                new CoreButton("ARC", {{"FBA Lite", "FBALite"},
-                                       {"FBA 2012", "FBA2012"},
-                                       {"FinalBurn Neo", "FBNeo"}})};
+    _buttons = {
+        new CoreButton("ATARI", {{"Stella 2014 (Atari 2600)", "Stella2014"},
+                                 {"ProSystem (Atari 7800)", "ProSystem"}}),
+        new CoreButton("NES", {{"FCEUmm", "FCEUmm"},
+                               {"Nestopia", "Nestopia"}}),
+        new CoreButton("SNES", {{"Snes9x 2002", "Snes9x2002"},
+                                {"Snes9x 2005", "Snes9x2005"},
+                                {"Snes9x 2010", "Snes9x2010"}}),
+        new CoreButton("MD", {{"Genesis Plus GX", "GenesisPlusGX"},
+                              {"Genesis Plus GX Wide", "GenesisPlusGXWide"},
+                              {"PicoDrive", "PicoDrive"}}),
+        new CoreButton("GBA", {{"gpSP", "gpSP"},
+                               {"VBA Next", "VBANext"},
+                               {"mGBA", "mGBA"}}),
+        new CoreButton("GBC", {{"Gambatte", "Gambatte"}}),
+        new CoreButton("PCE", {{"Mednafen PCE Fast", "MednafenPCEFast"},
+                               {"Mednafen SuperGrafx", "MednafenPCESuperGrafx"}}),
+        new CoreButton("PS1", {{"PCSX ReARMed", "PCSXReARMed"}}),
+        new CoreButton("WSC", {{"Mednafen Wswan", "MednafenWswan"}}),
+        new CoreButton("NGP", {{"Mednafen NeoPop", "MednafenNgp"}}),
+        new CoreButton("ARC", {{"FBA Lite", "FBALite"},
+                               {"FBA 2012", "FBA2012"},
+                               {"FinalBurn Neo", "FBNeo"}})};
 
     SetInputHooks(&_input);
 
