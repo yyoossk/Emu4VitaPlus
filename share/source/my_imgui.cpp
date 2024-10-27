@@ -37,6 +37,8 @@ const static ImWchar IconCharset[] = {0xe800, 0xe80c,
                                       0xf1de, 0xf1de,
                                       0x0000};
 
+const static ImWchar RomanNumCharset[] = {0x2160, 0x216c, 0x0000};
+
 static void matrix_init_orthographic(float *m,
                                      float left,
                                      float right,
@@ -258,6 +260,10 @@ void My_Imgui_Create_Font(uint32_t language, const char *cache_path)
                                  &font_config,
                                  glyph_ranges);
     font_config.MergeMode = true;
+    io.Fonts->AddFontFromFileTTF(APP_ASSETS_DIR "/" TEXT_FONT_NAME,
+                                 25.0f,
+                                 &font_config,
+                                 RomanNumCharset);
     io.Fonts->AddFontFromFileTTF(APP_ASSETS_DIR "/" GAMEPAD_FONT_NAME,
                                  26.0f,
                                  &font_config,

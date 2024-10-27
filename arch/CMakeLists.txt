@@ -39,7 +39,8 @@ set(CORE_SHORTS
     PCSXReARMed
     Stella2014
     ProSystem
-    Atari800)
+    Atari800
+    DOSBox)
 
 set(CORES
     gpsp
@@ -64,7 +65,8 @@ set(CORES
     pcsx_rearmed
     stella2014
     prosystem
-    atari800)
+    atari800
+    dosbox)
 
 set(CORE_EBOOTS "")
 set(CORE_FILES "")

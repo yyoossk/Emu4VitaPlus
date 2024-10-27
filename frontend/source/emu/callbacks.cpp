@@ -84,6 +84,14 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         }
         break;
 
+    case RETRO_ENVIRONMENT_SET_MESSAGE:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_SET_MESSAGE");
+        {
+            retro_message *message = (retro_message *)data;
+            LogDebug(message->msg);
+        }
+        break;
+
     case RETRO_ENVIRONMENT_SHUTDOWN:
         LogDebug("  cmd: RETRO_ENVIRONMENT_SHUTDOWN");
         gEmulator->UnloadGame();
@@ -190,6 +198,10 @@ bool EnvironmentCallback(unsigned cmd, void *data)
             *(retro_language *)data = gConfig->GetRetroLanguage();
             LogDebug("  retro_language:%d", *(retro_language *)data);
         }
+        break;
+
+    case RETRO_ENVIRONMENT_GET_FASTFORWARDING:
+        *(bool *)data = false;
         break;
 
     case RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION:

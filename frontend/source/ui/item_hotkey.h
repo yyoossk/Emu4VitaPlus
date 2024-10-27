@@ -109,11 +109,11 @@ private:
             {
                 if (s.size() == 0)
                 {
-                    s = Config::ControlTextMap.at(key).Get();
+                    s = Emu4Vita::Config::ControlTextMap.at(key).Get();
                 }
                 else
                 {
-                    s += std::string(" + ") + Config::ControlTextMap.at(key).Get();
+                    s += std::string(" + ") + Emu4Vita::Config::ControlTextMap.at(key).Get();
                 }
             }
         }
@@ -123,7 +123,7 @@ private:
 
     const char *_GetOptionString(size_t index) override
     {
-        return Config::ControlTextMap.at(PsvKeys[index]).Get();
+        return Emu4Vita::Config::ControlTextMap.at(PsvKeys[index]).Get();
     };
 
     void _OnClick(Input *input) override

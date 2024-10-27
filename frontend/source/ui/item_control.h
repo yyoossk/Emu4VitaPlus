@@ -9,7 +9,7 @@ class ItemControl : public ItemSelectable
 {
 public:
     ItemControl(ControlMapConfig *control_map)
-        : ItemSelectable(Config::ControlTextMap.at(control_map->psv)),
+        : ItemSelectable(Emu4Vita::Config::ControlTextMap.at(control_map->psv)),
           _control_map(control_map) {};
     virtual ~ItemControl() {};
 
@@ -33,7 +33,7 @@ private:
 
     const char *_GetOptionString(size_t index) override
     {
-        return Config::RetroTextMap.at(RETRO_KEYS[index]).Get();
+        return Emu4Vita::Config::RetroTextMap.at(RETRO_KEYS[index]).Get();
     };
 
     size_t _GetIndex() override

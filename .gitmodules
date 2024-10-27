@@ -76,3 +76,7 @@
 [submodule "cores/libretro-atari800"]
 	path = cores/libretro-atari800
 	url = https://github.com/libretro/libretro-atari800
+[submodule "cores/dosbox-svn"]
+	path = cores/dosbox-svn
+	url = https://github.com/libretro/dosbox-svn
+	branch = libretro

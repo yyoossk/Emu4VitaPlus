@@ -47,7 +47,7 @@ App::App(int argc, char *const argv[])
 
     _IsSaveMode();
 
-    gConfig = new Config();
+    gConfig = new Emu4Vita::Config();
 
     gVideo = new Video();
     gUi = new Ui();

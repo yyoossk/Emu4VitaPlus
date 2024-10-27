@@ -13,6 +13,7 @@ JOBS = {
     'SNES': ('snes9x2002', 'snes9x2005', 'snes9x2010'),
     'WSC': ('mednafen_wswan',),
     'ATARI': ('stella2014', 'prosystem'),
+    'DOS': ('dosbox',),
 }
 
 for job, names in JOBS.items():

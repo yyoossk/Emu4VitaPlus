@@ -77,7 +77,8 @@ App::App() : _index(0)
         new CoreButton("NGP", {{"Mednafen NeoPop", "MednafenNgp"}}),
         new CoreButton("ARC", {{"FBA Lite", "FBALite"},
                                {"FBA 2012", "FBA2012"},
-                               {"FinalBurn Neo", "FBNeo"}})};
+                               {"FinalBurn Neo", "FBNeo"}}),
+        new CoreButton("DOS", {{"DOS Box", "DOSBox"}})};
 
     SetInputHooks(&_input);
 
