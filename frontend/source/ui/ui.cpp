@@ -430,8 +430,6 @@ void Ui::_ShowNormal()
 
 void Ui::_ShowHint()
 {
-    LogFunctionName;
-
     ImGui_ImplVita2D_NewFrame();
     ImGui::SetMouseCursor(ImGuiMouseCursor_None);
 

@@ -189,7 +189,7 @@ void Emulator::_SetVideoSize(uint32_t width, uint32_t height)
         break;
     }
 
-    if (aspect_ratio > 0.f && (width / aspect_ratio) < height)
+    if (aspect_ratio > 0.f && width < (height * aspect_ratio))
     {
         width = height * aspect_ratio;
     }
@@ -212,7 +212,15 @@ void Emulator::_SetVideoSize(uint32_t width, uint32_t height)
 
     case CONFIG_DISPLAY_SIZE_FULL:
         width = VITA_HEIGHT * aspect_ratio;
-        height = VITA_HEIGHT;
+        if (width > VITA_WIDTH)
+        {
+            width = VITA_WIDTH;
+            height = VITA_WIDTH / aspect_ratio;
+        }
+        else
+        {
+            height = VITA_HEIGHT;
+        }
         break;
 
     case CONFIG_DISPLAY_SIZE_1X:

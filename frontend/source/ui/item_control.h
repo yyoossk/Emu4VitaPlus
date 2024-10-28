@@ -34,7 +34,7 @@ private:
 
     const char *_GetOptionString(size_t index) override
     {
-        return gInputDescriptors.Get(index);
+        return gInputDescriptors.Get(RETRO_KEYS[index]);
     };
 
     size_t _GetIndex() override

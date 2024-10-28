@@ -10,7 +10,7 @@
 #include "gb2312.i"
 
 #define APP_ASSETS_DIR "app0:assets"
-#define TEXT_FONT_NAME "wqy-microhei.ttf"
+#define TEXT_FONT_NAME "FZLantingHei.ttf"
 #define GAMEPAD_FONT_NAME "promptfont.ttf"
 #define ICON_FONT_NAME "fontello.ttf"
 #define FONT_CACHE_VERSION 1
