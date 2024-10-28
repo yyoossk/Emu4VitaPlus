@@ -15,6 +15,7 @@
 const char APP_DATA_DIR[] = _APP_DATA_DIR;
 const char APP_LOG_PATH[] = _APP_DATA_DIR "/Emu4Vita++.log";
 const char APP_CONFIG_PATH[] = _APP_DATA_DIR "/config.ini";
+const char APP_INPUT_DESC_PATH[] = _APP_DATA_DIR "/input_desc.ini";
 const char APP_CORE_CONFIG_PATH[] = _APP_DATA_DIR "/core.ini";
 const char APP_FAVOURITE_PATH[] = _APP_DATA_DIR "/favourite.ini";
 const char CORE_SYSTEM_DIR[] = _APP_DATA_DIR "/system";

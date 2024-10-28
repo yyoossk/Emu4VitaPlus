@@ -1,5 +1,6 @@
 #include "SimpleIni.h"
 #include "config.h"
+#include "file.h"
 #include "log.h"
 
 #define MAIN_SECTION "MAIN"

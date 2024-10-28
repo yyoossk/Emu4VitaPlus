@@ -8,6 +8,7 @@
 #include "config.h"
 #include "file.h"
 #include "profiler.h"
+#include "input_descriptor.h"
 
 #define CORE_OPTIONS_VERSION 2
 
@@ -116,19 +117,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
 
     case RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS:
         LogDebug("  cmd: RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS");
-        {
-            retro_input_descriptor *descriptors = (retro_input_descriptor *)data;
-            while (descriptors != nullptr && descriptors->description != nullptr)
-            {
-                LogDebug("%d %d %d %d %s",
-                         descriptors->port,
-                         descriptors->device,
-                         descriptors->index,
-                         descriptors->id,
-                         descriptors->description);
-                descriptors++;
-            }
-        }
+        gInputDescriptors.UpdateInputDescriptors((retro_input_descriptor *)data);
         break;
 
     case RETRO_ENVIRONMENT_SET_DISK_CONTROL_INTERFACE:

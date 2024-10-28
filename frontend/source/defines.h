@@ -14,6 +14,7 @@
 extern const char APP_DATA_DIR[];
 extern const char APP_LOG_PATH[];
 extern const char APP_CONFIG_PATH[];
+extern const char APP_INPUT_DESC_PATH[];
 extern const char APP_CORE_CONFIG_PATH[];
 extern const char APP_FAVOURITE_PATH[];
 extern const char CORE_SYSTEM_DIR[];

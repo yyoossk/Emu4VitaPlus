@@ -4,6 +4,7 @@
 #include "config.h"
 #include "defines.h"
 #include "emulator.h"
+#include "input_descriptor.h"
 
 class ItemControl : public ItemSelectable
 {
@@ -33,7 +34,7 @@ private:
 
     const char *_GetOptionString(size_t index) override
     {
-        return Emu4Vita::Config::RetroTextMap.at(RETRO_KEYS[index]).Get();
+        return gInputDescriptors.Get(index);
     };
 
     size_t _GetIndex() override
