@@ -89,6 +89,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         {
             retro_message *message = (retro_message *)data;
             LogDebug(message->msg);
+            gUi->SetHint(message->msg);
         }
         break;
 

@@ -1,5 +1,6 @@
 #include <SimpleIni.h>
 #include "favorite.h"
+#include "file.h"
 #include "log.h"
 
 Favorites *gFavorites = nullptr;
@@ -60,5 +61,6 @@ bool Favorites::Save(const char *path)
         count++;
     }
 
+    File::Remove(path);
     return ini.SaveFile(path, false) == SI_OK;
 }

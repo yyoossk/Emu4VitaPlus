@@ -183,6 +183,7 @@ bool CoreOptions::Save(const char *path)
         ini.SetValue(CORE_SECTION, key, option->value.c_str());
     }
 
+    File::Remove(path);
     return ini.SaveFile(path, false) == SI_OK;
 }
 

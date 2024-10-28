@@ -102,7 +102,10 @@ void Ui::_DeinitImgui()
     ImGui::DestroyContext();
 }
 
-Ui::Ui() : _tab_index(TAB_INDEX_BROWSER), _tabs{nullptr}
+Ui::Ui() : _tab_index(TAB_INDEX_BROWSER),
+           _tabs{nullptr},
+           _hint(""),
+           _hint_count(0)
 {
     LogFunctionName;
     _title = std::string("Emu4Vita++ (") + CORE_FULL_NAME + ") v" + APP_VER_STR;
@@ -357,6 +360,14 @@ void Ui::OnStatusChanged(APP_STATUS status)
     }
 }
 
+void Ui::SetHint(const char *s, int frame_count)
+{
+    LogFunctionName;
+    LogDebug("  %d %s", frame_count, s);
+    _hint = LanguageString(s);
+    _hint_count = frame_count;
+}
+
 void Ui::_ShowBoot()
 {
     static const char *frames[] = {"-",
@@ -417,25 +428,65 @@ void Ui::_ShowNormal()
     }
 }
 
+void Ui::_ShowHint()
+{
+    LogFunctionName;
+
+    ImGui_ImplVita2D_NewFrame();
+    ImGui::SetMouseCursor(ImGuiMouseCursor_None);
+
+    ImVec2 size = ImGui::CalcTextSize(_hint.Get());
+    float x = (VITA_WIDTH - size.x) / 2;
+    float y = VITA_HEIGHT - size.y - MAIN_WINDOW_PADDING;
+
+    ImGui::SetNextWindowPos({x - MAIN_WINDOW_PADDING, y - MAIN_WINDOW_PADDING});
+    ImGui::SetNextWindowSize({size.x + MAIN_WINDOW_PADDING * 2, size.y + MAIN_WINDOW_PADDING * 2});
+    ImGui::SetNextWindowBgAlpha(0.2);
+
+    ImGui::Begin("hint", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs);
+
+    ImGui::SetCursorPos({10, 10});
+    ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
+    ImGui::TextWrapped(_hint.Get());
+    ImGui::PopStyleColor();
+
+    ImGui::End();
+    ImGui::Render();
+    My_ImGui_ImplVita2D_RenderDrawData(ImGui::GetDrawData());
+}
+
 void Ui::Show()
 {
     LogFunctionNameLimited;
     // vita2d_set_clip_rectangle(0, 0, VITA_WIDTH, VITA_HEIGHT);
 
-    ImGui_ImplVita2D_NewFrame();
-    ImGui::SetMouseCursor(ImGuiMouseCursor_None);
-    ImGui::SetNextWindowPos({MAIN_WINDOW_PADDING, MAIN_WINDOW_PADDING});
-    ImGui::SetNextWindowSize({VITA_WIDTH - MAIN_WINDOW_PADDING * 2, VITA_HEIGHT - MAIN_WINDOW_PADDING * 2});
+    APP_STATUS status = gStatus.Get();
 
-    ImGui::Begin(_title.c_str(), NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs);
-    Utils::ShowTimePower();
+    if (((status & (APP_STATUS_BOOT | APP_STATUS_SHOW_UI | APP_STATUS_SHOW_UI_IN_GAME)) != 0))
+    {
+        ImGui_ImplVita2D_NewFrame();
+        ImGui::SetMouseCursor(ImGuiMouseCursor_None);
+        ImGui::SetNextWindowPos({MAIN_WINDOW_PADDING, MAIN_WINDOW_PADDING});
+        ImGui::SetNextWindowSize({VITA_WIDTH - MAIN_WINDOW_PADDING * 2, VITA_HEIGHT - MAIN_WINDOW_PADDING * 2});
 
-    (gStatus.Get() == APP_STATUS_BOOT) ? _ShowBoot() : _ShowNormal();
+        ImGui::Begin(_title.c_str(), NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs);
+        Utils::ShowTimePower();
 
-    ImGui::End();
-    ImGui::Render();
-    My_ImGui_ImplVita2D_RenderDrawData(ImGui::GetDrawData());
+        (status == APP_STATUS_BOOT) ? _ShowBoot() : _ShowNormal();
 
+        ImGui::End();
+        ImGui::Render();
+        My_ImGui_ImplVita2D_RenderDrawData(ImGui::GetDrawData());
+    }
+    else if (_hint_count > 0 && ((status & (APP_STATUS_RUN_GAME | APP_STATUS_REWIND_GAME)) != 0))
+    {
+        _ShowHint();
+    }
+
+    if (_hint_count > 0)
+    {
+        _hint_count--;
+    }
     return;
 }
 

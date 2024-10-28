@@ -76,6 +76,16 @@ namespace Utils
         }
     }
 
+    void TrimString(std::string *s)
+    {
+        s->erase(s->begin(), std::find_if(s->begin(), s->end(), [](unsigned char ch)
+                                          { return !std::isspace(ch); }));
+        s->erase(std::find_if(s->rbegin(), s->rend(), [](unsigned char ch)
+                              { return !std::isspace(ch); })
+                     .base(),
+                 s->end());
+    }
+
     int Utf16leToUtf8(uint16_t utf16_char, char *utf8_char)
     {
         if (utf16_char < 0x80)

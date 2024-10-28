@@ -42,5 +42,6 @@ bool Config::Save(const char *path)
 
     CSimpleIniA ini;
     ini.SetValue(MAIN_SECTION, "last_core", last_core.c_str());
+    File::Remove(path);
     return ini.SaveFile(path, false) == SI_OK;
 }

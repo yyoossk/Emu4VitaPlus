@@ -228,6 +228,7 @@ namespace Emu4Vita
             // LogDebug("%d %s", i, GraphicsStr.at(i));
         }
 
+        File::Remove(path);
         return ini.SaveFile(path, false) == SI_OK && core_options.Save();
     }
 

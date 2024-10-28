@@ -55,7 +55,7 @@ TEXTS = '\n'.join(TEXTS)
 TRANS = ',\n'.join(TRANS)
 
 # Generate language_define.h
-with open('language_define.h', 'w') as fp:
+with open('language_define.h', 'w', encoding='utf-8') as fp:
     fp.write(
         f'''#ifndef LANGUAGE_DEFINE
 #define LANGUAGE_DEFINE
@@ -82,7 +82,7 @@ extern std::unordered_map<std::string, TRANS> gTrans;
     )
 
 # Generate language_define.cpp
-with open('language_define.cpp', 'w') as fp:
+with open('language_define.cpp', 'w', encoding='utf-8') as fp:
     fp.write(
         f'''#include "language_define.h"
 

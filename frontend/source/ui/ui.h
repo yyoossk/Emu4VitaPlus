@@ -2,6 +2,7 @@
 #include <psp2/kernel/threadmgr.h>
 #include <vector>
 #include <string>
+#include <language_string.h>
 #include "emulator.h"
 #include "input.h"
 #include "tab_base.h"
@@ -26,6 +27,7 @@ public:
     void ChangeLanguage();
     void UpdateCheatOptions();
     void OnStatusChanged(APP_STATUS status);
+    void SetHint(const char *s, int frame_count = 120);
 
 private:
     void
@@ -40,6 +42,7 @@ private:
 
     void _ShowBoot();
     void _ShowNormal();
+    void _ShowHint();
 
     void _ClearTabs();
 
@@ -52,6 +55,9 @@ private:
     std::vector<std::string> _logs;
     Dialog *_dialog;
     int _current_dialog;
+
+    LanguageString _hint;
+    int _hint_count;
 };
 
 extern Ui *gUi;

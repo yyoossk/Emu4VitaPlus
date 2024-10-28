@@ -56,6 +56,7 @@ int Video::_DrawThread(SceSize args, void *argp)
         case APP_STATUS_REWIND_GAME:
             BeginProfile("Video");
             gEmulator->Show();
+            gUi->Show();
             EndProfile("Video");
             break;
 
