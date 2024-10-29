@@ -3,6 +3,8 @@
 #include "language_string.h"
 #include "defines.h"
 
+#define INPUT_DESC_COUNT 16
+
 class InputDescriptor
 {
 public:
@@ -11,6 +13,7 @@ public:
 
     const char *Get() { return _full.c_str(); };
     void Update() { _full = _icon + " " + _desc.Get(); };
+    const char *GetDesc() { return _desc.GetOriginal(); };
 
     void SetDescription(const char *desc)
     {
@@ -30,12 +33,13 @@ public:
     InputDescriptors();
     virtual ~InputDescriptors();
     void UpdateInputDescriptors(const retro_input_descriptor *descriptors);
+    void Update();
     const char *Get(int index);
     bool Load(const char *path = APP_INPUT_DESC_PATH);
     bool Save(const char *path = APP_INPUT_DESC_PATH);
 
 private:
-    InputDescriptor _descriptors[16];
+    InputDescriptor _descriptors[INPUT_DESC_COUNT];
 };
 
 extern InputDescriptors gInputDescriptors;

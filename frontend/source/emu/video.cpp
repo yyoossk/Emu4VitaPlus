@@ -149,6 +149,7 @@ void Emulator::_SetPixelFormat(retro_pixel_format format)
 void Emulator::_SetVideoSize(uint32_t width, uint32_t height)
 {
     LogFunctionName;
+    LogDebug(" %d %d %f", _av_info.geometry.base_width, _av_info.geometry.base_height, _av_info.geometry.aspect_ratio);
 
     if (gConfig->graphics[GRAPHICS_OVERLAY] > 0)
     {
@@ -161,10 +162,6 @@ void Emulator::_SetVideoSize(uint32_t width, uint32_t height)
 
     switch (gConfig->graphics[DISPLAY_RATIO])
     {
-    case CONFIG_DISPLAY_RATIO_BY_GAME_RESOLUTION:
-        aspect_ratio = _av_info.geometry.aspect_ratio;
-        break;
-
     case CONFIG_DISPLAY_RATIO_BY_DEVICE_SCREEN:
         aspect_ratio = (float)VITA_WIDTH / VITA_HEIGHT;
         break;
@@ -185,17 +182,22 @@ void Emulator::_SetVideoSize(uint32_t width, uint32_t height)
         aspect_ratio = 16.f / 9.f;
         break;
 
+    case CONFIG_DISPLAY_RATIO_BY_GAME_RESOLUTION:
     default:
-        break;
-    }
+        if (_av_info.geometry.aspect_ratio <= 0.f)
+        {
+            aspect_ratio = (float)_av_info.geometry.base_width / _av_info.geometry.base_height;
+        }
+        else
+        {
+            aspect_ratio = _av_info.geometry.aspect_ratio;
+        }
 
-    if (aspect_ratio > 0.f && width < (height * aspect_ratio))
-    {
-        width = height * aspect_ratio;
-    }
-    else
-    {
-        aspect_ratio = (float)width / (float)height;
+        if (_video_rotation == VIDEO_ROTATION_90)
+        {
+            aspect_ratio = 1.f / aspect_ratio;
+        }
+        break;
     }
 
     switch (gConfig->graphics[DISPLAY_SIZE])

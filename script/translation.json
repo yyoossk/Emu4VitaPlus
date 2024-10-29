@@ -778,5 +778,533 @@
         "English": "Selects device to use for Zapper games.",
         "Chinese": "Selects device to use for Zapper games.",
         "Comments": ""
+    },
+    {
+        "No.": "131",
+        "English": "Turbo A",
+        "Chinese": "A 连发",
+        "Comments": ""
+    },
+    {
+        "No.": "132",
+        "English": "Turbo B",
+        "Chinese": "B 连发",
+        "Comments": ""
+    },
+    {
+        "No.": "133",
+        "English": "Select",
+        "Chinese": "选择",
+        "Comments": ""
+    },
+    {
+        "No.": "134",
+        "English": "Start",
+        "Chinese": "开始",
+        "Comments": ""
+    },
+    {
+        "No.": "135",
+        "English": "D-Pad Up",
+        "Chinese": "方向键 上",
+        "Comments": ""
+    },
+    {
+        "No.": "136",
+        "English": "D-Pad Down",
+        "Chinese": "方向键 下",
+        "Comments": ""
+    },
+    {
+        "No.": "137",
+        "English": "D-Pad Left",
+        "Chinese": "方向键 左",
+        "Comments": ""
+    },
+    {
+        "No.": "138",
+        "English": "D-Pad Right",
+        "Chinese": "方向键 右",
+        "Comments": ""
+    },
+    {
+        "No.": "139",
+        "English": "L",
+        "Chinese": "左肩键",
+        "Comments": ""
+    },
+    {
+        "No.": "140",
+        "English": "R",
+        "Chinese": "右肩键",
+        "Comments": ""
+    },
+    {
+        "No.": "141",
+        "English": "Coin",
+        "Chinese": "投币",
+        "Comments": ""
+    },
+    {
+        "No.": "142",
+        "English": "Up",
+        "Chinese": "上",
+        "Comments": ""
+    },
+    {
+        "No.": "143",
+        "English": "Down",
+        "Chinese": "下",
+        "Comments": ""
+    },
+    {
+        "No.": "144",
+        "English": "Left",
+        "Chinese": "左",
+        "Comments": ""
+    },
+    {
+        "No.": "145",
+        "English": "Right",
+        "Chinese": "右",
+        "Comments": ""
+    },
+    {
+        "No.": "146",
+        "English": "Attack",
+        "Chinese": "攻击",
+        "Comments": ""
+    },
+    {
+        "No.": "147",
+        "English": "Jump",
+        "Chinese": "跳跃",
+        "Comments": ""
+    },
+    {
+        "No.": "148",
+        "English": "Mode Switch",
+        "Chinese": "模式切换",
+        "Comments": ""
+    },
+    {
+        "No.": "149",
+        "English": "Run",
+        "Chinese": "运行",
+        "Comments": ""
+    },
+    {
+        "No.": "150",
+        "English": "Option",
+        "Chinese": "选项",
+        "Comments": ""
+    },
+    {
+        "No.": "151",
+        "English": "X Cursor Left",
+        "Chinese": "X光标 左",
+        "Comments": ""
+    },
+    {
+        "No.": "152",
+        "English": "X Cursor Up",
+        "Chinese": "X光标 上",
+        "Comments": ""
+    },
+    {
+        "No.": "153",
+        "English": "X Cursor Down",
+        "Chinese": "X光标 下",
+        "Comments": ""
+    },
+    {
+        "No.": "154",
+        "English": "X Cursor Right",
+        "Chinese": "X光标 右",
+        "Comments": ""
+    },
+    {
+        "No.": "155",
+        "English": "Y Cursor Left",
+        "Chinese": "Y光标 左",
+        "Comments": ""
+    },
+    {
+        "No.": "156",
+        "English": "Y Cursor Up",
+        "Chinese": "Y光标 上",
+        "Comments": ""
+    },
+    {
+        "No.": "157",
+        "English": "Y Cursor Down",
+        "Chinese": "Y光标 下",
+        "Comments": ""
+    },
+    {
+        "No.": "158",
+        "English": "Y Cursor Right",
+        "Chinese": "Y光标 右",
+        "Comments": ""
+    },
+    {
+        "No.": "159",
+        "English": "Rotate screen + active D-Pad",
+        "Chinese": "旋转屏幕 + 激活方向键",
+        "Comments": ""
+    },
+    {
+        "No.": "160",
+        "English": "Emulated Mouse X Axis",
+        "Chinese": "仿真鼠标 X 轴",
+        "Comments": ""
+    },
+    {
+        "No.": "161",
+        "English": "Emulated Mouse Y Axis",
+        "Chinese": "仿真鼠标 Y 轴",
+        "Comments": ""
+    },
+    {
+        "No.": "162",
+        "English": "Emulated Mouse Left Click",
+        "Chinese": "仿真鼠标左键",
+        "Comments": ""
+    },
+    {
+        "No.": "163",
+        "English": "Emulated Mouse Right Click",
+        "Chinese": "仿真鼠标右键",
+        "Comments": ""
+    },
+    {
+        "No.": "164",
+        "English": "Emulated Mouse Slow Down",
+        "Chinese": "仿真鼠标减速",
+        "Comments": ""
+    },
+    {
+        "No.": "165",
+        "English": "Emulated Mouse Speed Up",
+        "Chinese": "仿真鼠标加速",
+        "Comments": ""
+    },
+    {
+        "No.": "166",
+        "English": "Button 1",
+        "Chinese": "按键 1",
+        "Comments": ""
+    },
+    {
+        "No.": "167",
+        "English": "Button 2",
+        "Chinese": "按键 2",
+        "Comments": ""
+    },
+    {
+        "No.": "168",
+        "English": "Button 3",
+        "Chinese": "按键 3",
+        "Comments": ""
+    },
+    {
+        "No.": "169",
+        "English": "Button 4",
+        "Chinese": "按键 4",
+        "Comments": ""
+    },
+    {
+        "No.": "170",
+        "English": "Left Analog X",
+        "Chinese": "左摇杆 X",
+        "Comments": ""
+    },
+    {
+        "No.": "171",
+        "English": "Left Analog Y",
+        "Chinese": "左摇杆 Y",
+        "Comments": ""
+    },
+    {
+        "No.": "172",
+        "English": "Fast Forward",
+        "Chinese": "快进",
+        "Comments": ""
+    },
+    {
+        "No.": "173",
+        "English": "Prev. Internal Palette",
+        "Chinese": "上一个内部调色板",
+        "Comments": ""
+    },
+    {
+        "No.": "174",
+        "English": "Next Internal Palette",
+        "Chinese": "下一个内部调色板",
+        "Comments": ""
+    },
+    {
+        "No.": "175",
+        "English": "Mode",
+        "Chinese": "模式",
+        "Comments": ""
+    },
+    {
+        "No.": "176",
+        "English": "Switch Palette (+ Left/Right)",
+        "Chinese": "切换调色板 (+左/右）",
+        "Comments": ""
+    },
+    {
+        "No.": "177",
+        "English": "(VSSystem) Insert Coin",
+        "Chinese": "(VSSystem) 投币",
+        "Comments": ""
+    },
+    {
+        "No.": "178",
+        "English": "(FDS) Disk Side Change",
+        "Chinese": "(FDS) 磁盘换面",
+        "Comments": ""
+    },
+    {
+        "No.": "179",
+        "English": "(FDS) Insert/Eject Disk",
+        "Chinese": "(FDS) 插入/弹出磁盘",
+        "Comments": ""
+    },
+    {
+        "No.": "180",
+        "English": "Turbo R",
+        "Chinese": "右肩键 连发",
+        "Comments": ""
+    },
+    {
+        "No.": "181",
+        "English": "Turbo L",
+        "Chinese": "左肩键 连发",
+        "Comments": ""
+    },
+    {
+        "No.": "182",
+        "English": "Brighten Solar Sensor",
+        "Chinese": "增亮太阳能传感器",
+        "Comments": ""
+    },
+    {
+        "No.": "183",
+        "English": "Darken Solar Sensor",
+        "Chinese": "减暗太阳能传感器",
+        "Comments": ""
+    },
+    {
+        "No.": "184",
+        "English": "(VSSystem) Coin 1",
+        "Chinese": "(VSSystem) 投币 1",
+        "Comments": ""
+    },
+    {
+        "No.": "185",
+        "English": "(VSSystem) Coin 2",
+        "Chinese": "(VSSystem) 投币 2",
+        "Comments": ""
+    },
+    {
+        "No.": "186",
+        "English": "(Famicom) Microphone",
+        "Chinese": "(Famicom) 麦克风",
+        "Comments": ""
+    },
+    {
+        "No.": "187",
+        "English": "Cross",
+        "Chinese": "⇓",
+        "Comments": ""
+    },
+    {
+        "No.": "188",
+        "English": "Circle",
+        "Chinese": "⇒",
+        "Comments": ""
+    },
+    {
+        "No.": "189",
+        "English": "Triangle",
+        "Chinese": "⇑",
+        "Comments": ""
+    },
+    {
+        "No.": "190",
+        "English": "Square",
+        "Chinese": "⇐",
+        "Comments": ""
+    },
+    {
+        "No.": "191",
+        "English": "Right Analog X",
+        "Chinese": "右摇杆 X",
+        "Comments": ""
+    },
+    {
+        "No.": "192",
+        "English": "Right Analog Y",
+        "Chinese": "右摇杆 Y",
+        "Comments": ""
+    },
+    {
+        "No.": "193",
+        "English": "Gun Trigger",
+        "Chinese": "枪械扳机",
+        "Comments": ""
+    },
+    {
+        "No.": "194",
+        "English": "Gun Reload",
+        "Chinese": "枪械装填",
+        "Comments": ""
+    },
+    {
+        "No.": "195",
+        "English": "Gun Aux A",
+        "Chinese": "枪械辅助 A",
+        "Comments": ""
+    },
+    {
+        "No.": "196",
+        "English": "Gun Aux B",
+        "Chinese": "枪械辅助 B",
+        "Comments": ""
+    },
+    {
+        "No.": "197",
+        "English": "Gun Start",
+        "Chinese": "枪械开始",
+        "Comments": ""
+    },
+    {
+        "No.": "198",
+        "English": "D-Pad Left (violet)",
+        "Chinese": "方向键 左 （紫）",
+        "Comments": ""
+    },
+    {
+        "No.": "199",
+        "English": "D-Pad Up (white)",
+        "Chinese": "方向键 上 （白）",
+        "Comments": ""
+    },
+    {
+        "No.": "200",
+        "English": "D-Pad Down (orange)",
+        "Chinese": "方向键 下 （橙）",
+        "Comments": ""
+    },
+    {
+        "No.": "201",
+        "English": "D-Pad Right (green)",
+        "Chinese": "方向键 右 （绿）",
+        "Comments": ""
+    },
+    {
+        "No.": "202",
+        "English": "Red Button",
+        "Chinese": "红色按键",
+        "Comments": ""
+    },
+    {
+        "No.": "203",
+        "English": "Pen Button",
+        "Chinese": "Pen Button",
+        "Comments": ""
+    },
+    {
+        "No.": "204",
+        "English": "Pen State",
+        "Chinese": "Pen State",
+        "Comments": ""
+    },
+    {
+        "No.": "205",
+        "English": "Pen on Storyware",
+        "Chinese": "Pen on Storyware",
+        "Comments": ""
+    },
+    {
+        "No.": "206",
+        "English": "Pen on Pad",
+        "Chinese": "Pen on Pad",
+        "Comments": ""
+    },
+    {
+        "No.": "207",
+        "English": "Previous Page",
+        "Chinese": "上一页",
+        "Comments": ""
+    },
+    {
+        "No.": "208",
+        "English": "Next Page",
+        "Chinese": "下一页",
+        "Comments": ""
+    },
+    {
+        "No.": "209",
+        "English": "Button 1 Start",
+        "Chinese": "按键 1 开始",
+        "Comments": ""
+    },
+    {
+        "No.": "210",
+        "English": "Button Pause",
+        "Chinese": "暂停按键",
+        "Comments": ""
+    },
+    {
+        "No.": "211",
+        "English": "Console Reset",
+        "Chinese": "重置",
+        "Comments": ""
+    },
+    {
+        "No.": "212",
+        "English": "Console Select",
+        "Chinese": "选择",
+        "Comments": ""
+    },
+    {
+        "No.": "213",
+        "English": "Console Pause",
+        "Chinese": "暂停按键",
+        "Comments": ""
+    },
+    {
+        "No.": "214",
+        "English": "Left Difficulty",
+        "Chinese": "左难度",
+        "Comments": ""
+    },
+    {
+        "No.": "215",
+        "English": "Right Difficulty",
+        "Chinese": "右难度",
+        "Comments": ""
+    },
+    {
+        "No.": "216",
+        "English": "(Dual Stick) P2 X-Axis",
+        "Chinese": "(Dual Stick) P2 X-Axis",
+        "Comments": ""
+    },
+    {
+        "No.": "217",
+        "English": "(Dual Stick) P2 Y-Axis",
+        "Chinese": "(Dual Stick) P2 Y-Axis",
+        "Comments": ""
+    },
+    {
+        "No.": "218",
+        "English": "Black/White",
+        "Chinese": "黑/白",
+        "Comments": ""
     }
 ]

@@ -564,6 +564,7 @@ void Ui::ChangeLanguage()
     {
         tab->ChangeLanguage(gConfig->language);
     }
+    gInputDescriptors.Update();
     gVideo->Unlock();
     gConfig->Save();
 }

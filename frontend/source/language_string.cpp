@@ -27,4 +27,14 @@ const char *const LanguageString::Get() const
     {
         return iter->second[gConfig->language - 1];
     }
-};
+}
+
+const char *const LanguageString::GetOriginal() const
+{
+    if (_text_id != INVALID_TEXT_ENUM)
+    {
+        return _text_id < TEXT_COUNT ? gTexts[0][_text_id] : "Unknown";
+    }
+
+    return _string.c_str();
+}

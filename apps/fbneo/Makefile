@@ -616,11 +616,11 @@ CXXFLAGS += $(fpic) $(FBNEO_DEFINES)
 LDFLAGS += $(fpic)
 
 ifeq (,$(findstring msvc,$(platform)))
-	# CFLAGS += -fforce-addr  \
-	CFLAGS += 	-Wall -Wno-long-long -Wno-sign-compare -Wno-uninitialized -Wno-unused \
+	CFLAGS += -fforce-addr  \
+		-Wall -Wno-long-long -Wno-sign-compare -Wno-uninitialized -Wno-unused \
 		-Wno-sequence-point -Wno-strict-aliasing
-	# CXXFLAGS += -fforce-addr \
-	CFLAGS += 	-Wall -W -Wshadow -Wno-long-long -Wno-write-strings \
+	CXXFLAGS += -fforce-addr \
+		-Wall -W -Wshadow -Wno-long-long -Wno-write-strings \
 		-Wunknown-pragmas -Wundef -Wno-conversion -Wno-missing-braces -Wno-multichar \
 		-Wuninitialized -Wpointer-arith -Wno-inline -Wno-unused-value \
 		-Wno-sequence-point -Wno-extra -Wno-strict-aliasing
