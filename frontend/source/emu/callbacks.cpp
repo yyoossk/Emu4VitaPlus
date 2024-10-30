@@ -388,12 +388,14 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
         {
             // gEmulator->_input.ClearKeyStates(gEmulator->_keys_mask);
             int16_t state = 0;
+            int16_t key = 1;
             for (size_t i = 0; i < 16; i++)
             {
                 if (key_states & gEmulator->_keys[i])
                 {
-                    state |= (1 << i);
+                    state |= key;
                 }
+                key <<= 1;
             }
 
             return state;

@@ -3,6 +3,7 @@
 #include "log.h"
 #include "video.h"
 #include "defines.h"
+#include "utils.h"
 
 Overlays *gOverlays;
 
@@ -73,16 +74,9 @@ bool Overlays::Load(const char *path)
         Overlay overlay;
         overlay.name = section.pItem;
         overlay.image_name = ini.GetValue(section.pItem, "image_name", "NULL");
+        Utils::StripQuotes(&overlay.image_name);
         overlay.viewport_width = ini.GetLongValue(section.pItem, "viewport_width");
-        if (overlay.viewport_width == 0)
-        {
-            continue;
-        }
         overlay.viewport_height = ini.GetLongValue(section.pItem, "viewport_height");
-        if (overlay.viewport_height == 0)
-        {
-            continue;
-        }
         overlay.viewport_rotate = ini.GetLongValue(section.pItem, "viewport_rotate");
         overlay.viewport_x = ini.GetLongValue(section.pItem, "viewport_x");
         overlay.viewport_y = ini.GetLongValue(section.pItem, "viewport_y");

@@ -121,6 +121,9 @@ B --> C[./to_json.py]
 ## 预览图
 程序会在 rom 目录下的 `.previews` 目录中自动寻找同名的 `jpg` 或 `png` 图片，如果未找到，则会搜寻即时存档的截图
 
+# 遮罩
+程序会读取 ux0:/data/EMU4VITAPLUS/[内核]/overlays 下的 overlays.ini
+
 ## 即时存档
 ux0:/data/EMU4VITAPLUS/[内核]/savestates/[rom]
 
