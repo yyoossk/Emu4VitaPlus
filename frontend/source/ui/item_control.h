@@ -24,6 +24,8 @@ public:
     void OnOption(Input *input) override
     {
         _control_map->turbo = !_control_map->turbo;
+        gConfig->Save();
+        gEmulator->SetupKeys();
     };
 
 private:

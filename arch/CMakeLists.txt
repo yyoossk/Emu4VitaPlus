@@ -139,10 +139,10 @@ target_link_libraries(
 set(VITA_MAKE_FSELF_FLAGS "-a 0x2800000000000001")
 vita_create_self(eboot_${APP_NAME}.bin ${APP_NAME}.elf STRIPPED REL_OPTIMIZE)
 
+string(TIMESTAMP NOW "%Y%m%d_%H%M")
 if(WITH_LOG)
-    set(VPK_NAME ${APP_NAME}_v${APP_VER}_log.vpk)
+    set(VPK_NAME ${APP_NAME}_v${APP_VER}_log_${NOW}.vpk)
 else()
-    string(TIMESTAMP NOW "%Y%m%d_%H%M")
     set(VPK_NAME ${APP_NAME}_v${APP_VER}_${NOW}.vpk)
 endif()
 

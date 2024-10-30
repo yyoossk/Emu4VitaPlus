@@ -395,6 +395,7 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
                     state |= (1 << i);
                 }
             }
+
             return state;
         }
         else if (id >= 16)
@@ -404,7 +405,7 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
         }
         else
         {
-            return key_states & gEmulator->_keys[id] ? 1 : 0;
+            return (key_states & gEmulator->_keys[id]) ? 1 : 0;
         }
     }
     break;

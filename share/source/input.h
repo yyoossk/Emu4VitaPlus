@@ -2,7 +2,6 @@
 #include <stdint.h>
 #include <functional>
 #include <map>
-#include <unordered_map>
 #include <stack>
 #include <psp2/ctrl.h>
 
@@ -48,8 +47,10 @@ const uint32_t SCE_CTRL_RSTICK_LEFT = 0x20000000;
 #define BUTTON_SQUARE "⇠"
 #define BUTTON_TRIANGLE "⇡"
 
-#define DEFAULT_TURBO_INTERVAL 100000ull
 #define DEFAULT_TURBO_START_TIME 500000ull
+#define DEFAULT_TURBO_INTERVAL 100000ull
+
+#define TEST_KEY(KEY, KEYS) (((KEY) & (KEYS)) != KEY)
 
 class Input;
 
@@ -69,6 +70,12 @@ struct AnalogAxis
 {
     uint8_t x;
     uint8_t y;
+};
+
+struct TurboKeyState
+{
+    bool down;
+    uint64_t next_change_state_time;
 };
 
 class Input
@@ -92,7 +99,7 @@ public:
 
     void Reset();
 
-    const uint32_t &GetKeyStates() { return _last_key; };
+    const uint32_t &GetKeyStates() const { return _last_key; };
     const AnalogAxis &GetLeftAnalogAxis() const { return _left; };
     const AnalogAxis &GetRightAnalogAxis() const { return _right; };
 
@@ -102,18 +109,19 @@ public:
 private:
     InputMap _key_up_callbacks;
     InputMap _key_down_callbacks;
-    std::unordered_map<uint32_t, uint64_t> _next_turbo_times;
+
+    TurboKeyState _turbo_key_states[32];
     uint32_t _last_key;
     uint32_t _turbo_key;
     uint64_t _turbo_start_ms;
     uint64_t _turbo_interval_ms;
-    uint64_t _next_key_up_called_ms;
+
     bool _enable_key_up;
     AnalogAxis _left;
     AnalogAxis _right;
 
     std::stack<InputMap> _callback_stack;
 
-    void _ProcTurbo(uint32_t key);
+    uint32_t _ProcTurbo(uint32_t key);
     void _ProcCallbacks(uint32_t key);
 };

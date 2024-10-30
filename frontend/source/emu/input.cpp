@@ -76,6 +76,8 @@ void Emulator::SetupKeys()
 
     BIND_HOTKEY_UP(GAME_REWIND, _OnHotkeyRewindUp);
     BIND_HOTKEY_UP(MENU_TOGGLE, _OnPsButton);
+
+    _input.SetTurboInterval(DEFAULT_TURBO_START_TIME, 20000);
 }
 
 void Emulator::_OnPsButton(Input *input)

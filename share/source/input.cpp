@@ -7,17 +7,15 @@
 #define ANALOG_CENTER 128
 #define ANALOG_THRESHOLD 64
 
-#define TEST_KEY(KEY, KEYS) (((KEY) & (KEYS)) == (KEY))
-
 Input::Input() : _last_key(0ull),
                  _turbo_key(0ull),
                  _turbo_start_ms(DEFAULT_TURBO_START_TIME),
                  _turbo_interval_ms(DEFAULT_TURBO_INTERVAL),
-                 _next_key_up_called_ms(0),
                  _enable_key_up(true),
                  _left{0},
                  _right{0}
 {
+    memset(_turbo_key_states, 0, sizeof(_turbo_key_states));
 }
 
 Input::~Input()
@@ -107,7 +105,7 @@ bool Input::Poll(bool waiting)
     _right.x = ctrl_data.rx;
     _right.y = ctrl_data.ry;
 
-    _ProcTurbo(key);
+    key = _ProcTurbo(key);
     _ProcCallbacks(key);
 
     bool changed = (_last_key != key);
@@ -115,39 +113,57 @@ bool Input::Poll(bool waiting)
     return changed;
 }
 
-void Input::_ProcTurbo(uint32_t key)
+/*
+Up                        ____________________                      _______________
+                         |                    |                    |
+         _turbo_start_ms |  _turbo_interval_ms|  _turbo_interval_ms| ......
+Down   __________________|                    |____________________|
+*/
+uint32_t Input::_ProcTurbo(uint32_t key)
 {
     if (!_turbo_key)
     {
-        return;
+        return key;
     }
 
     uint64_t current = sceKernelGetProcessTimeWide();
-    uint32_t k = 1;
-    do
+
+    for (int i = 0; i < 32; i++)
     {
+        uint32_t k = 1 << i;
         if (k & _turbo_key)
         {
+            TurboKeyState *state = _turbo_key_states + i;
+
             if (k & key)
             {
-                if (k & ~_last_key)
+                if ((k & ~_last_key) && state->next_change_state_time == 0ll)
                 {
-                    _next_turbo_times[k] = current + _turbo_start_ms;
+                    // first keydown
+                    state->next_change_state_time = current + _turbo_start_ms;
+                    state->down = true;
                 }
-                else if (current >= _next_turbo_times[k])
+                else if (current >= state->next_change_state_time)
                 {
-                    _last_key &= ~k;
-                    _next_turbo_times[k] = current + _turbo_interval_ms;
+                    // change state
+                    state->next_change_state_time += _turbo_interval_ms;
+                    state->down = !state->down;
+                }
+
+                if (!state->down)
+                {
+                    key &= ~k;
                 }
             }
-            else if (k & _last_key)
+            else if (state->next_change_state_time != 0ll)
             {
-                _next_turbo_times.erase(k);
+                state->next_change_state_time = 0ll;
+                state->down = false;
             }
         }
+    }
 
-        k <<= 1;
-    } while (k);
+    return key;
 }
 
 void Input::_ProcCallbacks(uint32_t key)
