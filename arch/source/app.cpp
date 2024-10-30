@@ -78,7 +78,8 @@ App::App() : _index(0)
         new CoreButton("ARC", {{"FBA Lite", "FBALite"},
                                {"FBA 2012", "FBA2012"},
                                {"FinalBurn Neo", "FBNeo"}}),
-        new CoreButton("DOS", {{"DOS Box", "DOSBox"}})};
+        new CoreButton("DOS", {{"DOS Box SVN", "DOSBoxSVN"},
+                               {"DOS BOX Pure", "DOSBoxPure"}})};
 
     SetInputHooks(&_input);
 

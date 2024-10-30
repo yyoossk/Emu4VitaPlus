@@ -40,7 +40,8 @@ set(CORE_SHORTS
     Stella2014
     ProSystem
     Atari800
-    DOSBox)
+    DOSBoxSVN
+    DOSBoxPure)
 
 set(CORES
     gpsp
@@ -66,7 +67,8 @@ set(CORES
     stella2014
     prosystem
     atari800
-    dosbox)
+    dosbox_svn
+    dosbox_pure)
 
 set(CORE_EBOOTS "")
 set(CORE_FILES "")
@@ -139,11 +141,10 @@ target_link_libraries(
 set(VITA_MAKE_FSELF_FLAGS "-a 0x2800000000000001")
 vita_create_self(eboot_${APP_NAME}.bin ${APP_NAME}.elf STRIPPED REL_OPTIMIZE)
 
-string(TIMESTAMP NOW "%Y%m%d_%H%M")
 if(WITH_LOG)
-    set(VPK_NAME ${APP_NAME}_v${APP_VER}_log_${NOW}.vpk)
+    set(VPK_NAME ${APP_NAME}_v${APP_VER}_log.vpk)
 else()
-    set(VPK_NAME ${APP_NAME}_v${APP_VER}_${NOW}.vpk)
+    set(VPK_NAME ${APP_NAME}_v${APP_VER}.vpk)
 endif()
 
 set(VITA_MKSFOEX_FLAGS -d ATTRIBUTE2=12)

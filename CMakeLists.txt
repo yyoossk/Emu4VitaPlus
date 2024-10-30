@@ -40,7 +40,8 @@ set(CORES
     stella2014
     prosystem
     atari800
-    dosbox)
+    dosbox_svn
+    dosbox_pure)
 
 set(BUILD_LIST "All" "Arch" ${CORES})
 string(REPLACE "|" " " BUILD_LIST_STR ${BUILD_LIST})

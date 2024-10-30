@@ -80,3 +80,6 @@
 	path = cores/dosbox-svn
 	url = https://github.com/libretro/dosbox-svn
 	branch = libretro
+[submodule "cores/dosbox-pure"]
+	path = cores/dosbox-pure
+	url = https://github.com/schellingb/dosbox-pure

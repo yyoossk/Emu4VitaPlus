@@ -52,8 +52,8 @@ add_dependencies(${ELF_NAME} ${CORE_TAG})
 target_link_libraries(
     ${ELF_NAME}
     frontend
-    ${LIBRETRO_LIBRARY}
     share
+    ${LIBRETRO_LIBRARY}
     retro_comm
     vita2d
     vita2d_ext

@@ -2,6 +2,7 @@
 #include <libretro.h>
 #include <vector>
 #include <psp2common/ctrl.h>
+#include <psp2/kernel/processmgr.h>
 #include "config_types.h"
 #include "input.h"
 #include "config.h"
@@ -229,3 +230,9 @@ const std::vector<ControlMapConfig> CONTROL_MAPS = {
     {SCE_CTRL_RSTICK_RIGHT},
 #endif
 };
+
+// for stupid DosBox Pure
+retro_time_t cpu_features_get_time_usec(void)
+{
+    return sceKernelGetSystemTimeWide();
+}
