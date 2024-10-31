@@ -417,12 +417,12 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
         if (gEmulator->_video_rotation == VIDEO_ROTATION_0)
         {
             const AnalogAxis aa = index == RETRO_DEVICE_INDEX_ANALOG_LEFT ? gEmulator->_input.GetLeftAnalogAxis() : gEmulator->_input.GetRightAnalogAxis();
-            return id == RETRO_DEVICE_ID_ANALOG_X ? aa.x * 0x101 - 0x8000 : aa.y * 0x101 - 0x8000;
+            return id == RETRO_DEVICE_ID_ANALOG_X ? ANALOG_PSV_TO_RETRO(aa.x) : ANALOG_PSV_TO_RETRO(aa.y);
         }
         else
         {
             const AnalogAxis aa = index == RETRO_DEVICE_INDEX_ANALOG_LEFT ? gEmulator->_input.GetRightAnalogAxis() : gEmulator->_input.GetLeftAnalogAxis();
-            return id == RETRO_DEVICE_ID_ANALOG_X ? -(aa.y * 0x101 - 0x7fff) : aa.x * 0x101 - 0x8000;
+            return id == RETRO_DEVICE_ID_ANALOG_X ? -ANALOG_PSV_TO_RETRO(aa.y) : ANALOG_PSV_TO_RETRO(aa.x);
         }
     }
     break;

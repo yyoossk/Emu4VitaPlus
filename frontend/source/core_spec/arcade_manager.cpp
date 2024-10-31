@@ -19,6 +19,7 @@ void Emulator::_InitArcadeManager()
 #endif
 }
 
+#ifdef ARC_BUILD
 ArcadeManager::ArcadeManager() : CacheManager(ARCADE_CACHE_DIR, ARC_CACHE_MAX_SIZE), _names(nullptr)
 {
     _Load();
@@ -160,3 +161,10 @@ const char *ArcadeManager::GetCachedPath(const char *path)
         return nullptr;
     }
 }
+#else
+ArcadeManager::ArcadeManager() {}
+ArcadeManager::~ArcadeManager() {}
+const char *ArcadeManager::GetCachedPath(const char *path) {}
+bool ArcadeManager::NeedReplace(const char *path) {}
+void ArcadeManager_Load() {}
+#endif
