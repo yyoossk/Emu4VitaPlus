@@ -29,6 +29,12 @@ const char APP_VER_STR[] = _APP_VER_STR;
 const char CONSOLE[] = _CONSOLE;
 const char CONSOLE_DIR[] = "app0:data/" _CONSOLE;
 
+#if defined(ARC_BUILD) || defined(DOS_BUILD)
+const size_t DEFAULT_REWIND_BUF_SIZE = 50;
+#else
+const size_t DEFAULT_REWIND_BUF_SIZE = 10;
+#endif
+
 const uint8_t RETRO_KEYS[] = {
     RETRO_DEVICE_ID_NONE,
     RETRO_DEVICE_ID_JOYPAD_UP,

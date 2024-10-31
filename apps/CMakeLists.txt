@@ -47,7 +47,9 @@ include_directories(
     ../deps/7-Zip/C
     ../share/source)
 
-add_executable(${ELF_NAME} defines.cpp arcade_manager.cpp)
+file(GLOB SRC ../frontend/source/core_spec/*.cpp)
+
+add_executable(${ELF_NAME} ${SRC})
 add_dependencies(${ELF_NAME} ${CORE_TAG})
 target_link_libraries(
     ${ELF_NAME}

@@ -142,7 +142,7 @@ namespace Emu4Vita
         LogFunctionName;
 
         rewind = 1;
-        rewind_buf_size = GetDefaultRewindBufSize();
+        rewind_buf_size = DEFAULT_REWIND_BUF_SIZE;
         last_rom = "ux0:";
         mute = false;
 
@@ -265,10 +265,7 @@ namespace Emu4Vita
             last_rom = "ux0:";
         }
 
-        if (rewind_buf_size < MIN_REWIND_BUF_SIZE || rewind_buf_size > MAX_REWIND_BUF_SIZE)
-        {
-            rewind_buf_size = GetDefaultRewindBufSize();
-        }
+        rewind_buf_size = DEFAULT_REWIND_BUF_SIZE;
 
         for (auto &control : control_maps)
         {
@@ -301,15 +298,5 @@ namespace Emu4Vita
         default:
             return RETRO_LANGUAGE_ENGLISH;
         }
-    }
-
-    size_t Config::GetDefaultRewindBufSize()
-    {
-        if (strcmp(CONSOLE, "ARC") == 0 || strcmp(CONSOLE, "DOS") == 0)
-        {
-            return DEFAULT_REWIND_BIG_BUF_SIZE;
-        }
-
-        return DEFAULT_REWIND_BUF_SIZE;
     }
 }

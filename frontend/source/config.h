@@ -9,9 +9,6 @@
 #include "language_define.h"
 #include "defines.h"
 
-#define DEFAULT_REWIND_BUF_SIZE 10
-#define DEFAULT_REWIND_BIG_BUF_SIZE 30
-
 #define MIN_REWIND_BUF_SIZE 5
 #define MAX_REWIND_BUF_SIZE 50
 #define REWIND_BUF_SIZE_STEP 5
@@ -32,7 +29,6 @@ namespace Emu4Vita
         void DefaultHotKey();
         void DefaultGraphics();
         retro_language GetRetroLanguage();
-        size_t GetDefaultRewindBufSize();
 
         bool boot_from_arch;
         std::string last_rom;

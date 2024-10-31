@@ -30,3 +30,4 @@ extern const char CONSOLE_DIR[];
 extern const uint8_t RETRO_KEYS[];
 extern const size_t RETRO_KEYS_SIZE;
 extern const std::vector<ControlMapConfig> CONTROL_MAPS;
+extern const size_t DEFAULT_REWIND_BUF_SIZE;
