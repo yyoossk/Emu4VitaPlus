@@ -322,7 +322,7 @@ bool RewindManager::_SaveFullState(RewindBlock *block, bool from_tmp)
     }
     else
     {
-        LogError("  _SaveFullState failed");
+        LogDebug("  _SaveFullState failed");
     }
 
     return result;

@@ -217,6 +217,14 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         gConfig->core_options.SetVisable((const retro_core_option_display *)data);
         break;
 
+    case RETRO_ENVIRONMENT_SET_MESSAGE_EXT:
+    {
+        retro_message_ext *message = (retro_message_ext *)data;
+        LogDebug(message->msg);
+        gUi->SetHint(message->msg);
+    }
+    break;
+
     case RETRO_ENVIRONMENT_SET_AUDIO_BUFFER_STATUS_CALLBACK:
         LogDebug("  cmd: RETRO_ENVIRONMENT_SET_AUDIO_BUFFER_STATUS_CALLBACK");
         gEmulator->_audio.SetBufStatusCallback(data ? ((const retro_audio_buffer_status_callback *)data)->callback : nullptr);
@@ -254,6 +262,30 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         LogDebug("  cmd: RETRO_ENVIRONMENT_GET_INPUT_BITMASKS");
         break;
 
+    case RETRO_ENVIRONMENT_GET_THROTTLE_STATE:
+    {
+        retro_throttle_state *throttle_state = (struct retro_throttle_state *)data;
+        switch (gStatus.Get())
+        {
+
+        case APP_STATUS_SHOW_UI_IN_GAME:
+            throttle_state->mode = RETRO_THROTTLE_FRAME_STEPPING;
+            throttle_state->rate = 0.0f;
+            break;
+
+        case APP_STATUS_REWIND_GAME:
+            throttle_state->mode = RETRO_THROTTLE_REWINDING;
+            throttle_state->rate = 0.0f;
+            break;
+
+        case APP_STATUS_RUN_GAME:
+        default:
+            throttle_state->mode = RETRO_THROTTLE_NONE;
+            throttle_state->rate = std::min((float)gEmulator->_av_info.timing.fps, 60.0);
+            break;
+        }
+    }
+    break;
     default:
         if (cmd > RETRO_ENVIRONMENT_EXPERIMENTAL)
         {

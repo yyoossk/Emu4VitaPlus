@@ -51,7 +51,7 @@ const uint32_t SCE_CTRL_RSTICK_LEFT = 0x20000000;
 #define DEFAULT_TURBO_INTERVAL 100000ull
 
 #define TEST_KEY(KEY, KEYS) (((KEY) & (KEYS)) != KEY)
-#define ANALOG_PSV_TO_RETRO(X) ((X) * 0x101 - 0x7fff)
+#define ANALOG_PSV_TO_RETRO(X) (((X) - 0x80) << 8)
 
 class Input;
 

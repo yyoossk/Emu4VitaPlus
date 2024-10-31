@@ -96,7 +96,7 @@ void TabAbout::_InitTexts()
     _texts = {
         APP_TITLE_NAME,
         std::string(TEXT(COMPILED_ON)) + " " + __DATE__ + " " + __TIME__,
-        std::string(TEXT(AUTHOR)) + ": noword   " + TEXT(SPECIAL_THANKS) + ": yizhigai, KyleBing",
+        std::string(TEXT(AUTHOR)) + ": noword   " + TEXT(SPECIAL_THANKS) + ": yizhigai, KyleBing, TearCrow",
         std::string(TEXT(SITE)) + ": https://github.com/noword/Emu4VitaPlus",
         "",
         TEXT(EXTERNAL_COMPONENTS),
