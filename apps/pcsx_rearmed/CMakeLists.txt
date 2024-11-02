@@ -18,7 +18,7 @@ set(CORE_MAKEFILE_NAME Makefile.libretro)
 set(SFO_TITLE_NAME "Emu4Vita++ (${CORE_FULL_NAME})")
 set(SFO_TITLE_ID "PCSX4VITA")
 
-set(CORE_ARGS platform=vita)
+set(CORE_ARGS platform=vita DYNAREC=ari64)
 set(CORE_SOFTWARE "Sony - PlayStation")
 
 set(PRIVATE_PKG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pkg)

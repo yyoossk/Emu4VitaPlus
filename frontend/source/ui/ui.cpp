@@ -238,15 +238,17 @@ void Ui::CreateTables()
     hotkeys.emplace_back(new ItemBase(RESET_CONFIGS, "", ResetHotkey));
     _tabs[TAB_INDEX_HOTKEY] = new TabSeletable(TAB_HOTKEY, hotkeys);
 
-    std::vector<ItemBase *> options;
-    for (auto &iter : gConfig->core_options)
-    {
-        if (iter.second.values.size() > 0 && iter.second.visible)
-        {
-            options.emplace_back(new ItemCore(&iter.second));
-        }
-    }
-    _tabs[TAB_INDEX_CORE] = new TabSeletable(TAB_CORE, options);
+    // std::vector<ItemBase *> options;
+    // for (auto &iter : gConfig->core_options)
+    // {
+    //     if (iter.second.values.size() > 0 && iter.second.visible)
+    //     {
+    //         options.emplace_back(new ItemCore(&iter.second));
+    //     }
+    // }
+    // _tabs[TAB_INDEX_CORE] = new TabSeletable(TAB_CORE, options);
+
+    UpdateCoreOptions();
 
     _tabs[TAB_INDEX_OPTIONS] = new TabSeletable(TAB_OPTIONS, {new ItemConfig(OPTIONS_MENU_LANGUAGE,
                                                                              "",
@@ -475,6 +477,10 @@ void Ui::Show()
         ImGui::End();
         ImGui::Render();
         My_ImGui_ImplVita2D_RenderDrawData(ImGui::GetDrawData());
+        if (_hint_count > 0)
+        {
+            _ShowHint();
+        }
     }
     else if (_hint_count > 0 && ((status & (APP_STATUS_RUN_GAME | APP_STATUS_REWIND_GAME)) != 0))
     {

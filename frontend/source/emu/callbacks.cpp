@@ -118,6 +118,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
     case RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS:
         LogDebug("  cmd: RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS");
         gConfig->input_descriptors.UpdateInputDescriptors((retro_input_descriptor *)data);
+        gConfig->Save();
         break;
 
     case RETRO_ENVIRONMENT_SET_DISK_CONTROL_INTERFACE:
@@ -215,6 +216,21 @@ bool EnvironmentCallback(unsigned cmd, void *data)
     case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_DISPLAY:
         LogDebug("  cmd: RETRO_ENVIRONMENT_SET_CORE_OPTIONS_DISPLAY");
         gConfig->core_options.SetVisable((const retro_core_option_display *)data);
+        break;
+
+    case RETRO_ENVIRONMENT_GET_DISK_CONTROL_INTERFACE_VERSION:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_GET_DISK_CONTROL_INTERFACE_VERSION");
+        if (data)
+            *(unsigned *)data = 1;
+        break;
+
+    case RETRO_ENVIRONMENT_SET_DISK_CONTROL_EXT_INTERFACE:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_SET_DISK_CONTROL_EXT_INTERFACE");
+        break;
+
+    case RETRO_ENVIRONMENT_GET_MESSAGE_INTERFACE_VERSION:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_GET_MESSAGE_INTERFACE_VERSION");
+        *(unsigned *)data = RETRO_ENVIRONMENT_SET_MESSAGE_EXT;
         break;
 
     case RETRO_ENVIRONMENT_SET_MESSAGE_EXT:
@@ -331,7 +347,8 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
                      gEmulator->_av_info.geometry.aspect_ratio);
         }
 
-        gVideo->Lock();
+        if (!gEmulator->_soft_frame_buf_render)
+            gVideo->Lock();
 
         if (gEmulator->_texture_buf != nullptr)
         {
@@ -348,16 +365,20 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
                                 gEmulator->_video_rect.height / height,
                                 gEmulator->_video_rotation == VIDEO_ROTATION_90 ? M_PI : 0.f);
         gEmulator->_graphics_config_changed = false;
+        gEmulator->_last_texture = nullptr;
 
-        gVideo->Unlock();
+        if (!gEmulator->_soft_frame_buf_render)
+            gVideo->Unlock();
     }
-    else if (gEmulator->_soft_frame_buf_render)
+
+    if (gEmulator->_soft_frame_buf_render)
     {
+        gVideo->Unlock();
         return;
     }
 
     BeginProfile("VideoRefreshCallback");
-    gEmulator->_texture_buf->Lock();
+
     vita2d_texture *texture = gEmulator->_texture_buf->Next();
 
     unsigned out_pitch = vita2d_texture_get_stride(texture);

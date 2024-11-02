@@ -287,7 +287,7 @@ namespace Emu4Vita
         }
 
         core_options.Load(ini);
-        input_descriptors.Load();
+        input_descriptors.Load(ini);
 
         return true;
     }

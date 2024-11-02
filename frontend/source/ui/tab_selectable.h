@@ -13,7 +13,7 @@ public:
     virtual void SetInputHooks(Input *input);
     virtual void UnsetInputHooks(Input *input);
     virtual void Show(bool selected);
-    void SetStatusText(std::string &text);
+    void SetStatusText(std::string text);
     void SetItemVisable(size_t index, bool visable);
     bool ItemVisable(size_t index);
     void SetColumns(int columns);

@@ -121,7 +121,10 @@ B --> C[./to_json.py]
 ## 预览图
 程序会在 rom 目录下的 `.previews` 目录中自动寻找同名的 `jpg` 或 `png` 图片，如果未找到，则会搜寻即时存档的截图
 
-# 遮罩
+## 金手指
+程序会依次在 rom 目录下，rom目录下的.cheats 目录，ux0:/data/EMU4VITAPLUS/[内核]/cheats 目录下的同名.cht文件，以先找到的为准。
+
+## 遮罩
 程序会读取 ux0:/data/EMU4VITAPLUS/[内核]/overlays 下的 overlays.ini
 
 ## 即时存档
@@ -135,9 +138,19 @@ ux0:/data/EMU4VITAPLUS/[内核]/system
 
 请自行将对应的 BIOS 文件复制到此目录中【重要】
 
+# 部分核心建议设置
+## FBNeo
+ 启用 旋风
+
+ 禁用 FM 插帧
+ 
+ 禁用 采样插帧
+
 # 特别感谢
 [一直改](https://gitee.com/yizhigai/Emu4Vita)
 
 [KyleBing](https://github.com/KyleBing/retro-game-console-icons)
+
+TearCrow
 
 以及在本项目中用到的所有开源项目的开发者们

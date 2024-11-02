@@ -1,4 +1,5 @@
 #pragma once
+#include "ui.h"
 #include "item_selectable.h"
 #include "core_options.h"
 #include "log.h"
@@ -38,6 +39,7 @@ private:
         ItemSelectable::_OnClick(input);
         gConfig->Save();
         gEmulator->CoreOptionUpdate();
+        gUi->SetHint(TEXT(CORE_NOTICE));
     };
 
     CoreOption *_option;

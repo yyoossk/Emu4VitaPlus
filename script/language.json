@@ -614,5 +614,12 @@
         "English": "Remove from favorites",
         "Chinese": "移出收藏夹",
         "Comments": ""
+    },
+    {
+        "No.": "89",
+        "Tag": "CORE_NOTICE",
+        "English": "After changing the settings, reset the game to take effect",
+        "Chinese": "更改设置后，重置游戏以生效",
+        "Comments": ""
     }
 ]

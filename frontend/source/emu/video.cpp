@@ -8,20 +8,20 @@
 
 extern float _vita2d_ortho_matrix[4 * 4];
 
+bool Emulator::NeedRender()
+{
+    return (!gEmulator->_graphics_config_changed) &&
+           gEmulator->_texture_buf != nullptr &&
+           _last_texture != _texture_buf->Current();
+}
+
 void Emulator::Show()
 {
     LogFunctionNameLimited;
+
     if (gEmulator->_graphics_config_changed || gEmulator->_texture_buf == nullptr || !(gStatus.Get() & (APP_STATUS_RUN_GAME | APP_STATUS_REWIND_GAME | APP_STATUS_SHOW_UI_IN_GAME)))
     {
         sceKernelDelayThread(100000);
-        return;
-    }
-
-    static vita2d_texture *last_tex = nullptr;
-    vita2d_texture *current_tex = _texture_buf->Current();
-    if (current_tex == last_tex)
-    {
-        sceKernelDelayThread(1000);
         return;
     }
 
@@ -34,12 +34,14 @@ void Emulator::Show()
         }
     }
 
-    // _texture_buf->Lock();
     // LogDebug("Show _texture_buf->Current() %08x", _texture_buf->Current());
 
     // vita2d_shader *shader = gConfig->graphics[GRAPHICS_SHADER] > 0 ? (*gShaders)[gConfig->graphics[GRAPHICS_SHADER] - 1].Get() : nullptr;
+
     uint32_t index = gConfig->graphics[GRAPHICS_SHADER];
     Shader *shader = (index > 0 && index <= gShaders->size()) ? &(*gShaders)[index - 1] : nullptr;
+
+    _last_texture = _texture_buf->Current();
 
     if (shader && shader->Valid())
     {
@@ -68,7 +70,7 @@ void Emulator::Show()
                                                                                     sizeof(vita2d_texture_vertex));
     memcpy(vertices, _vertices, 4 * sizeof(vita2d_texture_vertex));
 
-    sceGxmSetFragmentTexture(vita2d_get_context(), 0, &current_tex->gxm_tex);
+    sceGxmSetFragmentTexture(vita2d_get_context(), 0, &_last_texture->gxm_tex);
     sceGxmSetVertexStream(vita2d_get_context(), 0, vertices);
     sceGxmDraw(vita2d_get_context(), SCE_GXM_PRIMITIVE_TRIANGLE_STRIP, SCE_GXM_INDEX_FORMAT_U16, vita2d_get_linear_indices(), 4);
 
@@ -85,6 +87,7 @@ void Emulator::Show()
             vita2d_draw_texture(tex, 0.f, 0.f);
         }
     }
+
     _video_delay.Wait();
 }
 
@@ -92,18 +95,17 @@ bool Emulator::GetCurrentSoftwareFramebuffer(retro_framebuffer *fb)
 {
     LogFunctionNameLimited;
 
-    return false;
-    // TODO: ...
+    // return false;
 
     if (!fb || _texture_buf == nullptr)
     {
         return false;
     }
 
-    _texture_buf->Lock();
+    gVideo->Lock();
     // LogDebug("GetCurrentSoftwareFramebuffer _texture_buf->Current() %08x", _texture_buf->Current());
     _soft_frame_buf_render = true;
-    vita2d_texture *texture = _texture_buf->Current();
+    vita2d_texture *texture = _texture_buf->Next();
 
     fb->data = vita2d_texture_get_datap(texture);
     fb->width = vita2d_texture_get_width(texture);
@@ -241,6 +243,7 @@ void Emulator::_SetVideoSize(uint32_t width, uint32_t height)
 void Emulator::_SetVertices(float tex_x, float tex_y, float tex_w, float tex_h, float x_scale, float y_scale, float rad)
 {
     LogFunctionName;
+    LogDebug("  %.2f %.2f %.2f %.2f %.2f %.2f %.2f", tex_x, tex_y, tex_w, tex_h, x_scale, y_scale, rad);
 
     const float w_half = (tex_w * x_scale) / 2.0f;
     const float h_half = (tex_h * y_scale) / 2.0f;

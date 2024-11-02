@@ -38,13 +38,19 @@ int Video::_DrawThread(SceSize args, void *argp)
     APP_STATUS status = gStatus.Get();
     while (video->IsRunning() && (status & (APP_STATUS_EXIT | APP_STATUS_RETURN_ARCH)) == 0)
     {
+        status = gStatus.Get();
+        if (status == APP_STATUS_RUN_GAME && !gEmulator->NeedRender())
+        {
+            sceKernelDelayThread(1000);
+            continue;
+        }
+
         video->Lock();
 
         vita2d_pool_reset();
         vita2d_start_drawing_advanced(NULL, 0);
         vita2d_clear_screen();
 
-        status = gStatus.Get();
         switch (status)
         {
         case APP_STATUS_BOOT:

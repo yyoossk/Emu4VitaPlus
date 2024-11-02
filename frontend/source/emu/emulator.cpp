@@ -132,6 +132,7 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
     bool result = retro_load_game(&game_info);
     if (result)
     {
+        _last_texture = nullptr;
         retro_get_system_av_info(&_av_info);
         retro_set_controller_port_device(0, RETRO_DEVICE_JOYPAD);
         SetSpeed(1.0);
@@ -193,6 +194,8 @@ void Emulator::UnloadGame()
         Save();
         retro_unload_game();
         Unlock();
+
+        _last_texture = nullptr;
     }
 }
 
@@ -224,11 +227,6 @@ void Emulator::Run()
     Unlock();
 
     EndProfile("retro_run");
-
-    if (_soft_frame_buf_render && _texture_buf)
-    {
-        _texture_buf->Unlock();
-    }
 
     _delay.Wait();
 }

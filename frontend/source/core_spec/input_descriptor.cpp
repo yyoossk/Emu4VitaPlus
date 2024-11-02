@@ -23,7 +23,6 @@ InputDescriptors::InputDescriptors() : _descriptors{BUTTON_B,
                                                     BUTTON_L3,
                                                     BUTTON_R3}
 {
-    Load();
 }
 
 InputDescriptors::~InputDescriptors()
@@ -46,8 +45,6 @@ void InputDescriptors::UpdateInputDescriptors(const retro_input_descriptor *desc
         }
         descriptors++;
     }
-
-    Save();
 }
 
 void InputDescriptors::Update()
@@ -108,6 +105,8 @@ bool InputDescriptors::Load(CSimpleIniA &ini)
     }
 
     Update();
+
+    return true;
 #endif
 }
 

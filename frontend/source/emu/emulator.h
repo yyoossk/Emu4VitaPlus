@@ -59,6 +59,7 @@ public:
     Cheats *GetCheats() { return &_cheats; };
     void ChangeCheatConfig();
     void SetupKeys();
+    bool NeedRender();
 
     friend bool EnvironmentCallback(unsigned cmd, void *data);
     friend void VideoRefreshCallback(const void *data, unsigned width, unsigned height, size_t pitch);
@@ -96,6 +97,7 @@ private:
     bool _graphics_config_changed;
     VIDEO_ROTATION _video_rotation;
     Delay _video_delay;
+    vita2d_texture *_last_texture;
 
     Audio _audio;
     Input _input;
