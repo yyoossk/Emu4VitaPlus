@@ -1,6 +1,9 @@
 from fontTools.ttLib import TTFont
 from fontTools.subset import Subsetter, Options
 
+TEXTS = ''.join(chr(x) for x in range(0x20, 0x100))
+TEXTS += open('gb2312.txt', encoding='utf-8').read()
+
 # 加载TTF字体文件
 input_font_path = "FZLantingHei.ttf"
 output_font_path = "../share/pkg/assets/FZLantingHei.ttf"
@@ -17,8 +20,8 @@ options.drop_tables += ['DSIG']  # 删除特定表格，比如数字签名表‘
 subsetter = Subsetter(options=options)
 
 # 因为不减少字符数量，所以将所有字形加载到子集化器中
-# subsetter.populate(text="需要的字符集")
-subsetter.populate(glyphs=font.getGlyphOrder())
+subsetter.populate(text=TEXTS)
+# subsetter.populate(glyphs=font.getGlyphOrder())
 subsetter.subset(font)
 
 # 进一步优化表格数据

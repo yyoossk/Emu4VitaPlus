@@ -26,15 +26,20 @@ void Input::SetKeyDownCallback(uint32_t key, InputFunc func, bool turbo)
 {
     if (func == nullptr)
     {
-        UnsetKeyDownCallback(key);
+        UnsetKeyUpCallback(key);
     }
     else
     {
-        _key_down_callbacks[key] = func;
-        if (turbo)
+        for (auto &iter : _key_down_callbacks)
         {
-            _turbo_key |= key;
+            if (iter.key == key)
+            {
+                iter.func = func;
+                return;
+            }
         }
+
+        _key_down_callbacks.push_back({key, func});
     }
 }
 
@@ -46,28 +51,41 @@ void Input::SetKeyUpCallback(uint32_t key, InputFunc func)
     }
     else
     {
-        _key_up_callbacks[key] = func;
+        for (auto &iter : _key_up_callbacks)
+        {
+            if (iter.key == key)
+            {
+                iter.func = func;
+                return;
+            }
+        }
+
+        _key_up_callbacks.push_back({key, func});
     }
 }
 
 void Input::UnsetKeyUpCallback(uint32_t key)
 {
-    auto iter = _key_up_callbacks.find(key);
-    if (iter != _key_up_callbacks.end())
+    for (auto iter = _key_up_callbacks.begin(); iter != _key_up_callbacks.end(); iter++)
     {
-        _key_up_callbacks.erase(key);
+        if (iter->key == key)
+        {
+            _key_up_callbacks.erase(iter);
+            break;
+        }
     }
 }
 
 void Input::UnsetKeyDownCallback(uint32_t key)
 {
-    auto iter = _key_down_callbacks.find(key);
-    if (iter != _key_down_callbacks.end())
+    for (auto iter = _key_down_callbacks.begin(); iter != _key_down_callbacks.end(); iter++)
     {
-        _key_down_callbacks.erase(key);
+        if (iter->key == key)
+        {
+            _key_down_callbacks.erase(iter);
+            break;
+        }
     }
-
-    _turbo_key &= ~key;
 }
 
 bool Input::Poll(bool waiting)
@@ -114,10 +132,10 @@ bool Input::Poll(bool waiting)
 }
 
 /*
-Up                        ____________________                      _______________
-                         |                    |                    |
-         _turbo_start_ms |  _turbo_interval_ms|  _turbo_interval_ms| ......
-Down   __________________|                    |____________________|
+Up                        ______________________                      _______________
+                         |                     |                     |
+         _turbo_start_ms |  _turbo_interval_ms |  _turbo_interval_ms | ......
+Down   __________________|                     |_____________________|
 */
 uint32_t Input::_ProcTurbo(uint32_t key)
 {
@@ -173,10 +191,10 @@ void Input::_ProcCallbacks(uint32_t key)
         // LogDebug("key %08x", key);
         for (const auto &iter : _key_down_callbacks)
         {
-            if (TEST_KEY(iter.first, key) && !TEST_KEY(iter.first, _last_key))
+            if (TEST_KEY(iter.key, key) && !TEST_KEY(iter.key, _last_key))
             {
                 // LogDebug("  call down: %08x %08x", iter.first, iter.second);
-                iter.second(this);
+                iter.func(this);
                 break;
             }
         }
@@ -187,10 +205,10 @@ void Input::_ProcCallbacks(uint32_t key)
             for (const auto &iter : _key_up_callbacks)
             {
                 // LogDebug("_key_up_callbacks %08x %08x", iter.first, _last_key);
-                if (TEST_KEY(iter.first, _last_key) && !TEST_KEY(iter.first, key))
+                if (TEST_KEY(iter.key, _last_key) && !TEST_KEY(iter.key, key))
                 {
                     // LogDebug("  call up: %08x %08x", iter.first, iter.second);
-                    iter.second(this);
+                    iter.func(this);
                     if (key)
                     {
                         _enable_key_up = false;

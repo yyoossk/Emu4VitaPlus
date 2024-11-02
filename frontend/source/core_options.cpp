@@ -1,5 +1,4 @@
 #include <string.h>
-#include <SimpleIni.h>
 #include "core_options.h"
 #include "log.h"
 #include "file.h"
@@ -160,6 +159,13 @@ bool CoreOptions::Load(const char *path)
         return false;
     }
 
+    return Load(ini);
+}
+
+bool CoreOptions::Load(CSimpleIniA &ini)
+{
+    LogFunctionName;
+
     CSimpleIniA::TNamesDepend keys;
     ini.GetAllKeys(CORE_SECTION, keys);
     for (auto const &key : keys)
@@ -176,15 +182,20 @@ bool CoreOptions::Save(const char *path)
 {
     LogFunctionName;
     CSimpleIniA ini;
+    Save(ini);
+    File::Remove(path);
+    return ini.SaveFile(path, false) == SI_OK;
+}
+
+bool CoreOptions::Save(CSimpleIniA &ini)
+{
     for (auto const &iter : *this)
     {
         const char *key = iter.first.c_str();
         const CoreOption *option = &iter.second;
         ini.SetValue(CORE_SECTION, key, option->value.c_str());
     }
-
-    File::Remove(path);
-    return ini.SaveFile(path, false) == SI_OK;
+    return true;
 }
 
 void CoreOptions::SetVisable(const struct retro_core_option_display *option_display)

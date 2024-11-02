@@ -117,7 +117,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
 
     case RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS:
         LogDebug("  cmd: RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS");
-        gInputDescriptors.UpdateInputDescriptors((retro_input_descriptor *)data);
+        gConfig->input_descriptors.UpdateInputDescriptors((retro_input_descriptor *)data);
         break;
 
     case RETRO_ENVIRONMENT_SET_DISK_CONTROL_INTERFACE:
@@ -454,7 +454,7 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
         else
         {
             const AnalogAxis aa = index == RETRO_DEVICE_INDEX_ANALOG_LEFT ? gEmulator->_input.GetRightAnalogAxis() : gEmulator->_input.GetLeftAnalogAxis();
-            return id == RETRO_DEVICE_ID_ANALOG_X ? -ANALOG_PSV_TO_RETRO(aa.y) : ANALOG_PSV_TO_RETRO(aa.x);
+            return id == RETRO_DEVICE_ID_ANALOG_X ? -(ANALOG_PSV_TO_RETRO(aa.y) + 1) : ANALOG_PSV_TO_RETRO(aa.x);
         }
     }
     break;

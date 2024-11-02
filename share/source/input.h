@@ -1,7 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include <functional>
-#include <map>
+#include <vector>
 #include <stack>
 #include <psp2/ctrl.h>
 
@@ -57,15 +57,11 @@ class Input;
 
 using InputFunc = std::function<void(Input *)>;
 
-struct CompareKey
+struct KeyBinding
 {
-    bool operator()(uint32_t a, uint32_t b) const
-    {
-        return a > b;
-    }
+    uint32_t key;
+    InputFunc func;
 };
-
-using InputMap = std::map<uint32_t, InputFunc, CompareKey>;
 
 struct AnalogAxis
 {
@@ -108,8 +104,8 @@ public:
     void PopCallbacks();
 
 private:
-    InputMap _key_up_callbacks;
-    InputMap _key_down_callbacks;
+    std::vector<KeyBinding> _key_up_callbacks;
+    std::vector<KeyBinding> _key_down_callbacks;
 
     TurboKeyState _turbo_key_states[32];
     uint32_t _last_key;
@@ -121,7 +117,7 @@ private:
     AnalogAxis _left;
     AnalogAxis _right;
 
-    std::stack<InputMap> _callback_stack;
+    std::stack<std::vector<KeyBinding>> _callback_stack;
 
     uint32_t _ProcTurbo(uint32_t key);
     void _ProcCallbacks(uint32_t key);

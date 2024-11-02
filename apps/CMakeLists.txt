@@ -43,6 +43,7 @@ include_directories(
     ../frontend/source
     ../frontend/source/emu
     ../frontend/source/audio
+    ../frontend/source/core_spec
     ../deps/libretro-common/include
     ../deps/7-Zip/C
     ../share/source)

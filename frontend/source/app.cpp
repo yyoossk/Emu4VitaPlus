@@ -50,8 +50,6 @@ App::App(int argc, char *const argv[])
 
     gConfig = new Emu4Vita::Config();
 
-    gInputDescriptors.Update();
-
     gVideo = new Video();
     gUi = new Ui();
     gVideo->Start();

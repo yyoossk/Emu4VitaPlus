@@ -8,6 +8,7 @@
 #include "config_types.h"
 #include "language_define.h"
 #include "defines.h"
+#include "input_descriptor.h"
 
 #define MIN_REWIND_BUF_SIZE 5
 #define MAX_REWIND_BUF_SIZE 50
@@ -39,6 +40,7 @@ namespace Emu4Vita
         uint32_t graphics[GRAPHICS_CONFIG_COUNT];
         uint32_t hotkeys[HOT_KEY_COUNT];
         CoreOptions core_options;
+        InputDescriptors input_descriptors;
         bool mute;
 
         static const std::unordered_map<uint32_t, const char *> PsvKeyStr;

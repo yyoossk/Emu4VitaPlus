@@ -1,5 +1,6 @@
 #pragma once
 #include <libretro.h>
+#include <SimpleIni.h>
 #include "language_string.h"
 #include "defines.h"
 
@@ -36,10 +37,10 @@ public:
     void Update();
     const char *Get(int index);
     bool Load(const char *path = APP_INPUT_DESC_PATH);
+    bool Load(CSimpleIniA &ini);
     bool Save(const char *path = APP_INPUT_DESC_PATH);
+    bool Save(CSimpleIniA &ini);
 
 private:
     InputDescriptor _descriptors[INPUT_DESC_COUNT];
 };
-
-extern InputDescriptors gInputDescriptors;

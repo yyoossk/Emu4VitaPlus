@@ -2,7 +2,8 @@
 #include <map>
 #include <vector>
 #include <string>
-#include "libretro.h"
+#include <SimpleIni.h>
+#include <libretro.h>
 #include "defines.h"
 #include "language_string.h"
 
@@ -25,7 +26,9 @@ class CoreOptions : public std::map<std::string, CoreOption>
 {
 public:
     bool Load(const char *path = APP_CORE_CONFIG_PATH);
+    bool Load(CSimpleIniA &ini);
     bool Save(const char *path = APP_CORE_CONFIG_PATH);
+    bool Save(CSimpleIniA &ini);
 
     void Load(retro_core_options_intl *options);
     void Load(retro_core_options_v2_intl *options);

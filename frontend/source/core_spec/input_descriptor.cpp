@@ -1,4 +1,3 @@
-#include <SimpleIni.h>
 #include "input_descriptor.h"
 #include "input.h"
 #include "log.h"
@@ -6,8 +5,6 @@
 #include "defines.h"
 
 #define INPUT_DESC_SECTION "INPUT_DESC"
-
-InputDescriptors gInputDescriptors;
 
 InputDescriptors::InputDescriptors() : _descriptors{BUTTON_B,
                                                     BUTTON_Y,
@@ -26,10 +23,7 @@ InputDescriptors::InputDescriptors() : _descriptors{BUTTON_B,
                                                     BUTTON_L3,
                                                     BUTTON_R3}
 {
-    if (strcmp(CONSOLE, "ARC") != 0)
-    {
-        Load();
-    }
+    Load();
 }
 
 InputDescriptors::~InputDescriptors()
@@ -53,10 +47,7 @@ void InputDescriptors::UpdateInputDescriptors(const retro_input_descriptor *desc
         descriptors++;
     }
 
-    if (strcmp(CONSOLE, "ARC") != 0)
-    {
-        Save();
-    }
+    Save();
 }
 
 void InputDescriptors::Update()
@@ -82,6 +73,10 @@ const char *InputDescriptors::Get(int index)
 bool InputDescriptors::Load(const char *path)
 {
     LogFunctionName;
+#ifdef ARC_BUILD
+    return true;
+#else
+
     LogDebug("path: %s", path);
 
     CSimpleIniA ini;
@@ -90,6 +85,16 @@ bool InputDescriptors::Load(const char *path)
         return false;
     }
 
+    return Load(ini);
+#endif
+}
+
+bool InputDescriptors::Load(CSimpleIniA &ini)
+{
+    LogFunctionName;
+#ifdef ARC_BUILD
+    return true;
+#else
     CSimpleIniA::TNamesDepend keys;
     ini.GetAllKeys(INPUT_DESC_SECTION, keys);
     for (auto const &key : keys)
@@ -101,15 +106,43 @@ bool InputDescriptors::Load(const char *path)
             _descriptors[index].SetDescription(value);
         }
     }
-    return true;
+
+    Update();
+#endif
 }
 
 bool InputDescriptors::Save(const char *path)
 {
     LogFunctionName;
+
+#ifdef ARC_BUILD
+    return true;
+#else
+
     LogDebug("path: %s", path);
 
     CSimpleIniA ini;
+
+    if (Save(ini))
+    {
+        File::Remove(path);
+        return ini.SaveFile(path, false) == SI_OK;
+    }
+    else
+    {
+        return false;
+    }
+
+#endif
+}
+
+bool InputDescriptors::Save(CSimpleIniA &ini)
+{
+    LogFunctionName;
+
+#ifdef ARC_BUILD
+    return true;
+#else
     char num[8];
     bool need_save = false;
     for (size_t i = 0; i < INPUT_DESC_COUNT; i++)
@@ -123,13 +156,6 @@ bool InputDescriptors::Save(const char *path)
         }
     }
 
-    if (need_save)
-    {
-        File::Remove(path);
-        return ini.SaveFile(path, false) == SI_OK;
-    }
-    else
-    {
-        return false;
-    }
+    return need_save;
+#endif
 }

@@ -228,8 +228,11 @@ namespace Emu4Vita
             // LogDebug("%d %s", i, GraphicsStr.at(i));
         }
 
+        core_options.Save(ini);
+        input_descriptors.Save(ini);
+
         File::Remove(path);
-        return ini.SaveFile(path, false) == SI_OK && core_options.Save();
+        return ini.SaveFile(path, false) == SI_OK;
     }
 
     bool Config::Load(const char *path)
@@ -283,7 +286,8 @@ namespace Emu4Vita
             graphics[i] = ini.GetLongValue(GRAPHICS_SECTION, GraphicsStr.at(i), graphics[i]);
         }
 
-        core_options.Load();
+        core_options.Load(ini);
+        input_descriptors.Load();
 
         return true;
     }

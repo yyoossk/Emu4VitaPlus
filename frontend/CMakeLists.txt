@@ -5,6 +5,7 @@ include_directories(
     source/ui
     source/audio
     source/emu
+    source/core_spec
     ../share/source
     ../deps/libretro-common/include
     ../deps/libvita2d/libvita2d/include
@@ -23,5 +24,5 @@ file(GLOB SRC
 add_library(frontend OBJECT ${SRC})
 
 add_custom_target(FILE_TOUCHER
-        COMMAND ${CMAKE_COMMAND} -E touch_nocreate  ${CMAKE_CURRENT_SOURCE_DIR}/source/ui/tab_about.cpp)
+    COMMAND ${CMAKE_COMMAND} -E touch_nocreate ${CMAKE_CURRENT_SOURCE_DIR}/source/ui/tab_about.cpp)
 add_dependencies(frontend FILE_TOUCHER)
