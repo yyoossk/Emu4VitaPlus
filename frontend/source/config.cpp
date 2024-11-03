@@ -141,7 +141,7 @@ namespace Emu4Vita
     {
         LogFunctionName;
 
-        rewind = 1;
+        rewind = DEFAULT_ENABLE_REWIND;
         rewind_buf_size = DEFAULT_REWIND_BUF_SIZE;
         last_rom = "ux0:";
         mute = false;

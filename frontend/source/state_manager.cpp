@@ -4,6 +4,7 @@
 #include "defines.h"
 #include "log.h"
 #include "emulator.h"
+#include "video.h"
 
 CoreStateManager *gStateManager = nullptr;
 vita2d_texture *State::_empty_texture = nullptr;
@@ -134,9 +135,12 @@ bool State::Remove()
     result &= File::Remove(_image_path.c_str());
     if (_texture)
     {
+        gVideo->Lock();
         vita2d_free_texture(_texture);
         _texture = nullptr;
+        gVideo->Unlock();
     }
+    _valid = false;
     return result;
 }
 

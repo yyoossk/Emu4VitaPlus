@@ -20,8 +20,6 @@ public:
         {
             _buf[i] = vita2d_create_empty_texture_format(width, height, format);
         }
-
-        sceKernelCreateLwMutex(&_mutex, "texture_buf_mutex", 0, 1, nullptr);
     };
 
     virtual ~TextureBuf()
@@ -33,15 +31,10 @@ public:
         {
             vita2d_free_texture(_buf[i]);
         }
-
-        sceKernelDeleteLwMutex(&_mutex);
     }
 
     size_t GetWidth() const { return _width; };
     size_t GetHeight() const { return _height; };
-
-    void Lock() { sceKernelLockLwMutex(&_mutex, 1, nullptr); };
-    void Unlock() { sceKernelUnlockLwMutex(&_mutex, 1); };
 
     vita2d_texture *Next()
     {
@@ -49,14 +42,17 @@ public:
         return _buf[_index];
     };
 
-    vita2d_texture *StartNext()
+    vita2d_texture *NextBegin()
     {
         size_t index = _index;
         LOOP_PLUS_ONE(index, TEXTURE_BUF_COUNT);
         return _buf[index];
     };
 
-    void EndNext() { LOOP_PLUS_ONE(_index, TEXTURE_BUF_COUNT); };
+    void NextEnd()
+    {
+        LOOP_PLUS_ONE(_index, TEXTURE_BUF_COUNT);
+    };
 
     vita2d_texture *Current()
     {
@@ -72,7 +68,6 @@ public:
     }
 
 private:
-    SceKernelLwMutexWork _mutex;
     size_t _width, _height;
     size_t _index;
     vita2d_texture *_buf[TEXTURE_BUF_COUNT];

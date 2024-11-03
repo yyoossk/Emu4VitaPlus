@@ -77,8 +77,6 @@ void Emulator::Show()
     // LogDebug("%f %f %f %f", _video_rect.x, _video_rect.y, _video_rect.width, _video_rect.height);
     // LogDebug("%f %f", _video_rect.width / _texture_buf->GetWidth(), _video_rect.height / _texture_buf->GetHeight());
 
-    // _texture_buf->Unlock();
-
     if (gConfig->graphics[GRAPHICS_OVERLAY] > 0 && gConfig->graphics[GRAPHICS_OVERLAY_MODE] == CONFIG_GRAPHICS_OVERLAY_MODE_OVERLAY)
     {
         vita2d_texture *tex = (*gOverlays)[gConfig->graphics[GRAPHICS_OVERLAY] - 1].Get();
@@ -102,10 +100,9 @@ bool Emulator::GetCurrentSoftwareFramebuffer(retro_framebuffer *fb)
         return false;
     }
 
-    gVideo->Lock();
     // LogDebug("GetCurrentSoftwareFramebuffer _texture_buf->Current() %08x", _texture_buf->Current());
     _soft_frame_buf_render = true;
-    vita2d_texture *texture = _texture_buf->Next();
+    vita2d_texture *texture = _texture_buf->NextBegin();
 
     fb->data = vita2d_texture_get_datap(texture);
     fb->width = vita2d_texture_get_width(texture);

@@ -230,7 +230,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
 
     case RETRO_ENVIRONMENT_GET_MESSAGE_INTERFACE_VERSION:
         LogDebug("  cmd: RETRO_ENVIRONMENT_GET_MESSAGE_INTERFACE_VERSION");
-        *(unsigned *)data = RETRO_ENVIRONMENT_SET_MESSAGE_EXT;
+        *(unsigned *)data = 1;
         break;
 
     case RETRO_ENVIRONMENT_SET_MESSAGE_EXT:
@@ -347,8 +347,7 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
                      gEmulator->_av_info.geometry.aspect_ratio);
         }
 
-        if (!gEmulator->_soft_frame_buf_render)
-            gVideo->Lock();
+        gVideo->Lock();
 
         if (gEmulator->_texture_buf != nullptr)
         {
@@ -367,41 +366,38 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
         gEmulator->_graphics_config_changed = false;
         gEmulator->_last_texture = nullptr;
 
-        if (!gEmulator->_soft_frame_buf_render)
-            gVideo->Unlock();
-    }
-
-    if (gEmulator->_soft_frame_buf_render)
-    {
         gVideo->Unlock();
+
         return;
     }
-
-    BeginProfile("VideoRefreshCallback");
-
-    vita2d_texture *texture = gEmulator->_texture_buf->Next();
-
-    unsigned out_pitch = vita2d_texture_get_stride(texture);
-    uint8_t *out = (uint8_t *)vita2d_texture_get_datap(texture);
-    uint8_t *in = (uint8_t *)data;
-
-    if (pitch == out_pitch)
+    else if (!gEmulator->_soft_frame_buf_render)
     {
-        memcpy(out, in, pitch * height);
-    }
-    else
-    {
-        for (unsigned i = 0; i < height; i++)
+        BeginProfile("VideoRefreshCallback");
+
+        vita2d_texture *texture = gEmulator->_texture_buf->NextBegin();
+
+        unsigned out_pitch = vita2d_texture_get_stride(texture);
+        uint8_t *out = (uint8_t *)vita2d_texture_get_datap(texture);
+        uint8_t *in = (uint8_t *)data;
+
+        if (pitch == out_pitch)
         {
-            memcpy(out, in, pitch);
-            in += pitch;
-            out += out_pitch;
+            memcpy(out, in, pitch * height);
         }
+        else
+        {
+            for (unsigned i = 0; i < height; i++)
+            {
+                memcpy(out, in, pitch);
+                in += pitch;
+                out += out_pitch;
+            }
+        }
+        EndProfile("VideoRefreshCallback");
     }
 
-    gEmulator->_texture_buf->Unlock();
+    gEmulator->_texture_buf->NextEnd();
     gEmulator->_frame_count++;
-    EndProfile("VideoRefreshCallback");
 }
 
 size_t AudioSampleBatchCallback(const int16_t *data, size_t frames)

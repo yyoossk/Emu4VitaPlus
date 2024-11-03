@@ -30,8 +30,10 @@ const char CONSOLE[] = _CONSOLE;
 const char CONSOLE_DIR[] = "app0:data/" _CONSOLE;
 
 #if defined(ARC_BUILD) || defined(DOS_BUILD)
+const bool DEFAULT_ENABLE_REWIND = false;
 const size_t DEFAULT_REWIND_BUF_SIZE = 50;
 #else
+const bool DEFAULT_ENABLE_REWIND = true;
 const size_t DEFAULT_REWIND_BUF_SIZE = 10;
 #endif
 

@@ -8,7 +8,12 @@
 
 [百度网盘](https://pan.baidu.com/s/1chcOOw9G1GBtlkM9K4MtRg?pwd=E4VP)
 
-带log的版本会在 `ux0:data/EMU4VITAPLUS/[core]/Emu4Vita++.log` 中输出更多日志
+带log的版本会在 `ux0:data/EMU4VITAPLUS/[core]/Emu4Vita++.log` 中输出更多日志，但是会影响执行效率。
+
+# 问题反馈
+[https://github.com/noword/Emu4VitaPlus/issues](https://github.com/noword/Emu4VitaPlus/issues)
+
+QQ群：550802386
 
 # 截屏
 ![](screenshots/arch.jpg)
