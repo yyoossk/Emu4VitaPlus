@@ -591,6 +591,7 @@ void Ui::_OnDialog(Input *input, int index)
     {
     case DIALOG_CLEAN_CACHE:
     default:
+        File::RemoveAllFiles(ARCADE_CACHE_DIR);
         File::RemoveAllFiles(ARCHIVE_CACHE_DIR);
         File::RemoveAllFiles(CACHE_DIR);
         break;

@@ -141,6 +141,7 @@ namespace Emu4Vita
     {
         LogFunctionName;
 
+        version = APP_VER_STR;
         rewind = DEFAULT_ENABLE_REWIND;
         rewind_buf_size = DEFAULT_REWIND_BUF_SIZE;
         last_rom = "ux0:";
@@ -205,6 +206,7 @@ namespace Emu4Vita
 
         CSimpleIniA ini;
 
+        ini.SetValue(MAIN_SECTION, "verison", version.c_str());
         ini.SetValue(MAIN_SECTION, "language", gLanguageNames[language]);
         ini.SetLongValue(MAIN_SECTION, "rewind", rewind);
         ini.SetLongValue(MAIN_SECTION, "rewind_buf_size", rewind_buf_size);
@@ -246,7 +248,18 @@ namespace Emu4Vita
             return false;
         }
 
-        const char *tmp = ini.GetValue(MAIN_SECTION, "language", "ENGLISH");
+        const char *tmp = ini.GetValue(MAIN_SECTION, "version");
+
+        if (strcmp(tmp, APP_VER_STR) != 0)
+        {
+            File::RemoveAllFiles(ARCADE_CACHE_DIR);
+            File::RemoveAllFiles(ARCHIVE_CACHE_DIR);
+            File::RemoveAllFiles(CACHE_DIR);
+            LogDebug("ignore config of old version");
+            return false;
+        }
+
+        tmp = ini.GetValue(MAIN_SECTION, "language", "ENGLISH");
         for (size_t i = 0; i < LANGUAGE_COUNT; i++)
         {
             if (strcmp(tmp, gLanguageNames[i]) == 0)

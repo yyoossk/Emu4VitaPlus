@@ -31,6 +31,7 @@ namespace Emu4Vita
         void DefaultGraphics();
         retro_language GetRetroLanguage();
 
+        std::string version;
         bool boot_from_arch;
         std::string last_rom;
         uint32_t language;
