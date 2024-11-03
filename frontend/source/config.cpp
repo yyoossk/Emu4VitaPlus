@@ -206,7 +206,7 @@ namespace Emu4Vita
 
         CSimpleIniA ini;
 
-        ini.SetValue(MAIN_SECTION, "verison", version.c_str());
+        ini.SetValue(MAIN_SECTION, "version", version.c_str());
         ini.SetValue(MAIN_SECTION, "language", gLanguageNames[language]);
         ini.SetLongValue(MAIN_SECTION, "rewind", rewind);
         ini.SetLongValue(MAIN_SECTION, "rewind_buf_size", rewind_buf_size);

@@ -4,6 +4,73 @@
 #include "state_manager.h"
 #include "config.h"
 
+void InputPollCallback()
+{
+    LogFunctionNameLimited;
+}
+
+int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsigned id)
+{
+    LogFunctionNameLimited;
+    if (port != 0)
+    {
+        return 0;
+    }
+
+    switch (device)
+    {
+    case RETRO_DEVICE_JOYPAD:
+    {
+        const uint32_t key_states = gEmulator->_input.GetKeyStates();
+
+        if (id == RETRO_DEVICE_ID_JOYPAD_MASK)
+        {
+            // gEmulator->_input.ClearKeyStates(gEmulator->_keys_mask);
+            int16_t state = 0;
+            int16_t key = 1;
+            for (size_t i = 0; i < 16; i++)
+            {
+                if (key_states & gEmulator->_keys[i])
+                {
+                    state |= key;
+                }
+                key <<= 1;
+            }
+
+            return state;
+        }
+        else if (id >= 16)
+        {
+            LogError("  InputStateCallback, wrong id %d", id);
+            return 0;
+        }
+        else
+        {
+            return (key_states & gEmulator->_keys[id]) ? 1 : 0;
+        }
+    }
+    break;
+
+    case RETRO_DEVICE_ANALOG:
+    {
+        if (gEmulator->_video_rotation == VIDEO_ROTATION_0)
+        {
+            const AnalogAxis aa = index == RETRO_DEVICE_INDEX_ANALOG_LEFT ? gEmulator->_input.GetLeftAnalogAxis() : gEmulator->_input.GetRightAnalogAxis();
+            return id == RETRO_DEVICE_ID_ANALOG_X ? ANALOG_PSV_TO_RETRO(aa.x) : ANALOG_PSV_TO_RETRO(aa.y);
+        }
+        else
+        {
+            const AnalogAxis aa = index == RETRO_DEVICE_INDEX_ANALOG_LEFT ? gEmulator->_input.GetRightAnalogAxis() : gEmulator->_input.GetLeftAnalogAxis();
+            return id == RETRO_DEVICE_ID_ANALOG_X ? -(ANALOG_PSV_TO_RETRO(aa.y) + 1) : ANALOG_PSV_TO_RETRO(aa.x);
+        }
+    }
+    break;
+
+    default:
+        return 0;
+    }
+}
+
 void Emulator::SetupKeys()
 {
     LogFunctionName;

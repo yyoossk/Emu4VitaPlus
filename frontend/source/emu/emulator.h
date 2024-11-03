@@ -27,6 +27,12 @@ enum VIDEO_ROTATION
     VIDEO_ROTATION_270
 };
 
+extern bool EnvironmentCallback(unsigned cmd, void *data);
+extern void VideoRefreshCallback(const void *data, unsigned width, unsigned height, size_t pitch);
+extern size_t AudioSampleBatchCallback(const int16_t *data, size_t frames);
+extern void InputPollCallback();
+extern int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsigned id);
+
 class Emulator
 {
 public:

@@ -3,10 +3,27 @@
 #include "audio.h"
 #include "config.h"
 #include "log.h"
+#include "profiler.h"
+#include "emulator.h"
+#include "app.h"
 
 #define AUDIO_SKIP_THRESHOLD 5
 
 const uint32_t SAMPLE_RATES[] = {8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000};
+
+size_t AudioSampleBatchCallback(const int16_t *data, size_t frames)
+{
+    LogFunctionNameLimited;
+
+    if (data && (!gConfig->mute) && gStatus.Get() == APP_STATUS_RUN_GAME)
+    {
+        BeginProfile("AudioSampleBatchCallback");
+        gEmulator->_audio.SendAudioSample(data, frames);
+        EndProfile("AudioSampleBatchCallback");
+    }
+
+    return frames;
+}
 
 Audio::Audio()
     : _in_sample_rate(0),
