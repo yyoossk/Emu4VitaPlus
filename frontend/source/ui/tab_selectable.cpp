@@ -68,6 +68,7 @@ void TabSeletable::Show(bool selected)
         ImGui::BeginChild(TEXT(_title_id), size);
         ImGui::Columns(_columns, NULL, false);
         size_t total = _GetItemCount();
+        ImGui::PushStyleColor(ImGuiCol_PopupBg, IM_COL32(36, 36, 36, 255));
         for (size_t i = 0; i < total; i++)
         {
             if (ItemVisable(i))
@@ -84,6 +85,7 @@ void TabSeletable::Show(bool selected)
                 LOOP_PLUS_ONE(_index, total);
             }
         }
+        ImGui::PopStyleColor();
         ImGui::Columns(1);
         ImGui::EndChild();
 
