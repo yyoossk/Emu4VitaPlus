@@ -41,7 +41,10 @@ set(CORE_SHORTS
     ProSystem
     Atari800
     DOSBoxSVN
-    DOSBoxPure)
+    DOSBoxPure
+    MAME2003Plus
+    MAME2000
+    MAME2003)
 
 set(CORES
     gpsp
@@ -68,7 +71,10 @@ set(CORES
     prosystem
     atari800
     dosbox_svn
-    dosbox_pure)
+    dosbox_pure
+    mame2003_plus
+    mame2000
+    mame2003)
 
 set(CORE_EBOOTS "")
 set(CORE_FILES "")

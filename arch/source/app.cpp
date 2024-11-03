@@ -77,9 +77,11 @@ App::App() : _index(0)
         new CoreButton("NGP", {{"Mednafen NeoPop", "MednafenNgp"}}),
         new CoreButton("ARC", {{"FBA Lite", "FBALite"},
                                {"FBA 2012", "FBA2012"},
-                               {"FinalBurn Neo", "FBNeo"}}),
-        new CoreButton("DOS", {{"DOS Box SVN", "DOSBoxSVN"},
-                               {"DOS BOX Pure", "DOSBoxPure"}})};
+                               {"FinalBurn Neo", "FBNeo"},
+                               {"MAME 2000", "MAME2000"},
+                               {"MAME 2003", "MAME2003"},
+                               {"MAME 2003 Plus", "MAME2003Plus"}}),
+        new CoreButton("DOS", {{"DOS Box SVN", "DOSBoxSVN"}, {"DOS BOX Pure", "DOSBoxPure"}})};
 
     SetInputHooks(&_input);
 

@@ -14,25 +14,16 @@
 
 void RetroLog(retro_log_level level, const char *fmt, ...)
 {
-    static int disable = -1;
-    if (disable == -1)
-    {
-        disable = strcmp(CORE_FULL_NAME, "mGBA") == 0;
-        // mgba will output a large number of logs when running gba rom
-    }
-
-    if (disable && gStatus.Get() == APP_STATUS_RUN_GAME)
+    if (gStatus.Get() == APP_STATUS_RUN_GAME)
     {
         return;
     }
-
-    LogFunctionName;
 
     va_list list;
     char str[512];
 
     va_start(list, fmt);
-    vsprintf(str, fmt, list);
+    vsnprintf(str, 512, fmt, list);
     va_end(list);
 
     switch (level)
@@ -51,7 +42,10 @@ void RetroLog(retro_log_level level, const char *fmt, ...)
         break;
     }
 
-    gUi->AppendLog(str);
+    if (level >= RETRO_LOG_INFO)
+    {
+        gUi->AppendLog(str);
+    }
 }
 
 bool EnvironmentCallback(unsigned cmd, void *data)
@@ -188,6 +182,14 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         {
             *(retro_language *)data = gConfig->GetRetroLanguage();
             LogDebug("  retro_language:%d", *(retro_language *)data);
+        }
+        break;
+
+    case RETRO_ENVIRONMENT_GET_LED_INTERFACE:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_GET_LED_INTERFACE");
+        if (data)
+        {
+            ((retro_led_interface *)data)->set_led_state = NULL;
         }
         break;
 

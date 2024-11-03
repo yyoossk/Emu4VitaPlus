@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CORE_NAME "dosbox_pure")
-set(CORE_SHORT_NAME "DOSBoxPure")
-set(CORE_FULL_NAME "DOSBox Pure")
-set(CONSOLE "DOS")
+set(CORE_NAME "mame2000")
+set(CORE_SHORT_NAME "MAME2000")
+set(CORE_FULL_NAME "MAME 2000")
+set(CONSOLE "ARC")
 
 if(TARGET ${CORE_NAME}_build)
   return()
@@ -11,15 +11,15 @@ endif()
 
 project(${CORE_NAME})
 
-set(APP_NAME "DOSBoxPure_4Vita")
-set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/dosbox-pure)
+set(APP_NAME "${CORE_SHORT_NAME}_4Vita")
+set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/mame2000-libretro)
 set(CORE_MAKEFILE_DIR ${CORE_DIR})
-set(CORE_MAKEFILE_NAME Makefile)
-set(SFO_TITLE_NAME "Emu4Vita++ (${CORE_NAME})")
-set(SFO_TITLE_ID "DOSPURE4V")
+set(CORE_MAKEFILE_NAME ${CORE_DIR}/Makefile)
+set(SFO_TITLE_NAME "Emu4Vita++ (${CORE_FULL_NAME})")
+set(SFO_TITLE_ID "MAME2K4VI")
 
 set(CORE_ARGS platform=vita EXTERNAL_ZLIB=1)
-set(CORE_SOFTWARE, "DOS")
+set(CORE_SOFTWARE "Arcade")
 
 set(PRIVATE_PKG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pkg)
 file(GLOB_RECURSE PKG_FILES ${PRIVATE_PKG_DIR}/*)
@@ -30,6 +30,6 @@ foreach(file ${PKG_FILES})
   list(APPEND PRIVATE_PKG_FILES FILE ${file} ${rel})
 endforeach()
 
-add_compile_definitions(DOSBOX_PURE_BUILD DOS_BUILD)
+add_compile_definitions(MAME2000_BUILD ARC_BUILD)
 
 add_subdirectory(.. ${CMAKE_CURRENT_BINARY_DIR}/app)

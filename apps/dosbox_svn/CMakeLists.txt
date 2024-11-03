@@ -11,7 +11,7 @@ endif()
 
 project(${CORE_NAME})
 
-set(APP_NAME "DOSBox_4Vita")
+set(APP_NAME "DOSBoxSVN_4Vita")
 set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/dosbox-svn/libretro)
 set(CORE_MAKEFILE_DIR ${CORE_DIR})
 set(CORE_MAKEFILE_NAME Makefile.libretro)

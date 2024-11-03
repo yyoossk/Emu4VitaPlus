@@ -97,7 +97,7 @@ const char *ArcadeManager::GetCachedPath(const char *path)
     ArchiveReader *reader = gArchiveReaderFactory->Get(path);
     if (reader == nullptr || !reader->Open(path))
     {
-        return nullptr;
+        return path;
     }
 
     std::unordered_map<uint32_t, uint32_t> offsets; // offset:count
@@ -125,7 +125,7 @@ const char *ArcadeManager::GetCachedPath(const char *path)
 
     if (offsets.size() == 0)
     {
-        return nullptr;
+        return path;
     }
 
     uint32_t offset = 0;
@@ -158,7 +158,7 @@ const char *ArcadeManager::GetCachedPath(const char *path)
     }
     else
     {
-        return nullptr;
+        return path;
     }
 }
 #else

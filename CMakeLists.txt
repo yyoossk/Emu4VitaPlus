@@ -41,7 +41,10 @@ set(CORES
     prosystem
     atari800
     dosbox_svn
-    dosbox_pure)
+    dosbox_pure
+    mame2003_plus
+    mame2000
+    mame2003)
 
 set(BUILD_LIST "All" "Arch" ${CORES})
 string(REPLACE "|" " " BUILD_LIST_STR ${BUILD_LIST})

@@ -7,6 +7,7 @@ macro(gen_arc_dat OUTPUT_PATH)
 
     set(ARC_SCRIPT grab_arc_dat.py)
     set(ARC_TAG ${APP_NAME}_ARC_DAT)
+    message(${ARC_DAT_PATH})
 
     add_custom_command(
         OUTPUT

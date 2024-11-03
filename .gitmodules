@@ -83,3 +83,12 @@
 [submodule "cores/dosbox-pure"]
 	path = cores/dosbox-pure
 	url = https://github.com/schellingb/dosbox-pure
+[submodule "cores/mame2003-plus-libretro"]
+	path = cores/mame2003-plus-libretro
+	url = https://github.com/libretro/mame2003-plus-libretro.git
+[submodule "cores/mame2000-libretro"]
+	path = cores/mame2000-libretro
+	url = https://github.com/libretro/mame2000-libretro.git
+[submodule "cores/mame2003-libretro"]
+	path = cores/mame2003-libretro
+	url = https://github.com/libretro/mame2003-libretro.git
