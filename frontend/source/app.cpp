@@ -18,6 +18,7 @@
 #include "favorite.h"
 #include "archive_reader_factory.h"
 #include "input_descriptor.h"
+#include "core_spec.h"
 
 AppStatus gStatus;
 
@@ -64,6 +65,8 @@ App::App(int argc, char *const argv[])
     {
         gConfig->Save();
     }
+
+    InitCoreSpec();
 
     gUi->AppendLog("Initialize emulator");
     gEmulator = new Emulator();

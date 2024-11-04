@@ -250,7 +250,7 @@ namespace Emu4Vita
 
         const char *tmp = ini.GetValue(MAIN_SECTION, "version");
 
-        if (strcmp(tmp, APP_VER_STR) != 0)
+        if (!(tmp && strcmp(tmp, APP_VER_STR) != 0))
         {
             File::RemoveAllFiles(ARCADE_CACHE_DIR);
             File::RemoveAllFiles(ARCHIVE_CACHE_DIR);

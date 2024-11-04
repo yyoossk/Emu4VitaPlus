@@ -25,7 +25,6 @@ Emulator *gEmulator = nullptr;
 Emulator::Emulator()
     : _texture_buf(nullptr),
       _keys{0},
-      _soft_frame_buf_render(false),
       _info{0},
       _av_info{0},
       _graphics_config_changed(false),
@@ -90,7 +89,7 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
     gStateManager->Init(_current_name.c_str());
 
     retro_game_info game_info = {0};
-    _soft_frame_buf_render = false;
+
     char *buf = nullptr;
     const char *_path;
     if (*entry_name)

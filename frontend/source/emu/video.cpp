@@ -12,12 +12,6 @@ extern float _vita2d_ortho_matrix[4 * 4];
 void VideoRefreshCallback(const void *data, unsigned width, unsigned height, size_t pitch)
 {
     LogFunctionNameLimited;
-    if (((!data) || pitch == 0) && !gEmulator->_soft_frame_buf_render)
-    {
-        // LogDebug("video data is NULL");
-        // gEmulator->_delay.Wait();
-        return;
-    }
 
     if (width == 0 || height == 0)
     {
@@ -26,7 +20,10 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
         return;
     }
 
-    if (gEmulator->_graphics_config_changed || gEmulator->_texture_buf == nullptr || gEmulator->_texture_buf->GetWidth() != width || gEmulator->_texture_buf->GetHeight() != height)
+    if (gEmulator->_graphics_config_changed ||
+        gEmulator->_texture_buf == nullptr ||
+        gEmulator->_texture_buf->GetWidth() != width ||
+        gEmulator->_texture_buf->GetHeight() != height)
     {
         if (gEmulator->_texture_buf)
         {
@@ -44,35 +41,31 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
 
         gVideo->Lock();
 
-        if (gEmulator->_texture_buf != nullptr)
-        {
-            vita2d_wait_rendering_done();
-            delete gEmulator->_texture_buf;
-        }
-
-        gEmulator->_texture_buf = new TextureBuf<DEFAULT_TEXTURE_BUF_COUNT>(gEmulator->_video_pixel_format, width, height);
-        gEmulator->_texture_buf->SetFilter(gConfig->graphics[GRAPHICS_SMOOTH] ? SCE_GXM_TEXTURE_FILTER_LINEAR : SCE_GXM_TEXTURE_FILTER_POINT);
+        gEmulator->_CreateTextureBuf(gEmulator->_video_pixel_format, width, height);
         gEmulator->_SetVideoSize(width, height);
         gEmulator->_SetVertices(gEmulator->_video_rect.x, gEmulator->_video_rect.y,
                                 width, height,
                                 gEmulator->_video_rect.width / width,
                                 gEmulator->_video_rect.height / height,
                                 gEmulator->_video_rotation == VIDEO_ROTATION_90 ? M_PI : 0.f);
+
         gEmulator->_graphics_config_changed = false;
         gEmulator->_last_texture = nullptr;
 
         gVideo->Unlock();
-
-        if (gEmulator->_soft_frame_buf_render)
-            return;
     }
 
-    if (!gEmulator->_soft_frame_buf_render)
+    if ((!data) || pitch == 0)
     {
-        BeginProfile("VideoRefreshCallback");
-        gEmulator->_texture_buf->Lock();
-        vita2d_texture *texture = gEmulator->_texture_buf->NextBegin();
+        return;
+    }
 
+    BeginProfile("VideoRefreshCallback");
+
+    vita2d_texture *texture = gEmulator->_texture_buf->NextBegin();
+
+    if (data != vita2d_texture_get_datap(texture))
+    {
         unsigned out_pitch = vita2d_texture_get_stride(texture);
         uint8_t *out = (uint8_t *)vita2d_texture_get_datap(texture);
         uint8_t *in = (uint8_t *)data;
@@ -90,12 +83,12 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
                 out += out_pitch;
             }
         }
-        EndProfile("VideoRefreshCallback");
     }
 
     gEmulator->_texture_buf->NextEnd();
-    gEmulator->_texture_buf->Unlock();
     gEmulator->_frame_count++;
+
+    EndProfile("VideoRefreshCallback");
 }
 
 bool Emulator::NeedRender()
@@ -109,7 +102,9 @@ void Emulator::Show()
 {
     LogFunctionNameLimited;
 
-    if (gEmulator->_graphics_config_changed || gEmulator->_texture_buf == nullptr || !(gStatus.Get() & (APP_STATUS_RUN_GAME | APP_STATUS_REWIND_GAME | APP_STATUS_SHOW_UI_IN_GAME)))
+    APP_STATUS status = gStatus.Get();
+
+    if (gEmulator->_graphics_config_changed || gEmulator->_texture_buf == nullptr || !(status & (APP_STATUS_RUN_GAME | APP_STATUS_REWIND_GAME | APP_STATUS_SHOW_UI_IN_GAME)))
     {
         sceKernelDelayThread(100000);
         return;
@@ -188,19 +183,21 @@ bool Emulator::GetCurrentSoftwareFramebuffer(retro_framebuffer *fb)
     }
 
     // LogDebug("GetCurrentSoftwareFramebuffer _texture_buf->Current() %08x", _texture_buf->Current());
-    _soft_frame_buf_render = true;
 
-    _texture_buf->Lock();
     vita2d_texture *texture = _texture_buf->NextBegin();
 
+    if (fb->width != vita2d_texture_get_width(texture) ||
+        fb->height != vita2d_texture_get_height(texture))
+    {
+        return false;
+    }
+
     fb->data = vita2d_texture_get_datap(texture);
-    fb->width = vita2d_texture_get_width(texture);
-    fb->height = vita2d_texture_get_height(texture);
     fb->pitch = vita2d_texture_get_stride(texture);
     fb->format = _retro_pixel_format;
     fb->access_flags = RETRO_MEMORY_ACCESS_WRITE | RETRO_MEMORY_ACCESS_READ;
     fb->memory_flags = RETRO_MEMORY_TYPE_CACHED;
-    LogDebug("GetCurrentSoftwareFramebuffer %08x", texture);
+
     return true;
 }
 
