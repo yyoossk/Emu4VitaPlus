@@ -30,11 +30,15 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
     {
         if (gEmulator->_texture_buf)
         {
-            LogDebug("  old: (%d, %d) new: (%d, %d) aspect ratio: %0.4f",
+            LogDebug("  old: (%d, %d) new: (%d, %d)",
                      gEmulator->_texture_buf->GetWidth(),
                      gEmulator->_texture_buf->GetHeight(),
                      width,
-                     height,
+                     height);
+
+            LogDebug("  base width: %d base height: %d aspect ratio: %0.4f",
+                     gEmulator->_av_info.geometry.base_width,
+                     gEmulator->_av_info.geometry.base_height,
                      gEmulator->_av_info.geometry.aspect_ratio);
         }
 
@@ -46,7 +50,7 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
             delete gEmulator->_texture_buf;
         }
 
-        gEmulator->_texture_buf = new TextureBuf(gEmulator->_video_pixel_format, width, height);
+        gEmulator->_texture_buf = new TextureBuf<DEFAULT_TEXTURE_BUF_COUNT>(gEmulator->_video_pixel_format, width, height);
         gEmulator->_texture_buf->SetFilter(gConfig->graphics[GRAPHICS_SMOOTH] ? SCE_GXM_TEXTURE_FILTER_LINEAR : SCE_GXM_TEXTURE_FILTER_POINT);
         gEmulator->_SetVideoSize(width, height);
         gEmulator->_SetVertices(gEmulator->_video_rect.x, gEmulator->_video_rect.y,
@@ -228,6 +232,21 @@ void Emulator::_SetPixelFormat(retro_pixel_format format)
         delete _texture_buf;
         _texture_buf = nullptr;
     }
+}
+
+void Emulator::_CreateTextureBuf(SceGxmTextureFormat format, size_t width, size_t height)
+{
+    LogFunctionName;
+
+    if (_texture_buf != nullptr)
+    {
+        vita2d_wait_rendering_done();
+        delete _texture_buf;
+    }
+
+    _texture_buf = new TextureBuf<DEFAULT_TEXTURE_BUF_COUNT>(format, width, height);
+    _texture_buf->SetFilter(gConfig->graphics[GRAPHICS_SMOOTH] ? SCE_GXM_TEXTURE_FILTER_LINEAR : SCE_GXM_TEXTURE_FILTER_POINT);
+    _last_texture = nullptr;
 }
 
 void Emulator::_SetVideoSize(uint32_t width, uint32_t height)

@@ -4,8 +4,9 @@
 #include "defines.h"
 #include "utils.h"
 
-#define TEXTURE_BUF_COUNT 10
+#define DEFAULT_TEXTURE_BUF_COUNT 4
 
+template <size_t SIZE>
 class TextureBuf
 {
 public:
@@ -14,9 +15,9 @@ public:
     {
         LogFunctionName;
 
-        LogDebug("%d x %d (%d)", width, height, format);
+        LogDebug("  %d x %d (%d)", width, height, format);
 
-        for (size_t i = 0; i < TEXTURE_BUF_COUNT; i++)
+        for (size_t i = 0; i < SIZE; i++)
         {
             _buf[i] = vita2d_create_empty_texture_format(width, height, format);
         }
@@ -29,7 +30,7 @@ public:
         LogFunctionName;
 
         vita2d_wait_rendering_done();
-        for (size_t i = 0; i < TEXTURE_BUF_COUNT; i++)
+        for (size_t i = 0; i < SIZE; i++)
         {
             vita2d_free_texture(_buf[i]);
         }
@@ -45,20 +46,20 @@ public:
 
     vita2d_texture *Next()
     {
-        LOOP_PLUS_ONE(_index, TEXTURE_BUF_COUNT);
+        LOOP_PLUS_ONE(_index, SIZE);
         return _buf[_index];
     };
 
     vita2d_texture *NextBegin()
     {
         size_t index = _index;
-        LOOP_PLUS_ONE(index, TEXTURE_BUF_COUNT);
+        LOOP_PLUS_ONE(index, SIZE);
         return _buf[index];
     };
 
     void NextEnd()
     {
-        LOOP_PLUS_ONE(_index, TEXTURE_BUF_COUNT);
+        LOOP_PLUS_ONE(_index, SIZE);
     };
 
     vita2d_texture *Current()
@@ -78,5 +79,5 @@ private:
     SceKernelLwMutexWork _mutex;
     size_t _width, _height;
     size_t _index;
-    vita2d_texture *_buf[TEXTURE_BUF_COUNT];
+    vita2d_texture *_buf[SIZE];
 };

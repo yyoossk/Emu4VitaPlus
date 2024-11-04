@@ -77,6 +77,7 @@ private:
     void _SetPixelFormat(retro_pixel_format format);
     void _SetVideoSize(uint32_t width, uint32_t height);
     void _SetVertices(float tex_x, float tex_y, float tex_w, float tex_h, float x_scale, float y_scale, float rad);
+    void _CreateTextureBuf(SceGxmTextureFormat format, size_t width, size_t height);
     void _OnPsButton(Input *input);
     void _OnHotkeySave(Input *input);
     void _OnHotkeyLoad(Input *input);
@@ -98,7 +99,7 @@ private:
 
     SceGxmTextureFormat _video_pixel_format;
     retro_pixel_format _retro_pixel_format;
-    TextureBuf *_texture_buf;
+    TextureBuf<DEFAULT_TEXTURE_BUF_COUNT> *_texture_buf;
     Rect _video_rect;
     bool _graphics_config_changed;
     VIDEO_ROTATION _video_rotation;
