@@ -621,5 +621,19 @@
         "English": "After changing the settings, reset the game to take effect",
         "Chinese": "更改设置后，重置游戏以生效",
         "Comments": ""
+    },
+    {
+        "No.": "90",
+        "Tag": "ENABLED",
+        "English": "enabled",
+        "Chinese": "启用",
+        "Comments": ""
+    },
+    {
+        "No.": "91",
+        "Tag": "DISABLED",
+        "English": "disabled",
+        "Chinese": "禁用",
+        "Comments": ""
     }
 ]

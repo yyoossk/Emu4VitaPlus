@@ -116,25 +116,29 @@ void ItemSelectable::_OnCancel(Input *input)
 
 void ItemSelectable::OnActive(Input *input)
 {
+    input->PushCallbacks();
+
     if (_IsOnOff())
     {
         _OnKeyDown(input);
+        _OnClick(input);
     }
     else
     {
         _actived = true;
         _old_index = _GetIndex();
-        input->PushCallbacks();
         SetInputHooks(input);
     }
 }
+
+#define TEST(A, B) ((strcasecmp(_GetOptionString(0), TEXT(A)) == 0 && strcasecmp(_GetOptionString(1), TEXT(B)) == 0) || \
+                    (strcasecmp(_GetOptionString(0), TEXT(B)) == 0 && strcasecmp(_GetOptionString(1), TEXT(A)) == 0))
 
 bool ItemSelectable::_IsOnOff()
 {
     if (_GetTotalCount() == 2)
     {
-        if ((strcasecmp(_GetOptionString(0), TEXT(YES)) == 0 && strcasecmp(_GetOptionString(1), TEXT(NO)) == 0) ||
-            (strcasecmp(_GetOptionString(0), TEXT(NO)) == 0 && strcasecmp(_GetOptionString(1), TEXT(YES)) == 0))
+        if (TEST(YES, NO) || TEST(ENABLED, DISABLED))
         {
             return true;
         }

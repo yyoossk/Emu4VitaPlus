@@ -37,7 +37,11 @@ void *_sbrk_r(struct _reent *reent, ptrdiff_t incr)
 
 void _init_vita_heap(void)
 {
-	printf("_init_vita_heap");
+	printf("_init_vita_heap \n"
+		   "  _newlib_vm_size: %08x\n"
+		   "  _newlib_heap_size_user: %08x\n",
+		   _newlib_vm_size_user,
+		   _newlib_heap_size_user);
 	int _newlib_vm_size = 0;
 	if (&_newlib_vm_size_user != NULL)
 	{
@@ -90,12 +94,19 @@ void _init_vita_heap(void)
 	_newlib_heap_end = _newlib_heap_base + _newlib_heap_size;
 	_newlib_heap_cur = _newlib_heap_base;
 
+	printf("  _newlib_vm_memblock: %08x\n"
+		   "  _newlib_heap_memblock: %08x\n",
+		   _newlib_vm_memblock,
+		   _newlib_heap_memblock = 0);
+
 	return;
 failure:
 	_newlib_vm_memblock = 0;
 	_newlib_heap_memblock = 0;
 	_newlib_heap_base = 0;
 	_newlib_heap_cur = 0;
+
+	printf("_init_vita_heap failed\n");
 }
 
 int getVMBlock()
