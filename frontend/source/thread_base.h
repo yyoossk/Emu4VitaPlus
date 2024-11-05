@@ -22,9 +22,9 @@ public:
     bool Start(void *data, SceSize size);
     void Stop(bool force = false);
     bool IsRunning() { return _keep_running; };
-    void Lock();
+    int32_t Lock(uint32_t *timeout = NULL);
     void Unlock();
-    void Wait();
+    int32_t Wait(uint32_t *timeout = NULL);
     void Signal();
 
 protected:

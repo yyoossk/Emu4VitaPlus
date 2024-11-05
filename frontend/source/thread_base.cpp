@@ -102,9 +102,9 @@ void ThreadBase::Stop(bool force)
     _thread_id = -1;
 }
 
-void ThreadBase::Lock()
+int32_t ThreadBase::Lock(uint32_t *timeout)
 {
-    sceKernelLockLwMutex(&_mutex, 1, NULL);
+    sceKernelLockLwMutex(&_mutex, 1, timeout);
 }
 
 void ThreadBase::Unlock()
@@ -112,9 +112,9 @@ void ThreadBase::Unlock()
     sceKernelUnlockLwMutex(&_mutex, 1);
 }
 
-void ThreadBase::Wait()
+int32_t ThreadBase::Wait(uint32_t *timeout)
 {
-    sceKernelWaitSema(_semaid, 1, NULL);
+    sceKernelWaitSema(_semaid, 1, timeout);
 }
 
 void ThreadBase::Signal()

@@ -2,9 +2,14 @@
 #include "item_selectable.h"
 #include "defines.h"
 #include "utils.h"
+#include "icons.h"
+#include "log.h"
 
-ItemSelectable::ItemSelectable(const LanguageString text, LanguageString info)
-    : ItemBase(text, info),
+ItemSelectable::ItemSelectable(const LanguageString text,
+                               LanguageString info,
+                               CallbackFunc active_callback,
+                               CallbackFunc option_callback)
+    : ItemBase(text, info, active_callback, option_callback),
       _actived(false),
       _index(0)
 {
@@ -20,6 +25,18 @@ void ItemSelectable::Show(bool selected)
     ImGui::Selectable(text, selected);
     ImGui::NextColumn();
 
+    if (_IsOnOff())
+    {
+        _ShowOnOff(strcasecmp(_GetPreviewText(), TEXT(YES)) == 0);
+    }
+    else
+    {
+        _ShowCombo(text);
+    }
+}
+
+void ItemSelectable::_ShowCombo(const char *text)
+{
     bool is_popup = ImGui::IsPopupOpen(text);
 
     if (_actived && !is_popup)
@@ -43,6 +60,11 @@ void ItemSelectable::Show(bool selected)
         }
         ImGui::EndCombo();
     }
+}
+
+void ItemSelectable::_ShowOnOff(bool on)
+{
+    on ? ImGui::Text(ICON_ON) : ImGui::TextDisabled(ICON_OFF);
 }
 
 void ItemSelectable::SetInputHooks(Input *input)
@@ -94,8 +116,29 @@ void ItemSelectable::_OnCancel(Input *input)
 
 void ItemSelectable::OnActive(Input *input)
 {
-    _actived = true;
-    _old_index = _GetIndex();
-    input->PushCallbacks();
-    SetInputHooks(input);
+    if (_IsOnOff())
+    {
+        _OnKeyDown(input);
+    }
+    else
+    {
+        _actived = true;
+        _old_index = _GetIndex();
+        input->PushCallbacks();
+        SetInputHooks(input);
+    }
+}
+
+bool ItemSelectable::_IsOnOff()
+{
+    if (_GetTotalCount() == 2)
+    {
+        if ((strcasecmp(_GetOptionString(0), TEXT(YES)) == 0 && strcasecmp(_GetOptionString(1), TEXT(NO)) == 0) ||
+            (strcasecmp(_GetOptionString(0), TEXT(NO)) == 0 && strcasecmp(_GetOptionString(1), TEXT(YES)) == 0))
+        {
+            return true;
+        }
+    }
+
+    return false;
 }

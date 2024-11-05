@@ -35,6 +35,7 @@ const static ImWchar IconCharset[] = {0xe800, 0xe80c,
                                       0xf11b, 0xf11b,
                                       0xf135, 0xf135,
                                       0xf1de, 0xf1de,
+                                      0xf204, 0xf205,
                                       0x0000};
 
 const static ImWchar RomanNumCharset[] = {0x2160, 0x216c, 0x0000};

@@ -4,7 +4,10 @@
 class ItemSelectable : public ItemBase
 {
 public:
-    ItemSelectable(const LanguageString text, LanguageString info = "");
+    ItemSelectable(const LanguageString text,
+                   LanguageString info = "",
+                   CallbackFunc active_callback = nullptr,
+                   CallbackFunc option_callback = nullptr);
     virtual ~ItemSelectable();
 
     virtual void SetInputHooks(Input *input);
@@ -23,6 +26,9 @@ protected:
     virtual const char *_GetOptionString(size_t index) { return ""; };
     virtual size_t _GetIndex() { return _index; };
     virtual void _SetIndex(size_t index) { _index = index; };
+    bool _IsOnOff();
+    void _ShowCombo(const char *text);
+    void _ShowOnOff(bool on);
 
     bool _actived;
     size_t _index;

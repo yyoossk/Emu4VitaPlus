@@ -2,9 +2,9 @@
 #include <vector>
 #include <stdint.h>
 #include "language_string.h"
-#include "item_base.h"
+#include "item_selectable.h"
 
-class ItemConfig : public virtual ItemBase
+class ItemConfig : public ItemSelectable
 {
 public:
     ItemConfig(LanguageString text,
@@ -24,25 +24,15 @@ public:
 
     virtual ~ItemConfig();
 
-    virtual void SetInputHooks(Input *input);
-    virtual void UnsetInputHooks(Input *input);
-    virtual void Show(bool selected);
-    virtual void OnActive(Input *input);
-    virtual uint32_t GetConfig() const { return *_config; };
-    virtual void SetConfig(uint32_t value) { *_config = value; };
-
 protected:
     std::vector<LanguageString> _config_texts;
     uint32_t *_config;
 
-private:
-    void _OnKeyUp(Input *input);
-    void _OnKeyDown(Input *input);
-    void _OnClick(Input *input);
-    void _OnCancel(Input *input);
-
-    uint32_t _old_config;
-    bool _actived;
+    virtual void _OnClick(Input *input) override;
+    virtual size_t _GetTotalCount() override { return _config_texts.size(); };
+    virtual const char *_GetOptionString(size_t index) override { return _config_texts[index].Get(); };
+    virtual size_t _GetIndex() override { return *_config; };
+    virtual void _SetIndex(size_t index) override { *_config = index; };
 };
 
 class ItemIntConfig : public ItemConfig
@@ -57,7 +47,7 @@ public:
                   CallbackFunc active_callback = nullptr,
                   CallbackFunc option_callback = nullptr);
 
-    virtual void SetConfig(uint32_t value);
+    virtual void _SetIndex(size_t index) override;
 
 private:
     size_t _step;
