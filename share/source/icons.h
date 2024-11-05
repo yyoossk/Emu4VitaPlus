@@ -21,6 +21,8 @@
 #define ICON_ROCKET "\xef\x84\xb5"
 #define ICON_SLIDER "\xef\x87\x9e"
 #define ICON_PS "\xee\x80\x80"
+#define ICON_OFF "\xef\x88\x84"
+#define ICON_ON "\xef\x88\x85"
 
 #define ICON_STAR_SPACE ICON_STAR " "
 #define ICON_EMPTY_STAR_SPACE ICON_EMPTY_STAR " "
@@ -41,3 +43,5 @@
 #define ICON_ROCKET_SPACE ICON_ROCKET " "
 #define ICON_SLIDER_SPACE ICON_SLIDER " "
 #define ICON_PS_SPACE ICON_PS " "
+#define ICON_OFF_SPACE ICON_OFF " "
+#define ICON_ON_SPACE ICON_ON " "
