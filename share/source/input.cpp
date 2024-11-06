@@ -26,10 +26,15 @@ void Input::SetKeyDownCallback(uint32_t key, InputFunc func, bool turbo)
 {
     if (func == nullptr)
     {
-        UnsetKeyUpCallback(key);
+        UnsetKeyDownCallback(key);
     }
     else
     {
+        if (turbo)
+        {
+            _turbo_key |= key;
+        }
+
         for (auto &iter : _key_down_callbacks)
         {
             if (iter.key == key)
@@ -86,6 +91,8 @@ void Input::UnsetKeyDownCallback(uint32_t key)
             break;
         }
     }
+
+    _turbo_key &= ~key;
 }
 
 bool Input::Poll(bool waiting)
@@ -199,7 +206,6 @@ void Input::_ProcCallbacks(uint32_t key)
             }
         }
 
-        uint64_t current = sceKernelGetProcessTimeWide();
         if (_enable_key_up)
         {
             for (const auto &iter : _key_up_callbacks)
