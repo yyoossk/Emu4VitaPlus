@@ -6,7 +6,7 @@
 class TabSeletable : public TabBase
 {
 public:
-    TabSeletable(TEXT_ENUM title_id, std::vector<ItemBase *> items, int columns = 2);
+    TabSeletable(TEXT_ENUM title_id, std::vector<ItemBase *> items, int columns = 2, float column_ratio = -1.);
     TabSeletable(TEXT_ENUM title_id, int columns = 2);
     virtual ~TabSeletable();
 
@@ -33,4 +33,5 @@ protected:
     size_t _index;
     std::string _status_text;
     int _columns;
+    float _column_ratio;
 };

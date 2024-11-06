@@ -13,9 +13,9 @@ public:
           _info(info),
           _active_callback(active_callback),
           _option_callback(option_callback),
-          _visable(visable){};
+          _visable(visable) {};
 
-    virtual ~ItemBase(){};
+    virtual ~ItemBase() {};
 
     virtual void Show(bool selected)
     {

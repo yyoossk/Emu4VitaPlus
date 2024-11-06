@@ -139,7 +139,7 @@ ux0:/data/EMU4VITAPLUS/[内核]/savestates/[rom]
 ux0:/data/EMU4VITAPLUS/[内核]/savefiles
 
 ## BIOS
-ux0:/data/EMU4VITAPLUS/[内核]/system
+ux0:/data/EMU4VITAPLUS/system
 
 请自行将对应的 BIOS 文件复制到此目录中【重要】
 

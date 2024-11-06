@@ -10,7 +10,7 @@
 #include "gb2312.i"
 
 #define APP_ASSETS_DIR "app0:assets"
-#define TEXT_FONT_NAME "FZLantingHei.ttf"
+#define TEXT_FONT_NAME "AlibabaPuHuiTi-2-65-Medium.ttf"
 #define GAMEPAD_FONT_NAME "promptfont.ttf"
 #define ICON_FONT_NAME "fontello.ttf"
 #define FONT_CACHE_VERSION 1
@@ -196,17 +196,19 @@ static bool load_font_cache(const char *path)
 
 static const ImWchar *get_glyph_ranges(uint32_t language)
 {
-    switch (language)
-    {
-    case LANGUAGE_CHINESE:
-        return GB_2312;
-    // case LANGUAGE_JAPANESE:
-    //     glyph_ranges = GetGlyphRangesJapanese();
-    //     break;
-    case LANGUAGE_ENGLISH:
-    default:
-        return ImGui::GetIO().Fonts->GetGlyphRangesDefault();
-    }
+    return GB_2312;
+
+    // switch (language)
+    // {
+    // case LANGUAGE_CHINESE:
+    //     return GB_2312;
+    // // case LANGUAGE_JAPANESE:
+    // //     glyph_ranges = GetGlyphRangesJapanese();
+    // //     break;
+    // case LANGUAGE_ENGLISH:
+    // default:
+    //     return ImGui::GetIO().Fonts->GetGlyphRangesDefault();
+    // }
 }
 
 static uint32_t get_glyph_ranges_crc32(uint32_t language)
@@ -257,12 +259,12 @@ void My_Imgui_Create_Font(uint32_t language, const char *cache_path)
     const ImWchar *glyph_ranges = get_glyph_ranges(language);
 
     io.Fonts->AddFontFromFileTTF(APP_ASSETS_DIR "/" TEXT_FONT_NAME,
-                                 25.0f,
+                                 27.0f,
                                  &font_config,
                                  glyph_ranges);
     font_config.MergeMode = true;
     io.Fonts->AddFontFromFileTTF(APP_ASSETS_DIR "/" TEXT_FONT_NAME,
-                                 25.0f,
+                                 27.0f,
                                  &font_config,
                                  RomanNumCharset);
     io.Fonts->AddFontFromFileTTF(APP_ASSETS_DIR "/" GAMEPAD_FONT_NAME,

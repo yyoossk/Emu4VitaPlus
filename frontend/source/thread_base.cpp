@@ -104,7 +104,7 @@ void ThreadBase::Stop(bool force)
 
 int32_t ThreadBase::Lock(uint32_t *timeout)
 {
-    sceKernelLockLwMutex(&_mutex, 1, timeout);
+    return sceKernelLockLwMutex(&_mutex, 1, timeout);
 }
 
 void ThreadBase::Unlock()
@@ -114,7 +114,7 @@ void ThreadBase::Unlock()
 
 int32_t ThreadBase::Wait(uint32_t *timeout)
 {
-    sceKernelWaitSema(_semaid, 1, timeout);
+    return sceKernelWaitSema(_semaid, 1, timeout);
 }
 
 void ThreadBase::Signal()

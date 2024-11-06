@@ -5,6 +5,7 @@
 
 #define ROOT_DIR "ux0:data/EMU4VITAPLUS"
 #define CACHE_DIR ROOT_DIR "/cache"
+#define CORE_SYSTEM_DIR ROOT_DIR "/system"
 #define ARCHIVE_CACHE_DIR CACHE_DIR "/archives"
 #define ARCADE_CACHE_DIR CACHE_DIR "/arcades"
 #define OVERLAYS_DIR_NAME "overlays"
@@ -17,7 +18,6 @@ extern const char APP_CONFIG_PATH[];
 extern const char APP_INPUT_DESC_PATH[];
 extern const char APP_CORE_CONFIG_PATH[];
 extern const char APP_FAVOURITE_PATH[];
-extern const char CORE_SYSTEM_DIR[];
 extern const char CORE_SAVEFILES_DIR[];
 extern const char CORE_SAVESTATES_DIR[];
 extern const char CORE_CHEATS_DIR[];

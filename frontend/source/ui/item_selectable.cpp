@@ -27,7 +27,8 @@ void ItemSelectable::Show(bool selected)
 
     if (_IsOnOff())
     {
-        _ShowOnOff(strcasecmp(_GetPreviewText(), TEXT(YES)) == 0);
+        _ShowOnOff(strcasecmp(_GetPreviewText(), TEXT(YES)) == 0 ||
+                   strcasecmp(_GetPreviewText(), TEXT(ENABLED)) == 0);
     }
     else
     {
@@ -105,6 +106,7 @@ void ItemSelectable::_OnClick(Input *input)
 {
     _actived = false;
     input->PopCallbacks();
+    ItemBase::OnActive(input);
 }
 
 void ItemSelectable::_OnCancel(Input *input)

@@ -556,7 +556,7 @@ void Ui::UpdateCheatOptions()
         delete _tabs[TAB_INDEX_CHEAT];
     }
 
-    _tabs[TAB_INDEX_CHEAT] = new TabSeletable(TAB_CHEAT, options);
+    _tabs[TAB_INDEX_CHEAT] = new TabSeletable(TAB_CHEAT, options, 2, 0.8);
     gVideo->Unlock();
 }
 

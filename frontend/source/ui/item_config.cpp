@@ -52,12 +52,7 @@ void ItemConfig::_OnClick(Input *input)
     LogFunctionName;
 
     ItemSelectable::_OnClick(input);
-
     gConfig->Save();
-    if (_active_callback != nullptr)
-    {
-        _active_callback();
-    }
 }
 
 ItemIntConfig::ItemIntConfig(LanguageString text,

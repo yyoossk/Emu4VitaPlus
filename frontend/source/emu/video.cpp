@@ -87,6 +87,7 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
 
     gEmulator->_texture_buf->NextEnd();
     gEmulator->_frame_count++;
+    gVideo->Signal();
 
     EndProfile("VideoRefreshCallback");
 }

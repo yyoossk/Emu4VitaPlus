@@ -6,6 +6,8 @@ GB_2312 = (
     0x00FF,  # Basic Latin + Latin Supplement
     0x2000,
     0x206F,  # General Punctuation
+    0x2160,
+    0x216C,  # Roman numerals
     0x3000,
     0x30FF,  # CJK Symbols and Punctuations, Hiragana, Katakana
     0x31F0,
@@ -7104,8 +7106,8 @@ for i in range(0, len(GB_2312), 2):
     TEXTS += ''.join(chr(x) for x in range(GB_2312[i], GB_2312[i + 1] + 1))
 
 # 加载TTF字体文件
-input_font_path = "FZLantingHei.ttf"
-output_font_path = "../share/pkg/assets/FZLantingHei.ttf"
+input_font_path = "AlibabaPuHuiTi-2-65-Medium.ttf"
+output_font_path = "../share/pkg/assets/AlibabaPuHuiTi-2-65-Medium.ttf"
 font = TTFont(input_font_path)
 
 # 创建子集化选项，删除Hinting信息

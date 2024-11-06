@@ -6,10 +6,7 @@
 #include "config_types.h"
 #include "input.h"
 #include "config.h"
-
-#ifndef ROOT_DIR
-#define ROOT_DIR "ux0:data/EMU4VITAPLUS"
-#endif
+#include "defines.h"
 
 #define _APP_DATA_DIR ROOT_DIR "/" _APP_DIR_NAME
 
@@ -19,7 +16,6 @@ const char APP_CONFIG_PATH[] = _APP_DATA_DIR "/config.ini";
 const char APP_INPUT_DESC_PATH[] = _APP_DATA_DIR "/input_desc.ini";
 const char APP_CORE_CONFIG_PATH[] = _APP_DATA_DIR "/core.ini";
 const char APP_FAVOURITE_PATH[] = _APP_DATA_DIR "/favourite.ini";
-const char CORE_SYSTEM_DIR[] = _APP_DATA_DIR "/system";
 const char CORE_SAVEFILES_DIR[] = _APP_DATA_DIR "/savefiles";
 const char CORE_SAVESTATES_DIR[] = _APP_DATA_DIR "/savestates";
 const char CORE_CHEATS_DIR[] = _APP_DATA_DIR "/cheats";

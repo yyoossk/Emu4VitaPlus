@@ -41,8 +41,11 @@ int Video::_DrawThread(SceSize args, void *argp)
         status = gStatus.Get();
         if (status == APP_STATUS_RUN_GAME && !gEmulator->NeedRender())
         {
-            sceKernelDelayThread(1000);
-            continue;
+            uint32_t timeout = 1000;
+            if (video->Wait(&timeout) == SCE_KERNEL_ERROR_WAIT_TIMEOUT)
+            {
+                continue;
+            }
         }
 
         video->Lock();

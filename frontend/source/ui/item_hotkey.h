@@ -43,7 +43,7 @@ public:
 
     virtual ~ItemHotkey() {};
 
-    void Show(bool selected) override
+    virtual void Show(bool selected) override
     {
         const char *text = GetText();
         ImGui::Selectable(text, selected);
@@ -86,12 +86,12 @@ public:
     };
 
 private:
-    size_t _GetTotalCount() override
+    virtual size_t _GetTotalCount() override
     {
         return PSV_KEYS_SIZE;
     };
 
-    const char *_GetPreviewText() override
+    virtual const char *_GetPreviewText() override
     {
         static uint32_t old_hotkey = 0;
         static std::string s;
@@ -121,12 +121,12 @@ private:
         return s.c_str();
     };
 
-    const char *_GetOptionString(size_t index) override
+    virtual const char *_GetOptionString(size_t index) override
     {
         return Emu4Vita::Config::ControlTextMap.at(PsvKeys[index]).Get();
     };
 
-    void _OnClick(Input *input) override
+    virtual void _OnClick(Input *input) override
     {
         uint32_t k = PsvKeys[_index];
         if (*_hotkey & k)

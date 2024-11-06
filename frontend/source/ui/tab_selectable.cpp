@@ -3,11 +3,12 @@
 #include "defines.h"
 #include "utils.h"
 
-TabSeletable::TabSeletable(TEXT_ENUM title_id, std::vector<ItemBase *> items, int columns)
+TabSeletable::TabSeletable(TEXT_ENUM title_id, std::vector<ItemBase *> items, int columns, float column_ratio)
     : TabBase(title_id),
       _items(std::move(items)),
       _index(0),
-      _columns(columns)
+      _columns(columns),
+      _column_ratio(column_ratio)
 {
     LogFunctionName;
 }
@@ -55,18 +56,24 @@ void TabSeletable::Show(bool selected)
     if (ImGui::BeginTabItem(title.c_str(), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
     {
         ImVec2 size = {0.f, 0.f};
+        float avail_width = ImGui::GetContentRegionAvailWidth();
         if (ItemVisable(_index))
         {
             _status_text = _items[_index]->GetInfo();
             if (_status_text.size() > 0)
             {
                 ImVec2 s = ImGui::CalcTextSize(_status_text.c_str());
-                size.y = -s.y * (s.x / ImGui::GetContentRegionAvailWidth() + 1);
+                size.y = -s.y * (s.x / avail_width + 1);
             }
         }
 
         ImGui::BeginChild(TEXT(_title_id), size);
         ImGui::Columns(_columns, NULL, false);
+        if (_columns == 2 && _column_ratio > 0)
+        {
+            ImGui::SetColumnOffset(1, avail_width * _column_ratio);
+        }
+
         size_t total = _GetItemCount();
         ImGui::PushStyleColor(ImGuiCol_PopupBg, IM_COL32(36, 36, 36, 255));
         for (size_t i = 0; i < total; i++)

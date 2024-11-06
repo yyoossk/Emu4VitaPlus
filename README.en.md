@@ -123,7 +123,7 @@ ux0:/data/EMU4VITAPLUS/[core]/savestates/[rom]
 ux0:/data/EMU4VITAPLUS/[core]/savefiles
 
 ## BIOS
-ux0:/data/EMU4VITAPLUS/[core]/system
+ux0:/data/EMU4VITAPLUS/system
 
 copy the corresponding BIOS file to this directory【IMPORTANT】
 

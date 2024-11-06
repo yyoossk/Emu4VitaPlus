@@ -6,22 +6,28 @@
 #include "emulator.h"
 #include "input_descriptor.h"
 
+void ItemControlOnClick()
+{
+    gConfig->Save();
+    gEmulator->SetupKeys();
+}
+
 class ItemControl : public ItemSelectable
 {
 public:
     ItemControl(ControlMapConfig *control_map)
-        : ItemSelectable(Emu4Vita::Config::ControlTextMap.at(control_map->psv)),
+        : ItemSelectable(Emu4Vita::Config::ControlTextMap.at(control_map->psv), "", ItemControlOnClick),
           _control_map(control_map) {};
     virtual ~ItemControl() {};
 
-    void Show(bool selected) override
+    virtual void Show(bool selected) override
     {
         ItemSelectable::Show(selected);
         ImGui::SameLine();
         _control_map->turbo ? ImGui::Text(TEXT(TURBO)) : ImGui::TextDisabled(TEXT(TURBO));
     };
 
-    void OnOption(Input *input) override
+    virtual void OnOption(Input *input) override
     {
         _control_map->turbo = !_control_map->turbo;
         gConfig->Save();
@@ -29,17 +35,17 @@ public:
     };
 
 private:
-    size_t _GetTotalCount() override
+    virtual size_t _GetTotalCount() override
     {
         return RETRO_KEYS_SIZE;
     };
 
-    const char *_GetOptionString(size_t index) override
+    virtual const char *_GetOptionString(size_t index) override
     {
         return gConfig->input_descriptors.Get(RETRO_KEYS[index]);
     };
 
-    size_t _GetIndex() override
+    virtual size_t _GetIndex() override
     {
         for (uint32_t i = 0; i < RETRO_KEYS_SIZE; i++)
         {
@@ -51,16 +57,9 @@ private:
         return 0;
     };
 
-    void _SetIndex(size_t index) override
+    virtual void _SetIndex(size_t index) override
     {
         _control_map->retro = RETRO_KEYS[index];
-    };
-
-    void _OnClick(Input *input) override
-    {
-        ItemSelectable::_OnClick(input);
-        gConfig->Save();
-        gEmulator->SetupKeys();
     };
 
     ControlMapConfig *_control_map;
