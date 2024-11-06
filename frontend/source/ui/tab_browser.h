@@ -30,4 +30,6 @@ private:
     vita2d_texture *_texture;
     float _texture_width;
     float _texture_height;
+    float _texture_max_width;
+    float _texture_max_height;
 };

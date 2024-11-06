@@ -20,6 +20,8 @@
 #include "input_descriptor.h"
 #include "core_spec.h"
 
+extern "C" int getVMBlock();
+
 AppStatus gStatus;
 
 App::App(int argc, char *const argv[])
@@ -48,7 +50,7 @@ App::App(int argc, char *const argv[])
     sceTouchSetSamplingState(SCE_TOUCH_PORT_BACK, SCE_TOUCH_SAMPLING_STATE_START);
 
     _IsSaveMode();
-
+    LogDebug("getVMBlock: %08x", getVMBlock());
     gConfig = new Emu4Vita::Config();
 
     gVideo = new Video();

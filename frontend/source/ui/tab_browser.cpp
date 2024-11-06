@@ -14,7 +14,9 @@
 #include "misc.h"
 
 TabBrowser::TabBrowser() : TabSeletable(TAB_BROWSER),
-                           _texture(nullptr)
+                           _texture(nullptr),
+                           _texture_max_width(BROWSER_TEXTURE_MAX_WIDTH),
+                           _texture_max_height(BROWSER_TEXTURE_MAX_HEIGHT)
 {
     LogFunctionName;
 
@@ -106,10 +108,12 @@ void TabBrowser::Show(bool selected)
 
         ImGui::ListBoxFooter();
         ImGui::NextColumn();
+        ImVec2 avail_size = ImGui::GetContentRegionAvail();
+        _texture_max_width = avail_size.x;
+        _texture_max_height = avail_size.y;
 
         if (_texture != nullptr)
         {
-            ImVec2 avail_size = ImGui::GetContentRegionAvail();
             ImVec2 pos = ImGui::GetCursorScreenPos();
             pos.x += ceilf(fmax(0.0f, (avail_size.x - _texture_width) * 0.5f));
             pos.y += ceilf(fmax(0.0f, (avail_size.y - _texture_height) * 0.5f));
@@ -267,8 +271,8 @@ void TabBrowser::_UpdateTexture()
     {
         CalcFitSize(vita2d_texture_get_width(_texture),
                     vita2d_texture_get_height(_texture),
-                    BROWSER_TEXTURE_MAX_WIDTH,
-                    BROWSER_TEXTURE_MAX_HEIGHT,
+                    _texture_max_width,
+                    _texture_max_height,
                     &_texture_width,
                     &_texture_height);
     }

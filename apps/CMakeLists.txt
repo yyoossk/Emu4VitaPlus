@@ -54,8 +54,8 @@ add_executable(${ELF_NAME} ${SRC})
 add_dependencies(${ELF_NAME} ${CORE_TAG})
 target_link_libraries(
     ${ELF_NAME}
-    frontend
     share
+    frontend
     ${LIBRETRO_LIBRARY}
     retro_comm
     vita2d
