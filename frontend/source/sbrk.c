@@ -41,6 +41,7 @@ void _init_vita_heap(void)
 	int _newlib_vm_size = 0;
 	if (&_newlib_vm_size_user != NULL)
 	{
+		printf("_newlib_vm_size_user %x\n", _newlib_vm_size_user);
 		_newlib_vm_size = ALIGN(_newlib_vm_size_user, 0x100000);
 		_newlib_vm_memblock = sceKernelAllocMemBlockForVM("code", _newlib_vm_size);
 
@@ -64,11 +65,11 @@ void _init_vita_heap(void)
 	SceKernelFreeMemorySizeInfo info;
 	info.size = sizeof(SceKernelFreeMemorySizeInfo);
 	sceKernelGetFreeMemorySize(&info);
-	printf("_newlib_vm_size_user %x\n", _newlib_vm_size_user);
 	printf("sceKernelGetFreeMemorySize %x\n", info.size_user);
 
 	if (&_newlib_heap_size_user != NULL)
 	{
+		printf("_newlib_heap_size_user %08x", _newlib_heap_size_user);
 		_newlib_heap_size = _newlib_heap_size_user;
 	}
 	else

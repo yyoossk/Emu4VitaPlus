@@ -29,6 +29,9 @@ QQ群：550802386
   - [FinalBurn Lite](https://gitee.com/yizhigai/libretro-fba-lite)
   - [FinalBurn Alpha 2012](https://github.com/libretro/fbalpha2012.git)
   - [FinalBurn Neo](https://github.com/libretro/FBNeo.git)
+  - [mame2000](https://github.com/libretro/mame2000-libretro)
+  - [mame2003](https://github.com/libretro/mame2003-libretro)
+  - [mame2003_plus](https://github.com/libretro/mame2003-plus-libretro)
 
 NES
   - [FCEUmm](https://github.com/libretro/libretro-fceumm)
@@ -64,6 +67,10 @@ WSC
 
 NGP
   - [Mednafen NeoPop](https://github.com/libretro/beetle-ngp-libretro)
+
+DOS(测试中)
+  - [DOS SVN](https://github.com/libretro/dosbox-svn)
+  - [DOS Pure](https://github.com/libretro/dosbox-pure)
 
 # 编译前准备
 ## Windows

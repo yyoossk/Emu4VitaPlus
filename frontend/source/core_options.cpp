@@ -110,14 +110,25 @@ void CoreOptions::_Load(const T *define)
         option = &(iter->second);
         option->desc = define->desc ? define->desc : emptry_string;
         option->info = define->info ? define->info : emptry_string;
+        option->default_value = define->default_value;
         option->values.clear();
     }
 
     const retro_core_option_value *v = define->values;
+    bool checked = false;
     while (v->value)
     {
+        if (!checked && option->value == v->value)
+        {
+            checked = true;
+        }
         option->values.emplace_back(*v);
         v++;
+    }
+
+    if (!checked)
+    {
+        option->Default();
     }
 }
 
@@ -170,9 +181,18 @@ bool CoreOptions::Load(CSimpleIniA &ini)
     ini.GetAllKeys(CORE_SECTION, keys);
     for (auto const &key : keys)
     {
+        const auto &iter = this->find(key.pItem);
         const char *value = ini.GetValue(CORE_SECTION, key.pItem, "NULL");
-        this->emplace(key.pItem, CoreOption{value});
         LogDebug("  %s = %s", key.pItem, value);
+
+        if (iter == this->end())
+        {
+            this->emplace(key.pItem, CoreOption{value});
+        }
+        else
+        {
+            iter->second.value = value;
+        }
     }
 
     return true;

@@ -11,6 +11,7 @@
 #include "file.h"
 #include "log.h"
 #include "defines.h"
+#include "core_spec.h"
 
 #define MAIN_SECTION "MAIN"
 #define HOTKEY_SECTION "HOTKEY"
@@ -165,6 +166,7 @@ namespace Emu4Vita
         DefaultControlMap();
         DefaultHotKey();
         DefaultGraphics();
+        DefaultCoreOptions(&core_options);
     }
 
     void Config::DefaultControlMap()

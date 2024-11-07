@@ -196,19 +196,19 @@ static bool load_font_cache(const char *path)
 
 static const ImWchar *get_glyph_ranges(uint32_t language)
 {
-    return GB_2312;
+    // return GB_2312;
 
-    // switch (language)
-    // {
-    // case LANGUAGE_CHINESE:
-    //     return GB_2312;
-    // // case LANGUAGE_JAPANESE:
-    // //     glyph_ranges = GetGlyphRangesJapanese();
-    // //     break;
-    // case LANGUAGE_ENGLISH:
-    // default:
-    //     return ImGui::GetIO().Fonts->GetGlyphRangesDefault();
-    // }
+    switch (language)
+    {
+    case LANGUAGE_CHINESE:
+        return GB_2312;
+    // case LANGUAGE_JAPANESE:
+    //     glyph_ranges = GetGlyphRangesJapanese();
+    //     break;
+    case LANGUAGE_ENGLISH:
+    default:
+        return ImGui::GetIO().Fonts->GetGlyphRangesDefault();
+    }
 }
 
 static uint32_t get_glyph_ranges_crc32(uint32_t language)

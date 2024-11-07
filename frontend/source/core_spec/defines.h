@@ -1,6 +1,6 @@
 #pragma once
-#include <stdint.h>
 #include <vector>
+#include <stdint.h>
 #include "config_types.h"
 
 #define ROOT_DIR "ux0:data/EMU4VITAPLUS"

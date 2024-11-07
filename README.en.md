@@ -19,6 +19,9 @@ Arcade
   - [FinalBurn Lite](https://gitee.com/yizhigai/libretro-fba-lite)
   - [FinalBurn Alpha 2012](https://github.com/libretro/fbalpha2012.git)
   - [FinalBurn Neo](https://github.com/libretro/FBNeo.git)
+  - [mame2000](https://github.com/libretro/mame2000-libretro)
+  - [mame2003](https://github.com/libretro/mame2003-libretro)
+  - [mame2003_plus](https://github.com/libretro/mame2003-plus-libretro)
 
 NES
   - [FCEUmm](https://github.com/libretro/libretro-fceumm)
@@ -54,6 +57,10 @@ WSC
 
 NGP
   - [Mednafen NeoPop](https://github.com/libretro/beetle-ngp-libretro)
+  
+DOS(In testing)
+  - [DOS SVN](https://github.com/libretro/dosbox-svn)
+  - [DOS Pure](https://github.com/libretro/dosbox-pure)
 
 # Pre-Compilation Preparation
 ## Windows
@@ -116,6 +123,9 @@ B --> C[./to_json.py]
 ## Priviews
 The program will automatically search for a `jpg` or `png` image with the same name in the `.previews` directory under the rom directory. If not found, it will search for the screenshots saved in instant state.
 
+## Cheats
+The program will be found the .cht file of the same name as rom in the rom directory, the `.cheats` directory under the rom directory, and `ux0:/data/EMU4VITAPLUS/[core]/cheats` directory, whichever is found first.
+
 ## Instant State
 ux0:/data/EMU4VITAPLUS/[core]/savestates/[rom]
 
@@ -131,5 +141,7 @@ copy the corresponding BIOS file to this directory【IMPORTANT】
 [yizhigai](https://gitee.com/yizhigai/Emu4Vita)
 
 [KyleBing](https://github.com/KyleBing/retro-game-console-icons)
+
+TearCrow
 
 The developers of all open source software used in this project
