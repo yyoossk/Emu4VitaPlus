@@ -12,18 +12,10 @@ const char *DEFAULT_CORE_SETTINGS[][2] =
     {{}};
 #endif
 
-#if defined(PCSX_REARMED_BUILD)
-// int _newlib_vm_size_user = 0x1000000;
-#endif
-
 void InitCoreSpec()
 {
 #if defined(PCSX_REARMED_BUILD)
     LogFunctionName;
-    // LogDebug("  _newlib_vm_size_user:   %08x", _newlib_vm_size_user);
-    // LogDebug("  _newlib_heap_size_user: %08x", _newlib_heap_size_user);
-    // _init_vita_heap();
-
 #endif
 }
 
