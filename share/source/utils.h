@@ -9,7 +9,6 @@
 
 namespace Utils
 {
-    void ShowTimePower();
     void Lower(std::string *s);
     void StripQuotes(std::string *s);
     void TrimString(std::string *s);

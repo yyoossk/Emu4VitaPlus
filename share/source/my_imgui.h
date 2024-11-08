@@ -31,3 +31,4 @@ IMGUI_API void My_Imgui_Destroy_Font();
 IMGUI_API bool My_Imgui_BeginCombo(const char *label, const char *preview_value, ImGuiComboFlags flags);
 IMGUI_API void My_Imgui_CenteredText(const char *text, ...);
 IMGUI_API bool My_Imgui_Selectable(const char *label, bool selected, TextMovingStatus *status);
+IMGUI_API void My_Imgui_ShowTimePower();
