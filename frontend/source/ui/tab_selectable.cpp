@@ -115,6 +115,8 @@ void TabSeletable::_OnKeyUp(Input *input)
         return;
     }
 
+    _moving_status.Reset();
+
     do
     {
         LOOP_MINUS_ONE(_index, _GetItemCount());
@@ -129,6 +131,8 @@ void TabSeletable::_OnKeyDown(Input *input)
     {
         return;
     }
+
+    _moving_status.Reset();
 
     do
     {

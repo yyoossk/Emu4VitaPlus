@@ -590,3 +590,33 @@ IMGUI_API void My_Imgui_CenteredText(const char *text, ...)
     ImGui::SetCursorPosX((win_width - text_width) * 0.5);
     ImGui::Text(buf);
 }
+
+IMGUI_API bool My_Imgui_Selectable(const char *label, bool selected, TextMovingStatus *status)
+{
+
+    float text_width = ImGui::CalcTextSize(label).x;
+    float item_width = ImGui::GetContentRegionAvailWidth();
+    if (text_width > item_width)
+    {
+        if (status->pos > 0)
+        {
+            status->delta = -1;
+            status->pos = 0;
+            status->delay.SetDelay(DEFAULT_TEXT_MOVING_START);
+        }
+        else if (status->pos + text_width < item_width)
+        {
+            status->delta = 1;
+            status->pos++;
+            status->delay.SetDelay(DEFAULT_TEXT_MOVING_START);
+        }
+        if (status->delay.TimeUp())
+        {
+            status->pos += status->delta;
+        }
+
+        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + status->pos);
+    }
+
+    return ImGui::Selectable(label, selected);
+}

@@ -93,7 +93,14 @@ void TabBrowser::Show(bool selected)
                 name.insert(0, ICON_EMPTY_STAR_SPACE);
             }
 
-            ImGui::Selectable(name.c_str(), i == _index);
+            if (i == _index)
+            {
+                My_Imgui_Selectable(name.c_str(), true, &_moving_status);
+            }
+            else
+            {
+                ImGui::Selectable(name.c_str());
+            }
 
             if (!item.is_dir)
             {
@@ -230,6 +237,8 @@ void TabBrowser::_OnKeyLeft(Input *input)
     {
         _index -= 10;
     }
+
+    _moving_status.Reset();
     _UpdateStatus();
     _UpdateTexture();
 }
@@ -242,6 +251,7 @@ void TabBrowser::_OnKeyRight(Input *input)
         _index = _GetItemCount() - 1;
     }
 
+    _moving_status.Reset();
     _UpdateStatus();
     _UpdateTexture();
 }

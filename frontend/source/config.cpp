@@ -254,9 +254,6 @@ namespace Emu4Vita
 
         if (!(tmp && strcmp(tmp, APP_VER_STR) == 0))
         {
-            File::RemoveAllFiles(ARCADE_CACHE_DIR);
-            File::RemoveAllFiles(ARCHIVE_CACHE_DIR);
-            File::RemoveAllFiles(CACHE_DIR);
             LogDebug("ignore config of old version");
             return false;
         }

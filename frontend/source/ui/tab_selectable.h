@@ -2,6 +2,7 @@
 #include <vector>
 #include "tab_base.h"
 #include "item_base.h"
+#include "my_imgui.h"
 
 class TabSeletable : public TabBase
 {
@@ -34,4 +35,5 @@ protected:
     std::string _status_text;
     int _columns;
     float _column_ratio;
+    TextMovingStatus _moving_status;
 };

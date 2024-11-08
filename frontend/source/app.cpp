@@ -52,6 +52,13 @@ App::App(int argc, char *const argv[])
     _IsSaveMode();
     LogDebug("getVMBlock: %08x", getVMBlock());
     gConfig = new Emu4Vita::Config();
+    if (!gConfig->Load())
+    {
+        File::RemoveAllFiles(ARCADE_CACHE_DIR);
+        File::RemoveAllFiles(ARCHIVE_CACHE_DIR);
+        File::RemoveAllFiles(CACHE_DIR);
+        gConfig->Save();
+    }
 
     gVideo = new Video();
     gUi = new Ui();
@@ -62,12 +69,7 @@ App::App(int argc, char *const argv[])
     _ParseParams(argc, argv);
 
     gUi->AppendLog("Initialize video");
-    gUi->AppendLog("Load config");
-    if (!gConfig->Load())
-    {
-        gConfig->Save();
-    }
-
+    gUi->AppendLog("Initialize core spec settings");
     InitCoreSpec();
 
     gUi->AppendLog("Initialize emulator");
