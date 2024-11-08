@@ -183,7 +183,6 @@ void ItemState::_OnClick(Input *input)
 
 void ItemState::_OnCancel(Input *input)
 {
-
   _actived = false;
   input->PopCallbacks();
 }

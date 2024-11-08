@@ -131,6 +131,7 @@ bool State::Load()
 bool State::Remove()
 {
     LogFunctionName;
+    _valid = false;
     bool result = File::Remove(_state_path.c_str());
     result &= File::Remove(_image_path.c_str());
     if (_texture)
@@ -140,7 +141,8 @@ bool State::Remove()
         _texture = nullptr;
         gVideo->Unlock();
     }
-    _valid = false;
+
+    LogDebug("Removed %d", result);
     return result;
 }
 

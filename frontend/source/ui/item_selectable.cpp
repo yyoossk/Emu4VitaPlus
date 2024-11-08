@@ -118,8 +118,6 @@ void ItemSelectable::_OnCancel(Input *input)
 
 void ItemSelectable::OnActive(Input *input)
 {
-    input->PushCallbacks();
-
     if (_IsOnOff())
     {
         _OnKeyDown(input);
@@ -129,6 +127,7 @@ void ItemSelectable::OnActive(Input *input)
     {
         _actived = true;
         _old_index = _GetIndex();
+        input->PushCallbacks();
         SetInputHooks(input);
     }
 }
