@@ -1,6 +1,7 @@
 #include "dialog.h"
 #include "defines.h"
 #include "utils.h"
+#include "video.h"
 
 Dialog::Dialog(LanguageString text,
                std::vector<LanguageString> options,
@@ -63,9 +64,11 @@ void Dialog::SetText(LanguageString text)
 
 void Dialog::OnActive(Input *input)
 {
+    gVideo->Lock();
     _actived = true;
     input->PushCallbacks();
     SetInputHooks(input);
+    gVideo->Unlock();
 }
 
 void Dialog::SetInputHooks(Input *input)
@@ -100,16 +103,20 @@ void Dialog::_OnKeyRight(Input *input)
 
 void Dialog::_OnClick(Input *input)
 {
+    gVideo->Lock();
     _actived = false;
     input->PopCallbacks();
     if (_callback)
     {
         _callback(input, _index);
     }
+    gVideo->Unlock();
 }
 
 void Dialog::_OnCancel(Input *input)
 {
+    gVideo->Lock();
     _actived = false;
     input->PopCallbacks();
+    gVideo->Unlock();
 }

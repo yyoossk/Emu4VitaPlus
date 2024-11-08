@@ -412,6 +412,11 @@ void Ui::_ShowBoot()
 void Ui::_ShowNormal()
 {
     _tabs[TAB_INDEX_FAVORITE]->SetVisable(gFavorites->size() > 0);
+    if (!_tabs[TAB_INDEX_FAVORITE]->Visable() && _tab_index == TAB_INDEX_FAVORITE)
+    {
+        _OnKeyL2(&_input);
+    }
+
     if (ImGui::BeginTabBar("MyTabBar", ImGuiTabBarFlags_FittingPolicyScroll))
     {
         for (size_t i = 0; i < TAB_INDEX_COUNT; i++)

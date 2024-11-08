@@ -4,6 +4,7 @@
 #include "utils.h"
 #include "icons.h"
 #include "log.h"
+#include "video.h"
 
 ItemSelectable::ItemSelectable(const LanguageString text,
                                LanguageString info,
@@ -104,16 +105,20 @@ void ItemSelectable::_OnKeyDown(Input *input)
 
 void ItemSelectable::_OnClick(Input *input)
 {
+    gVideo->Lock();
     _actived = false;
     input->PopCallbacks();
     ItemBase::OnActive(input);
+    gVideo->Unlock();
 }
 
 void ItemSelectable::_OnCancel(Input *input)
 {
+    gVideo->Lock();
     _actived = false;
     input->PopCallbacks();
     _SetIndex(_old_index);
+    gVideo->Unlock();
 }
 
 void ItemSelectable::OnActive(Input *input)
@@ -125,10 +130,12 @@ void ItemSelectable::OnActive(Input *input)
     }
     else
     {
+        gVideo->Lock();
         _actived = true;
         _old_index = _GetIndex();
         input->PushCallbacks();
         SetInputHooks(input);
+        gVideo->Unlock();
     }
 }
 
