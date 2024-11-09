@@ -171,6 +171,23 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         gEmulator->SetSpeed(gEmulator->_speed);
         break;
 
+    case RETRO_ENVIRONMENT_SET_CONTROLLER_INFO:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_SET_CONTROLLER_INFO");
+        {
+            const retro_controller_info *info = (const struct retro_controller_info *)data;
+            unsigned count = 0;
+            while (info->types)
+            {
+                for (unsigned i = 0; i < info->num_types; i++)
+                {
+                    LogDebug(" %d %d %d %s", count, i, info->types[i].id, info->types[i].desc);
+                }
+                info++;
+                count++;
+            }
+        }
+        break;
+
     case RETRO_ENVIRONMENT_SET_GEOMETRY:
         LogDebug("  cmd: RETRO_ENVIRONMENT_SET_GEOMETRY");
         gEmulator->ChangeGraphicsConfig();

@@ -122,6 +122,14 @@ bool State::Load()
     fclose(fp);
 
     bool result = retro_unserialize(buf, size);
+    if (result)
+    {
+        LogDebug("retro_unserialize successfully");
+    }
+    else
+    {
+        LogWarn("retro_unserialize failed");
+    }
 
     delete[] buf;
 

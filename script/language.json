@@ -642,5 +642,12 @@
         "English": "disabled",
         "Chinese": "禁用",
         "Comments": ""
+    },
+    {
+        "No.": "93",
+        "Tag": "LOAD_ROM_FAILED",
+        "English": "Failed to load rom",
+        "Chinese": "载入 rom 失败",
+        "Comments": ""
     }
 ]

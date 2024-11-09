@@ -159,6 +159,7 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
     else
     {
         LogError("  load rom failed: %s", _current_name.c_str());
+        gUi->SetHint(TEXT(LOAD_ROM_FAILED));
         gStatus.Set(APP_STATUS_SHOW_UI);
     }
 
@@ -311,7 +312,52 @@ static void ConvertTextureToRGB888(vita2d_texture *texture, uint8_t *dst, size_t
     sws_freeContext(sws_ctx);
 }
 
-bool Emulator::SaveScreenShot(const char *name, size_t height)
+static void RotateImage(uint8_t *buf, size_t width, size_t height, VIDEO_ROTATION rotation)
+{
+    size_t size = width * height * 3;
+    uint8_t *new_buf = new uint8_t[size];
+    switch (rotation)
+    {
+    case VIDEO_ROTATION_90:
+        for (int i = 0; i < height; i++)
+        {
+            for (int j = 0; j < width; j++)
+            {
+                int src_idx = (i * width + j) * 3;
+                int dst_idx = ((width - j - 1) * height + i) * 3;
+                memcpy(&new_buf[dst_idx], &buf[src_idx], 3);
+            }
+        }
+        break;
+    case VIDEO_ROTATION_180:
+        for (int i = 0; i < height; i++)
+        {
+            for (int j = 0; j < width; j++)
+            {
+                int src_idx = (i * width + j) * 3;
+                int dst_idx = ((height - i - 1) * width + (width - j - 1)) * 3;
+                memcpy(&new_buf[dst_idx], &buf[src_idx], 3);
+            }
+        }
+        break;
+    case VIDEO_ROTATION_270:
+        for (int i = 0; i < height; i++)
+        {
+            for (int j = 0; j < width; j++)
+            {
+                int src_idx = (i * width + j) * 3;
+                int dst_idx = (j * height + (height - i - 1)) * 3;
+                memcpy(&new_buf[dst_idx], &buf[src_idx], 3);
+            }
+        }
+        break;
+    }
+
+    memcpy(buf, new_buf, size);
+    delete[] new_buf;
+}
+
+bool Emulator::SaveScreenShot(const char *name)
 {
     LogFunctionName;
 
@@ -321,16 +367,20 @@ bool Emulator::SaveScreenShot(const char *name, size_t height)
         return false;
     }
 
-    if (height == 0)
-    {
-        height = vita2d_texture_get_height(_texture_buf->Current());
-    }
-
-    float scale = float(height) / _texture_buf->GetHeight();
-    size_t width = _texture_buf->GetWidth() * scale;
+    size_t width = _texture_buf->GetWidth();
+    size_t height = _texture_buf->GetHeight();
     uint8_t *buf = new uint8_t[width * height * 3];
     ConvertTextureToRGB888(_texture_buf->Current(), buf, width, height);
-    int dst_stride = 3 * width;
+
+    if (_video_rotation != VIDEO_ROTATION_0)
+    {
+        RotateImage(buf, width, height, _video_rotation);
+        if (_video_rotation == VIDEO_ROTATION_90 || _video_rotation == VIDEO_ROTATION_270)
+        {
+            width = _texture_buf->GetHeight();
+            height = _texture_buf->GetWidth();
+        }
+    }
 
     jpeg_compress_struct cinfo;
     jpeg_error_mgr jerr;
@@ -346,10 +396,11 @@ bool Emulator::SaveScreenShot(const char *name, size_t height)
     jpeg_start_compress(&cinfo, TRUE);
 
     uint8_t *p = buf;
+    int pitch = 3 * width;
     for (size_t i = 0; i < height; i++)
     {
         jpeg_write_scanlines(&cinfo, (JSAMPARRAY)&p, 1);
-        p += dst_stride;
+        p += pitch;
     }
 
     jpeg_finish_compress(&cinfo);

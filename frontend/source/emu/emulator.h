@@ -51,7 +51,7 @@ public:
     void Unlock();
     void SetSpeed(double speed);
     const char *CurrentName() { return _current_name.c_str(); };
-    bool SaveScreenShot(const char *name, size_t height = 0);
+    bool SaveScreenShot(const char *name);
     bool GetCurrentSoftwareFramebuffer(retro_framebuffer *fb);
     const char *GetValidExtensions() const { return _info.valid_extensions; };
     double GetSampleRate() const { return _av_info.timing.sample_rate; };
