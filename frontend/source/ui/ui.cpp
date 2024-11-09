@@ -272,7 +272,12 @@ void Ui::CreateTables()
                                                                              "",
                                                                              (uint32_t *)&gConfig->mute,
                                                                              {NO, YES},
-                                                                             std::bind(&Emulator::ChangeAudioConfig, gEmulator))});
+                                                                             std::bind(&Emulator::ChangeAudioConfig, gEmulator)),
+                                                              new ItemConfig(OPTIONS_MENU_AUTOSAVE,
+                                                                             "",
+                                                                             (uint32_t *)&gConfig->auto_save,
+                                                                             {NO, YES},
+                                                                             nullptr)});
 
     _tabs[TAB_INDEX_ABOUT] = new TabAbout();
 

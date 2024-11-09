@@ -13,6 +13,8 @@
 #define MIN_REWIND_BUF_SIZE 5
 #define MAX_REWIND_BUF_SIZE 50
 #define REWIND_BUF_SIZE_STEP 5
+#define DEFAULT_MUTE false
+#define DEFAULT_AUTO_SAVE true
 
 namespace Emu4Vita
 {
@@ -42,7 +44,8 @@ namespace Emu4Vita
         uint32_t hotkeys[HOT_KEY_COUNT];
         CoreOptions core_options;
         InputDescriptors input_descriptors;
-        bool mute;
+        uint32_t mute;
+        uint32_t auto_save;
 
         static const std::unordered_map<uint32_t, const char *> PsvKeyStr;
         static const std::unordered_map<uint32_t, const char *> HotkeyStr;

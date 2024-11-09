@@ -189,7 +189,10 @@ void Emulator::UnloadGame()
         _rewind_manager.Deinit();
         Lock();
         _cheats.Stop(true);
-        gStateManager->states[0]->Save();
+        if (gConfig->auto_save)
+        {
+            gStateManager->states[0]->Save();
+        }
         Save();
         retro_unload_game();
         Unlock();

@@ -39,20 +39,7 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
                      gEmulator->_av_info.geometry.aspect_ratio);
         }
 
-        gVideo->Lock();
-
-        gEmulator->_CreateTextureBuf(gEmulator->_video_pixel_format, width, height);
-        gEmulator->_SetVideoSize(width, height);
-        gEmulator->_SetVertices(gEmulator->_video_rect.x, gEmulator->_video_rect.y,
-                                width, height,
-                                gEmulator->_video_rect.width / width,
-                                gEmulator->_video_rect.height / height,
-                                gEmulator->_video_rotation == VIDEO_ROTATION_90 ? M_PI : 0.f);
-
-        gEmulator->_graphics_config_changed = false;
-        gEmulator->_last_texture = nullptr;
-
-        gVideo->Unlock();
+        gEmulator->_SetupVideoOutput(width, height);
     }
 
     if ((!data) || pitch == 0)
@@ -190,7 +177,8 @@ bool Emulator::GetCurrentSoftwareFramebuffer(retro_framebuffer *fb)
     if (fb->width != vita2d_texture_get_width(texture) ||
         fb->height != vita2d_texture_get_height(texture))
     {
-        return false;
+        _SetupVideoOutput(fb->width, fb->height);
+        texture = _texture_buf->NextBegin();
     }
 
     fb->data = vita2d_texture_get_datap(texture);
@@ -385,4 +373,24 @@ void Emulator::_SetVertices(float tex_x, float tex_y, float tex_w, float tex_h, 
         _vertices[i].x = _x * c - _y * s + VITA_WIDTH / 2;
         _vertices[i].y = _x * s + _y * c + VITA_HEIGHT / 2;
     }
+}
+
+void Emulator::_SetupVideoOutput(unsigned width, unsigned height)
+{
+    LogFunctionName;
+
+    gVideo->Lock();
+
+    gEmulator->_CreateTextureBuf(gEmulator->_video_pixel_format, width, height);
+    gEmulator->_SetVideoSize(width, height);
+    gEmulator->_SetVertices(gEmulator->_video_rect.x, gEmulator->_video_rect.y,
+                            width, height,
+                            gEmulator->_video_rect.width / width,
+                            gEmulator->_video_rect.height / height,
+                            gEmulator->_video_rotation == VIDEO_ROTATION_90 ? M_PI : 0.f);
+
+    gEmulator->_graphics_config_changed = false;
+    gEmulator->_last_texture = nullptr;
+
+    gVideo->Unlock();
 }

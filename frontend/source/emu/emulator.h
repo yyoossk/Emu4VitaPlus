@@ -78,6 +78,8 @@ private:
     void _SetVideoSize(uint32_t width, uint32_t height);
     void _SetVertices(float tex_x, float tex_y, float tex_w, float tex_h, float x_scale, float y_scale, float rad);
     void _CreateTextureBuf(SceGxmTextureFormat format, size_t width, size_t height);
+    void _SetupVideoOutput(unsigned width, unsigned height);
+
     void _OnPsButton(Input *input);
     void _OnHotkeySave(Input *input);
     void _OnHotkeyLoad(Input *input);
@@ -88,8 +90,10 @@ private:
     void _OnHotkeyCtrlPortUp(Input *input);
     void _OnHotkeyCtrlPortDown(Input *input);
     void _OnHotkeyExitGame(Input *input);
+
     std::string _SaveDirPath();
     std::string _SaveNamePath(uint32_t id);
+
     bool _LoadCheats(const char *path);
     void _InitArcadeManager();
 

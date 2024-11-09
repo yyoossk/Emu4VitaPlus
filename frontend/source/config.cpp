@@ -146,7 +146,8 @@ namespace Emu4Vita
         rewind = DEFAULT_ENABLE_REWIND;
         rewind_buf_size = DEFAULT_REWIND_BUF_SIZE;
         last_rom = "ux0:";
-        mute = false;
+        mute = DEFAULT_MUTE;
+        auto_save = DEFAULT_AUTO_SAVE;
 
         int sys_lang;
         sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &sys_lang);
@@ -213,6 +214,8 @@ namespace Emu4Vita
         ini.SetLongValue(MAIN_SECTION, "rewind", rewind);
         ini.SetLongValue(MAIN_SECTION, "rewind_buf_size", rewind_buf_size);
         ini.SetValue(MAIN_SECTION, "last_rom", last_rom.c_str());
+        ini.SetBoolValue(MAIN_SECTION, "mute", mute);
+        ini.SetBoolValue(MAIN_SECTION, "auto_save", auto_save);
 
         for (const auto &control : control_maps)
         {
@@ -268,8 +271,11 @@ namespace Emu4Vita
             }
         }
 
-        rewind = ini.GetLongValue(MAIN_SECTION, "rewind");
-        rewind_buf_size = ini.GetLongValue(MAIN_SECTION, "rewind_buf_size");
+        rewind = ini.GetLongValue(MAIN_SECTION, "rewind", DEFAULT_ENABLE_REWIND);
+        rewind_buf_size = ini.GetLongValue(MAIN_SECTION, "rewind_buf_size", DEFAULT_REWIND_BUF_SIZE);
+        mute = ini.GetBoolValue(MAIN_SECTION, "mute", DEFAULT_MUTE);
+        auto_save = ini.GetBoolValue(MAIN_SECTION, "auto_save", DEFAULT_AUTO_SAVE);
+
         tmp = ini.GetValue(MAIN_SECTION, "last_rom");
         if (tmp && File::Exist(tmp))
         {

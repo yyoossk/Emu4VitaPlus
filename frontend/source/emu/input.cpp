@@ -12,6 +12,7 @@ void InputPollCallback()
 int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsigned id)
 {
     LogFunctionNameLimited;
+
     if (port != 0)
     {
         return 0;
@@ -25,7 +26,6 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
 
         if (id == RETRO_DEVICE_ID_JOYPAD_MASK)
         {
-            // gEmulator->_input.ClearKeyStates(gEmulator->_keys_mask);
             int16_t state = 0;
             int16_t key = 1;
             for (size_t i = 0; i < 16; i++)
