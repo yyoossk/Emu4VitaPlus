@@ -11,7 +11,7 @@ const std::vector<LanguageString> CoreOption::GetValues() const
     _values.reserve(values.size());
     for (const auto &v : values)
     {
-        _values.emplace_back(v.label ? v.label : v.value);
+        _values.emplace_back(v.label.empty() ? v.value : v.label);
     }
 
     return _values;
@@ -22,7 +22,7 @@ size_t CoreOption::GetValueIndex()
     size_t count = 0;
     for (const auto &v : values)
     {
-        if ((v.value && value == v.value) || (v.label && value == v.label))
+        if (value == v.value || value == v.label)
         {
             return count;
         }
@@ -35,6 +35,69 @@ size_t CoreOption::GetValueIndex()
 void CoreOption::SetValueIndex(size_t index)
 {
     value = values[index].value;
+}
+
+void CoreOptions::Load(retro_variable *variables)
+{
+    while (variables && variables->key && variables->value)
+    {
+        LogDebug("  key:   %s", variables->key);
+        LogDebug("  value: %s", variables->value);
+
+        char *value_cp = new char[strlen(variables->value) + 1];
+        strcpy(value_cp, variables->value);
+
+        char *desc = value_cp;
+        char *values = strchr(value_cp, ';');
+        *values = '\x00';
+        values += 2;
+        char *p = strchr(values, '|');
+        *p = '\x00';
+        p++;
+
+        // example:
+        // "Frameskip; 0|1|2|3|4|5"
+        // desc ==> "Frameskip"
+        // values ==> "0"  // default value
+        // p ==> "1|2|3|4|5""
+
+        CoreOption *option;
+        const auto &iter = this->find(variables->key);
+        if (iter == this->end())
+        {
+            option = &((*this)[variables->key] = CoreOption{values,
+                                                            desc,
+                                                            "",
+                                                            values});
+        }
+        else
+        {
+            option = &(iter->second);
+            option->desc = desc;
+            option->default_value = values;
+            option->values.clear();
+        }
+
+        do
+        {
+            option->values.push_back({values, ""});
+            values = p;
+            p = strchr(p, '|');
+            if (p)
+            {
+                *p = '\x00';
+                p++;
+            }
+            else
+            {
+                option->values.push_back({values, ""});
+                break;
+            }
+        } while (true);
+
+        delete[] value_cp;
+        variables++;
+    }
 }
 
 void CoreOptions::Load(retro_core_options_intl *options)
@@ -94,22 +157,20 @@ void CoreOptions::_Load(const T *define)
     LogDebug("  default_value: %s", define->default_value);
     LogDebug("");
 
-    static const char emptry_string[] = "";
-
     const auto &iter = this->find(define->key);
     CoreOption *option;
     if (iter == this->end())
     {
         option = &((*this)[define->key] = CoreOption{define->default_value,
-                                                     define->desc ? define->desc : emptry_string,
-                                                     define->info ? define->info : emptry_string,
+                                                     define->desc ? define->desc : "",
+                                                     define->info ? define->info : "",
                                                      define->default_value});
     }
     else
     {
         option = &(iter->second);
-        option->desc = define->desc ? define->desc : emptry_string;
-        option->info = define->info ? define->info : emptry_string;
+        option->desc = define->desc ? define->desc : "";
+        option->info = define->info ? define->info : "";
         option->default_value = define->default_value;
         option->values.clear();
     }
@@ -122,7 +183,7 @@ void CoreOptions::_Load(const T *define)
         {
             checked = true;
         }
-        option->values.emplace_back(*v);
+        option->values.push_back({v->value, v->label ? v->label : ""});
         v++;
     }
 

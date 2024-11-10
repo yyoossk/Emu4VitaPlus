@@ -133,7 +133,9 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         break;
 
     case RETRO_ENVIRONMENT_SET_VARIABLES:
-        LogDebug("  RETRO_ENVIRONMENT_SET_VARIABLES: %s", ((retro_variable *)data)->key);
+        LogDebug("  cmd: RETRO_ENVIRONMENT_SET_VARIABLES");
+        gConfig->core_options.Load((retro_variable *)data);
+        gUi->UpdateCoreOptions();
         break;
 
     case RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE:

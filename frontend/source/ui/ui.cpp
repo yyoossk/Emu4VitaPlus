@@ -523,6 +523,7 @@ void Ui::ClearLogs()
 
 void Ui::UpdateCoreOptions()
 {
+    LogFunctionName;
     std::vector<ItemBase *> options;
     options.reserve(gConfig->core_options.size());
     for (auto &iter : gConfig->core_options)

@@ -7,13 +7,19 @@
 #include "defines.h"
 #include "language_string.h"
 
+struct OptionValue
+{
+    std::string value;
+    std::string label;
+};
+
 struct CoreOption
 {
     std::string value;
-    const char *desc = nullptr;
-    const char *info = nullptr;
-    const char *default_value = nullptr;
-    std::vector<retro_core_option_value> values;
+    std::string desc;
+    std::string info;
+    std::string default_value;
+    std::vector<OptionValue> values;
     bool visible = true;
 
     const std::vector<LanguageString> GetValues() const;
@@ -30,6 +36,7 @@ public:
     bool Save(const char *path = APP_CORE_CONFIG_PATH);
     bool Save(CSimpleIniA &ini);
 
+    void Load(retro_variable *variables);
     void Load(retro_core_options_intl *options);
     void Load(retro_core_options_v2_intl *options);
     void Load(retro_core_option_definition *options);
