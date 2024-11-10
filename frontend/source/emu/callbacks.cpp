@@ -182,7 +182,16 @@ bool EnvironmentCallback(unsigned cmd, void *data)
             {
                 for (unsigned i = 0; i < info->num_types; i++)
                 {
-                    LogDebug(" %d %d %d %s", count, i, info->types[i].id, info->types[i].desc);
+                    LogDebug(" %d %d %08x %s", count, i, info->types[i].id, info->types[i].desc);
+                    int device = info->types[i].id & 0xff;
+                    if (count == 0 && (device == RETRO_DEVICE_MOUSE ||
+                                       device == RETRO_DEVICE_ANALOG ||
+                                       device == RETRO_DEVICE_LIGHTGUN ||
+                                       device == RETRO_DEVICE_POINTER))
+                    {
+                        LogDebug("retro_set_controller_port_device %08x", info->types[i].id);
+                        // retro_set_controller_port_device(0, info->types[i].id);
+                    }
                 }
                 info++;
                 count++;
