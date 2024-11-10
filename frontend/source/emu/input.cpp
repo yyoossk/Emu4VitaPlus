@@ -13,6 +13,8 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
 {
     LogFunctionNameLimited;
 
+    // LogDebug("%d %d %d %d", port, device, index, id);
+
     if (port != 0)
     {
         return 0;

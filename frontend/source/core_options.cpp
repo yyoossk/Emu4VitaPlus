@@ -39,12 +39,22 @@ void CoreOption::SetValueIndex(size_t index)
 
 void CoreOptions::Load(retro_variable *variables)
 {
+    char *value_cp = new char[512];
+    size_t value_cp_size = 512;
+
     while (variables && variables->key && variables->value)
     {
         LogDebug("  key:   %s", variables->key);
         LogDebug("  value: %s", variables->value);
 
-        char *value_cp = new char[strlen(variables->value) + 1];
+        size_t vsize = strlen(variables->value);
+        if (vsize >= value_cp_size)
+        {
+            delete[] value_cp;
+            value_cp_size = vsize + 1;
+            value_cp = new char[value_cp_size];
+        }
+
         strcpy(value_cp, variables->value);
 
         char *desc = value_cp;
@@ -95,9 +105,10 @@ void CoreOptions::Load(retro_variable *variables)
             }
         } while (true);
 
-        delete[] value_cp;
         variables++;
     }
+
+    delete[] value_cp;
 }
 
 void CoreOptions::Load(retro_core_options_intl *options)

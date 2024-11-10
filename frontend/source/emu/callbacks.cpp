@@ -255,12 +255,13 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         break;
 
     case RETRO_ENVIRONMENT_SET_MESSAGE_EXT:
-    {
-        retro_message_ext *message = (retro_message_ext *)data;
-        LogDebug(message->msg);
-        gUi->SetHint(message->msg);
-    }
-    break;
+        LogDebug("  cmd: RETRO_ENVIRONMENT_SET_MESSAGE_EXT");
+        {
+            retro_message_ext *message = (retro_message_ext *)data;
+            LogDebug(message->msg);
+            gUi->SetHint(message->msg);
+        }
+        break;
 
     case RETRO_ENVIRONMENT_SET_AUDIO_BUFFER_STATUS_CALLBACK:
         LogDebug("  cmd: RETRO_ENVIRONMENT_SET_AUDIO_BUFFER_STATUS_CALLBACK");

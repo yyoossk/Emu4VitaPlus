@@ -267,10 +267,25 @@ void Input::PopCallbacks()
 {
     _key_down_callbacks.clear();
     _key_up_callbacks.clear();
-    _key_down_callbacks = _callback_stack.top();
-    _callback_stack.pop();
-    _key_up_callbacks = _callback_stack.top();
-    _callback_stack.pop();
+    if (_callback_stack.size() > 0)
+    {
+        _key_down_callbacks = _callback_stack.top();
+        _callback_stack.pop();
+    }
+    else
+    {
+        LogWarn("_callback_stack is empty, can't pop to _key_down_callbacks");
+    }
+
+    if (_callback_stack.size() > 0)
+    {
+        _key_up_callbacks = _callback_stack.top();
+        _callback_stack.pop();
+    }
+    else
+    {
+        LogWarn("_callback_stack is empty, can't pop to _key_up_callbacks");
+    }
 }
 
 // void Input::ClearKeyStates(uint32_t mask)

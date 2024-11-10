@@ -107,7 +107,8 @@ void ItemSelectable::_OnClick(Input *input)
 {
     gVideo->Lock();
     _actived = false;
-    input->PopCallbacks();
+    if (!_IsOnOff())
+        input->PopCallbacks();
     ItemBase::OnActive(input);
     gVideo->Unlock();
 }

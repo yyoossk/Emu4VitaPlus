@@ -25,18 +25,14 @@ public:
 
     virtual void OnActive(Input *input)
     {
-        if (_active_callback != nullptr)
-        {
+        if (_active_callback)
             _active_callback();
-        }
     };
 
     virtual void OnOption(Input *input)
     {
-        if (_option_callback != nullptr)
-        {
+        if (_option_callback)
             _option_callback();
-        }
     }
 
     const char *GetText() { return _text.Get(); };

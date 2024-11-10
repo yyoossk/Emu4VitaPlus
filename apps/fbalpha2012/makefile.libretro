@@ -254,13 +254,15 @@ else ifeq ($(platform), vita)
     -marm -mcpu=cortex-a9 -mfpu=neon -DVITA -D__vita__ \
     -mword-relocations -fno-optimize-sibling-calls \
     -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables \
-    -ffast-math -ftree-vectorize -O3
+    -ffast-math -ftree-vectorize -O3 \
+	-DUSE_CYCLONE
    CXXFLAGS += -mfloat-abi=hard -fsingle-precision-constant -fpermissive \
      -marm -mcpu=cortex-a9 -mfpu=neon -DVITA -D__vita__ \
      -mword-relocations -fno-optimize-sibling-calls \
      -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables \
      -ffast-math -ftree-vectorize -O3 \
-     -fno-rtti -fno-exceptions -std=gnu++17
+     -fno-rtti -fno-exceptions -std=gnu++17 \
+	 -DUSE_CYCLONE
 
 # CTR (3DS)
 else ifeq ($(platform), ctr)
