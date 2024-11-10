@@ -32,4 +32,7 @@ private:
     float _texture_height;
     float _texture_max_width;
     float _texture_max_height;
+
+    My_Imgui_SpinText _spin_text;
+    bool _in_refreshing;
 };

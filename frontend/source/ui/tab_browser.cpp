@@ -16,7 +16,8 @@
 TabBrowser::TabBrowser() : TabSeletable(TAB_BROWSER),
                            _texture(nullptr),
                            _texture_max_width(BROWSER_TEXTURE_MAX_WIDTH),
-                           _texture_max_height(BROWSER_TEXTURE_MAX_HEIGHT)
+                           _texture_max_height(BROWSER_TEXTURE_MAX_HEIGHT),
+                           _in_refreshing(false)
 {
     LogFunctionName;
 
@@ -77,39 +78,47 @@ void TabBrowser::Show(bool selected)
 
         ImGui::Text(_directory->GetCurrentPath().c_str());
         ImGui::ListBoxHeader("", ImGui::GetContentRegionAvail());
-        for (size_t i = 0; i < _directory->GetSize(); i++)
+
+        if (_in_refreshing)
         {
-            const DirItem &item = _directory->GetItem(i);
-
-            std::string name(item.name);
-            if (!item.is_dir)
+            _spin_text.Show();
+        }
+        else
+        {
+            for (size_t i = 0; i < _directory->GetSize(); i++)
             {
+                const DirItem &item = _directory->GetItem(i);
 
-                ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
-            }
+                std::string name(item.name);
+                if (!item.is_dir)
+                {
 
-            if (gFavorites->find(name) != gFavorites->end())
-            {
-                name.insert(0, ICON_EMPTY_STAR_SPACE);
-            }
+                    ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
+                }
 
-            if (i == _index)
-            {
-                My_Imgui_Selectable(name.c_str(), true, &_moving_status);
-            }
-            else
-            {
-                ImGui::Selectable(name.c_str());
-            }
+                if (gFavorites->find(name) != gFavorites->end())
+                {
+                    name.insert(0, ICON_EMPTY_STAR_SPACE);
+                }
 
-            if (!item.is_dir)
-            {
-                ImGui::PopStyleColor();
-            }
+                if (i == _index)
+                {
+                    My_Imgui_Selectable(name.c_str(), true, &_moving_status);
+                }
+                else
+                {
+                    ImGui::Selectable(name.c_str());
+                }
 
-            if (i == _index && ImGui::GetScrollMaxY() > 0.f)
-            {
-                ImGui::SetScrollHereY((float)_index / (float)_directory->GetSize());
+                if (!item.is_dir)
+                {
+                    ImGui::PopStyleColor();
+                }
+
+                if (i == _index && ImGui::GetScrollMaxY() > 0.f)
+                {
+                    ImGui::SetScrollHereY((float)_index / (float)_directory->GetSize());
+                }
             }
         }
 
@@ -151,6 +160,8 @@ void TabBrowser::_OnActive(Input *input)
 
     if (item.is_dir)
     {
+        _in_refreshing = true;
+
         if (_directory->GetCurrentPath().size() == 0)
         {
             _directory->SetCurrentPath(item.name);
@@ -159,6 +170,8 @@ void TabBrowser::_OnActive(Input *input)
         {
             _directory->SetCurrentPath(_directory->GetCurrentPath() + "/" + item.name);
         }
+        _in_refreshing = false;
+
         _index = 0;
         _UpdateStatus();
     }
@@ -174,6 +187,8 @@ void TabBrowser::_OnActive(Input *input)
 void TabBrowser::_OnKeyCross(Input *input)
 {
     auto path = _directory->GetCurrentPath();
+
+    _in_refreshing = true;
     if (path.size() <= 5)
     {
         _directory->SetCurrentPath("");
@@ -186,6 +201,8 @@ void TabBrowser::_OnKeyCross(Input *input)
             _directory->SetCurrentPath(path.substr(0, pos));
         }
     }
+
+    _in_refreshing = false;
 
     _index = 0;
     _UpdateStatus();

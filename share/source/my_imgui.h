@@ -32,3 +32,20 @@ IMGUI_API bool My_Imgui_BeginCombo(const char *label, const char *preview_value,
 IMGUI_API void My_Imgui_CenteredText(const char *text, ...);
 IMGUI_API bool My_Imgui_Selectable(const char *label, bool selected, TextMovingStatus *status);
 IMGUI_API void My_Imgui_ShowTimePower();
+
+class My_Imgui_SpinText
+{
+public:
+    My_Imgui_SpinText(uint64_t interval_ms = 200000, ImU32 color = IM_COL32_GREEN);
+    virtual ~My_Imgui_SpinText();
+    void Show();
+
+private:
+    inline void _Update();
+
+    static const char *_frames[];
+    uint64_t _next_ms;
+    uint64_t _interval_ms;
+    size_t _count;
+    ImU32 _color;
+};

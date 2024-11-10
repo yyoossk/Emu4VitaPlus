@@ -377,36 +377,23 @@ void Ui::SetHint(const char *s, int frame_count)
 
 void Ui::_ShowBoot()
 {
-    static const char *frames[] = {"-",
-                                   "\\",
-                                   "|",
-                                   "/"};
-    static size_t count = 0;
-    static uint64_t next_ms = 0;
+    static My_Imgui_SpinText spin_text;
 
     for (const auto &log : _logs)
     {
         if (&log == &_logs.back())
         {
-            ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
+            ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32_GREEN);
         }
         ImGui::Text(log.c_str());
     }
 
-    if (_logs.size() == 0)
+    if (_logs.size() > 0)
     {
-        ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
+        ImGui::PopStyleColor();
     }
 
-    uint64_t current_ms = sceKernelGetProcessTimeWide();
-    if (next_ms <= current_ms)
-    {
-        LOOP_PLUS_ONE(count, sizeof(frames) / sizeof(*frames));
-        next_ms = current_ms + 200000;
-    }
-    ImGui::Text(frames[count]);
-
-    ImGui::PopStyleColor();
+    spin_text.Show();
 
     if (ImGui::GetScrollMaxY() > 0.f)
     {

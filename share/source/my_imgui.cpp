@@ -9,6 +9,7 @@
 #include "log.h"
 #include "gb2312.i"
 #include "icons.h"
+#include "utils.h"
 
 #define APP_ASSETS_DIR "app0:assets"
 #define TEXT_FONT_NAME "AlibabaPuHuiTi-2-65-Medium.ttf"
@@ -667,4 +668,36 @@ void My_Imgui_ShowTimePower()
     draw_list->AddText({BATTERY_PERCENT_X, TOP_RIGHT_Y}, color, percent_str);
 
     draw_list->PopClipRect();
+}
+
+const char *My_Imgui_SpinText::_frames[] = {"-",
+                                            "\\",
+                                            "|",
+                                            "/"};
+
+My_Imgui_SpinText::My_Imgui_SpinText(uint64_t interval_ms, ImU32 color)
+    : _interval_ms(interval_ms), _color(color), _count(0), _next_ms(0)
+{
+}
+
+My_Imgui_SpinText::~My_Imgui_SpinText()
+{
+}
+
+void My_Imgui_SpinText::_Update()
+{
+    uint64_t current_ms = sceKernelGetProcessTimeWide();
+    if (_next_ms <= current_ms)
+    {
+        LOOP_PLUS_ONE(_count, sizeof(_frames) / sizeof(*_frames));
+        _next_ms = current_ms + 200000;
+    }
+}
+
+void My_Imgui_SpinText::Show()
+{
+    _Update();
+    ImGui::PushStyleColor(ImGuiCol_Text, _color);
+    ImGui::Text(_frames[_count]);
+    ImGui::PopStyleColor();
 }

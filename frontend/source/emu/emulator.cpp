@@ -138,11 +138,7 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
 
         SetSpeed(1.0);
         gUi->ClearLogs();
-        if ((!gConfig->mute) && (!_audio.Inited()))
-        {
-            _audio.Init(_av_info.timing.sample_rate);
-        }
-
+        _audio.Init(_av_info.timing.sample_rate);
         gConfig->last_rom = path;
         gConfig->Save();
 
