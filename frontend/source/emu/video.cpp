@@ -387,7 +387,7 @@ void Emulator::_SetupVideoOutput(unsigned width, unsigned height)
                             width, height,
                             gEmulator->_video_rect.width / width,
                             gEmulator->_video_rect.height / height,
-                            gEmulator->_video_rotation == VIDEO_ROTATION_90 ? M_PI : 0.f);
+                            gEmulator->_video_rotation == VIDEO_ROTATION_90 || gEmulator->_video_rotation == VIDEO_ROTATION_180 ? M_PI : 0);
 
     gEmulator->_graphics_config_changed = false;
     gEmulator->_last_texture = nullptr;

@@ -54,12 +54,17 @@ void TabFavorite::Show(bool selected)
         std::advance(iter, _index);
         ImGui::Text(iter->second.path.c_str());
 
-        ImGui::ListBoxHeader("", ImGui::GetContentRegionAvail());
         size_t count = 0;
+        const float total = gFavorites->size();
+        ImGui::ListBoxHeader("", ImGui::GetContentRegionAvail());
         ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
         for (const auto &fav : *gFavorites)
         {
             ImGui::Selectable(fav.second.item.name.c_str(), count == _index);
+            if (count == _index && ImGui::GetScrollMaxY() > 0.f)
+            {
+                ImGui::SetScrollHereY((float)_index / total);
+            }
             count++;
         }
         ImGui::PopStyleColor();
