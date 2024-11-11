@@ -221,3 +221,29 @@ void Emulator::_OnHotkeyExitGame(Input *input)
     LogFunctionName;
     UnloadGame();
 }
+
+void Emulator::_SetControllerInfo(retro_controller_info *info)
+{
+    LogFunctionName;
+
+    _controllers.clear();
+    unsigned count = 0;
+    while (info->types)
+    {
+        for (unsigned i = 0; i < info->num_types; i++)
+        {
+            LogDebug(" %d %d %08x %s", count, i, info->types[i].id, info->types[i].desc);
+            int device = info->types[i].id & 0xff;
+            if (count == 0 && (device == RETRO_DEVICE_JOYPAD ||
+                               device == RETRO_DEVICE_MOUSE ||
+                               device == RETRO_DEVICE_ANALOG ||
+                               device == RETRO_DEVICE_LIGHTGUN ||
+                               device == RETRO_DEVICE_POINTER))
+            {
+                _controllers.push_back(info->types[i].id);
+            }
+        }
+        info++;
+        count++;
+    }
+}

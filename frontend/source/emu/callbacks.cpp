@@ -180,28 +180,7 @@ bool EnvironmentCallback(unsigned cmd, void *data)
 
     case RETRO_ENVIRONMENT_SET_CONTROLLER_INFO:
         LogDebug("  cmd: RETRO_ENVIRONMENT_SET_CONTROLLER_INFO");
-        {
-            const retro_controller_info *info = (const struct retro_controller_info *)data;
-            unsigned count = 0;
-            while (info->types)
-            {
-                for (unsigned i = 0; i < info->num_types; i++)
-                {
-                    LogDebug(" %d %d %08x %s", count, i, info->types[i].id, info->types[i].desc);
-                    int device = info->types[i].id & 0xff;
-                    if (count == 0 && (device == RETRO_DEVICE_MOUSE ||
-                                       device == RETRO_DEVICE_ANALOG ||
-                                       device == RETRO_DEVICE_LIGHTGUN ||
-                                       device == RETRO_DEVICE_POINTER))
-                    {
-                        LogDebug("retro_set_controller_port_device %08x", info->types[i].id);
-                        // retro_set_controller_port_device(0, info->types[i].id);
-                    }
-                }
-                info++;
-                count++;
-            }
-        }
+        gEmulator->_SetControllerInfo((retro_controller_info *)data);
         break;
 
     case RETRO_ENVIRONMENT_SET_GEOMETRY:

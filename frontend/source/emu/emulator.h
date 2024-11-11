@@ -2,6 +2,7 @@
 #include <string>
 #include <libretro.h>
 #include <stdint.h>
+#include <vector>
 #include "texture_buf.h"
 #include "audio.h"
 #include "delay.h"
@@ -79,6 +80,7 @@ private:
     void _SetVertices(float tex_x, float tex_y, float tex_w, float tex_h, float x_scale, float y_scale, float rad);
     void _CreateTextureBuf(SceGxmTextureFormat format, size_t width, size_t height);
     void _SetupVideoOutput(unsigned width, unsigned height);
+    void _SetControllerInfo(retro_controller_info *info);
 
     void _OnPsButton(Input *input);
     void _OnHotkeySave(Input *input);
@@ -117,6 +119,7 @@ private:
     double _speed;
     Delay _delay;
     uint32_t _frame_count;
+    std::vector<uint32_t> _controllers;
 
     SceKernelLwMutexWork _run_mutex;
 
