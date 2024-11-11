@@ -93,6 +93,11 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         gEmulator->UnloadGame();
         break;
 
+    case RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL");
+        LogDebug("  PERFORMANCE_LEVEL:%f", *(const unsigned *)data);
+        break;
+
     case RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY:
         LogDebug("  cmd: RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY");
         if (data)
