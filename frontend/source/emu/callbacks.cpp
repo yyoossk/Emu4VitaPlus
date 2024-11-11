@@ -227,7 +227,8 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         break;
 
     case RETRO_ENVIRONMENT_GET_FASTFORWARDING:
-        *(bool *)data = false;
+        *(bool *)data = gEmulator->_core_options_updated;
+        gEmulator->_core_options_updated = false;
         break;
 
     case RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION:
@@ -319,7 +320,6 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         retro_throttle_state *throttle_state = (struct retro_throttle_state *)data;
         switch (gStatus.Get())
         {
-
         case APP_STATUS_SHOW_UI_IN_GAME:
             throttle_state->mode = RETRO_THROTTLE_FRAME_STEPPING;
             throttle_state->rate = 0.0f;

@@ -31,7 +31,8 @@ Emulator::Emulator()
       _frame_count(0),
       _core_options_update_display_callback(nullptr),
       _arcade_manager(nullptr),
-      _video_rotation(VIDEO_ROTATION_0)
+      _video_rotation(VIDEO_ROTATION_0),
+      _core_options_updated(false)
 {
     sceKernelCreateLwMutex(&_run_mutex, "run_mutex", 0, 0, NULL);
     _InitArcadeManager();
@@ -89,6 +90,7 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
     gStateManager->Init(_current_name.c_str());
 
     retro_game_info game_info = {0};
+    _core_options_updated = false;
 
     char *buf = nullptr;
     const char *_path;
@@ -226,8 +228,8 @@ void Emulator::Run()
     BeginProfile("retro_run");
 
     Lock();
-    _audio.NotifyBufStatus();
     retro_run();
+    _audio.NotifyBufStatus();
     Unlock();
 
     EndProfile("retro_run");
@@ -536,6 +538,8 @@ void Emulator::CoreOptionUpdate()
     {
         _core_options_update_display_callback();
     }
+
+    _core_options_updated = true;
 }
 
 bool Emulator::_LoadCheats(const char *path)

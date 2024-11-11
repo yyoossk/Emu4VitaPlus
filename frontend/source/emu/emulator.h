@@ -127,6 +127,7 @@ private:
     vita2d_texture_vertex _vertices[4];
 
     retro_core_options_update_display_callback_t _core_options_update_display_callback;
+    bool _core_options_updated;
 
     ArcadeManager *_arcade_manager;
 };

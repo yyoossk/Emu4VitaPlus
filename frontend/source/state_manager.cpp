@@ -91,8 +91,6 @@ END:
 
     if (result)
     {
-        _valid = true;
-        File::GetCreateTime(_state_path.c_str(), &_create_time);
         if (_texture)
         {
             vita2d_free_texture(_texture);
