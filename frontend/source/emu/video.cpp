@@ -246,9 +246,12 @@ void Emulator::_SetVideoSize(uint32_t width, uint32_t height)
     {
         _video_rect.width = (*gOverlays)[gConfig->graphics[GRAPHICS_OVERLAY] - 1].viewport_width;
         _video_rect.height = (*gOverlays)[gConfig->graphics[GRAPHICS_OVERLAY] - 1].viewport_height;
+        _video_rect.x = (*gOverlays)[gConfig->graphics[GRAPHICS_OVERLAY] - 1].viewport_x;
+        _video_rect.y = (*gOverlays)[gConfig->graphics[GRAPHICS_OVERLAY] - 1].viewport_y;
         return;
     }
 
+    _video_rect.x = _video_rect.y = 0;
     float aspect_ratio = .0f;
 
     switch (gConfig->graphics[DISPLAY_RATIO])
@@ -327,10 +330,10 @@ void Emulator::_SetVideoSize(uint32_t width, uint32_t height)
     LogDebug("  width: %d height:%d", width, height);
 }
 
-void Emulator::_SetVertices(float tex_x, float tex_y, float tex_w, float tex_h, float x_scale, float y_scale, float rad)
+void Emulator::_SetVertices(float x, float y, float tex_x, float tex_y, float tex_w, float tex_h, float x_scale, float y_scale, float rad)
 {
     LogFunctionName;
-    LogDebug("  %.2f %.2f %.2f %.2f %.2f %.2f %.2f", tex_x, tex_y, tex_w, tex_h, x_scale, y_scale, rad);
+    LogDebug("  %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f", x, y, tex_x, tex_y, tex_w, tex_h, x_scale, y_scale, rad);
 
     const float w_half = (tex_w * x_scale) / 2.0f;
     const float h_half = (tex_h * y_scale) / 2.0f;
@@ -370,8 +373,8 @@ void Emulator::_SetVertices(float tex_x, float tex_y, float tex_w, float tex_h, 
     { // Rotate and translate
         float _x = _vertices[i].x;
         float _y = _vertices[i].y;
-        _vertices[i].x = _x * c - _y * s + VITA_WIDTH / 2;
-        _vertices[i].y = _x * s + _y * c + VITA_HEIGHT / 2;
+        _vertices[i].x = _x * c - _y * s + VITA_WIDTH / 2 - x;
+        _vertices[i].y = _x * s + _y * c + VITA_HEIGHT / 2 - y;
     }
 }
 
@@ -384,6 +387,7 @@ void Emulator::_SetupVideoOutput(unsigned width, unsigned height)
     gEmulator->_CreateTextureBuf(gEmulator->_video_pixel_format, width, height);
     gEmulator->_SetVideoSize(width, height);
     gEmulator->_SetVertices(gEmulator->_video_rect.x, gEmulator->_video_rect.y,
+                            0, 0,
                             width, height,
                             gEmulator->_video_rect.width / width,
                             gEmulator->_video_rect.height / height,

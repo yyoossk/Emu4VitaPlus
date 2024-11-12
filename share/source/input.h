@@ -5,7 +5,6 @@
 #include <stack>
 #include <psp2/ctrl.h>
 #include <psp2/touch.h>
-#include <libretro.h>
 
 const uint32_t SCE_CTRL_LSTICK_UP = 0x00400000;
 const uint32_t SCE_CTRL_LSTICK_RIGHT = 0x00800000;
@@ -77,6 +76,13 @@ struct TouchAxis
     int16_t y;
 };
 
+enum TouchState
+{
+    TOUCH_NONE = 0,
+    TOUCH_DOWN,
+    TOUCH_UP
+};
+
 struct TurboKeyState
 {
     bool down;
@@ -93,6 +99,7 @@ struct Touch
 
     void Enable(bool _enabled);
     void Poll();
+    TouchState GetState() const;
 };
 
 class Input
@@ -127,8 +134,10 @@ public:
     void EnableRearTouch(bool enabled) { _rear_touch.Enable(enabled); };
     bool FrontTouchEnabled() { return _front_touch.enabled; };
     bool RearTouchEnabled() { return _rear_touch.enabled; };
-    const TouchAxis &GetFrontTouchAxis() { return *(TouchAxis *)(&_front_touch.report.x); };
-    const TouchAxis &GetRearTouchAxis() { return *(TouchAxis *)(&_rear_touch.report.x); };
+    const TouchAxis &GetFrontTouchAxis() const { return *(TouchAxis *)(&_front_touch.report.x); };
+    const TouchAxis &GetRearTouchAxis() const { return *(TouchAxis *)(&_rear_touch.report.x); };
+    TouchState GetFrontTouchSate() const { return _front_touch.GetState(); };
+    TouchState GetRearTouchSate() const { return _rear_touch.GetState(); };
 
 private:
     std::vector<KeyBinding>

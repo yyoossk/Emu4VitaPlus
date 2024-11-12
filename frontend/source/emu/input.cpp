@@ -1,3 +1,4 @@
+#include <imgui_vita2d/imgui_impl_vita2d.h>
 #include "emulator.h"
 #include "app.h"
 #include "video.h"
@@ -86,17 +87,20 @@ int16_t Emulator::_GetMouseState(unsigned index, unsigned id)
 
 int16_t Emulator::_GetLightGunState(unsigned index, unsigned id)
 {
+    // LogDebug("id %d", id);
     if (gEmulator->_input.FrontTouchEnabled())
     {
         switch (id)
         {
+        case RETRO_DEVICE_ID_LIGHTGUN_TRIGGER:
+            // LogDebug("GetFrontTouchSate %d", _input.GetFrontTouchSate());
+            return _input.GetFrontTouchSate() == TOUCH_DOWN ? 1 : 0;
+
         case RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X:
-            // LogDebug("%d", _input.GetFrontTouchAxis().x);
-            // LogDebug("%08x", (_input.GetFrontTouchAxis().x - _video_rect.x - _video_rect.width / 2) * 0x10000 / _video_rect.width);
-            return (_input.GetFrontTouchAxis().x - _video_rect.x - _video_rect.width / 2) * 0x10000 / _video_rect.width;
+            return (_input.GetFrontTouchAxis().x - VITA_WIDTH + _video_rect.x * 2) * 0x7fff / _video_rect.width;
 
         case RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y:
-            return (_input.GetFrontTouchAxis().y - _video_rect.y - _video_rect.height / 2) * 0x10000 / _video_rect.height;
+            return (_input.GetFrontTouchAxis().y - VITA_HEIGHT + _video_rect.y * 2) * 0x7fff / _video_rect.height;
 
         default:
             break;

@@ -40,8 +40,20 @@ void Touch::Poll()
     {
         last_id = report.id;
         memcpy(&report, touch_data.report, sizeof(SceTouchReport));
-        // LogDebug("%d %d %d", report->id, report->x, report->y);
+        // LogDebug("%d %d %d", report.id, report.x, report.y);
     }
+}
+
+TouchState Touch::GetState() const
+{
+    // LogDebug("%d %d", last_id, report.id);
+
+    if (last_id != report.id)
+    {
+        return last_id == 0 ? TOUCH_DOWN : TOUCH_UP;
+    }
+
+    return TOUCH_NONE;
 }
 
 Input::Input() : _last_key(0ull),
