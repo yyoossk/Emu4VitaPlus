@@ -23,54 +23,87 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
     switch (device)
     {
     case RETRO_DEVICE_JOYPAD:
-    {
-        const uint32_t key_states = gEmulator->_input.GetKeyStates();
-
-        if (id == RETRO_DEVICE_ID_JOYPAD_MASK)
-        {
-            int16_t state = 0;
-            int16_t key = 1;
-            for (size_t i = 0; i < 16; i++)
-            {
-                if (key_states & gEmulator->_keys[i])
-                {
-                    state |= key;
-                }
-                key <<= 1;
-            }
-
-            return state;
-        }
-        else if (id >= 16)
-        {
-            LogError("  InputStateCallback, wrong id %d", id);
-            return 0;
-        }
-        else
-        {
-            return (key_states & gEmulator->_keys[id]) ? 1 : 0;
-        }
-    }
-    break;
+        return gEmulator->_GetJoypadState(index, id);
 
     case RETRO_DEVICE_ANALOG:
-    {
-        if (gEmulator->_video_rotation == VIDEO_ROTATION_0 || gEmulator->_video_rotation == VIDEO_ROTATION_180)
-        {
-            const AnalogAxis aa = index == RETRO_DEVICE_INDEX_ANALOG_LEFT ? gEmulator->_input.GetLeftAnalogAxis() : gEmulator->_input.GetRightAnalogAxis();
-            return id == RETRO_DEVICE_ID_ANALOG_X ? ANALOG_PSV_TO_RETRO(aa.x) : ANALOG_PSV_TO_RETRO(aa.y);
-        }
-        else
-        {
-            const AnalogAxis aa = index == RETRO_DEVICE_INDEX_ANALOG_LEFT ? gEmulator->_input.GetRightAnalogAxis() : gEmulator->_input.GetLeftAnalogAxis();
-            return id == RETRO_DEVICE_ID_ANALOG_X ? -(ANALOG_PSV_TO_RETRO(aa.y) + 1) : ANALOG_PSV_TO_RETRO(aa.x);
-        }
-    }
-    break;
+        return gEmulator->_GetAnalogState(index, id);
+
+    case RETRO_DEVICE_LIGHTGUN:
+        return gEmulator->_GetLightGunState(index, id);
 
     default:
         return 0;
     }
+}
+
+int16_t Emulator::_GetJoypadState(unsigned index, unsigned id)
+{
+    const uint32_t key_states = _input.GetKeyStates();
+    if (id == RETRO_DEVICE_ID_JOYPAD_MASK)
+    {
+        int16_t state = 0;
+        int16_t key = 1;
+        for (size_t i = 0; i < 16; i++)
+        {
+            if (key_states & _keys[i])
+            {
+                state |= key;
+            }
+            key <<= 1;
+        }
+
+        return state;
+    }
+    else if (id >= 16)
+    {
+        LogError("  InputStateCallback, wrong id %d", id);
+        return 0;
+    }
+    else
+    {
+        return (key_states & _keys[id]) ? 1 : 0;
+    }
+}
+
+int16_t Emulator::_GetAnalogState(unsigned index, unsigned id)
+{
+    if (_video_rotation == VIDEO_ROTATION_0 || _video_rotation == VIDEO_ROTATION_180)
+    {
+        const AnalogAxis aa = index == RETRO_DEVICE_INDEX_ANALOG_LEFT ? _input.GetLeftAnalogAxis() : _input.GetRightAnalogAxis();
+        return id == RETRO_DEVICE_ID_ANALOG_X ? ANALOG_PSV_TO_RETRO(aa.x) : ANALOG_PSV_TO_RETRO(aa.y);
+    }
+    else
+    {
+        const AnalogAxis aa = index == RETRO_DEVICE_INDEX_ANALOG_LEFT ? _input.GetRightAnalogAxis() : _input.GetLeftAnalogAxis();
+        return id == RETRO_DEVICE_ID_ANALOG_X ? -(ANALOG_PSV_TO_RETRO(aa.y) + 1) : ANALOG_PSV_TO_RETRO(aa.x);
+    }
+}
+
+int16_t Emulator::_GetMouseState(unsigned index, unsigned id)
+{
+    return 0;
+}
+
+int16_t Emulator::_GetLightGunState(unsigned index, unsigned id)
+{
+    if (gEmulator->_input.FrontTouchEnabled())
+    {
+        switch (id)
+        {
+        case RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X:
+            // LogDebug("%d", _input.GetFrontTouchAxis().x);
+            // LogDebug("%08x", (_input.GetFrontTouchAxis().x - _video_rect.x - _video_rect.width / 2) * 0x10000 / _video_rect.width);
+            return (_input.GetFrontTouchAxis().x - _video_rect.x - _video_rect.width / 2) * 0x10000 / _video_rect.width;
+
+        case RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y:
+            return (_input.GetFrontTouchAxis().y - _video_rect.y - _video_rect.height / 2) * 0x10000 / _video_rect.height;
+
+        default:
+            break;
+        }
+    }
+
+    return 0;
 }
 
 void Emulator::SetupKeys()
@@ -147,8 +180,12 @@ void Emulator::SetupKeys()
     BIND_HOTKEY_UP(MENU_TOGGLE, _OnPsButton);
 
     _input.SetTurboInterval(DEFAULT_TURBO_START_TIME, 20000);
-    _input.EnableFrontTouch(true);
-    _input.EnableRearTouch(true);
+
+    if (gConfig->front_touch)
+        _input.EnableFrontTouch(true);
+
+    if (gConfig->rear_touch)
+        _input.EnableRearTouch(true);
 }
 
 void Emulator::_OnPsButton(Input *input)

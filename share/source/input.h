@@ -55,18 +55,6 @@ const uint32_t SCE_CTRL_RSTICK_LEFT = 0x20000000;
 #define TEST_KEY(KEY, KEYS) (((KEY) & (KEYS)) == (KEY))
 #define ANALOG_PSV_TO_RETRO(X) (((X) - 0x80) << 8)
 
-struct Touch
-{
-    SceTouchPortType port;
-    bool enabled = false;
-    SceTouchPanelInfo info{0};
-    uint8_t last_id{0};
-    SceTouchReport report{0};
-
-    void Enable(bool _enabled);
-    void Poll();
-};
-
 class Input;
 
 using InputFunc = std::function<void(Input *)>;
@@ -83,10 +71,28 @@ struct AnalogAxis
     uint8_t y;
 };
 
+struct TouchAxis
+{
+    int16_t x;
+    int16_t y;
+};
+
 struct TurboKeyState
 {
     bool down;
     uint64_t next_change_state_time;
+};
+
+struct Touch
+{
+    SceTouchPortType port;
+    bool enabled = false;
+    SceTouchPanelInfo info{0};
+    uint8_t last_id{0};
+    SceTouchReport report{0};
+
+    void Enable(bool _enabled);
+    void Poll();
 };
 
 class Input
@@ -118,10 +124,15 @@ public:
     void PopCallbacks();
 
     void EnableFrontTouch(bool enabled) { _front_touch.Enable(enabled); };
-    void EnableRearTouch(bool enabled) { _rear_touch.Enable(enabled); }
+    void EnableRearTouch(bool enabled) { _rear_touch.Enable(enabled); };
+    bool FrontTouchEnabled() { return _front_touch.enabled; };
+    bool RearTouchEnabled() { return _rear_touch.enabled; };
+    const TouchAxis &GetFrontTouchAxis() { return *(TouchAxis *)(&_front_touch.report.x); };
+    const TouchAxis &GetRearTouchAxis() { return *(TouchAxis *)(&_rear_touch.report.x); };
 
 private:
-    std::vector<KeyBinding> _key_up_callbacks;
+    std::vector<KeyBinding>
+        _key_up_callbacks;
     std::vector<KeyBinding> _key_down_callbacks;
 
     TurboKeyState _turbo_key_states[32];

@@ -82,6 +82,11 @@ private:
     void _SetupVideoOutput(unsigned width, unsigned height);
     void _SetControllerInfo(retro_controller_info *info);
 
+    int16_t _GetJoypadState(unsigned index, unsigned id);
+    int16_t _GetAnalogState(unsigned index, unsigned id);
+    int16_t _GetMouseState(unsigned index, unsigned id);
+    int16_t _GetLightGunState(unsigned index, unsigned id);
+
     void _OnPsButton(Input *input);
     void _OnHotkeySave(Input *input);
     void _OnHotkeyLoad(Input *input);
