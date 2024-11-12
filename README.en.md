@@ -67,16 +67,16 @@ DOS(In testing)
 * Install [msys2](https://www.msys2.org/) or [devkitPro](https://github.com/devkitPro/installer/releases)
 #### Enter msys
 * Install [vitasdk](https://vitasdk.org/)
-* Install cmake, python, ccache (optional)
+* Install cmake, python, ccache
 
   ```bash
-  pacman -S cmake python python-pip [ccache]
+  pacman -S cmake python python-pip ccache
   ```
 
 * Install [openpyxl](https://pypi.org/project/openpyxl/), [pillow](https://pypi.org/project/pillow/)
 
   ```bash
-  pip install openpyxl pillow
+  pip install openpyxl
   ```
 
 ## Linux
@@ -120,11 +120,11 @@ B --> C[./to_json.py]
 ```
 
 # Paths
-## Priviews
+## Previews
 The program will automatically search for a `jpg` or `png` image with the same name in the `.previews` directory under the rom directory. If not found, it will search for the screenshots saved in instant state.
 
 ## Cheats
-The program will be found the .cht file of the same name as rom in the rom directory, the `.cheats` directory under the rom directory, and `ux0:/data/EMU4VITAPLUS/[core]/cheats` directory, whichever is found first.
+The program will find the .cht file of the same name as rom in the rom directory, the `.cheats` directory under the rom directory, and `ux0:/data/EMU4VITAPLUS/[core]/cheats` directory, whichever is found first.
 
 ## Instant State
 ux0:/data/EMU4VITAPLUS/[core]/savestates/[rom]
