@@ -77,10 +77,10 @@ DOS(测试中)
 * 安装 [msys2](https://www.msys2.org/) 或 [devkitPro](https://github.com/devkitPro/installer/releases)
 #### 进入 msys
 * 安装 [vitasdk](https://vitasdk.org/)
-* 安装 cmake, python, ccache(可选)
+* 安装 cmake, python, ccache
   
   ```bash
-  pacman -S cmake python python-pip [ccache]
+  pacman -S cmake python python-pip ccache
   ```
 
 * 安装 [openpyxl](https://pypi.org/project/openpyxl/), [pillow](https://pypi.org/project/pillow/)
