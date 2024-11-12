@@ -148,6 +148,8 @@ namespace Emu4Vita
         last_rom = "ux0:";
         mute = DEFAULT_MUTE;
         auto_save = DEFAULT_AUTO_SAVE;
+        front_touch = DEFAULT_FRONT_TOUCH;
+        rear_touch = DEFAULT_REAR_TOUCH;
 
         int sys_lang;
         sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &sys_lang);

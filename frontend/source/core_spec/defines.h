@@ -32,3 +32,5 @@ extern const size_t RETRO_KEYS_SIZE;
 extern const std::vector<ControlMapConfig> CONTROL_MAPS;
 extern const bool DEFAULT_ENABLE_REWIND;
 extern const size_t DEFAULT_REWIND_BUF_SIZE;
+extern const bool DEFAULT_FRONT_TOUCH;
+extern const bool DEFAULT_REAR_TOUCH;

@@ -33,6 +33,14 @@ const bool DEFAULT_ENABLE_REWIND = true;
 const size_t DEFAULT_REWIND_BUF_SIZE = 10;
 #endif
 
+#if defined(FC_BUILD)
+const bool DEFAULT_FRONT_TOUCH = true;
+const bool DEFAULT_REAR_TOUCH = false;
+#else
+const bool DEFAULT_FRONT_TOUCH = false;
+const bool DEFAULT_REAR_TOUCH = false;
+#endif
+
 const uint8_t RETRO_KEYS[] = {
     RETRO_DEVICE_ID_NONE,
     RETRO_DEVICE_ID_JOYPAD_UP,

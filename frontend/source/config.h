@@ -46,6 +46,8 @@ namespace Emu4Vita
         InputDescriptors input_descriptors;
         uint32_t mute;
         uint32_t auto_save;
+        uint32_t front_touch;
+        uint32_t rear_touch;
 
         static const std::unordered_map<uint32_t, const char *> PsvKeyStr;
         static const std::unordered_map<uint32_t, const char *> HotkeyStr;

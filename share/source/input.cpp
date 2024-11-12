@@ -7,6 +7,43 @@
 #define ANALOG_CENTER 128
 #define ANALOG_THRESHOLD 64
 
+void Touch::Enable(bool _enabled)
+{
+    LogFunctionName;
+    enabled = _enabled;
+    if (enabled)
+    {
+        sceTouchGetPanelInfo(port, &info);
+        sceTouchSetSamplingState(port, SCE_TOUCH_SAMPLING_STATE_START);
+        LogDebug("%d:\n"
+                 "   %d %d %d %d\n"
+                 "   %d %d %d %d",
+                 port,
+                 info.minAaX, info.minAaY, info.maxAaX, info.maxAaY,
+                 info.minDispX, info.minDispY, info.maxDispX, info.maxDispY);
+    }
+    else
+    {
+        sceTouchSetSamplingState(port, SCE_TOUCH_SAMPLING_STATE_STOP);
+    }
+}
+
+void Touch::Poll()
+{
+    if (!enabled)
+    {
+        return;
+    }
+
+    SceTouchData touch_data{0};
+    if (sceTouchPeek(port, &touch_data, 1) == 1)
+    {
+        last_id = report.id;
+        memcpy(&report, touch_data.report, sizeof(SceTouchReport));
+        // LogDebug("%d %d %d", report->id, report->x, report->y);
+    }
+}
+
 Input::Input() : _last_key(0ull),
                  _turbo_key(0ull),
                  _turbo_start_ms(DEFAULT_TURBO_START_TIME),
@@ -95,47 +132,46 @@ void Input::UnsetKeyDownCallback(uint32_t key)
     _turbo_key &= ~key;
 }
 
-bool Input::Poll(bool waiting)
+void Input::Poll(bool waiting)
 {
-    SceCtrlData ctrl_data;
+    SceCtrlData ctrl_data{0};
+    if ((waiting ? sceCtrlReadBufferPositiveExt2(0, &ctrl_data, 1) : sceCtrlPeekBufferPositiveExt2(0, &ctrl_data, 1)) > 0)
+    {
 
-    memset(&ctrl_data, 0, sizeof(SceCtrlData));
-    int result = waiting ? sceCtrlReadBufferPositiveExt2(0, &ctrl_data, 1) : sceCtrlPeekBufferPositiveExt2(0, &ctrl_data, 1);
-    if (result < 0)
-        return false;
+        uint32_t key = ctrl_data.buttons;
+        if (ctrl_data.lx < (ANALOG_CENTER - ANALOG_THRESHOLD))
+            key |= SCE_CTRL_LSTICK_LEFT;
+        else if (ctrl_data.lx > (ANALOG_CENTER + ANALOG_THRESHOLD))
+            key |= SCE_CTRL_LSTICK_RIGHT;
 
-    uint32_t key = ctrl_data.buttons;
-    if (ctrl_data.lx < (ANALOG_CENTER - ANALOG_THRESHOLD))
-        key |= SCE_CTRL_LSTICK_LEFT;
-    else if (ctrl_data.lx > (ANALOG_CENTER + ANALOG_THRESHOLD))
-        key |= SCE_CTRL_LSTICK_RIGHT;
+        if (ctrl_data.ly < (ANALOG_CENTER - ANALOG_THRESHOLD))
+            key |= SCE_CTRL_LSTICK_UP;
+        else if (ctrl_data.ly > (ANALOG_CENTER + ANALOG_THRESHOLD))
+            key |= SCE_CTRL_LSTICK_DOWN;
 
-    if (ctrl_data.ly < (ANALOG_CENTER - ANALOG_THRESHOLD))
-        key |= SCE_CTRL_LSTICK_UP;
-    else if (ctrl_data.ly > (ANALOG_CENTER + ANALOG_THRESHOLD))
-        key |= SCE_CTRL_LSTICK_DOWN;
+        if (ctrl_data.rx < (ANALOG_CENTER - ANALOG_THRESHOLD))
+            key |= SCE_CTRL_RSTICK_LEFT;
+        else if (ctrl_data.rx > (ANALOG_CENTER + ANALOG_THRESHOLD))
+            key |= SCE_CTRL_RSTICK_RIGHT;
 
-    if (ctrl_data.rx < (ANALOG_CENTER - ANALOG_THRESHOLD))
-        key |= SCE_CTRL_RSTICK_LEFT;
-    else if (ctrl_data.rx > (ANALOG_CENTER + ANALOG_THRESHOLD))
-        key |= SCE_CTRL_RSTICK_RIGHT;
+        if (ctrl_data.ry < (ANALOG_CENTER - ANALOG_THRESHOLD))
+            key |= SCE_CTRL_RSTICK_UP;
+        else if (ctrl_data.ry > (ANALOG_CENTER + ANALOG_THRESHOLD))
+            key |= SCE_CTRL_RSTICK_DOWN;
 
-    if (ctrl_data.ry < (ANALOG_CENTER - ANALOG_THRESHOLD))
-        key |= SCE_CTRL_RSTICK_UP;
-    else if (ctrl_data.ry > (ANALOG_CENTER + ANALOG_THRESHOLD))
-        key |= SCE_CTRL_RSTICK_DOWN;
+        _left.x = ctrl_data.lx;
+        _left.y = ctrl_data.ly;
+        _right.x = ctrl_data.rx;
+        _right.y = ctrl_data.ry;
 
-    _left.x = ctrl_data.lx;
-    _left.y = ctrl_data.ly;
-    _right.x = ctrl_data.rx;
-    _right.y = ctrl_data.ry;
+        key = _ProcTurbo(key);
+        _ProcCallbacks(key);
 
-    key = _ProcTurbo(key);
-    _ProcCallbacks(key);
+        _last_key = key;
+    }
 
-    bool changed = (_last_key != key);
-    _last_key = key;
-    return changed;
+    _front_touch.Poll();
+    _rear_touch.Poll();
 }
 
 /*
@@ -287,8 +323,3 @@ void Input::PopCallbacks()
         LogWarn("_callback_stack is empty, can't pop to _key_up_callbacks");
     }
 }
-
-// void Input::ClearKeyStates(uint32_t mask)
-// {
-//     _last_key &= ~mask;
-// }

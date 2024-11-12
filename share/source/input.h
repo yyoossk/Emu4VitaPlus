@@ -4,6 +4,8 @@
 #include <vector>
 #include <stack>
 #include <psp2/ctrl.h>
+#include <psp2/touch.h>
+#include <libretro.h>
 
 const uint32_t SCE_CTRL_LSTICK_UP = 0x00400000;
 const uint32_t SCE_CTRL_LSTICK_RIGHT = 0x00800000;
@@ -53,6 +55,18 @@ const uint32_t SCE_CTRL_RSTICK_LEFT = 0x20000000;
 #define TEST_KEY(KEY, KEYS) (((KEY) & (KEYS)) == (KEY))
 #define ANALOG_PSV_TO_RETRO(X) (((X) - 0x80) << 8)
 
+struct Touch
+{
+    SceTouchPortType port;
+    bool enabled = false;
+    SceTouchPanelInfo info{0};
+    uint8_t last_id{0};
+    SceTouchReport report{0};
+
+    void Enable(bool _enabled);
+    void Poll();
+};
+
 class Input;
 
 using InputFunc = std::function<void(Input *)>;
@@ -92,7 +106,7 @@ public:
 
     void SetTurboInterval(uint64_t turbo_start, uint64_t turbo_interval);
 
-    bool Poll(bool waiting = false);
+    void Poll(bool waiting = false);
 
     void Reset();
 
@@ -102,6 +116,9 @@ public:
 
     void PushCallbacks();
     void PopCallbacks();
+
+    void EnableFrontTouch(bool enabled) { _front_touch.Enable(enabled); };
+    void EnableRearTouch(bool enabled) { _rear_touch.Enable(enabled); }
 
 private:
     std::vector<KeyBinding> _key_up_callbacks;
@@ -116,6 +133,9 @@ private:
     bool _enable_key_up;
     AnalogAxis _left;
     AnalogAxis _right;
+
+    Touch _front_touch{SCE_TOUCH_PORT_FRONT};
+    Touch _rear_touch{SCE_TOUCH_PORT_BACK};
 
     std::stack<std::vector<KeyBinding>> _callback_stack;
 

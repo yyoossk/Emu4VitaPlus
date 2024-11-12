@@ -147,6 +147,8 @@ void Emulator::SetupKeys()
     BIND_HOTKEY_UP(MENU_TOGGLE, _OnPsButton);
 
     _input.SetTurboInterval(DEFAULT_TURBO_START_TIME, 20000);
+    _input.EnableFrontTouch(true);
+    _input.EnableRearTouch(true);
 }
 
 void Emulator::_OnPsButton(Input *input)
