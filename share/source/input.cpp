@@ -47,13 +47,7 @@ void Touch::Poll()
 TouchState Touch::GetState() const
 {
     // LogDebug("%d %d", last_id, report.id);
-
-    if (last_id != report.id)
-    {
-        return last_id == 0 ? TOUCH_DOWN : TOUCH_UP;
-    }
-
-    return TOUCH_NONE;
+    return last_id == report.id ? TOUCH_NONE : TOUCH_DOWN;
 }
 
 Input::Input() : _last_key(0ull),
