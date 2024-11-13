@@ -20,6 +20,19 @@ struct Rect
     float height = 0.f;
 };
 
+struct PointRect
+{
+    int16_t top;
+    int16_t left;
+    int16_t bottom;
+    int16_t right;
+
+    bool In(int16_t x, int16_t y)
+    {
+        return x >= left && x <= right && y >= top && y <= bottom;
+    }
+};
+
 enum VIDEO_ROTATION
 {
     VIDEO_ROTATION_0 = 0,
@@ -81,6 +94,7 @@ private:
     void _CreateTextureBuf(SceGxmTextureFormat format, size_t width, size_t height);
     void _SetupVideoOutput(unsigned width, unsigned height);
     void _SetControllerInfo(retro_controller_info *info);
+    void _SetPointRect();
 
     int16_t _GetJoypadState(unsigned index, unsigned id);
     int16_t _GetAnalogState(unsigned index, unsigned id);
@@ -125,6 +139,7 @@ private:
     Delay _delay;
     uint32_t _frame_count;
     std::vector<uint32_t> _controllers;
+    PointRect _point_rect;
 
     SceKernelLwMutexWork _run_mutex;
 

@@ -16,10 +16,8 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
 
     // LogDebug("%d %d %d %d", port, device, index, id);
 
-    if (port != 0)
-    {
+    if (device == RETRO_DEVICE_JOYPAD && port != 0)
         return 0;
-    }
 
     switch (device)
     {
@@ -87,7 +85,7 @@ int16_t Emulator::_GetMouseState(unsigned index, unsigned id)
 
 int16_t Emulator::_GetLightGunState(unsigned index, unsigned id)
 {
-    // LogDebug("id %d", id);
+    // LogDebug("index:%d id:%d", index, id);
     if (gEmulator->_input.FrontTouchEnabled())
     {
         switch (id)
@@ -97,10 +95,38 @@ int16_t Emulator::_GetLightGunState(unsigned index, unsigned id)
             return _input.GetFrontTouchSate() == TOUCH_DOWN ? 1 : 0;
 
         case RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X:
-            return (_input.GetFrontTouchAxis().x - VITA_WIDTH + _video_rect.x * 2) * 0x7fff / _video_rect.width;
+        {
+            int16_t x = _input.GetFrontTouchAxis().x;
+            int16_t y = _input.GetFrontTouchAxis().y;
+            if (_point_rect.In(x, y))
+                return (_input.GetFrontTouchAxis().x - VITA_WIDTH + _video_rect.x * 2) * 0x7fff / _video_rect.width;
+            else
+                return -0x8000;
+        }
 
         case RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y:
-            return (_input.GetFrontTouchAxis().y - VITA_HEIGHT + _video_rect.y * 2) * 0x7fff / _video_rect.height;
+        {
+            int16_t x = _input.GetFrontTouchAxis().x;
+            int16_t y = _input.GetFrontTouchAxis().y;
+            if (_point_rect.In(x, y))
+                return (_input.GetFrontTouchAxis().y - VITA_HEIGHT + _video_rect.y * 2) * 0x7fff / _video_rect.height;
+            else
+                return -0x8000;
+        }
+
+        case RETRO_DEVICE_ID_LIGHTGUN_IS_OFFSCREEN:
+        {
+            int16_t x = _input.GetFrontTouchAxis().x;
+            int16_t y = _input.GetFrontTouchAxis().y;
+            return !_point_rect.In(x, y);
+        }
+
+        case RETRO_DEVICE_ID_LIGHTGUN_RELOAD:
+        {
+            int16_t x = _input.GetFrontTouchAxis().x;
+            int16_t y = _input.GetFrontTouchAxis().y;
+            return (!_point_rect.In(x, y)) && (_input.GetFrontTouchSate() == TOUCH_DOWN);
+        }
 
         default:
             break;
@@ -108,6 +134,19 @@ int16_t Emulator::_GetLightGunState(unsigned index, unsigned id)
     }
 
     return 0;
+}
+
+void Emulator::_SetPointRect()
+{
+    LogFunctionName;
+    // all double, cause the data of SceTouchData is doubled.
+
+    _point_rect.top = VITA_HEIGHT - _video_rect.height - _video_rect.y * 2;
+    _point_rect.bottom = _point_rect.top + _video_rect.height * 2;
+    _point_rect.left = VITA_WIDTH - _video_rect.width - _video_rect.x * 2;
+    _point_rect.right = _point_rect.left + _video_rect.width * 2;
+
+    LogDebug("  %d %d %d %d", _point_rect.top, _point_rect.bottom, _point_rect.left, _point_rect.right);
 }
 
 void Emulator::SetupKeys()

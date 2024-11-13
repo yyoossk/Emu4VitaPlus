@@ -397,4 +397,6 @@ void Emulator::_SetupVideoOutput(unsigned width, unsigned height)
     gEmulator->_last_texture = nullptr;
 
     gVideo->Unlock();
+
+    _SetPointRect();
 }

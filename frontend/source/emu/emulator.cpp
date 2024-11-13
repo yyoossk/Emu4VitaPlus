@@ -136,12 +136,7 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
         _last_texture = nullptr;
         retro_get_system_av_info(&_av_info);
         retro_set_controller_port_device(0, RETRO_DEVICE_JOYPAD);
-
-        // for (const auto &ctrl : _controllers)
-        // {
-        //     retro_set_controller_port_device(0, ctrl);
-        //     LogDebug("retro_set_controller_port_device %08x", ctrl);
-        // }
+        retro_set_controller_port_device(0, 0x102);
 
         SetSpeed(1.0);
         gUi->ClearLogs();
