@@ -3,3 +3,4 @@
 
 extern void InitCoreSpec();
 extern void DefaultCoreOptions(CoreOptions *core_options);
+extern void SetControllerPortDevice();

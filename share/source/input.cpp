@@ -40,7 +40,7 @@ void Touch::Poll()
     {
         last_id = report.id;
         memcpy(&report, touch_data.report, sizeof(SceTouchReport));
-        // LogDebug("%d %d %d", report.id, report.x, report.y);
+        // LogDebug("last_id:%d report.id:%d report.x:%d report.y:%d", last_id, report.id, report.x, report.y);
     }
 }
 
