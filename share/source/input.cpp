@@ -45,21 +45,6 @@ void Touch::Poll()
     }
 }
 
-void Touch::_ClearMapTable()
-{
-    if (_map_table_x)
-    {
-        delete[] _map_table_x;
-        _map_table_x = nullptr;
-    }
-
-    if (_map_table_y)
-    {
-        delete[] _map_table_y;
-        _map_table_y = nullptr;
-    }
-}
-
 Input::Input() : _last_key(0ull),
                  _turbo_key(0ull),
                  _turbo_start_ms(DEFAULT_TURBO_START_TIME),

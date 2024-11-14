@@ -95,11 +95,11 @@ class Touch
 public:
     Touch(SceTouchPortType port)
         : _port(port),
-          _enabled(false),
-          _map_table_x(nullptr),
-          _map_table_y(nullptr) {}
+          _enabled(false)
+    {
+    }
 
-    virtual ~Touch() { _ClearMapTable(); };
+    virtual ~Touch() {};
 
     void Enable(bool enable);
     bool IsEnabled() const { return _enabled; };
@@ -110,44 +110,43 @@ public:
     template <typename T>
     void InitMapTable(const Rect<T> &rect)
     {
-        _ClearMapTable();
-
         T half_width = rect.width / 2;
         T half_height = rect.height / 2;
 
-        _map_table_x = new int16_t[rect.width];
-        _map_table_y = new int16_t[rect.height];
-        int16_t *xp = _map_table_x;
-        int16_t *yp = _map_table_y;
+        _map_table_x.clear();
+        _map_table_y.clear();
+        _map_table_x.reserve(rect.width);
+        _map_table_y.reserve(rect.height);
+
         float xscale = 32767.f / half_width; // 0x7fff == 32767
         float yscale = 32767.f / half_height;
 
         for (T x = 0; x < rect.width; x++)
         {
-            *xp++ = (x - half_width) * xscale;
+            _map_table_x.emplace_back((x - half_width) * xscale);
         }
 
         for (T y = 0; y < rect.height; y++)
         {
-            *yp++ = (y - half_height) * yscale;
+            _map_table_y.emplace_back((y - half_height) * yscale);
         }
     }
 
     template <typename T>
     int16_t GetMapedX(const Rect<T> &rect) const
     {
-        return rect.Contains(_axis.x, _axis.y) ? _map_table_x[_axis.x - rect.left] : -0x8000;
+        size_t x = _axis.x - rect.left;
+        return rect.Contains(_axis.x, _axis.y) && x < _map_table_x.size() ? _map_table_x[x] : -0x8000;
     }
 
     template <typename T>
     int16_t GetMapedY(const Rect<T> &rect) const
     {
-        return rect.Contains(_axis.x, _axis.y) ? _map_table_y[_axis.y - rect.top] : -0x8000;
+        size_t y = _axis.y - rect.top;
+        return rect.Contains(_axis.x, _axis.y) && y < _map_table_y.size() ? _map_table_y[y] : -0x8000;
     }
 
 private:
-    void _ClearMapTable();
-
     bool _enabled;
     SceTouchPanelInfo _info;
     TouchAxis _axis;
@@ -155,8 +154,8 @@ private:
     uint8_t _current_id;
     SceTouchPortType _port;
 
-    int16_t *_map_table_x;
-    int16_t *_map_table_y;
+    std::vector<int16_t> _map_table_x;
+    std::vector<int16_t> _map_table_y;
 };
 
 class Input
