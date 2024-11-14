@@ -49,7 +49,7 @@ struct Rect
         displacement_y = VITA_HEIGHT_HALF - height / 2 - top;
     }
 
-    bool Contains(T x, T y)
+    bool Contains(T x, T y) const
     {
         return x >= left && x <= right && y >= top && y <= bottom;
     }

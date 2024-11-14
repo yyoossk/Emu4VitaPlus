@@ -5,6 +5,7 @@
 #include <stack>
 #include <psp2/ctrl.h>
 #include <psp2/touch.h>
+#include "rect.h"
 
 const uint32_t SCE_CTRL_LSTICK_UP = 0x00400000;
 const uint32_t SCE_CTRL_LSTICK_RIGHT = 0x00800000;
@@ -101,10 +102,48 @@ public:
     virtual ~Touch() { _ClearMapTable(); };
 
     void Enable(bool enable);
-    bool IsEnabled() { return _enabled; };
+    bool IsEnabled() const { return _enabled; };
     void Poll();
     const TouchState GetState() const { return _last_id == _current_id ? TOUCH_NONE : TOUCH_DOWN; };
     const TouchAxis &GetAxis() const { return _axis; };
+
+    template <typename T>
+    void InitMapTable(const Rect<T> &rect)
+    {
+        _ClearMapTable();
+
+        T half_width = rect.width / 2;
+        T half_height = rect.height / 2;
+
+        _map_table_x = new int16_t[rect.width];
+        _map_table_y = new int16_t[rect.height];
+        int16_t *xp = _map_table_x;
+        int16_t *yp = _map_table_y;
+        float xscale = 32767.f / half_width; // 0x7fff == 32767
+        float yscale = 32767.f / half_height;
+
+        for (T x = 0; x < rect.width; x++)
+        {
+            *xp++ = (x - half_width) * xscale;
+        }
+
+        for (T y = 0; y < rect.height; y++)
+        {
+            *yp++ = (y - half_height) * yscale;
+        }
+    }
+
+    template <typename T>
+    int16_t GetMapedX(const Rect<T> &rect) const
+    {
+        return rect.Contains(_axis.x, _axis.y) ? _map_table_x[_axis.x - rect.left] : -0x8000;
+    }
+
+    template <typename T>
+    int16_t GetMapedY(const Rect<T> &rect) const
+    {
+        return rect.Contains(_axis.x, _axis.y) ? _map_table_y[_axis.y - rect.top] : -0x8000;
+    }
 
 private:
     void _ClearMapTable();

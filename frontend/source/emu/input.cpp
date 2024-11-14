@@ -92,26 +92,13 @@ int16_t Emulator::_GetLightGunState(unsigned index, unsigned id)
         switch (id)
         {
         case RETRO_DEVICE_ID_LIGHTGUN_TRIGGER:
-            // LogDebug("GetFrontTouchSate %d", _input.GetFrontTouchSate());
             return front.GetState() == TOUCH_DOWN ? 1 : 0;
 
         case RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X:
-        {
-            const TouchAxis &axis = front.GetAxis();
-            if (_video_rect.Contains(axis.x, axis.y))
-                return (axis.x - _video_rect.left - _video_rect.width / 2) * 0x7fff * 2 / _video_rect.width;
-            else
-                return -0x8000;
-        }
+            return front.GetMapedX(_video_rect);
 
         case RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y:
-        {
-            const TouchAxis &axis = front.GetAxis();
-            if (_video_rect.Contains(axis.x, axis.y))
-                return (axis.y - _video_rect.top - _video_rect.height / 2) * 0x7fff * 2 / _video_rect.height;
-            else
-                return -0x8000;
-        }
+            return front.GetMapedY(_video_rect);
 
         case RETRO_DEVICE_ID_LIGHTGUN_IS_OFFSCREEN:
         {
