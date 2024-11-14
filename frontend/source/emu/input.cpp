@@ -94,6 +94,15 @@ int16_t Emulator::_GetLightGunState(unsigned index, unsigned id)
         case RETRO_DEVICE_ID_LIGHTGUN_TRIGGER:
             return front.GetState() == TOUCH_DOWN ? 1 : 0;
 
+        case RETRO_DEVICE_ID_LIGHTGUN_AUX_A:
+            return (_input.GetKeyStates() & _keys[RETRO_DEVICE_ID_JOYPAD_A]) ? 1 : 0;
+
+        case RETRO_DEVICE_ID_LIGHTGUN_AUX_B:
+            return (_input.GetKeyStates() & _keys[RETRO_DEVICE_ID_JOYPAD_B]) ? 1 : 0;
+
+        case RETRO_DEVICE_ID_LIGHTGUN_START:
+            return (_input.GetKeyStates() & _keys[RETRO_DEVICE_ID_JOYPAD_START]) ? 1 : 0;
+
         case RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X:
             return front.GetMapedX(_video_rect);
 

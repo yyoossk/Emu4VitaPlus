@@ -33,7 +33,7 @@ const bool DEFAULT_ENABLE_REWIND = true;
 const size_t DEFAULT_REWIND_BUF_SIZE = 10;
 #endif
 
-#if defined(FC_BUILD)
+#if defined(FC_BUILD) || defined(GENESIS_PLUS_GX_BUILD)
 const bool DEFAULT_FRONT_TOUCH = true;
 const bool DEFAULT_REAR_TOUCH = false;
 #else
