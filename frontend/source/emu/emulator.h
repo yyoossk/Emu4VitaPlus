@@ -11,27 +11,7 @@
 #include "rewind.h"
 #include "cheat.h"
 #include "arcade_manager.h"
-
-struct Rect
-{
-    float x = 0.f;
-    float y = 0.f;
-    float width = 0.f;
-    float height = 0.f;
-};
-
-struct PointRect
-{
-    int16_t top;
-    int16_t left;
-    int16_t bottom;
-    int16_t right;
-
-    bool In(int16_t x, int16_t y)
-    {
-        return x >= left && x <= right && y >= top && y <= bottom;
-    }
-};
+#include "rect.h"
 
 enum VIDEO_ROTATION
 {
@@ -94,7 +74,6 @@ private:
     void _CreateTextureBuf(SceGxmTextureFormat format, size_t width, size_t height);
     void _SetupVideoOutput(unsigned width, unsigned height);
     void _SetControllerInfo(retro_controller_info *info);
-    void _SetPointRect();
 
     int16_t _GetJoypadState(unsigned index, unsigned id);
     int16_t _GetAnalogState(unsigned index, unsigned id);
@@ -125,7 +104,7 @@ private:
     SceGxmTextureFormat _video_pixel_format;
     retro_pixel_format _retro_pixel_format;
     TextureBuf<DEFAULT_TEXTURE_BUF_COUNT> *_texture_buf;
-    Rect _video_rect;
+    Rect<int> _video_rect;
     bool _graphics_config_changed;
     VIDEO_ROTATION _video_rotation;
     Delay _video_delay;
@@ -139,7 +118,6 @@ private:
     Delay _delay;
     uint32_t _frame_count;
     std::vector<uint32_t> _controllers;
-    PointRect _point_rect;
 
     SceKernelLwMutexWork _run_mutex;
 

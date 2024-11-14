@@ -240,18 +240,19 @@ void Emulator::_SetVideoSize(uint32_t width, uint32_t height)
     LogFunctionName;
     LogDebug(" %d %d %f", _av_info.geometry.base_width, _av_info.geometry.base_height, _av_info.geometry.aspect_ratio);
 
-    if (gConfig->graphics[GRAPHICS_OVERLAY] > 0 &&
-        (*gOverlays)[gConfig->graphics[GRAPHICS_OVERLAY] - 1].viewport_width > 0 &&
-        (*gOverlays)[gConfig->graphics[GRAPHICS_OVERLAY] - 1].viewport_height > 0)
+    if (gConfig->graphics[GRAPHICS_OVERLAY] > 0)
     {
-        _video_rect.width = (*gOverlays)[gConfig->graphics[GRAPHICS_OVERLAY] - 1].viewport_width;
-        _video_rect.height = (*gOverlays)[gConfig->graphics[GRAPHICS_OVERLAY] - 1].viewport_height;
-        _video_rect.x = (*gOverlays)[gConfig->graphics[GRAPHICS_OVERLAY] - 1].viewport_x;
-        _video_rect.y = (*gOverlays)[gConfig->graphics[GRAPHICS_OVERLAY] - 1].viewport_y;
-        return;
+        const Overlay *overlay = &(*gOverlays)[gConfig->graphics[GRAPHICS_OVERLAY] - 1];
+        if (overlay->viewport_width > 0 && overlay->viewport_height > 0)
+        {
+            _video_rect.InitWithDisplacementAndSize(overlay->viewport_x,
+                                                    overlay->viewport_y,
+                                                    overlay->viewport_width,
+                                                    overlay->viewport_height);
+            return;
+        }
     }
 
-    _video_rect.x = _video_rect.y = 0;
     float aspect_ratio = .0f;
 
     switch (gConfig->graphics[DISPLAY_RATIO])
@@ -324,10 +325,10 @@ void Emulator::_SetVideoSize(uint32_t width, uint32_t height)
         break;
     }
 
-    _video_rect.width = width;
-    _video_rect.height = height;
+    _video_rect.InitWithDisplacementAndSize(0, 0, width, height);
 
     LogDebug("  width: %d height:%d", width, height);
+    LogDebug("%d %d %d %d", _video_rect.top, _video_rect.left, _video_rect.bottom, _video_rect.right);
 }
 
 void Emulator::_SetVertices(float x, float y, float tex_x, float tex_y, float tex_w, float tex_h, float x_scale, float y_scale, float rad)
@@ -386,17 +387,15 @@ void Emulator::_SetupVideoOutput(unsigned width, unsigned height)
 
     gEmulator->_CreateTextureBuf(gEmulator->_video_pixel_format, width, height);
     gEmulator->_SetVideoSize(width, height);
-    gEmulator->_SetVertices(gEmulator->_video_rect.x, gEmulator->_video_rect.y,
+    gEmulator->_SetVertices(gEmulator->_video_rect.displacement_x, gEmulator->_video_rect.displacement_y,
                             0, 0,
                             width, height,
-                            gEmulator->_video_rect.width / width,
-                            gEmulator->_video_rect.height / height,
+                            (float)gEmulator->_video_rect.width / width,
+                            (float)gEmulator->_video_rect.height / height,
                             gEmulator->_video_rotation == VIDEO_ROTATION_90 || gEmulator->_video_rotation == VIDEO_ROTATION_180 ? M_PI : 0);
 
     gEmulator->_graphics_config_changed = false;
     gEmulator->_last_texture = nullptr;
 
     gVideo->Unlock();
-
-    _SetPointRect();
 }

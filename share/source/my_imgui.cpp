@@ -277,7 +277,7 @@ void My_Imgui_Create_Font(uint32_t language, const char *cache_path)
                                  &font_config,
                                  RomanNumCharset);
     io.Fonts->AddFontFromFileTTF(APP_ASSETS_DIR "/" GAMEPAD_FONT_NAME,
-                                 26.0f,
+                                 30.0f,
                                  &font_config,
                                  GamePadCharset);
     io.Fonts->AddFontFromFileTTF(APP_ASSETS_DIR "/" ICON_FONT_NAME,

@@ -89,17 +89,35 @@ struct TurboKeyState
     uint64_t next_change_state_time;
 };
 
-struct Touch
+class Touch
 {
-    SceTouchPortType port;
-    bool enabled = false;
-    SceTouchPanelInfo info{0};
-    uint8_t last_id{0};
-    SceTouchReport report{0};
+public:
+    Touch(SceTouchPortType port)
+        : _port(port),
+          _enabled(false),
+          _map_table_x(nullptr),
+          _map_table_y(nullptr) {}
 
-    void Enable(bool _enabled);
+    virtual ~Touch() { _ClearMapTable(); };
+
+    void Enable(bool enable);
+    bool IsEnabled() { return _enabled; };
     void Poll();
-    TouchState GetState() const;
+    const TouchState GetState() const { return _last_id == _current_id ? TOUCH_NONE : TOUCH_DOWN; };
+    const TouchAxis &GetAxis() const { return _axis; };
+
+private:
+    void _ClearMapTable();
+
+    bool _enabled;
+    SceTouchPanelInfo _info;
+    TouchAxis _axis;
+    uint8_t _last_id;
+    uint8_t _current_id;
+    SceTouchPortType _port;
+
+    int16_t *_map_table_x;
+    int16_t *_map_table_y;
 };
 
 class Input
@@ -130,18 +148,11 @@ public:
     void PushCallbacks();
     void PopCallbacks();
 
-    void EnableFrontTouch(bool enabled) { _front_touch.Enable(enabled); };
-    void EnableRearTouch(bool enabled) { _rear_touch.Enable(enabled); };
-    bool FrontTouchEnabled() { return _front_touch.enabled; };
-    bool RearTouchEnabled() { return _rear_touch.enabled; };
-    const TouchAxis &GetFrontTouchAxis() const { return *(TouchAxis *)(&_front_touch.report.x); };
-    const TouchAxis &GetRearTouchAxis() const { return *(TouchAxis *)(&_rear_touch.report.x); };
-    TouchState GetFrontTouchSate() const { return _front_touch.GetState(); };
-    TouchState GetRearTouchSate() const { return _rear_touch.GetState(); };
+    Touch &GetFrontTouch() { return _front_touch; };
+    Touch &GetRearTouch() { return _rear_touch; };
 
 private:
-    std::vector<KeyBinding>
-        _key_up_callbacks;
+    std::vector<KeyBinding> _key_up_callbacks;
     std::vector<KeyBinding> _key_down_callbacks;
 
     TurboKeyState _turbo_key_states[32];

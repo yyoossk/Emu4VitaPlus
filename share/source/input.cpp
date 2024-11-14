@@ -7,47 +7,57 @@
 #define ANALOG_CENTER 128
 #define ANALOG_THRESHOLD 64
 
-void Touch::Enable(bool _enabled)
+void Touch::Enable(bool enable)
 {
     LogFunctionName;
-    enabled = _enabled;
-    if (enabled)
+    _enabled = enable;
+    if (enable)
     {
-        sceTouchGetPanelInfo(port, &info);
-        sceTouchSetSamplingState(port, SCE_TOUCH_SAMPLING_STATE_START);
+        sceTouchGetPanelInfo(_port, &_info);
+        sceTouchSetSamplingState(_port, SCE_TOUCH_SAMPLING_STATE_START);
         LogDebug("%d:\n"
                  "   %d %d %d %d\n"
                  "   %d %d %d %d",
-                 port,
-                 info.minAaX, info.minAaY, info.maxAaX, info.maxAaY,
-                 info.minDispX, info.minDispY, info.maxDispX, info.maxDispY);
+                 _port,
+                 _info.minAaX, _info.minAaY, _info.maxAaX, _info.maxAaY,
+                 _info.minDispX, _info.minDispY, _info.maxDispX, _info.maxDispY);
     }
     else
     {
-        sceTouchSetSamplingState(port, SCE_TOUCH_SAMPLING_STATE_STOP);
+        sceTouchSetSamplingState(_port, SCE_TOUCH_SAMPLING_STATE_STOP);
     }
 }
 
 void Touch::Poll()
 {
-    if (!enabled)
+    if (!_enabled)
     {
         return;
     }
 
     SceTouchData touch_data{0};
-    if (sceTouchPeek(port, &touch_data, 1) == 1)
+    if (sceTouchPeek(_port, &touch_data, 1) == 1)
     {
-        last_id = report.id;
-        memcpy(&report, touch_data.report, sizeof(SceTouchReport));
-        // LogDebug("last_id:%d report.id:%d report.x:%d report.y:%d", last_id, report.id, report.x, report.y);
+        _last_id = _current_id;
+        _current_id = touch_data.report->id;
+        _axis.x = touch_data.report->x >> 1;
+        _axis.y = touch_data.report->y >> 1;
     }
 }
 
-TouchState Touch::GetState() const
+void Touch::_ClearMapTable()
 {
-    // LogDebug("%d %d", last_id, report.id);
-    return last_id == report.id ? TOUCH_NONE : TOUCH_DOWN;
+    if (_map_table_x)
+    {
+        delete[] _map_table_x;
+        _map_table_x = nullptr;
+    }
+
+    if (_map_table_y)
+    {
+        delete[] _map_table_y;
+        _map_table_y = nullptr;
+    }
 }
 
 Input::Input() : _last_key(0ull),
