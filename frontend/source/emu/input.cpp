@@ -24,6 +24,9 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
     case RETRO_DEVICE_JOYPAD:
         return gEmulator->_GetJoypadState(index, id);
 
+    case RETRO_DEVICE_MOUSE:
+        return gEmulator->_GetMouseState(index, id);
+
     case RETRO_DEVICE_ANALOG:
         return gEmulator->_GetAnalogState(index, id);
 
@@ -97,6 +100,24 @@ int16_t Emulator::_GetAnalogState(unsigned index, unsigned id)
 
 int16_t Emulator::_GetMouseState(unsigned index, unsigned id)
 {
+    Touch &front = gEmulator->_input.GetFrontTouch();
+    if (front.IsEnabled())
+    {
+        switch (id)
+        {
+        case RETRO_DEVICE_ID_MOUSE_X:
+            return (float)front.GetRelativeMovingX() * _texture_buf->GetWidth() / _video_rect.width;
+
+        case RETRO_DEVICE_ID_MOUSE_Y:
+            return (float)front.GetRelativeMovingY() * _texture_buf->GetHeight() / _video_rect.height;
+
+        case RETRO_DEVICE_ID_MOUSE_LEFT:
+            front.GetState() == TOUCH_DOWN ? 1 : 0;
+
+        default:
+            break;
+        }
+    }
     return 0;
 }
 
@@ -311,7 +332,7 @@ void Emulator::_SetControllerInfo(retro_controller_info *info)
     {
         for (unsigned i = 0; i < info->num_types; i++)
         {
-            LogDebug(" %d %d %08x %s", count, i, info->types[i].id, info->types[i].desc);
+            LogDebug(" %d %08x %s", count, info->types[i].id, info->types[i].desc);
             int device = info->types[i].id & 0xff;
             if (count == 0 && (device == RETRO_DEVICE_JOYPAD ||
                                device == RETRO_DEVICE_MOUSE ||

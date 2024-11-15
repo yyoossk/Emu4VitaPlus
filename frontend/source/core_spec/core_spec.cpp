@@ -35,5 +35,7 @@ void SetControllerPortDevice()
     retro_set_controller_port_device(1, 0x102); // Zapper
 #elif defined(NESTOPIA_BUILD)
     retro_set_controller_port_device(1, 0x106); // Zapper
+#elif defined(SNES9X2010_BUILD)
+    retro_set_controller_port_device(0, 2); // Mouse
 #endif
 }

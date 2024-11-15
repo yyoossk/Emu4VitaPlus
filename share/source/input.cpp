@@ -40,6 +40,8 @@ void Touch::Poll()
     {
         _last_id = _current_id;
         _current_id = touch_data.report->id;
+        _last_axis.x = _axis.x;
+        _last_axis.y = _axis.y;
         _axis.x = touch_data.report->x >> 1;
         _axis.y = touch_data.report->y >> 1;
     }

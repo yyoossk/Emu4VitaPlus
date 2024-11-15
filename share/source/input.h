@@ -106,6 +106,8 @@ public:
     void Poll();
     const TouchState GetState() const { return _last_id == _current_id ? TOUCH_NONE : TOUCH_DOWN; };
     const TouchAxis &GetAxis() const { return _axis; };
+    const int16_t GetRelativeMovingX() const { return _axis.x - _last_axis.x; };
+    const int16_t GetRelativeMovingY() const { return _axis.y - _last_axis.y; };
 
     template <typename T>
     void InitMapTable(const Rect<T> &rect)
@@ -149,6 +151,7 @@ public:
 private:
     bool _enabled;
     SceTouchPanelInfo _info;
+    TouchAxis _last_axis;
     TouchAxis _axis;
     uint8_t _last_id;
     uint8_t _current_id;
