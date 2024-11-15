@@ -20,8 +20,10 @@ private:
     void _OnActive(Input *input) override;
     void _OnKeyCross(Input *input);
     void _OnKeyUp(Input *input) override;
+    void _OnKeyLeft(Input *input);
+    void _OnKeyRight(Input *input);
     void _OnKeyDown(Input *input) override;
-    void _OnRemove(Input *input, int index);
+    void _OnDialog(Input *input, int index);
     void _UpdateStatus();
     void _UpdateTexture();
 

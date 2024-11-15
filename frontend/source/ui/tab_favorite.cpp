@@ -25,7 +25,7 @@ TabFavorite::TabFavorite() : TabSeletable(TAB_FAVORITE), _texture(nullptr)
 
     _dialog = new Dialog{DIALOG_REMOVE_FAVORITE,
                          {DIALOG_OK, DIALOG_CANCEL},
-                         std::bind(&TabFavorite::_OnRemove, this, std::placeholders::_1, std::placeholders::_2)};
+                         std::bind(&TabFavorite::_OnDialog, this, std::placeholders::_1, std::placeholders::_2)};
 }
 
 TabFavorite::~TabFavorite()
@@ -60,7 +60,15 @@ void TabFavorite::Show(bool selected)
         ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
         for (const auto &fav : *gFavorites)
         {
-            ImGui::Selectable(fav.second.item.name.c_str(), count == _index);
+            if (count == _index)
+            {
+                My_Imgui_Selectable(fav.second.item.name.c_str(), true, &_moving_status);
+            }
+            else
+            {
+                ImGui::Selectable(fav.second.item.name.c_str());
+            }
+
             if (count == _index && ImGui::GetScrollMaxY() > 0.f)
             {
                 ImGui::SetScrollHereY((float)_index / total);
@@ -100,12 +108,16 @@ void TabFavorite::Show(bool selected)
 void TabFavorite::SetInputHooks(Input *input)
 {
     TabSeletable::SetInputHooks(input);
+    input->SetKeyUpCallback(SCE_CTRL_LEFT, std::bind(&TabFavorite::_OnKeyLeft, this, input));
+    input->SetKeyUpCallback(SCE_CTRL_RIGHT, std::bind(&TabFavorite::_OnKeyRight, this, input));
     input->SetKeyUpCallback(SCE_CTRL_CROSS, std::bind(&TabFavorite::_OnKeyCross, this, input));
 }
 
 void TabFavorite::UnsetInputHooks(Input *input)
 {
     TabSeletable::UnsetInputHooks(input);
+    input->UnsetKeyUpCallback(SCE_CTRL_LEFT);
+    input->UnsetKeyUpCallback(SCE_CTRL_RIGHT);
     input->UnsetKeyUpCallback(SCE_CTRL_CROSS);
 }
 
@@ -118,6 +130,33 @@ void TabFavorite::_OnKeyUp(Input *input)
 void TabFavorite::_OnKeyDown(Input *input)
 {
     TabSeletable::_OnKeyDown(input);
+    _UpdateTexture();
+}
+
+void TabFavorite::_OnKeyLeft(Input *input)
+{
+    if (_index <= 10)
+    {
+        _index = 0;
+    }
+    else
+    {
+        _index -= 10;
+    }
+
+    _moving_status.Reset();
+    _UpdateTexture();
+}
+
+void TabFavorite::_OnKeyRight(Input *input)
+{
+    _index += 10;
+    if (_index >= _GetItemCount())
+    {
+        _index = _GetItemCount() - 1;
+    }
+
+    _moving_status.Reset();
     _UpdateTexture();
 }
 
@@ -150,15 +189,18 @@ void TabFavorite::_UpdateStatus()
     _status_text += TEXT(BROWSER_REMOVE_FAVORITE);
 }
 
-void TabFavorite::_OnRemove(Input *input, int index)
+void TabFavorite::_OnDialog(Input *input, int index)
 {
     LogFunctionName;
-    gVideo->Lock();
-    auto iter = gFavorites->begin();
-    std::advance(iter, _index);
-    gFavorites->erase(iter);
-    gFavorites->Save();
-    gVideo->Unlock();
+    if (index == 0)
+    {
+        gVideo->Lock();
+        auto iter = gFavorites->begin();
+        std::advance(iter, _index);
+        gFavorites->erase(iter);
+        gFavorites->Save();
+        gVideo->Unlock();
+    }
 }
 
 void TabFavorite::ChangeLanguage(uint32_t language)
