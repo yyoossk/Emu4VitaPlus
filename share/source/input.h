@@ -106,8 +106,8 @@ public:
     void Poll();
     const TouchState GetState() const { return _last_id == _current_id ? TOUCH_NONE : TOUCH_DOWN; };
     const TouchAxis &GetAxis() const { return _axis; };
-    const int16_t GetRelativeMovingX() const { return _axis.x - _last_axis.x; };
-    const int16_t GetRelativeMovingY() const { return _axis.y - _last_axis.y; };
+    const int16_t GetRelativeMovingX() const { return _last_id == _current_id ? _axis.x - _last_axis.x : 0; };
+    const int16_t GetRelativeMovingY() const { return _last_id == _current_id ? _axis.y - _last_axis.y : 0; };
 
     template <typename T>
     void InitMapTable(const Rect<T> &rect)
@@ -213,7 +213,7 @@ private:
     AnalogAxis _right_analog;
     // map to retro's analog
     // -0x7fff to 0x7fff
-    int16_t _analog_map_table[0x100];
+    static int16_t _analog_map_table[0x100];
 
     Touch _front_touch{SCE_TOUCH_PORT_FRONT};
     Touch _rear_touch{SCE_TOUCH_PORT_BACK};

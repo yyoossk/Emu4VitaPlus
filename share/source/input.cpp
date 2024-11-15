@@ -38,6 +38,7 @@ void Touch::Poll()
     SceTouchData touch_data{0};
     if (sceTouchPeek(_port, &touch_data, 1) == 1)
     {
+
         _last_id = _current_id;
         _current_id = touch_data.report->id;
         _last_axis.x = _axis.x;
@@ -56,12 +57,20 @@ Input::Input() : _last_key(0ull),
                  _right_analog{0}
 {
     memset(_turbo_key_states, 0, sizeof(_turbo_key_states));
-    int16_t *p = _analog_map_table;
-    for (size_t i = 0; i < 0x100; i++)
+
+    if (_analog_map_table[0] != ANALOG_PSV_TO_RETRO(0) || _analog_map_table[0xff] != ANALOG_PSV_TO_RETRO(0xff))
     {
-        *p++ = ANALOG_PSV_TO_RETRO(i);
+        int16_t *p = _analog_map_table;
+        {
+            for (size_t i = 0; i < 0x100; i++)
+            {
+                *p++ = ANALOG_PSV_TO_RETRO(i);
+            }
+        }
     }
 }
+
+int16_t Input::_analog_map_table[0x100] = {0};
 
 Input::~Input()
 {

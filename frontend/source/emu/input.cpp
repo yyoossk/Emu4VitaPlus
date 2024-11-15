@@ -100,19 +100,22 @@ int16_t Emulator::_GetAnalogState(unsigned index, unsigned id)
 
 int16_t Emulator::_GetMouseState(unsigned index, unsigned id)
 {
-    Touch &front = gEmulator->_input.GetFrontTouch();
-    if (front.IsEnabled())
+    Touch &touch = gEmulator->_input.GetFrontTouch();
+    if (touch.IsEnabled())
     {
         switch (id)
         {
         case RETRO_DEVICE_ID_MOUSE_X:
-            return (float)front.GetRelativeMovingX() * _texture_buf->GetWidth() / _video_rect.width;
+            return (float)touch.GetRelativeMovingX() * _texture_buf->GetWidth() / _video_rect.width;
 
         case RETRO_DEVICE_ID_MOUSE_Y:
-            return (float)front.GetRelativeMovingY() * _texture_buf->GetHeight() / _video_rect.height;
+            return (float)touch.GetRelativeMovingY() * _texture_buf->GetHeight() / _video_rect.height;
 
         case RETRO_DEVICE_ID_MOUSE_LEFT:
-            front.GetState() == TOUCH_DOWN ? 1 : 0;
+            return (_input.GetKeyStates() & _keys[RETRO_DEVICE_ID_JOYPAD_L]) ? 1 : 0;
+
+        case RETRO_DEVICE_ID_MOUSE_RIGHT:
+            return (_input.GetKeyStates() & _keys[RETRO_DEVICE_ID_JOYPAD_R]) ? 1 : 0;
 
         default:
             break;
