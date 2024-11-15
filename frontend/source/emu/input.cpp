@@ -68,13 +68,30 @@ int16_t Emulator::_GetAnalogState(unsigned index, unsigned id)
 {
     if (_video_rotation == VIDEO_ROTATION_0 || _video_rotation == VIDEO_ROTATION_180)
     {
-        const AnalogAxis aa = index == RETRO_DEVICE_INDEX_ANALOG_LEFT ? _input.GetLeftAnalogAxis() : _input.GetRightAnalogAxis();
-        return id == RETRO_DEVICE_ID_ANALOG_X ? ANALOG_PSV_TO_RETRO(aa.x) : ANALOG_PSV_TO_RETRO(aa.y);
+        if (index == RETRO_DEVICE_INDEX_ANALOG_LEFT)
+        {
+            return id == RETRO_DEVICE_ID_ANALOG_X ? _input.GetMapedLeftAnalogX() : _input.GetMapedLeftAnalogY();
+        }
+        else
+        {
+            return id == RETRO_DEVICE_ID_ANALOG_X ? _input.GetMapedRightAnalogX() : _input.GetMapedRightAnalogY();
+        }
+
+        // const AnalogAxis aa = index == RETRO_DEVICE_INDEX_ANALOG_LEFT ? _input.GetLeftAnalogAxis() : _input.GetRightAnalogAxis();
+        // return id == RETRO_DEVICE_ID_ANALOG_X ? ANALOG_PSV_TO_RETRO(aa.x) : ANALOG_PSV_TO_RETRO(aa.y);
     }
     else
     {
-        const AnalogAxis aa = index == RETRO_DEVICE_INDEX_ANALOG_LEFT ? _input.GetRightAnalogAxis() : _input.GetLeftAnalogAxis();
-        return id == RETRO_DEVICE_ID_ANALOG_X ? -(ANALOG_PSV_TO_RETRO(aa.y) + 1) : ANALOG_PSV_TO_RETRO(aa.x);
+        if (index == RETRO_DEVICE_INDEX_ANALOG_LEFT)
+        {
+            return RETRO_DEVICE_ID_ANALOG_X ? -(_input.GetMapedRightAnalogY() + 1) : _input.GetMapedRightAnalogX();
+        }
+        else
+        {
+            return RETRO_DEVICE_ID_ANALOG_X ? -(_input.GetMapedLeftAnalogY() + 1) : _input.GetMapedLeftAnalogX();
+        }
+        // const AnalogAxis aa = index == RETRO_DEVICE_INDEX_ANALOG_LEFT ? _input.GetRightAnalogAxis() : _input.GetLeftAnalogAxis();
+        // return id == RETRO_DEVICE_ID_ANALOG_X ? -(ANALOG_PSV_TO_RETRO(aa.y) + 1) : ANALOG_PSV_TO_RETRO(aa.x);
     }
 }
 

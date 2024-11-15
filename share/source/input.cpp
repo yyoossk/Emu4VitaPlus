@@ -50,10 +50,15 @@ Input::Input() : _last_key(0ull),
                  _turbo_start_ms(DEFAULT_TURBO_START_TIME),
                  _turbo_interval_ms(DEFAULT_TURBO_INTERVAL),
                  _enable_key_up(true),
-                 _left{0},
-                 _right{0}
+                 _left_analog{0},
+                 _right_analog{0}
 {
     memset(_turbo_key_states, 0, sizeof(_turbo_key_states));
+    int16_t *p = _analog_map_table;
+    for (size_t i = 0; i < 0x100; i++)
+    {
+        *p++ = ANALOG_PSV_TO_RETRO(i);
+    }
 }
 
 Input::~Input()
@@ -160,10 +165,10 @@ void Input::Poll(bool waiting)
         else if (ctrl_data.ry > (ANALOG_CENTER + ANALOG_THRESHOLD))
             key |= SCE_CTRL_RSTICK_DOWN;
 
-        _left.x = ctrl_data.lx;
-        _left.y = ctrl_data.ly;
-        _right.x = ctrl_data.rx;
-        _right.y = ctrl_data.ry;
+        _left_analog.x = ctrl_data.lx;
+        _left_analog.y = ctrl_data.ly;
+        _right_analog.x = ctrl_data.rx;
+        _right_analog.y = ctrl_data.ry;
 
         key = _ProcTurbo(key);
         _ProcCallbacks(key);

@@ -154,6 +154,8 @@ private:
     uint8_t _current_id;
     SceTouchPortType _port;
 
+    // map to retro's coordinate system
+    // -0x7fff to 0x7fff
     std::vector<int16_t> _map_table_x;
     std::vector<int16_t> _map_table_y;
 };
@@ -180,8 +182,12 @@ public:
     void Reset();
 
     const uint32_t &GetKeyStates() const { return _last_key; };
-    const AnalogAxis &GetLeftAnalogAxis() const { return _left; };
-    const AnalogAxis &GetRightAnalogAxis() const { return _right; };
+    const AnalogAxis &GetLeftAnalogAxis() const { return _left_analog; };
+    const AnalogAxis &GetRightAnalogAxis() const { return _right_analog; };
+    const int16_t GetMapedLeftAnalogX() const { return _analog_map_table[_left_analog.x]; };
+    const int16_t GetMapedLeftAnalogY() const { return _analog_map_table[_left_analog.y]; };
+    const int16_t GetMapedRightAnalogX() const { return _analog_map_table[_right_analog.x]; };
+    const int16_t GetMapedRightAnalogY() const { return _analog_map_table[_right_analog.y]; };
 
     void PushCallbacks();
     void PopCallbacks();
@@ -200,8 +206,11 @@ private:
     uint64_t _turbo_interval_ms;
 
     bool _enable_key_up;
-    AnalogAxis _left;
-    AnalogAxis _right;
+    AnalogAxis _left_analog;
+    AnalogAxis _right_analog;
+    // map to retro's analog
+    // -0x7fff to 0x7fff
+    int16_t _analog_map_table[0x100];
 
     Touch _front_touch{SCE_TOUCH_PORT_FRONT};
     Touch _rear_touch{SCE_TOUCH_PORT_BACK};
