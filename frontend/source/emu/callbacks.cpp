@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <math.h>
+#include <features/features_cpu.h>
 #include "app.h"
 #include "emulator.h"
 #include "video.h"
@@ -154,6 +155,22 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         {
             ((retro_log_callback *)data)->log = RetroLog;
         }
+        break;
+
+    case RETRO_ENVIRONMENT_GET_PERF_INTERFACE:
+        LogDebug("  cmd: RETRO_ENVIRONMENT_GET_PERF_INTERFACE");
+        {
+            retro_perf_callback *cb = (struct retro_perf_callback *)data;
+            cb->get_time_usec = cpu_features_get_time_usec;
+            cb->get_cpu_features = cpu_features_get;
+            cb->get_perf_counter = cpu_features_get_perf_counter;
+
+            // cb->perf_register = runloop_performance_counter_register;
+            // cb->perf_start = core_performance_counter_start;
+            // cb->perf_stop = core_performance_counter_stop;
+            // cb->perf_log = runloop_perf_log;
+        }
+
         break;
 
     case RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY:

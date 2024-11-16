@@ -148,8 +148,6 @@ namespace Emu4Vita
         last_rom = "ux0:";
         mute = DEFAULT_MUTE;
         auto_save = DEFAULT_AUTO_SAVE;
-        front_touch = DEFAULT_FRONT_TOUCH;
-        rear_touch = DEFAULT_REAR_TOUCH;
 
         int sys_lang;
         sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &sys_lang);
@@ -176,6 +174,12 @@ namespace Emu4Vita
     {
         LogFunctionName;
         control_maps = CONTROL_MAPS;
+        mouse = DEFAULT_MOUSE;
+        lightgun = DEFAULT_LIGHTGUN;
+        for (auto device : device_options)
+        {
+            device.Default();
+        }
     }
 
     void Config::DefaultHotKey()
@@ -218,6 +222,8 @@ namespace Emu4Vita
         ini.SetValue(MAIN_SECTION, "last_rom", last_rom.c_str());
         ini.SetBoolValue(MAIN_SECTION, "mute", mute);
         ini.SetBoolValue(MAIN_SECTION, "auto_save", auto_save);
+        ini.SetBoolValue(MAIN_SECTION, "mouse", mouse);
+        ini.SetBoolValue(MAIN_SECTION, "lightgun", lightgun);
 
         for (const auto &control : control_maps)
         {
@@ -239,6 +245,7 @@ namespace Emu4Vita
 
         core_options.Save(ini);
         input_descriptors.Save(ini);
+        device_options.Save(ini);
 
         File::Remove(path);
         return ini.SaveFile(path, false) == SI_OK;
@@ -277,6 +284,8 @@ namespace Emu4Vita
         rewind_buf_size = ini.GetLongValue(MAIN_SECTION, "rewind_buf_size", DEFAULT_REWIND_BUF_SIZE);
         mute = ini.GetBoolValue(MAIN_SECTION, "mute", DEFAULT_MUTE);
         auto_save = ini.GetBoolValue(MAIN_SECTION, "auto_save", DEFAULT_AUTO_SAVE);
+        mouse = ini.GetBoolValue(MAIN_SECTION, "mouse", DEFAULT_MOUSE);
+        lightgun = ini.GetBoolValue(MAIN_SECTION, "lightgun", DEFAULT_LIGHTGUN);
 
         tmp = ini.GetValue(MAIN_SECTION, "last_rom");
         if (tmp && File::Exist(tmp))
@@ -308,6 +317,7 @@ namespace Emu4Vita
 
         core_options.Load(ini);
         input_descriptors.Load(ini);
+        device_options.Load(ini);
 
         return true;
     }
@@ -322,5 +332,15 @@ namespace Emu4Vita
         default:
             return RETRO_LANGUAGE_ENGLISH;
         }
+    }
+
+    bool Config::FrontEnabled()
+    {
+        return mouse == CONFIG_MOUSE_FRONT || lightgun == true;
+    }
+
+    bool Config::RearEnabled()
+    {
+        return mouse == CONFIG_MOUSE_REAR;
     }
 }

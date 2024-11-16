@@ -9,6 +9,7 @@
 #include "language_define.h"
 #include "defines.h"
 #include "input_descriptor.h"
+#include "device_options.h"
 
 #define MIN_REWIND_BUF_SIZE 5
 #define MAX_REWIND_BUF_SIZE 50
@@ -32,6 +33,8 @@ namespace Emu4Vita
         void DefaultHotKey();
         void DefaultGraphics();
         retro_language GetRetroLanguage();
+        bool FrontEnabled();
+        bool RearEnabled();
 
         std::string version;
         bool boot_from_arch;
@@ -44,10 +47,11 @@ namespace Emu4Vita
         uint32_t hotkeys[HOT_KEY_COUNT];
         CoreOptions core_options;
         InputDescriptors input_descriptors;
+        DeviceOptions device_options;
         uint32_t mute;
         uint32_t auto_save;
-        uint32_t front_touch;
-        uint32_t rear_touch;
+        uint32_t mouse;
+        uint32_t lightgun;
 
         static const std::unordered_map<uint32_t, const char *> PsvKeyStr;
         static const std::unordered_map<uint32_t, const char *> HotkeyStr;

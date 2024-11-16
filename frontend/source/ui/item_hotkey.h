@@ -138,8 +138,7 @@ private:
             *_hotkey |= k;
         }
 
-        gConfig->Save();
-        gEmulator->SetupKeys();
+        gEmulator->SetupKeysWithSaveConfig();
     };
 
     uint32_t *_hotkey;

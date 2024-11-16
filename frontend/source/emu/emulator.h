@@ -59,6 +59,7 @@ public:
     Cheats *GetCheats() { return &_cheats; };
     void ChangeCheatConfig();
     void SetupKeys();
+    void SetupKeysWithSaveConfig();
     bool NeedRender();
 
     friend bool EnvironmentCallback(unsigned cmd, void *data);
@@ -117,7 +118,6 @@ private:
     double _speed;
     Delay _delay;
     uint32_t _frame_count;
-    std::vector<uint32_t> _controllers;
 
     SceKernelLwMutexWork _run_mutex;
 

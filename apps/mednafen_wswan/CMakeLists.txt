@@ -11,7 +11,7 @@ endif()
 
 project(${CORE_NAME})
 
-set(APP_NAME "${CORE_SHORT_NAME}_4Vita")
+set(APP_NAME "${CORE_SHORT_NAME}4VitaPlus")
 set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/beetle-wswan-libretro)
 set(CORE_MAKEFILE_DIR ${CORE_DIR})
 set(CORE_MAKEFILE_NAME Makefile)

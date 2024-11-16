@@ -78,3 +78,11 @@ enum GraphicsConfig
     GRAPHICS_OVERLAY,
     GRAPHICS_CONFIG_COUNT,
 };
+
+enum MouseConfig
+{
+    CONFIG_MOUSE_DISABLE = 0,
+    CONFIG_MOUSE_FRONT,
+    CONFIG_MOUSE_REAR,
+    CONFIG_MOUSE_COUNT,
+};

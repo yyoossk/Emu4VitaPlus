@@ -694,10 +694,13 @@ void My_Imgui_SpinText::_Update()
     }
 }
 
-void My_Imgui_SpinText::Show()
+void My_Imgui_SpinText::Show(bool show_text)
 {
     _Update();
     ImGui::PushStyleColor(ImGuiCol_Text, _color);
-    ImGui::Text(_frames[_count]);
+    if (show_text)
+        ImGui::Text(_frames[_count]);
+    else
+        ImGui::Selectable(_frames[_count]);
     ImGui::PopStyleColor();
 }

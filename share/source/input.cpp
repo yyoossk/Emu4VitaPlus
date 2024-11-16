@@ -7,6 +7,8 @@
 #define ANALOG_CENTER 128
 #define ANALOG_THRESHOLD 64
 
+int16_t Input::_analog_map_table[0x100] = {0};
+
 void Touch::Enable(bool enable)
 {
     LogFunctionName;
@@ -56,21 +58,20 @@ Input::Input() : _last_key(0ull),
                  _left_analog{0},
                  _right_analog{0}
 {
+    LogFunctionName;
     memset(_turbo_key_states, 0, sizeof(_turbo_key_states));
 
     if (_analog_map_table[0] != ANALOG_PSV_TO_RETRO(0) || _analog_map_table[0xff] != ANALOG_PSV_TO_RETRO(0xff))
     {
         int16_t *p = _analog_map_table;
         {
-            for (size_t i = 0; i < 0x100; i++)
+            for (uint16_t i = 0; i < 0x100; i++)
             {
                 *p++ = ANALOG_PSV_TO_RETRO(i);
             }
         }
     }
 }
-
-int16_t Input::_analog_map_table[0x100] = {0};
 
 Input::~Input()
 {

@@ -89,9 +89,7 @@ bool InputDescriptors::Load(const char *path)
 bool InputDescriptors::Load(CSimpleIniA &ini)
 {
     LogFunctionName;
-#ifdef ARC_BUILD
-    return true;
-#else
+
     CSimpleIniA::TNamesDepend keys;
     ini.GetAllKeys(INPUT_DESC_SECTION, keys);
     for (auto const &key : keys)
@@ -107,7 +105,6 @@ bool InputDescriptors::Load(CSimpleIniA &ini)
     Update();
 
     return true;
-#endif
 }
 
 bool InputDescriptors::Save(const char *path)

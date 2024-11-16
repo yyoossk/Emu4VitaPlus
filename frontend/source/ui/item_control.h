@@ -6,17 +6,11 @@
 #include "emulator.h"
 #include "input_descriptor.h"
 
-void ItemControlOnClick()
-{
-    gConfig->Save();
-    gEmulator->SetupKeys();
-}
-
 class ItemControl : public ItemSelectable
 {
 public:
     ItemControl(ControlMapConfig *control_map)
-        : ItemSelectable(Emu4Vita::Config::ControlTextMap.at(control_map->psv), "", ItemControlOnClick),
+        : ItemSelectable(Emu4Vita::Config::ControlTextMap.at(control_map->psv), "", std::bind(&Emulator::SetupKeysWithSaveConfig, gEmulator)),
           _control_map(control_map) {};
     virtual ~ItemControl() {};
 
@@ -30,8 +24,7 @@ public:
     virtual void OnOption(Input *input) override
     {
         _control_map->turbo = !_control_map->turbo;
-        gConfig->Save();
-        gEmulator->SetupKeys();
+        gEmulator->SetupKeysWithSaveConfig();
     };
 
 private:

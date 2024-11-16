@@ -34,3 +34,5 @@ extern const bool DEFAULT_ENABLE_REWIND;
 extern const size_t DEFAULT_REWIND_BUF_SIZE;
 extern const bool DEFAULT_FRONT_TOUCH;
 extern const bool DEFAULT_REAR_TOUCH;
+extern const bool DEFAULT_MOUSE;
+extern const bool DEFAULT_LIGHTGUN;

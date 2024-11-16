@@ -31,9 +31,7 @@ struct CoreOption
 class CoreOptions : public std::map<std::string, CoreOption>
 {
 public:
-    bool Load(const char *path = APP_CORE_CONFIG_PATH);
     bool Load(CSimpleIniA &ini);
-    bool Save(const char *path = APP_CORE_CONFIG_PATH);
     bool Save(CSimpleIniA &ini);
 
     void Load(retro_variable *variables);

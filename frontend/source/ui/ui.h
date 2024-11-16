@@ -23,9 +23,10 @@ public:
     void SetInputHooks();
     void AppendLog(const char *log);
     void ClearLogs();
-    void UpdateCoreOptions();
     void ChangeLanguage();
+    void UpdateCoreOptions();
     void UpdateCheatOptions();
+    void UpdateControllerOptions();
     void OnStatusChanged(APP_STATUS status);
     void SetHint(const char *s, int frame_count = 120);
 

@@ -232,19 +232,6 @@ bool CoreOptions::Get(retro_variable *var)
     }
 }
 
-bool CoreOptions::Load(const char *path)
-{
-    LogFunctionName;
-    CSimpleIniA ini;
-    if (ini.LoadFile(path) != SI_OK)
-    {
-        LogWarn("Load %s failed", path);
-        return false;
-    }
-
-    return Load(ini);
-}
-
 bool CoreOptions::Load(CSimpleIniA &ini)
 {
     LogFunctionName;
@@ -268,15 +255,6 @@ bool CoreOptions::Load(CSimpleIniA &ini)
     }
 
     return true;
-}
-
-bool CoreOptions::Save(const char *path)
-{
-    LogFunctionName;
-    CSimpleIniA ini;
-    Save(ini);
-    File::Remove(path);
-    return ini.SaveFile(path, false) == SI_OK;
 }
 
 bool CoreOptions::Save(CSimpleIniA &ini)

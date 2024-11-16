@@ -63,7 +63,7 @@ void TabBrowser::UnsetInputHooks(Input *input)
 void TabBrowser::Show(bool selected)
 {
     std::string title = std::string(TAB_ICONS[_title_id]) + TEXT(_title_id);
-
+    LogDebug(title.c_str());
     if (ImGui::BeginTabItem(title.c_str(), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
     {
         ImVec2 size = {0.f, 0.f};
@@ -81,7 +81,7 @@ void TabBrowser::Show(bool selected)
 
         if (_in_refreshing)
         {
-            _spin_text.Show();
+            _spin_text.Show(false);
         }
         else
         {
@@ -151,6 +151,7 @@ void TabBrowser::Show(bool selected)
 
         ImGui::EndTabItem();
     }
+    LogDebug("%s end", title.c_str());
 }
 
 void TabBrowser::_OnActive(Input *input)

@@ -11,6 +11,7 @@
 #include "item_hotkey.h"
 #include "item_core.h"
 #include "item_state.h"
+#include "item_device.h"
 #include "tab_browser.h"
 #include "tab_favorite.h"
 #include "tab_about.h"
@@ -220,14 +221,16 @@ void Ui::CreateTables()
                                                                "",
                                                                ResetGraphics,
                                                                std::bind(&Emulator::ChangeGraphicsConfig, gEmulator))});
-    std::vector<ItemBase *> controls;
-    controls.reserve(gConfig->control_maps.size() + 1);
-    for (ControlMapConfig &cmap : gConfig->control_maps)
-    {
-        controls.emplace_back(new ItemControl(&cmap));
-    }
-    controls.emplace_back(new ItemBase(RESET_CONFIGS, "", ResetControl));
-    _tabs[TAB_INDEX_CONTROL] = new TabSeletable(TAB_CONTROL, controls);
+    // std::vector<ItemBase *> controls;
+    // controls.reserve(gConfig->control_maps.size() + 1);
+    // for (ControlMapConfig &cmap : gConfig->control_maps)
+    // {
+    //     controls.emplace_back(new ItemControl(&cmap));
+    // }
+    // controls.emplace_back(new ItemBase(RESET_CONFIGS, "", ResetControl));
+    // _tabs[TAB_INDEX_CONTROL] = new TabSeletable(TAB_CONTROL, controls);
+
+    UpdateControllerOptions();
 
     std::vector<ItemBase *> hotkeys;
     hotkeys.reserve(HOT_KEY_COUNT + 1);
@@ -238,46 +241,37 @@ void Ui::CreateTables()
     hotkeys.emplace_back(new ItemBase(RESET_CONFIGS, "", ResetHotkey));
     _tabs[TAB_INDEX_HOTKEY] = new TabSeletable(TAB_HOTKEY, hotkeys);
 
-    // std::vector<ItemBase *> options;
-    // for (auto &iter : gConfig->core_options)
-    // {
-    //     if (iter.second.values.size() > 0 && iter.second.visible)
-    //     {
-    //         options.emplace_back(new ItemCore(&iter.second));
-    //     }
-    // }
-    // _tabs[TAB_INDEX_CORE] = new TabSeletable(TAB_CORE, options);
-
     UpdateCoreOptions();
 
-    _tabs[TAB_INDEX_OPTIONS] = new TabSeletable(TAB_OPTIONS, {new ItemConfig(OPTIONS_MENU_LANGUAGE,
-                                                                             "",
-                                                                             (uint32_t *)&gConfig->language,
-                                                                             {LanguageString(gLanguageNames[LANGUAGE_ENGLISH]),
-                                                                              LanguageString(gLanguageNames[LANGUAGE_CHINESE])},
-                                                                             std::bind(&Ui::ChangeLanguage, gUi)),
-                                                              new ItemConfig(OPTIONS_MENU_REWIND,
-                                                                             "",
-                                                                             &gConfig->rewind,
-                                                                             {NO, YES},
-                                                                             std::bind(&Emulator::ChangeRewindConfig, gEmulator)),
-                                                              new ItemIntConfig(OPTIONS_MENU_REWIND_BUF_SIZE,
-                                                                                "",
-                                                                                &gConfig->rewind_buf_size,
-                                                                                MIN_REWIND_BUF_SIZE,
-                                                                                MAX_REWIND_BUF_SIZE,
-                                                                                REWIND_BUF_SIZE_STEP,
-                                                                                std::bind(&Emulator::ChangeRewindConfig, gEmulator)),
-                                                              new ItemConfig(OPTIONS_MENU_MUTE,
-                                                                             "",
-                                                                             (uint32_t *)&gConfig->mute,
-                                                                             {NO, YES},
-                                                                             std::bind(&Emulator::ChangeAudioConfig, gEmulator)),
-                                                              new ItemConfig(OPTIONS_MENU_AUTOSAVE,
-                                                                             "",
-                                                                             (uint32_t *)&gConfig->auto_save,
-                                                                             {NO, YES},
-                                                                             nullptr)});
+    _tabs[TAB_INDEX_OPTIONS] = new TabSeletable(TAB_OPTIONS,
+                                                {new ItemConfig(OPTIONS_MENU_LANGUAGE,
+                                                                "",
+                                                                (uint32_t *)&gConfig->language,
+                                                                {LanguageString(gLanguageNames[LANGUAGE_ENGLISH]),
+                                                                 LanguageString(gLanguageNames[LANGUAGE_CHINESE])},
+                                                                std::bind(&Ui::ChangeLanguage, gUi)),
+                                                 new ItemConfig(OPTIONS_MENU_REWIND,
+                                                                "",
+                                                                &gConfig->rewind,
+                                                                {NO, YES},
+                                                                std::bind(&Emulator::ChangeRewindConfig, gEmulator)),
+                                                 new ItemIntConfig(OPTIONS_MENU_REWIND_BUF_SIZE,
+                                                                   "",
+                                                                   &gConfig->rewind_buf_size,
+                                                                   MIN_REWIND_BUF_SIZE,
+                                                                   MAX_REWIND_BUF_SIZE,
+                                                                   REWIND_BUF_SIZE_STEP,
+                                                                   std::bind(&Emulator::ChangeRewindConfig, gEmulator)),
+                                                 new ItemConfig(OPTIONS_MENU_MUTE,
+                                                                "",
+                                                                (uint32_t *)&gConfig->mute,
+                                                                {NO, YES},
+                                                                std::bind(&Emulator::ChangeAudioConfig, gEmulator)),
+                                                 new ItemConfig(OPTIONS_MENU_AUTOSAVE,
+                                                                "",
+                                                                (uint32_t *)&gConfig->auto_save,
+                                                                {NO, YES},
+                                                                nullptr)});
 
     _tabs[TAB_INDEX_ABOUT] = new TabAbout();
 
@@ -364,6 +358,8 @@ void Ui::OnStatusChanged(APP_STATUS status)
         gVideo->Unlock();
 
         SetInputHooks();
+
+        LogDebug("OnStatusChanged end");
     }
 }
 
@@ -413,10 +409,12 @@ void Ui::_ShowNormal()
     {
         for (size_t i = 0; i < TAB_INDEX_COUNT; i++)
         {
+            LogDebug("tab %d", i);
             if (_tabs[i] && _tabs[i]->Visable())
             {
                 _tabs[i]->Show(_tab_index == i);
             }
+            LogDebug("tab %d end", i);
         }
         ImGui::EndTabBar();
     }
@@ -511,6 +509,7 @@ void Ui::ClearLogs()
 void Ui::UpdateCoreOptions()
 {
     LogFunctionName;
+
     std::vector<ItemBase *> options;
     options.reserve(gConfig->core_options.size());
     for (auto &iter : gConfig->core_options)
@@ -555,6 +554,51 @@ void Ui::UpdateCheatOptions()
     }
 
     _tabs[TAB_INDEX_CHEAT] = new TabSeletable(TAB_CHEAT, options, 2, 0.8);
+    gVideo->Unlock();
+}
+
+void Ui::UpdateControllerOptions()
+{
+    LogFunctionName;
+
+    std::vector<ItemBase *> controls;
+    controls.reserve(gConfig->control_maps.size() + gConfig->device_options.size() + 3);
+
+    if (gConfig->device_options.size() > 0 && gConfig->device_options[0].size() > 0)
+    {
+        for (size_t i = 0; i < gConfig->device_options.size(); i++)
+        {
+            std::string port_name = TEXT(DEVICE_PORT);
+            port_name += std::to_string(i);
+            controls.emplace_back(new ItemDevice(port_name, &gConfig->device_options[i]));
+        }
+    }
+
+    controls.emplace_back(new ItemConfig(OPTIONS_MENU_MOUSE,
+                                         "",
+                                         &gConfig->mouse,
+                                         {DISABLED, MOUSE_FRONT_TOUCH_PANEL, MOUSE_REAR_TOUCH_PANEL},
+                                         std::bind(&Emulator::SetupKeys, gEmulator)));
+
+    controls.emplace_back(new ItemConfig(OPTIONS_MENU_LIGHTGUN,
+                                         "",
+                                         &gConfig->lightgun,
+                                         {DISABLED, ENABLED},
+                                         std::bind(&Emulator::SetupKeys, gEmulator)));
+
+    for (ControlMapConfig &cmap : gConfig->control_maps)
+    {
+        controls.emplace_back(new ItemControl(&cmap));
+    }
+
+    controls.emplace_back(new ItemBase(RESET_CONFIGS, "", ResetControl));
+
+    gVideo->Lock();
+    if (_tabs[TAB_INDEX_CONTROL] != nullptr)
+    {
+        delete _tabs[TAB_INDEX_CONTROL];
+    }
+    _tabs[TAB_INDEX_CONTROL] = new TabSeletable(TAB_CONTROL, controls);
     gVideo->Unlock();
 }
 

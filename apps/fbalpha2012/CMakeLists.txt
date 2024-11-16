@@ -11,7 +11,7 @@ endif()
 
 project(${CORE_NAME})
 
-set(APP_NAME "Fba2012_4Vita")
+set(APP_NAME "${CORE_SHORT_NAME}4VitaPlus")
 set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/fbalpha2012/svn-current/trunk)
 set(CORE_MAKEFILE_DIR ${CORE_DIR})
 set(CORE_MAKEFILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/makefile.libretro)

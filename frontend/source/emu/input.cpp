@@ -4,6 +4,7 @@
 #include "video.h"
 #include "state_manager.h"
 #include "config.h"
+#include "ui.h"
 
 void InputPollCallback()
 {
@@ -100,16 +101,21 @@ int16_t Emulator::_GetAnalogState(unsigned index, unsigned id)
 
 int16_t Emulator::_GetMouseState(unsigned index, unsigned id)
 {
-    Touch &touch = gEmulator->_input.GetFrontTouch();
-    if (touch.IsEnabled())
+    if (gConfig->mouse == CONFIG_MOUSE_DISABLE)
+    {
+        return 0;
+    }
+
+    Touch *touch = gConfig->mouse == CONFIG_MOUSE_FRONT ? gEmulator->_input.GetFrontTouch() : gEmulator->_input.GetRearTouch();
+    if (touch->IsEnabled())
     {
         switch (id)
         {
         case RETRO_DEVICE_ID_MOUSE_X:
-            return (float)touch.GetRelativeMovingX() * _texture_buf->GetWidth() / _video_rect.width;
+            return touch->GetRelativeMovingX();
 
         case RETRO_DEVICE_ID_MOUSE_Y:
-            return (float)touch.GetRelativeMovingY() * _texture_buf->GetHeight() / _video_rect.height;
+            return touch->GetRelativeMovingY();
 
         case RETRO_DEVICE_ID_MOUSE_LEFT:
             return (_input.GetKeyStates() & _keys[RETRO_DEVICE_ID_JOYPAD_L]) ? 1 : 0;
@@ -127,13 +133,13 @@ int16_t Emulator::_GetMouseState(unsigned index, unsigned id)
 int16_t Emulator::_GetLightGunState(unsigned index, unsigned id)
 {
     // LogDebug("index:%d id:%d", index, id);
-    Touch &front = gEmulator->_input.GetFrontTouch();
-    if (front.IsEnabled())
+    Touch *front = gEmulator->_input.GetFrontTouch();
+    if (front->IsEnabled())
     {
         switch (id)
         {
         case RETRO_DEVICE_ID_LIGHTGUN_TRIGGER:
-            return front.GetState() == TOUCH_DOWN ? 1 : 0;
+            return front->GetState() == TOUCH_DOWN ? 1 : 0;
 
         case RETRO_DEVICE_ID_LIGHTGUN_AUX_A:
             return (_input.GetKeyStates() & _keys[RETRO_DEVICE_ID_JOYPAD_A]) ? 1 : 0;
@@ -145,21 +151,21 @@ int16_t Emulator::_GetLightGunState(unsigned index, unsigned id)
             return (_input.GetKeyStates() & _keys[RETRO_DEVICE_ID_JOYPAD_START]) ? 1 : 0;
 
         case RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X:
-            return front.GetMapedX(_video_rect);
+            return front->GetMapedX(_video_rect);
 
         case RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y:
-            return front.GetMapedY(_video_rect);
+            return front->GetMapedY(_video_rect);
 
         case RETRO_DEVICE_ID_LIGHTGUN_IS_OFFSCREEN:
         {
-            const TouchAxis &axis = front.GetAxis();
+            const TouchAxis &axis = front->GetAxis();
             return !_video_rect.Contains(axis.x, axis.y);
         }
 
         case RETRO_DEVICE_ID_LIGHTGUN_RELOAD:
         {
-            const TouchAxis &axis = front.GetAxis();
-            return (!_video_rect.Contains(axis.x, axis.y)) && (front.GetState() == TOUCH_DOWN);
+            const TouchAxis &axis = front->GetAxis();
+            return (!_video_rect.Contains(axis.x, axis.y)) && (front->GetState() == TOUCH_DOWN);
         }
 
         default:
@@ -173,6 +179,11 @@ int16_t Emulator::_GetLightGunState(unsigned index, unsigned id)
 void Emulator::SetupKeys()
 {
     LogFunctionName;
+    if ((gStatus.Get() & (APP_STATUS_RUN_GAME | APP_STATUS_SHOW_UI_IN_GAME)) == 0)
+    {
+        return;
+    }
+
     memset(_keys, 0, sizeof(_keys));
     _keys_mask = 0;
     _input.Reset();
@@ -245,11 +256,20 @@ void Emulator::SetupKeys()
 
     _input.SetTurboInterval(DEFAULT_TURBO_START_TIME, 20000);
 
-    if (gConfig->front_touch)
-        _input.GetFrontTouch().Enable(true);
+    _input.GetFrontTouch()->Enable(gConfig->FrontEnabled());
+    _input.GetRearTouch()->Enable(gConfig->RearEnabled());
+    uint32_t count = 0;
 
-    if (gConfig->rear_touch)
-        _input.GetRearTouch().Enable(true);
+    for (const auto &device : gConfig->device_options)
+    {
+        device.Apply(count++);
+    }
+}
+
+void Emulator::SetupKeysWithSaveConfig()
+{
+    SetupKeys();
+    gConfig->Save();
 }
 
 void Emulator::_OnPsButton(Input *input)
@@ -329,24 +349,6 @@ void Emulator::_SetControllerInfo(retro_controller_info *info)
 {
     LogFunctionName;
 
-    _controllers.clear();
-    unsigned count = 0;
-    while (info->types)
-    {
-        for (unsigned i = 0; i < info->num_types; i++)
-        {
-            LogDebug(" %d %08x %s", count, info->types[i].id, info->types[i].desc);
-            int device = info->types[i].id & 0xff;
-            if (count == 0 && (device == RETRO_DEVICE_JOYPAD ||
-                               device == RETRO_DEVICE_MOUSE ||
-                               device == RETRO_DEVICE_ANALOG ||
-                               device == RETRO_DEVICE_LIGHTGUN ||
-                               device == RETRO_DEVICE_POINTER))
-            {
-                _controllers.push_back(info->types[i].id);
-            }
-        }
-        info++;
-        count++;
-    }
+    gConfig->device_options.Load(info);
+    gUi->UpdateControllerOptions();
 }

@@ -42,7 +42,7 @@ set(RETRO_SRC
 
 include_directories("libretro-common/include")
 
-add_compile_definitions(VITA HAVE_NEON HAVE_THREADS HAVE_COMPRESSION HAVE_ZLIB HAVE_7ZIP)
+add_compile_definitions(VITA HAVE_NEON HAVE_THREADS HAVE_COMPRESSION HAVE_ZLIB HAVE_7ZIP __ARM_NEON__)
 add_library(retro_comm STATIC ${RETRO_SRC})
 
 # vita2d

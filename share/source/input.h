@@ -95,7 +95,9 @@ class Touch
 public:
     Touch(SceTouchPortType port)
         : _port(port),
-          _enabled(false)
+          _enabled(false),
+          _x_scale(1.f),
+          _y_scale(1.f)
     {
     }
 
@@ -106,8 +108,13 @@ public:
     void Poll();
     const TouchState GetState() const { return _last_id == _current_id ? TOUCH_NONE : TOUCH_DOWN; };
     const TouchAxis &GetAxis() const { return _axis; };
-    const int16_t GetRelativeMovingX() const { return _last_id == _current_id ? _axis.x - _last_axis.x : 0; };
-    const int16_t GetRelativeMovingY() const { return _last_id == _current_id ? _axis.y - _last_axis.y : 0; };
+    const int16_t GetRelativeMovingX() const { return _last_id == _current_id ? (_axis.x - _last_axis.x) * _x_scale : 0; };
+    const int16_t GetRelativeMovingY() const { return _last_id == _current_id ? (_axis.y - _last_axis.y) * _y_scale : 0; };
+    void SetMovingScale(float xscale, float yscale)
+    {
+        _x_scale = xscale;
+        _y_scale = yscale;
+    }
 
     template <typename T>
     void InitMapTable(const Rect<T> &rect)
@@ -156,6 +163,8 @@ private:
     uint8_t _last_id;
     uint8_t _current_id;
     SceTouchPortType _port;
+    float _x_scale;
+    float _y_scale;
 
     // map to retro's coordinate system
     // -0x7fff to 0x7fff
@@ -195,8 +204,8 @@ public:
     void PushCallbacks();
     void PopCallbacks();
 
-    Touch &GetFrontTouch() { return _front_touch; };
-    Touch &GetRearTouch() { return _rear_touch; };
+    Touch *GetFrontTouch() { return &_front_touch; };
+    Touch *GetRearTouch() { return &_rear_touch; };
 
 private:
     std::vector<KeyBinding> _key_up_callbacks;

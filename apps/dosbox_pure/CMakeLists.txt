@@ -11,7 +11,7 @@ endif()
 
 project(${CORE_NAME})
 
-set(APP_NAME "DOSBoxPure_4Vita")
+set(APP_NAME "${CORE_SHORT_NAME}4VitaPlus")
 set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../cores/dosbox-pure)
 set(CORE_MAKEFILE_DIR ${CORE_DIR})
 set(CORE_MAKEFILE_NAME Makefile)

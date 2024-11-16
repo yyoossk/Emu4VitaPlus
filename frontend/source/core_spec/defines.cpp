@@ -34,11 +34,15 @@ const size_t DEFAULT_REWIND_BUF_SIZE = 10;
 #endif
 
 #if defined(FC_BUILD) || defined(GENESIS_PLUS_GX_BUILD) || defined(SNES9X2010_BUILD)
-const bool DEFAULT_FRONT_TOUCH = true;
-const bool DEFAULT_REAR_TOUCH = false;
+const bool DEFAULT_LIGHTGUN = true;
 #else
-const bool DEFAULT_FRONT_TOUCH = false;
-const bool DEFAULT_REAR_TOUCH = false;
+const bool DEFAULT_LIGHTGUN = false;
+#endif
+
+#if defined(SNES9X2010_BUILD) || defined(DOS_BUILD)
+const bool DEFAULT_MOUSE = CONFIG_MOUSE_REAR;
+#else
+const bool DEFAULT_MOUSE = CONFIG_MOUSE_DISABLE;
 #endif
 
 const uint8_t RETRO_KEYS[] = {
