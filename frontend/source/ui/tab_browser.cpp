@@ -63,7 +63,6 @@ void TabBrowser::UnsetInputHooks(Input *input)
 void TabBrowser::Show(bool selected)
 {
     std::string title = std::string(TAB_ICONS[_title_id]) + TEXT(_title_id);
-    LogDebug(title.c_str());
     if (ImGui::BeginTabItem(title.c_str(), NULL, selected ? ImGuiTabItemFlags_SetSelected : 0))
     {
         ImVec2 size = {0.f, 0.f};
@@ -77,52 +76,53 @@ void TabBrowser::Show(bool selected)
         ImGui::Columns(2, NULL, false);
 
         ImGui::Text(_directory->GetCurrentPath().c_str());
-        ImGui::ListBoxHeader("", ImGui::GetContentRegionAvail());
-
-        if (_in_refreshing)
+        if (ImGui::ListBoxHeader("", ImGui::GetContentRegionAvail()))
         {
-            _spin_text.Show(false);
-        }
-        else
-        {
-            for (size_t i = 0; i < _directory->GetSize(); i++)
+            if (_in_refreshing)
             {
-                const DirItem &item = _directory->GetItem(i);
-
-                std::string name(item.name);
-                if (!item.is_dir)
+                _spin_text.Show();
+            }
+            else
+            {
+                for (size_t i = 0; i < _directory->GetSize(); i++)
                 {
+                    const DirItem &item = _directory->GetItem(i);
 
-                    ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
-                }
+                    std::string name(item.name);
+                    if (!item.is_dir)
+                    {
 
-                if (gFavorites->find(name) != gFavorites->end())
-                {
-                    name.insert(0, ICON_EMPTY_STAR_SPACE);
-                }
+                        ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
+                    }
 
-                if (i == _index)
-                {
-                    My_Imgui_Selectable(name.c_str(), true, &_moving_status);
-                }
-                else
-                {
-                    ImGui::Selectable(name.c_str());
-                }
+                    if (gFavorites->find(name) != gFavorites->end())
+                    {
+                        name.insert(0, ICON_EMPTY_STAR_SPACE);
+                    }
 
-                if (!item.is_dir)
-                {
-                    ImGui::PopStyleColor();
-                }
+                    if (i == _index)
+                    {
+                        My_Imgui_Selectable(name.c_str(), true, &_moving_status);
+                    }
+                    else
+                    {
+                        ImGui::Selectable(name.c_str());
+                    }
 
-                if (i == _index && ImGui::GetScrollMaxY() > 0.f)
-                {
-                    ImGui::SetScrollHereY((float)_index / (float)_directory->GetSize());
+                    if (!item.is_dir)
+                    {
+                        ImGui::PopStyleColor();
+                    }
+
+                    if (i == _index && ImGui::GetScrollMaxY() > 0.f)
+                    {
+                        ImGui::SetScrollHereY((float)_index / (float)_directory->GetSize());
+                    }
                 }
             }
-        }
 
-        ImGui::ListBoxFooter();
+            ImGui::ListBoxFooter();
+        }
         ImGui::NextColumn();
         ImVec2 avail_size = ImGui::GetContentRegionAvail();
         _texture_max_width = avail_size.x;
@@ -151,7 +151,6 @@ void TabBrowser::Show(bool selected)
 
         ImGui::EndTabItem();
     }
-    LogDebug("%s end", title.c_str());
 }
 
 void TabBrowser::_OnActive(Input *input)

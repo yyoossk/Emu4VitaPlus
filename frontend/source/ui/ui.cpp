@@ -409,12 +409,10 @@ void Ui::_ShowNormal()
     {
         for (size_t i = 0; i < TAB_INDEX_COUNT; i++)
         {
-            LogDebug("tab %d", i);
             if (_tabs[i] && _tabs[i]->Visable())
             {
                 _tabs[i]->Show(_tab_index == i);
             }
-            LogDebug("tab %d end", i);
         }
         ImGui::EndTabBar();
     }
