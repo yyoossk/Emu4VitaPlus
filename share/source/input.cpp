@@ -65,7 +65,7 @@ Input::Input() : _last_key(0ull),
     {
         int16_t *p = _analog_map_table;
         {
-            for (uint16_t i = 0; i < 0x100; i++)
+            for (int16_t i = 0; i < 0x100; i++)
             {
                 *p++ = ANALOG_PSV_TO_RETRO(i);
             }

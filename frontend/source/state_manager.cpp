@@ -59,6 +59,11 @@ void State::Init(const char *game_name)
 bool State::Save()
 {
     LogFunctionName;
+
+    // backup the path immediately
+    std::string state_path = _state_path;
+    std::string image_path = _image_path;
+
     FILE *fp;
 
     size_t size = retro_serialize_size();
@@ -71,10 +76,10 @@ bool State::Save()
         goto END;
     }
 
-    fp = fopen(_state_path.c_str(), "wb");
+    fp = fopen(state_path.c_str(), "wb");
     if (!fp)
     {
-        LogError("failed to open file %s for writing", _state_path.c_str());
+        LogError("failed to open file %s for writing", state_path.c_str());
         goto END;
     }
 
@@ -82,12 +87,12 @@ bool State::Save()
     fclose(fp);
 
     _valid = true;
-    File::GetCreateTime(_state_path.c_str(), &_create_time);
+    File::GetCreateTime(state_path.c_str(), &_create_time);
 
 END:
     delete[] buf;
 
-    result &= gEmulator->SaveScreenShot(_image_path.c_str());
+    result &= gEmulator->SaveScreenShot(image_path.c_str());
 
     if (result)
     {
@@ -95,7 +100,7 @@ END:
         {
             vita2d_free_texture(_texture);
         }
-        _texture = vita2d_load_JPEG_file(_image_path.c_str());
+        _texture = vita2d_load_JPEG_file(image_path.c_str());
     }
 
     return result;

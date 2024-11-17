@@ -194,12 +194,17 @@ public:
     void Reset();
 
     const uint32_t &GetKeyStates() const { return _last_key; };
+
     const AnalogAxis &GetLeftAnalogAxis() const { return _left_analog; };
     const AnalogAxis &GetRightAnalogAxis() const { return _right_analog; };
+
     const int16_t GetMapedLeftAnalogX() const { return _analog_map_table[_left_analog.x]; };
     const int16_t GetMapedLeftAnalogY() const { return _analog_map_table[_left_analog.y]; };
+    const int16_t GetReverseMapedLeftAnalogY() const { return _analog_map_table[0xff - _left_analog.y]; };
+
     const int16_t GetMapedRightAnalogX() const { return _analog_map_table[_right_analog.x]; };
     const int16_t GetMapedRightAnalogY() const { return _analog_map_table[_right_analog.y]; };
+    const int16_t GetReverseMapedRightAnalogY() const { return _analog_map_table[0xff - _right_analog.y]; };
 
     void PushCallbacks();
     void PopCallbacks();

@@ -88,11 +88,11 @@ int16_t Emulator::_GetAnalogState(unsigned index, unsigned id)
     {
         if (index == RETRO_DEVICE_INDEX_ANALOG_LEFT)
         {
-            return RETRO_DEVICE_ID_ANALOG_X ? -(_input.GetMapedRightAnalogY() + 1) : _input.GetMapedRightAnalogX();
+            return id == RETRO_DEVICE_ID_ANALOG_X ? _input.GetReverseMapedRightAnalogY() : _input.GetMapedRightAnalogX();
         }
         else
         {
-            return RETRO_DEVICE_ID_ANALOG_X ? -(_input.GetMapedLeftAnalogY() + 1) : _input.GetMapedLeftAnalogX();
+            return id == RETRO_DEVICE_ID_ANALOG_X ? _input.GetReverseMapedLeftAnalogY() : _input.GetMapedLeftAnalogX();
         }
         // const AnalogAxis aa = index == RETRO_DEVICE_INDEX_ANALOG_LEFT ? _input.GetRightAnalogAxis() : _input.GetLeftAnalogAxis();
         // return id == RETRO_DEVICE_ID_ANALOG_X ? -(ANALOG_PSV_TO_RETRO(aa.y) + 1) : ANALOG_PSV_TO_RETRO(aa.x);
