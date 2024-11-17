@@ -121,8 +121,8 @@ void ItemState::SetInputHooks(Input *input)
   input->SetKeyDownCallback(SCE_CTRL_RIGHT, std::bind(&ItemState::_OnKeyRight, this, input), true);
   input->SetKeyDownCallback(SCE_CTRL_LSTICK_LEFT, std::bind(&ItemState::_OnKeyLeft, this, input), true);
   input->SetKeyDownCallback(SCE_CTRL_LSTICK_RIGHT, std::bind(&ItemState::_OnKeyRight, this, input), true);
-  input->SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&ItemState::_OnClick, this, input));
-  input->SetKeyUpCallback(SCE_CTRL_CROSS, std::bind(&ItemState::_OnCancel, this, input));
+  input->SetKeyUpCallback(EnterButton, std::bind(&ItemState::_OnClick, this, input));
+  input->SetKeyUpCallback(CancelButton, std::bind(&ItemState::_OnCancel, this, input));
 }
 
 void ItemState::UnsetInputHooks(Input *input)

@@ -1,4 +1,6 @@
+#include <psp2/apputil.h>
 #include <psp2/ctrl.h>
+#include <psp2/system_param.h>
 #include <string.h>
 #include "input.h"
 #include "log.h"
@@ -7,7 +9,29 @@
 #define ANALOG_CENTER 128
 #define ANALOG_THRESHOLD 64
 
+uint32_t EnterButton = SCE_CTRL_CROSS;
+
 int16_t Input::_analog_map_table[0x100] = {0};
+
+void SwapEnterButton(bool swap)
+{
+    static uint32_t enter_button = 0;
+    if (enter_button == 0)
+    {
+        int config;
+        sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &config);
+        enter_button = config == SCE_SYSTEM_PARAM_ENTER_BUTTON_CIRCLE ? SCE_CTRL_CIRCLE : SCE_CTRL_CROSS;
+    }
+
+    if (swap)
+    {
+        EnterButton = enter_button == SCE_CTRL_CIRCLE ? SCE_CTRL_CROSS : SCE_CTRL_CIRCLE;
+    }
+    else
+    {
+        EnterButton = enter_button;
+    }
+}
 
 void Touch::Enable(bool enable)
 {

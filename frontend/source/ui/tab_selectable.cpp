@@ -36,7 +36,7 @@ void TabSeletable::SetInputHooks(Input *input)
     input->SetKeyDownCallback(SCE_CTRL_DOWN, std::bind(&TabSeletable::_OnKeyDown, this, input), true);
     input->SetKeyDownCallback(SCE_CTRL_LSTICK_UP, std::bind(&TabSeletable::_OnKeyUp, this, input), true);
     input->SetKeyDownCallback(SCE_CTRL_LSTICK_DOWN, std::bind(&TabSeletable::_OnKeyDown, this, input), true);
-    input->SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&TabSeletable::_OnActive, this, input));
+    input->SetKeyUpCallback(EnterButton, std::bind(&TabSeletable::_OnActive, this, input));
     input->SetKeyUpCallback(SCE_CTRL_TRIANGLE, std::bind(&TabSeletable::_OnOption, this, input));
 }
 
@@ -46,7 +46,7 @@ void TabSeletable::UnsetInputHooks(Input *input)
     input->UnsetKeyDownCallback(SCE_CTRL_DOWN);
     input->UnsetKeyDownCallback(SCE_CTRL_LSTICK_UP);
     input->UnsetKeyDownCallback(SCE_CTRL_LSTICK_DOWN);
-    input->UnsetKeyUpCallback(SCE_CTRL_CIRCLE);
+    input->UnsetKeyUpCallback(EnterButton);
     input->UnsetKeyUpCallback(SCE_CTRL_TRIANGLE);
 }
 

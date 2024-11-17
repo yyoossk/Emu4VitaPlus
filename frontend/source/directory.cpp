@@ -153,7 +153,7 @@ bool Directory::SetCurrentPath(const std::string &path)
     SortDirItemsByNameIgnoreCase(files);
 
     _items.insert(_items.end(), files.begin(), files.end());
-
+    LogDebug("items %d", _items.size());
     return true;
 }
 

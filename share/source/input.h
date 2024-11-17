@@ -55,6 +55,11 @@ const uint32_t SCE_CTRL_RSTICK_LEFT = 0x20000000;
 #define TEST_KEY(KEY, KEYS) (((KEY) & (KEYS)) == (KEY))
 #define ANALOG_PSV_TO_RETRO(X) (((X) - 0x80) << 8)
 
+extern uint32_t EnterButton;
+#define CancelButton (EnterButton == SCE_CTRL_CIRCLE ? SCE_CTRL_CROSS : SCE_CTRL_CIRCLE)
+
+extern void SwapEnterButton(bool swap);
+
 class Input;
 
 using InputFunc = std::function<void(Input *)>;

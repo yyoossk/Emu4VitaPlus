@@ -117,8 +117,8 @@ void CoreButton::SetInputHooks(Input *input)
     input->SetKeyDownCallback(SCE_CTRL_DOWN, std::bind(&CoreButton::_OnKeyDown, this, input), true);
     input->SetKeyDownCallback(SCE_CTRL_LSTICK_UP, std::bind(&CoreButton::_OnKeyUp, this, input), true);
     input->SetKeyDownCallback(SCE_CTRL_LSTICK_DOWN, std::bind(&CoreButton::_OnKeyDown, this, input), true);
-    input->SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&CoreButton::_OnClick, this, input));
-    input->SetKeyUpCallback(SCE_CTRL_CROSS, std::bind(&CoreButton::_OnCancel, this, input));
+    input->SetKeyUpCallback(EnterButton, std::bind(&CoreButton::_OnClick, this, input));
+    input->SetKeyUpCallback(CancelButton, std::bind(&CoreButton::_OnCancel, this, input));
 }
 
 void CoreButton::UnsetInputHooks(Input *input)

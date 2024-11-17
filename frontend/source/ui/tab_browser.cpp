@@ -47,7 +47,7 @@ void TabBrowser::SetInputHooks(Input *input)
     TabSeletable::SetInputHooks(input);
     input->SetKeyUpCallback(SCE_CTRL_LEFT, std::bind(&TabBrowser::_OnKeyLeft, this, input));
     input->SetKeyUpCallback(SCE_CTRL_RIGHT, std::bind(&TabBrowser::_OnKeyRight, this, input));
-    input->SetKeyUpCallback(SCE_CTRL_CROSS, std::bind(&TabBrowser::_OnKeyCross, this, input));
+    input->SetKeyUpCallback(CancelButton, std::bind(&TabBrowser::_OnKeyCross, this, input));
     input->SetKeyUpCallback(SCE_CTRL_START, std::bind(&TabBrowser::_OnKeyStart, this, input));
 }
 
@@ -56,7 +56,7 @@ void TabBrowser::UnsetInputHooks(Input *input)
     TabSeletable::UnsetInputHooks(input);
     input->UnsetKeyUpCallback(SCE_CTRL_LEFT);
     input->UnsetKeyUpCallback(SCE_CTRL_RIGHT);
-    input->UnsetKeyUpCallback(SCE_CTRL_CROSS);
+    input->UnsetKeyUpCallback(CancelButton);
     input->UnsetKeyUpCallback(SCE_CTRL_START);
 }
 
@@ -156,12 +156,17 @@ void TabBrowser::Show(bool selected)
 void TabBrowser::_OnActive(Input *input)
 {
     LogFunctionName;
+    if (_index >= _directory->GetSize())
+    {
+        return;
+    }
+
     auto item = _directory->GetItem(_index);
 
     if (item.is_dir)
     {
         _in_refreshing = true;
-
+        LogDebug("%d %s", _directory->GetCurrentPath().size(), item.name.c_str());
         if (_directory->GetCurrentPath().size() == 0)
         {
             _directory->SetCurrentPath(item.name);
@@ -210,6 +215,11 @@ void TabBrowser::_OnKeyCross(Input *input)
 
 void TabBrowser::_OnKeyStart(Input *input)
 {
+    if (_index >= _directory->GetSize())
+    {
+        return;
+    }
+
     DirItem item = _directory->GetItem(_index);
     if (item.is_dir)
     {
@@ -286,6 +296,11 @@ void TabBrowser::_UpdateTexture()
         gVideo->Unlock();
     }
 
+    if (_index >= _directory->GetSize())
+    {
+        return;
+    }
+
     const DirItem &item = _directory->GetItem(_index);
     if (item.is_dir)
     {
@@ -315,10 +330,10 @@ void TabBrowser::_UpdateStatus()
 
     const DirItem &item = _directory->GetItem(_index);
 
-    _status_text = BUTTON_CIRCLE;
+    _status_text = EnterButton == SCE_CTRL_CIRCLE ? BUTTON_CIRCLE : BUTTON_CROSS;
     _status_text += item.is_dir ? TEXT(BROWSER_ENTER_DIR) : TEXT(BROWSER_START_GAME);
     _status_text += "\t";
-    _status_text += BUTTON_CROSS;
+    _status_text += EnterButton == SCE_CTRL_CIRCLE ? BUTTON_CROSS : BUTTON_CIRCLE;
     _status_text += TEXT(BROWSER_BACK_DIR);
     _status_text += "\t";
     if (!item.is_dir)

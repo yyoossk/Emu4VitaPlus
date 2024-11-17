@@ -148,6 +148,7 @@ namespace Emu4Vita
         last_rom = "ux0:";
         mute = DEFAULT_MUTE;
         auto_save = DEFAULT_AUTO_SAVE;
+        swap_enter = false;
 
         int sys_lang;
         sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &sys_lang);
@@ -224,6 +225,7 @@ namespace Emu4Vita
         ini.SetBoolValue(MAIN_SECTION, "auto_save", auto_save);
         ini.SetBoolValue(MAIN_SECTION, "mouse", mouse);
         ini.SetBoolValue(MAIN_SECTION, "lightgun", lightgun);
+        ini.SetBoolValue(MAIN_SECTION, "swap_enter", swap_enter);
 
         for (const auto &control : control_maps)
         {
@@ -286,6 +288,7 @@ namespace Emu4Vita
         auto_save = ini.GetBoolValue(MAIN_SECTION, "auto_save", DEFAULT_AUTO_SAVE);
         mouse = ini.GetBoolValue(MAIN_SECTION, "mouse", DEFAULT_MOUSE);
         lightgun = ini.GetBoolValue(MAIN_SECTION, "lightgun", DEFAULT_LIGHTGUN);
+        swap_enter = ini.GetBoolValue(MAIN_SECTION, "swap_enter", false);
 
         tmp = ini.GetValue(MAIN_SECTION, "last_rom");
         if (tmp && File::Exist(tmp))

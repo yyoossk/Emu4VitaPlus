@@ -110,7 +110,7 @@ void TabFavorite::SetInputHooks(Input *input)
     TabSeletable::SetInputHooks(input);
     input->SetKeyUpCallback(SCE_CTRL_LEFT, std::bind(&TabFavorite::_OnKeyLeft, this, input));
     input->SetKeyUpCallback(SCE_CTRL_RIGHT, std::bind(&TabFavorite::_OnKeyRight, this, input));
-    input->SetKeyUpCallback(SCE_CTRL_CROSS, std::bind(&TabFavorite::_OnKeyCross, this, input));
+    input->SetKeyUpCallback(CancelButton, std::bind(&TabFavorite::_OnKeyCross, this, input));
 }
 
 void TabFavorite::UnsetInputHooks(Input *input)
@@ -118,7 +118,7 @@ void TabFavorite::UnsetInputHooks(Input *input)
     TabSeletable::UnsetInputHooks(input);
     input->UnsetKeyUpCallback(SCE_CTRL_LEFT);
     input->UnsetKeyUpCallback(SCE_CTRL_RIGHT);
-    input->UnsetKeyUpCallback(SCE_CTRL_CROSS);
+    input->UnsetKeyUpCallback(CancelButton);
 }
 
 void TabFavorite::_OnKeyUp(Input *input)
@@ -182,10 +182,10 @@ void TabFavorite::_OnKeyCross(Input *input)
 
 void TabFavorite::_UpdateStatus()
 {
-    _status_text = BUTTON_CIRCLE;
+    _status_text = EnterButton == SCE_CTRL_CIRCLE ? BUTTON_CIRCLE : BUTTON_CROSS;
     _status_text += TEXT(BROWSER_START_GAME);
     _status_text += "\t";
-    _status_text += BUTTON_CROSS;
+    _status_text += EnterButton == SCE_CTRL_CIRCLE ? BUTTON_CROSS : BUTTON_CIRCLE;
     _status_text += TEXT(BROWSER_REMOVE_FAVORITE);
 }
 

@@ -77,8 +77,8 @@ void Dialog::SetInputHooks(Input *input)
     input->SetKeyDownCallback(SCE_CTRL_RIGHT, std::bind(&Dialog::_OnKeyRight, this, input), true);
     input->SetKeyDownCallback(SCE_CTRL_LSTICK_LEFT, std::bind(&Dialog::_OnKeyLeft, this, input), true);
     input->SetKeyDownCallback(SCE_CTRL_LSTICK_RIGHT, std::bind(&Dialog::_OnKeyRight, this, input), true);
-    input->SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&Dialog::_OnClick, this, input));
-    input->SetKeyUpCallback(SCE_CTRL_CROSS, std::bind(&Dialog::_OnCancel, this, input));
+    input->SetKeyUpCallback(EnterButton, std::bind(&Dialog::_OnClick, this, input));
+    input->SetKeyUpCallback(CancelButton, std::bind(&Dialog::_OnCancel, this, input));
 }
 
 void Dialog::UnsetInputHooks(Input *input)

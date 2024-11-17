@@ -75,8 +75,8 @@ void ItemSelectable::SetInputHooks(Input *input)
     input->SetKeyDownCallback(SCE_CTRL_DOWN, std::bind(&ItemSelectable::_OnKeyDown, this, input), true);
     input->SetKeyDownCallback(SCE_CTRL_LSTICK_UP, std::bind(&ItemSelectable::_OnKeyUp, this, input), true);
     input->SetKeyDownCallback(SCE_CTRL_LSTICK_DOWN, std::bind(&ItemSelectable::_OnKeyDown, this, input), true);
-    input->SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&ItemSelectable::_OnClick, this, input));
-    input->SetKeyUpCallback(SCE_CTRL_CROSS, std::bind(&ItemSelectable::_OnCancel, this, input));
+    input->SetKeyUpCallback(EnterButton, std::bind(&ItemSelectable::_OnClick, this, input));
+    input->SetKeyUpCallback(CancelButton, std::bind(&ItemSelectable::_OnCancel, this, input));
 }
 
 void ItemSelectable::UnsetInputHooks(Input *input)

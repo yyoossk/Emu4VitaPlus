@@ -46,8 +46,9 @@ App::App(int argc, char *const argv[])
     sceCommonDialogSetConfigParam(&config);
 
     sceCtrlSetSamplingModeExt(SCE_CTRL_MODE_ANALOG);
-    sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
-    sceTouchSetSamplingState(SCE_TOUCH_PORT_BACK, SCE_TOUCH_SAMPLING_STATE_START);
+
+    // sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
+    // sceTouchSetSamplingState(SCE_TOUCH_PORT_BACK, SCE_TOUCH_SAMPLING_STATE_START);
 
     _IsSaveMode();
     LogDebug("getVMBlock: %08x", getVMBlock());
@@ -59,6 +60,8 @@ App::App(int argc, char *const argv[])
         File::RemoveAllFiles(CACHE_DIR);
         gConfig->Save();
     }
+
+    SwapEnterButton(gConfig->swap_enter);
 
     gVideo = new Video();
     gUi = new Ui();

@@ -271,6 +271,11 @@ void Ui::CreateTables()
                                                                 "",
                                                                 (uint32_t *)&gConfig->auto_save,
                                                                 {NO, YES},
+                                                                nullptr),
+                                                 new ItemConfig(OPTIONS_MENU_SWAP_ENTER,
+                                                                "",
+                                                                (uint32_t *)&gConfig->swap_enter,
+                                                                {NO, YES},
                                                                 nullptr)});
 
     _tabs[TAB_INDEX_ABOUT] = new TabAbout();

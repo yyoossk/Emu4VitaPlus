@@ -51,6 +51,7 @@ namespace Emu4Vita
         uint32_t auto_save;
         uint32_t mouse;
         uint32_t lightgun;
+        uint32_t swap_enter;
 
         static const std::unordered_map<uint32_t, const char *> PsvKeyStr;
         static const std::unordered_map<uint32_t, const char *> HotkeyStr;
