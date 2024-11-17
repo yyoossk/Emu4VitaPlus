@@ -19,7 +19,7 @@ void SwapEnterButton(bool swap)
     if (enter_button == 0)
     {
         int config;
-        sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &config);
+        sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_ENTER_BUTTON, &config);
         enter_button = config == SCE_SYSTEM_PARAM_ENTER_BUTTON_CIRCLE ? SCE_CTRL_CIRCLE : SCE_CTRL_CROSS;
     }
 

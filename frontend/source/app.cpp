@@ -73,7 +73,6 @@ App::App(int argc, char *const argv[])
 
     gUi->AppendLog("Initialize video");
     gUi->AppendLog("Initialize core spec settings");
-    InitCoreSpec();
 
     gUi->AppendLog("Initialize emulator");
     gEmulator = new Emulator();

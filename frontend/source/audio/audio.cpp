@@ -7,7 +7,7 @@
 #include "emulator.h"
 #include "app.h"
 
-#define AUDIO_SKIP_THRESHOLD 95
+#define AUDIO_SKIP_THRESHOLD 90
 
 const uint32_t SAMPLE_RATES[] = {8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000};
 
@@ -139,6 +139,5 @@ void Audio::NotifyBufStatus()
         {
             LogDebug("skip audio: %d", occupancy);
         }
-        // LogDebug("  _buf_status_callback: %d %d %d", gConfig->mute, occupancy, occupancy < AUDIO_SKIP_THRESHOLD);
     }
 }
