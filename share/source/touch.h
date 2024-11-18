@@ -24,6 +24,8 @@ public:
     int16_t GetCount() const { return _current_id; };
     const TouchAxis &GetAxis() const { return _axis; };
     void InitMovingScale(float xscale, float yscale);
+    const int16_t GetRelativeMovingX() { return _GetRelativeMoving(&_scale_map_table_x, _axis.x - _last_axis.x); };
+    const int16_t GetRelativeMovingY() { return _GetRelativeMoving(&_scale_map_table_y, _axis.y - _last_axis.y); };
 
     template <typename T>
     void InitMapTable(const Rect<T> &rect)
@@ -72,35 +74,32 @@ public:
         return mapy;
     }
 
-    const int16_t GetRelativeMovingX()
-    {
-        int16_t result = 0;
-        if (_last_id == _current_id)
-        {
-            int x = _axis.x - _last_axis.x;
-            _Lock();
-            result = x > 0 ? _scale_map_table_x[x] : -_scale_map_table_x[-x];
-            _Unlock();
-        }
-        return result;
-    }
-
-    const int16_t GetRelativeMovingY()
-    {
-        int16_t result = 0;
-        if (_last_id == _current_id)
-        {
-            int y = _axis.y - _last_axis.y;
-            _Lock();
-            result = y > 0 ? _scale_map_table_y[y] : -_scale_map_table_y[-y];
-            _Unlock();
-        }
-        return result;
-    }
-
 private:
     void _Lock() { sceKernelLockLwMutex(&_mutex, 1, NULL); };
     void _Unlock() { sceKernelUnlockLwMutex(&_mutex, 1); };
+
+    const inline int16_t _GetRelativeMoving(std::vector<float> *table, int v)
+    {
+        int16_t result = 0;
+        if (_last_id == _current_id && v != 0)
+        {
+            _Lock();
+            if (v > 0 && v < _scale_map_table_x.size())
+            {
+                result = _scale_map_table_x[v];
+            }
+            else
+            {
+                v = -v;
+                if (v < _scale_map_table_x.size())
+                {
+                    result = -_scale_map_table_x[v];
+                }
+            }
+            _Unlock();
+        }
+        return result;
+    }
 
     bool _enabled;
     static SceTouchPanelInfo _info;

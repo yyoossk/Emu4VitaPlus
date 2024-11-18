@@ -121,6 +121,10 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         gConfig->Save();
         break;
 
+    case RETRO_ENVIRONMENT_SET_KEYBOARD_CALLBACK:
+        LogDebug("  unsupported cmd: RETRO_ENVIRONMENT_SET_KEYBOARD_CALLBACK");
+        return false;
+
     case RETRO_ENVIRONMENT_SET_DISK_CONTROL_INTERFACE:
         LogDebug("  cmd: RETRO_ENVIRONMENT_SET_DISK_CONTROL_INTERFACE");
         break;
@@ -148,6 +152,14 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         // LogDebug("  cmd: RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE");
         *(bool *)data = false;
         break;
+
+    case RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME:
+        LogDebug("  unsupported cmd: RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME");
+        return false;
+
+    case RETRO_ENVIRONMENT_SET_FRAME_TIME_CALLBACK:
+        LogDebug("  unsupported cmd: RETRO_ENVIRONMENT_SET_FRAME_TIME_CALLBACK");
+        return false;
 
     case RETRO_ENVIRONMENT_GET_LOG_INTERFACE:
         LogDebug("  cmd: RETRO_ENVIRONMENT_GET_LOG_INTERFACE");
@@ -199,6 +211,10 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         gEmulator->_SetControllerInfo((retro_controller_info *)data);
         break;
 
+    case RETRO_ENVIRONMENT_SET_MEMORY_MAPS:
+        LogDebug("  unsupported cmd: RETRO_ENVIRONMENT_SET_MEMORY_MAPS");
+        return false;
+
     case RETRO_ENVIRONMENT_SET_GEOMETRY:
         LogDebug("  cmd: RETRO_ENVIRONMENT_SET_GEOMETRY");
         gEmulator->ChangeGraphicsConfig();
@@ -213,6 +229,14 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         }
         break;
 
+    case RETRO_ENVIRONMENT_SET_SUPPORT_ACHIEVEMENTS:
+        LogDebug("  unsupported cmd: RETRO_ENVIRONMENT_SET_SUPPORT_ACHIEVEMENTS");
+        return false;
+
+    case RETRO_ENVIRONMENT_GET_VFS_INTERFACE:
+        LogDebug("  unsupported cmd: RETRO_ENVIRONMENT_GET_VFS_INTERFACE");
+        return false;
+
     case RETRO_ENVIRONMENT_GET_LED_INTERFACE:
         LogDebug("  cmd: RETRO_ENVIRONMENT_GET_LED_INTERFACE");
         if (data)
@@ -225,6 +249,10 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         *(bool *)data = gEmulator->_core_options_updated;
         gEmulator->_core_options_updated = false;
         break;
+
+    case RETRO_ENVIRONMENT_GET_TARGET_REFRESH_RATE:
+        LogDebug("  unsupported cmd: RETRO_ENVIRONMENT_GET_TARGET_REFRESH_RATE");
+        return false;
 
     case RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION:
         LogDebug("  cmd: RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION");
