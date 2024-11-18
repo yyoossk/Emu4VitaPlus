@@ -142,10 +142,16 @@ static void gen_font_texture(ImFontAtlas *fonts)
     const auto stride = vita2d_texture_get_stride(gFontTexture) / 4;
     uint32_t *texture_data = (uint32_t *)vita2d_texture_get_datap(gFontTexture);
 
-    for (auto y = 0; y < height; ++y)
-        for (auto x = 0; x < width; ++x)
-            texture_data[y * stride + x] = pixels[y * width + x];
-
+    if (stride == width)
+    {
+        memcpy(texture_data, pixels, width * height * sizeof(uint32_t));
+    }
+    else
+    {
+        for (auto y = 0; y < height; ++y)
+            for (auto x = 0; x < width; ++x)
+                texture_data[y * stride + x] = pixels[y * width + x];
+    }
     fonts->TexID = gFontTexture;
 }
 
