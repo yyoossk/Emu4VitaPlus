@@ -126,6 +126,8 @@ size_t Audio::SendAudioSample(const int16_t *data, size_t frames)
         _output->Signal();
     }
 
+    // LogDebug("%d %d", frames * 2, _out_buf.OccupancySize());
+
     return frames;
 }
 

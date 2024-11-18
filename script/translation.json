@@ -1306,5 +1306,131 @@
         "English": "Black/White",
         "Chinese": "黑/白",
         "Comments": ""
+    },
+    {
+        "No.": "219",
+        "English": "Gamepad",
+        "Chinese": "手柄",
+        "Comments": ""
+    },
+    {
+        "No.": "220",
+        "English": "SNES Joypad",
+        "Chinese": "超任手柄",
+        "Comments": ""
+    },
+    {
+        "No.": "221",
+        "English": "SNES Mouse",
+        "Chinese": "超任鼠标",
+        "Comments": ""
+    },
+    {
+        "No.": "222",
+        "English": "PCE Joypad",
+        "Chinese": "PCE手柄",
+        "Comments": ""
+    },
+    {
+        "No.": "223",
+        "English": "Mouse",
+        "Chinese": "鼠标",
+        "Comments": ""
+    },
+    {
+        "No.": "224",
+        "English": "Classic",
+        "Chinese": "古典",
+        "Comments": ""
+    },
+    {
+        "No.": "225",
+        "English": "Modern",
+        "Chinese": "现代",
+        "Comments": ""
+    },
+    {
+        "No.": "226",
+        "English": "Mouse (ball only)",
+        "Chinese": "鼠标 (仅坐标)",
+        "Comments": ""
+    },
+    {
+        "No.": "227",
+        "English": "Mouse (full)",
+        "Chinese": "鼠标 (完整)",
+        "Comments": ""
+    },
+    {
+        "No.": "228",
+        "English": "Pointer",
+        "Chinese": "触屏",
+        "Comments": ""
+    },
+    {
+        "No.": "229",
+        "English": "Lightgun",
+        "Chinese": "光枪",
+        "Comments": ""
+    },
+    {
+        "No.": "230",
+        "English": "ATARI Joystick",
+        "Chinese": "雅达利摇杆",
+        "Comments": ""
+    },
+    {
+        "No.": "231",
+        "English": "ATARI 5200 Joystick",
+        "Chinese": "雅达利 5200 摇杆",
+        "Comments": ""
+    },
+    {
+        "No.": "232",
+        "English": "ATARI Keyboard",
+        "Chinese": "雅达利键盘",
+        "Comments": ""
+    },
+    {
+        "No.": "233",
+        "English": "RetroPad",
+        "Chinese": "传统手柄",
+        "Comments": ""
+    },
+    {
+        "No.": "234",
+        "English": "Fightstick",
+        "Chinese": "街机摇杆",
+        "Comments": ""
+    },
+    {
+        "No.": "235",
+        "English": "8-Button",
+        "Chinese": "8键",
+        "Comments": ""
+    },
+    {
+        "No.": "236",
+        "English": "6-Button",
+        "Chinese": "6键",
+        "Comments": ""
+    },
+    {
+        "No.": "237",
+        "English": "standard",
+        "Chinese": "标准",
+        "Comments": ""
+    },
+    {
+        "No.": "238",
+        "English": "analog",
+        "Chinese": "模拟",
+        "Comments": ""
+    },
+    {
+        "No.": "239",
+        "English": "mouse",
+        "Chinese": "鼠标",
+        "Comments": ""
     }
 ]
