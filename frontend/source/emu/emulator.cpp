@@ -205,21 +205,21 @@ void Emulator::UnloadGame()
 void Emulator::Run()
 {
     LogFunctionNameLimited;
+
     _input.Poll();
 
-    if (gConfig->rewind)
+    switch (gStatus.Get())
     {
-        switch (gStatus.Get())
-        {
-        case APP_STATUS_REWIND_GAME:
+    case APP_STATUS_REWIND_GAME:
+        if (gConfig->rewind)
             _rewind_manager.Wait();
-            break;
-        case APP_STATUS_RUN_GAME:
+        break;
+    case APP_STATUS_RUN_GAME:
+        if (gConfig->rewind)
             _rewind_manager.Signal();
-            break;
-        default:
-            return;
-        }
+        break;
+    default:
+        return;
     }
 
     BeginProfile("retro_run");
