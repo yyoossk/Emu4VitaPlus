@@ -11,13 +11,6 @@ struct TouchAxis
     int16_t y;
 };
 
-enum TouchState
-{
-    TOUCH_NONE = 0,
-    TOUCH_DOWN,
-    TOUCH_UP
-};
-
 class Touch
 {
 public:
@@ -27,7 +20,8 @@ public:
     void Enable(bool enable);
     bool IsEnabled() const { return _enabled; };
     void Poll();
-    const TouchState GetState() const { return _last_id == _current_id ? TOUCH_NONE : TOUCH_DOWN; };
+    const bool IsPressed() const { return _last_id != _current_id; };
+    int16_t GetCount() const { return _current_id; };
     const TouchAxis &GetAxis() const { return _axis; };
     void InitMovingScale(float xscale, float yscale);
 

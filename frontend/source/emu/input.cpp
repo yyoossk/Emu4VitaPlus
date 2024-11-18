@@ -34,6 +34,9 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
     case RETRO_DEVICE_LIGHTGUN:
         return gEmulator->_GetLightGunState(index, id);
 
+    case RETRO_DEVICE_POINTER:
+        return gEmulator->_GetPointerState(index, id);
+
     default:
         return 0;
     }
@@ -106,7 +109,7 @@ int16_t Emulator::_GetMouseState(unsigned index, unsigned id)
         return 0;
     }
 
-    Touch *touch = gConfig->mouse == CONFIG_MOUSE_FRONT ? gEmulator->_input.GetFrontTouch() : gEmulator->_input.GetRearTouch();
+    Touch *touch = gConfig->mouse == CONFIG_MOUSE_FRONT ? _input.GetFrontTouch() : _input.GetRearTouch();
     if (touch->IsEnabled())
     {
         switch (id)
@@ -133,44 +136,75 @@ int16_t Emulator::_GetMouseState(unsigned index, unsigned id)
 int16_t Emulator::_GetLightGunState(unsigned index, unsigned id)
 {
     // LogDebug("index:%d id:%d", index, id);
-    Touch *front = gEmulator->_input.GetFrontTouch();
-    if (front->IsEnabled())
+    Touch *front = _input.GetFrontTouch();
+    if (!front->IsEnabled())
     {
-        switch (id)
-        {
-        case RETRO_DEVICE_ID_LIGHTGUN_TRIGGER:
-            return front->GetState() == TOUCH_DOWN ? 1 : 0;
+        return 0;
+    }
 
-        case RETRO_DEVICE_ID_LIGHTGUN_AUX_A:
-            return (_input.GetKeyStates() & _keys[RETRO_DEVICE_ID_JOYPAD_A]) ? 1 : 0;
+    switch (id)
+    {
+    case RETRO_DEVICE_ID_LIGHTGUN_TRIGGER:
+        return front->IsPressed() ? 1 : 0;
 
-        case RETRO_DEVICE_ID_LIGHTGUN_AUX_B:
-            return (_input.GetKeyStates() & _keys[RETRO_DEVICE_ID_JOYPAD_B]) ? 1 : 0;
+    case RETRO_DEVICE_ID_LIGHTGUN_AUX_A:
+        return (_input.GetKeyStates() & _keys[RETRO_DEVICE_ID_JOYPAD_A]) ? 1 : 0;
 
-        case RETRO_DEVICE_ID_LIGHTGUN_START:
-            return (_input.GetKeyStates() & _keys[RETRO_DEVICE_ID_JOYPAD_START]) ? 1 : 0;
+    case RETRO_DEVICE_ID_LIGHTGUN_AUX_B:
+        return (_input.GetKeyStates() & _keys[RETRO_DEVICE_ID_JOYPAD_B]) ? 1 : 0;
 
-        case RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X:
-            return front->GetMapedX(_video_rect);
+    case RETRO_DEVICE_ID_LIGHTGUN_START:
+        return (_input.GetKeyStates() & _keys[RETRO_DEVICE_ID_JOYPAD_START]) ? 1 : 0;
 
-        case RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y:
-            return front->GetMapedY(_video_rect);
+    case RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X:
+        return front->GetMapedX(_video_rect);
 
-        case RETRO_DEVICE_ID_LIGHTGUN_IS_OFFSCREEN:
-        {
-            const TouchAxis &axis = front->GetAxis();
-            return !_video_rect.Contains(axis.x, axis.y);
-        }
+    case RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y:
+        return front->GetMapedY(_video_rect);
 
-        case RETRO_DEVICE_ID_LIGHTGUN_RELOAD:
-        {
-            const TouchAxis &axis = front->GetAxis();
-            return (!_video_rect.Contains(axis.x, axis.y)) && (front->GetState() == TOUCH_DOWN);
-        }
+    case RETRO_DEVICE_ID_LIGHTGUN_IS_OFFSCREEN:
+    {
+        const TouchAxis &axis = front->GetAxis();
+        return !_video_rect.Contains(axis.x, axis.y);
+    }
 
-        default:
-            break;
-        }
+    case RETRO_DEVICE_ID_LIGHTGUN_RELOAD:
+    {
+        const TouchAxis &axis = front->GetAxis();
+        return (!_video_rect.Contains(axis.x, axis.y)) && front->IsPressed();
+    }
+
+    default:
+        break;
+    }
+
+    return 0;
+}
+
+int16_t Emulator::_GetPointerState(unsigned index, unsigned id)
+{
+    Touch *front = _input.GetFrontTouch();
+    if (!front->IsEnabled())
+    {
+        return 0;
+    }
+
+    switch (id)
+    {
+    case RETRO_DEVICE_ID_POINTER_X:
+        return front->GetMapedX(_video_rect);
+
+    case RETRO_DEVICE_ID_POINTER_Y:
+        return front->GetMapedY(_video_rect);
+
+    case RETRO_DEVICE_ID_POINTER_PRESSED:
+        return front->IsPressed() ? 1 : 0;
+
+    case RETRO_DEVICE_ID_POINTER_COUNT:
+        return front->GetCount();
+
+    default:
+        break;
     }
 
     return 0;

@@ -339,7 +339,8 @@ namespace Emu4Vita
 
     bool Config::FrontEnabled()
     {
-        return mouse == CONFIG_MOUSE_FRONT || lightgun == true;
+        return true; // for pointer
+        // return mouse == CONFIG_MOUSE_FRONT || lightgun == true;
     }
 
     bool Config::RearEnabled()
