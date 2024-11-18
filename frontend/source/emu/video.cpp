@@ -400,6 +400,6 @@ void Emulator::_SetupVideoOutput(unsigned width, unsigned height)
     gVideo->Unlock();
 
     _input.GetFrontTouch()->InitMapTable(_video_rect);
-    _input.GetFrontTouch()->SetMovingScale((float)width / _video_rect.width, (float)height / _video_rect.height);
-    _input.GetRearTouch()->SetMovingScale((float)width / _video_rect.width, (float)height / _video_rect.height);
+    _input.GetFrontTouch()->InitMovingScale((float)width / _video_rect.width, (float)height / _video_rect.height);
+    _input.GetRearTouch()->InitMovingScale((float)width / _video_rect.width, (float)height / _video_rect.height);
 }

@@ -33,47 +33,6 @@ void SwapEnterButton(bool swap)
     }
 }
 
-void Touch::Enable(bool enable)
-{
-    LogFunctionName;
-    _enabled = enable;
-    if (enable)
-    {
-        sceTouchGetPanelInfo(_port, &_info);
-        sceTouchSetSamplingState(_port, SCE_TOUCH_SAMPLING_STATE_START);
-        LogDebug("%d:\n"
-                 "   %d %d %d %d\n"
-                 "   %d %d %d %d",
-                 _port,
-                 _info.minAaX, _info.minAaY, _info.maxAaX, _info.maxAaY,
-                 _info.minDispX, _info.minDispY, _info.maxDispX, _info.maxDispY);
-    }
-    else
-    {
-        sceTouchSetSamplingState(_port, SCE_TOUCH_SAMPLING_STATE_STOP);
-    }
-}
-
-void Touch::Poll()
-{
-    if (!_enabled)
-    {
-        return;
-    }
-
-    SceTouchData touch_data{0};
-    if (sceTouchPeek(_port, &touch_data, 1) == 1)
-    {
-
-        _last_id = _current_id;
-        _current_id = touch_data.report->id;
-        _last_axis.x = _axis.x;
-        _last_axis.y = _axis.y;
-        _axis.x = touch_data.report->x >> 1;
-        _axis.y = touch_data.report->y >> 1;
-    }
-}
-
 Input::Input() : _last_key(0ull),
                  _turbo_key(0ull),
                  _turbo_start_ms(DEFAULT_TURBO_START_TIME),

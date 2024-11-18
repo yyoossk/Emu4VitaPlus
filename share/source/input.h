@@ -4,8 +4,8 @@
 #include <vector>
 #include <stack>
 #include <psp2/ctrl.h>
-#include <psp2/touch.h>
 #include "rect.h"
+#include "touch.h"
 
 const uint32_t SCE_CTRL_LSTICK_UP = 0x00400000;
 const uint32_t SCE_CTRL_LSTICK_RIGHT = 0x00800000;
@@ -76,105 +76,10 @@ struct AnalogAxis
     uint8_t y;
 };
 
-struct TouchAxis
-{
-    int16_t x;
-    int16_t y;
-};
-
-enum TouchState
-{
-    TOUCH_NONE = 0,
-    TOUCH_DOWN,
-    TOUCH_UP
-};
-
 struct TurboKeyState
 {
     bool down;
     uint64_t next_change_state_time;
-};
-
-class Touch
-{
-public:
-    Touch(SceTouchPortType port)
-        : _port(port),
-          _enabled(false),
-          _x_scale(1.f),
-          _y_scale(1.f)
-    {
-    }
-
-    virtual ~Touch() {};
-
-    void Enable(bool enable);
-    bool IsEnabled() const { return _enabled; };
-    void Poll();
-    const TouchState GetState() const { return _last_id == _current_id ? TOUCH_NONE : TOUCH_DOWN; };
-    const TouchAxis &GetAxis() const { return _axis; };
-    const int16_t GetRelativeMovingX() const { return _last_id == _current_id ? (_axis.x - _last_axis.x) * _x_scale : 0; };
-    const int16_t GetRelativeMovingY() const { return _last_id == _current_id ? (_axis.y - _last_axis.y) * _y_scale : 0; };
-    void SetMovingScale(float xscale, float yscale)
-    {
-        _x_scale = xscale;
-        _y_scale = yscale;
-    }
-
-    template <typename T>
-    void InitMapTable(const Rect<T> &rect)
-    {
-        T half_width = rect.width / 2;
-        T half_height = rect.height / 2;
-
-        _map_table_x.clear();
-        _map_table_y.clear();
-        _map_table_x.reserve(rect.width);
-        _map_table_y.reserve(rect.height);
-
-        float xscale = 32767.f / half_width; // 0x7fff == 32767
-        float yscale = 32767.f / half_height;
-
-        for (T x = 0; x < rect.width; x++)
-        {
-            _map_table_x.emplace_back((x - half_width) * xscale);
-        }
-
-        for (T y = 0; y < rect.height; y++)
-        {
-            _map_table_y.emplace_back((y - half_height) * yscale);
-        }
-    }
-
-    template <typename T>
-    int16_t GetMapedX(const Rect<T> &rect) const
-    {
-        size_t x = _axis.x - rect.left;
-        return rect.Contains(_axis.x, _axis.y) && x < _map_table_x.size() ? _map_table_x[x] : -0x8000;
-    }
-
-    template <typename T>
-    int16_t GetMapedY(const Rect<T> &rect) const
-    {
-        size_t y = _axis.y - rect.top;
-        return rect.Contains(_axis.x, _axis.y) && y < _map_table_y.size() ? _map_table_y[y] : -0x8000;
-    }
-
-private:
-    bool _enabled;
-    SceTouchPanelInfo _info;
-    TouchAxis _last_axis;
-    TouchAxis _axis;
-    uint8_t _last_id;
-    uint8_t _current_id;
-    SceTouchPortType _port;
-    float _x_scale;
-    float _y_scale;
-
-    // map to retro's coordinate system
-    // -0x7fff to 0x7fff
-    std::vector<int16_t> _map_table_x;
-    std::vector<int16_t> _map_table_y;
 };
 
 class Input
