@@ -1,8 +1,19 @@
 #include "device_options.h"
+#include "icons.h"
 #include "log.h"
 
 #define DEVCIE_SECTION "DEVICE"
 static const char *Unset = gTexts[LANGUAGE_ENGLISH][UNSET];
+
+// the order is RETRO_DEVICE_xxx
+static const char *DEVICE_ICON[] = {
+    "",
+    ICON_GAMEPAD_0_SPACE,
+    ICON_MOUSE_SPACE,
+    ICON_KEYBOARD_SPACE,
+    ICON_LIGHTGUN_SPACE,
+    ICON_JOYSTICK_SPACE,
+    ICON_TOUCH_SPACE};
 
 const std::vector<LanguageString> ControllerTypes::GetValues() const
 {
@@ -11,7 +22,12 @@ const std::vector<LanguageString> ControllerTypes::GetValues() const
     _values.emplace_back(TEXT(UNSET));
     for (const auto &v : *this)
     {
-        _values.emplace_back(v.desc);
+        uint32_t base = v.device & 0xff;
+        if (base >= sizeof(DEVICE_ICON) / sizeof(DEVICE_ICON[0]))
+        {
+            base = 0;
+        }
+        _values.emplace_back(std::string(DEVICE_ICON[base]) + LanguageString(v.desc).Get());
     }
 
     return _values;

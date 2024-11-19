@@ -23,6 +23,12 @@
 #define ICON_PS "\xee\x80\x80"
 #define ICON_OFF "\xef\x88\x84"
 #define ICON_ON "\xef\x88\x85"
+#define ICON_GAMEPAD_0 "\xe2\x90\xbc"
+#define ICON_KEYBOARD "\xe2\x90\xbd"
+#define ICON_MOUSE "\xe2\x90\xbe"
+#define ICON_LIGHTGUN "\xef\x94\xab"
+#define ICON_JOYSTICK "\xef\x95\xb9"
+#define ICON_TOUCH "\xe2\x87\xa7"
 
 #define ICON_STAR_SPACE ICON_STAR " "
 #define ICON_EMPTY_STAR_SPACE ICON_EMPTY_STAR " "
@@ -45,3 +51,9 @@
 #define ICON_PS_SPACE ICON_PS " "
 #define ICON_OFF_SPACE ICON_OFF " "
 #define ICON_ON_SPACE ICON_ON " "
+#define ICON_GAMEPAD_0_SPACE ICON_GAMEPAD_0 " "
+#define ICON_KEYBOARD_SPACE ICON_KEYBOARD " "
+#define ICON_MOUSE_SPACE ICON_MOUSE " "
+#define ICON_LIGHTGUN_SPACE ICON_LIGHTGUN " "
+#define ICON_JOYSTICK_SPACE ICON_JOYSTICK " "
+#define ICON_TOUCH_SPACE ICON_TOUCH

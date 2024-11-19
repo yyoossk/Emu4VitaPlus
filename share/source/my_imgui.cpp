@@ -34,8 +34,12 @@ const static ImWchar GamePadCharset[] = {0x219c, 0x21a1,
                                          0x21cb, 0x21cc,
                                          0x21d0, 0x21d3,
                                          0x21e0, 0x21e3,
+                                         0x21e7, 0x21e7,
                                          0x21f7, 0x21f8,
+                                         0x243c, 0x243e,
                                          0xe000, 0xe000,
+                                         0xf52b, 0xf52b,
+                                         0xf579, 0xf579,
                                          0x0000};
 
 const static ImWchar IconCharset[] = {0xe800, 0xe80c,
@@ -149,8 +153,11 @@ static void gen_font_texture(ImFontAtlas *fonts)
     else
     {
         for (auto y = 0; y < height; ++y)
-            for (auto x = 0; x < width; ++x)
-                texture_data[y * stride + x] = pixels[y * width + x];
+        {
+            memcpy(texture_data, pixels, stride * 4);
+            texture_data += stride;
+            pixels += width;
+        }
     }
     fonts->TexID = gFontTexture;
 }
