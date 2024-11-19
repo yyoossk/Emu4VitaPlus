@@ -2,7 +2,7 @@ from PIL import Image
 from pathlib import Path
 
 JOBS = {
-    'ARC': ('fba_lite', 'fbalpha2012', 'fbneo'),
+    'ARC': ('fba_lite', 'fbalpha2012', 'fbneo', 'mame2000', 'mame2003', 'mame2003_plus'),
     'GBA': ('gpsp', 'mgba', 'vba_next'),
     'GBC': ('gambatte',),
     'MD': ('genesis_plus_gx', 'genesis_plus_gx_wide', 'picodrive'),
@@ -12,16 +12,16 @@ JOBS = {
     'PS1': ('pcsx_rearmed',),
     'SNES': ('snes9x2002', 'snes9x2005', 'snes9x2010'),
     'WSC': ('mednafen_wswan',),
-    'ATARI': ('stella2014', 'prosystem'),
-    'DOS': ('dosbox',),
+    'ATARI': ('stella2014', 'prosystem', 'atari800'),
+    'DOS': ('dosbox_pure', 'dosbox_svn'),
 }
 
 for job, names in JOBS.items():
     im = Image.open(f'icons/{job}_icon0.png')
     w, h = im.size
     _im = im.resize((110, h * 110 // w))
-    im = Image.new('RGBA', (128, 128))
-    im.paste(_im, (10, 18))
+    im = Image.new('RGB', (128, 128), '#23446d')
+    im.paste(_im, (10, 18), mask=_im.split()[3])
     im = im.quantize()
     for name in names:
         print(name)
