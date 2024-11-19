@@ -1432,5 +1432,245 @@
         "English": "mouse",
         "Chinese": "鼠标",
         "Comments": ""
+    },
+    {
+        "No.": "240",
+        "English": "【SFC】Scanlines + 2x resolution",
+        "Chinese": "【SFC】扫描线 + 2倍分辨率",
+        "Comments": ""
+    },
+    {
+        "No.": "241",
+        "English": "【SFC】4:3 Full screen",
+        "Chinese": "【SFC】4:3 铺满屏幕",
+        "Comments": ""
+    },
+    {
+        "No.": "240",
+        "English": "【Universal】4:3 Full screen",
+        "Chinese": "【通用】4:3 铺满屏幕",
+        "Comments": ""
+    },
+    {
+        "No.": "241",
+        "English": "【Universal】Scanlines + 2x resolution",
+        "Chinese": "【通用】扫描线 + 2倍分辨率",
+        "Comments": ""
+    },
+    {
+        "No.": "242",
+        "English": "【Universal】Scanlines + RGB + 2x resolution",
+        "Chinese": "【通用】扫描线 + RGB + 2倍分辨率",
+        "Comments": ""
+    },
+    {
+        "No.": "243",
+        "English": "【NeoGeo】Scanlines",
+        "Chinese": "【NeoGeo】扫描线",
+        "Comments": ""
+    },
+    {
+        "No.": "242",
+        "English": "【NeoGeo】Vertical, Scanlines",
+        "Chinese": "【NeoGeo】竖版、扫描线",
+        "Comments": ""
+    },
+    {
+        "No.": "243",
+        "English": "【Capcom】Scanlines",
+        "Chinese": "【Capcom】扫描线",
+        "Comments": ""
+    },
+    {
+        "No.": "244",
+        "English": "【Capcom】Vertical, Scanlines",
+        "Chinese": "【Capcom】竖版、扫描线",
+        "Comments": ""
+    },
+    {
+        "No.": "245",
+        "English": "【PGM】Scanlines",
+        "Chinese": "【PGM】扫描线",
+        "Comments": ""
+    },
+    {
+        "No.": "246",
+        "English": "【PGM】Vertical, Scalines",
+        "Chinese": "【PGM】竖版、扫描线",
+        "Comments": ""
+    },
+    {
+        "No.": "247",
+        "English": "【GB】Grid lines",
+        "Chinese": "【GB】网格线",
+        "Comments": ""
+    },
+    {
+        "No.": "248",
+        "English": "【GB】Grid lines + 20% Dark filter",
+        "Chinese": "【GB】网格线 + 深色滤光级别20%",
+        "Comments": ""
+    },
+    {
+        "No.": "249",
+        "English": "【GB】Grid lines + Color Correction",
+        "Chinese": "【GB】网格线 + 色彩校正",
+        "Comments": ""
+    },
+    {
+        "No.": "250",
+        "English": "【GBP】Grid lines",
+        "Chinese": "【GBP】网格线",
+        "Comments": ""
+    },
+    {
+        "No.": "251",
+        "English": "【GBP】Grid lines + Color Correction",
+        "Chinese": "【GBP】网格线 + 色彩校正",
+        "Comments": ""
+    },
+    {
+        "No.": "252",
+        "English": "【GBL】Grid lines",
+        "Chinese": "【GBL】网格线",
+        "Comments": ""
+    },
+    {
+        "No.": "253",
+        "English": "【GBL】Grid lines + Color Correction",
+        "Chinese": "【GBL】网格线 + 色彩校正",
+        "Comments": ""
+    },
+    {
+        "No.": "254",
+        "English": "【GBL Famitsu Edition】Grid lines + Color Correction",
+        "Chinese": "【GBL法米通限定机】网格线 + 色彩校正",
+        "Comments": ""
+    },
+    {
+        "No.": "255",
+        "English": "【GBC】Grid lines",
+        "Chinese": "【GBC】网格线",
+        "Comments": ""
+    },
+    {
+        "No.": "256",
+        "English": "【GBC】Grid lines + Yellow",
+        "Chinese": "【GBC】网格线 + 实机偏黄",
+        "Comments": ""
+    },
+    {
+        "No.": "257",
+        "English": "【GBC】3X",
+        "Chinese": "【GBC】3倍大小",
+        "Comments": ""
+    },
+    {
+        "No.": "258",
+        "English": "【WSC】Grid lines",
+        "Chinese": "【WSC】网格线",
+        "Comments": ""
+    },
+    {
+        "No.": "259",
+        "English": "【WSC】Gird lines + Dark",
+        "Chinese": "【WSC】网格线+偏暗",
+        "Comments": ""
+    },
+    {
+        "No.": "260",
+        "English": "【WSC】3X",
+        "Chinese": "【WSC】3倍大小",
+        "Comments": ""
+    },
+    {
+        "No.": "261",
+        "English": "【PCE】Scanlines + 2x resolution",
+        "Chinese": "【PCE】扫描线 + 2倍分辨率",
+        "Comments": ""
+    },
+    {
+        "No.": "262",
+        "English": "【NGPC】Grid lines",
+        "Chinese": "【NGPC】网格线",
+        "Comments": ""
+    },
+    {
+        "No.": "263",
+        "English": "【NGPC】Grid lines + RGB",
+        "Chinese": "【NGPC】网格线+RGB",
+        "Comments": ""
+    },
+    {
+        "No.": "264",
+        "English": "【NGP】3X",
+        "Chinese": "【NGP】3倍大小",
+        "Comments": ""
+    },
+    {
+        "No.": "265",
+        "English": "【FC】Scanlines + 2x resolution",
+        "Chinese": "【FC】扫描线 + 2倍分辨率",
+        "Comments": ""
+    },
+    {
+        "No.": "266",
+        "English": "【MD】Scanlines + 2x resolution (Wide)",
+        "Chinese": "【MD】扫描线 + 2倍分辨率（宽屏比例）",
+        "Comments": ""
+    },
+    {
+        "No.": "267",
+        "English": "【MD】Scanlines + 2x resolution (Square)",
+        "Chinese": "【MD】扫描线 + 2倍分辨率（方屏比例）",
+        "Comments": ""
+    },
+    {
+        "No.": "268",
+        "English": "【GG】Grid lines",
+        "Chinese": "【GG】网格线",
+        "Comments": ""
+    },
+    {
+        "No.": "269",
+        "English": "【GG】3X",
+        "Chinese": "【GG】3倍大小",
+        "Comments": ""
+    },
+    {
+        "No.": "270",
+        "English": "【GBA】Grid lines",
+        "Chinese": "【GBA】网格线",
+        "Comments": ""
+    },
+    {
+        "No.": "271",
+        "English": "【GBA】Grid lines + Yellow",
+        "Chinese": "【GBA】网格线 + 实机偏黄",
+        "Comments": ""
+    },
+    {
+        "No.": "272",
+        "English": "【GBM】Grid lines",
+        "Chinese": "【GBM】网格线",
+        "Comments": ""
+    },
+    {
+        "No.": "273",
+        "English": "【GBM】Grid lines + Rear highlight",
+        "Chinese": "【GBM】网格线 + 实机高亮",
+        "Comments": ""
+    },
+    {
+        "No.": "274",
+        "English": "【GBA】3X",
+        "Chinese": "【GBA】3倍大小",
+        "Comments": ""
+    },
+    {
+        "No.": "275",
+        "English": "【GBM】2X",
+        "Chinese": "【GBM】2倍大小",
+        "Comments": ""
     }
 ]
