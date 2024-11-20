@@ -147,7 +147,9 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
         gConfig->Save();
 
         Load();
+        LogDebug("run first frame");
         retro_run();
+        LogDebug("first frame end");
 
         _frame_count = 0;
 
@@ -448,9 +450,14 @@ void Emulator::Save()
 
     for (auto id : RETRO_MEMORY_IDS)
     {
+        void *data = NULL;
         size_t size = retro_get_memory_size(id);
-        void *data = retro_get_memory_data(id);
-        if (size == 0 || data == NULL)
+        if (size > 0)
+        {
+            data = retro_get_memory_data(id);
+        }
+
+        if (data == NULL)
         {
             LogDebug("failed to save: %d", id);
             continue;
@@ -472,9 +479,13 @@ void Emulator::Load()
 
     for (auto id : RETRO_MEMORY_IDS)
     {
+        void *data = NULL;
         size_t size = retro_get_memory_size(id);
-        void *data = retro_get_memory_data(id);
-        if (size == 0 || data == NULL)
+        if (size > 0)
+        {
+            data = retro_get_memory_data(id);
+        }
+        if (data == NULL)
         {
             LogDebug("failed to load: %d", id);
             continue;

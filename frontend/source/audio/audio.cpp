@@ -15,7 +15,7 @@ size_t AudioSampleBatchCallback(const int16_t *data, size_t frames)
 {
     LogFunctionNameLimited;
 
-    if (data && (!gConfig->mute) && gStatus.Get() == APP_STATUS_RUN_GAME)
+    if (data && frames > 0 && (!gConfig->mute) && gStatus.Get() == APP_STATUS_RUN_GAME)
     {
         BeginProfile("AudioSampleBatchCallback");
         gEmulator->_audio.SendAudioSample(data, frames);
@@ -136,9 +136,9 @@ void Audio::NotifyBufStatus()
     if (_buf_status_callback)
     {
         size_t occupancy = (_resampler == nullptr ? _out_buf.OccupancySize() : _resampler->GetInBufOccupancy());
-        _buf_status_callback(gConfig->mute, occupancy, occupancy > AUDIO_SKIP_THRESHOLD);
         if (occupancy > AUDIO_SKIP_THRESHOLD)
         {
+            _buf_status_callback(gConfig->mute, occupancy, true);
             LogDebug("skip audio: %d", occupancy);
         }
     }
