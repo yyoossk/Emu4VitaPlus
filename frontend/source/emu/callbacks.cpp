@@ -15,10 +15,12 @@
 
 void RetroLog(retro_log_level level, const char *fmt, ...)
 {
+#if LOG_LEVEL > LOG_LEVEL_DEBUG
     if (gStatus.Get() == APP_STATUS_RUN_GAME)
     {
         return;
     }
+#endif
 
     va_list list;
     char str[512];
@@ -43,7 +45,7 @@ void RetroLog(retro_log_level level, const char *fmt, ...)
         break;
     }
 
-    if (level >= RETRO_LOG_INFO)
+    if (level >= RETRO_LOG_INFO && gStatus.Get() != APP_STATUS_RUN_GAME)
     {
         gUi->AppendLog(str);
     }
@@ -206,6 +208,10 @@ bool EnvironmentCallback(unsigned cmd, void *data)
         gEmulator->SetSpeed(gEmulator->_speed);
         break;
 
+    case RETRO_ENVIRONMENT_SET_SUBSYSTEM_INFO:
+        LogDebug("  unsupported cmd: RETRO_ENVIRONMENT_SET_SUBSYSTEM_INFO");
+        return false;
+
     case RETRO_ENVIRONMENT_SET_CONTROLLER_INFO:
         LogDebug("  cmd: RETRO_ENVIRONMENT_SET_CONTROLLER_INFO");
         gEmulator->_SetControllerInfo((retro_controller_info *)data);
@@ -231,6 +237,10 @@ bool EnvironmentCallback(unsigned cmd, void *data)
 
     case RETRO_ENVIRONMENT_SET_SUPPORT_ACHIEVEMENTS:
         LogDebug("  unsupported cmd: RETRO_ENVIRONMENT_SET_SUPPORT_ACHIEVEMENTS");
+        return false;
+
+    case RETRO_ENVIRONMENT_SET_SERIALIZATION_QUIRKS:
+        LogDebug("  unsupported cmd: RETRO_ENVIRONMENT_SET_SERIALIZATION_QUIRKS");
         return false;
 
     case RETRO_ENVIRONMENT_GET_VFS_INTERFACE:
@@ -360,7 +370,11 @@ bool EnvironmentCallback(unsigned cmd, void *data)
             break;
         }
     }
-    break;
+
+    case RETRO_ENVIRONMENT_GET_SAVESTATE_CONTEXT:
+        LogDebug("  unsupported cmd: RETRO_ENVIRONMENT_GET_SAVESTATE_CONTEXT");
+        return false;
+
     default:
         if (cmd > RETRO_ENVIRONMENT_EXPERIMENTAL)
         {
