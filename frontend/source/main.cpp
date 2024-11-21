@@ -7,9 +7,9 @@
 
 #define SCE_LIBC_HEAP_SIZE_EXTENDED_ALLOC_NO_LIMIT (0xffffffffU)
 
-unsigned int sceLibcHeapExtendedAlloc = 1;
-unsigned int sceLibcHeapSize = SCE_LIBC_HEAP_SIZE_EXTENDED_ALLOC_NO_LIMIT;
-// unsigned int sceUserMainThreadStackSize = 2 * 1024 * 1024;
+unsigned int sceUserMainThreadStackSize __attribute__((used)) = 0x100000;
+unsigned int sceLibcHeapExtendedAlloc __attribute__((used)) = 1;
+unsigned int sceLibcHeapSize __attribute__((used)) = SCE_LIBC_HEAP_SIZE_EXTENDED_ALLOC_NO_LIMIT;
 
 int main(int argc, char *const argv[])
 {
@@ -21,7 +21,11 @@ int main(int argc, char *const argv[])
 #endif
     LogInfo("Emu4Vita++ v%s", APP_VER_STR);
     LogInfo("updated on " __DATE__ " " __TIME__);
-    LogDebug("Start");
+
+    LogInfo("%d %d %d", sceUserMainThreadStackSize, sceLibcHeapExtendedAlloc, sceLibcHeapSize);
+
+    LogDebug("stack size: %d", sceKernelCheckThreadStack());
+
     {
         App app(argc, argv);
         app.Run();
