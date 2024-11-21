@@ -63,6 +63,7 @@ App::App(int argc, char *const argv[])
 
     SwapEnterButton(gConfig->swap_enter);
 
+    gEmulator = new Emulator();
     gVideo = new Video();
     gUi = new Ui();
     gVideo->Start();
@@ -75,7 +76,6 @@ App::App(int argc, char *const argv[])
     gUi->AppendLog("Initialize core spec settings");
 
     gUi->AppendLog("Initialize emulator");
-    gEmulator = new Emulator();
     gEmulator->Init();
 
     gUi->AppendLog("Initialize state manager");

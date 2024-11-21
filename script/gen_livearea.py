@@ -118,9 +118,6 @@ def do(console_name, cores):
     bg.paste(im, mask=im)
     bg = bg.convert('RGB')
     bg.save(f'{console_name}.png')
-    for core in cores:
-        name = f'../apps/{core}/pkg/sce_sys/livearea/contents/bg.png'
-        shutil.copy(f'{console_name}.png', name)
 
 
 for console, cores in CORES.items():

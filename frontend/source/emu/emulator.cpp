@@ -35,6 +35,7 @@ Emulator::Emulator()
       _video_rotation(VIDEO_ROTATION_0),
       _core_options_updated(false)
 {
+    retro_get_system_info(&_info);
     sceKernelCreateLwMutex(&_run_mutex, "run_mutex", 0, 0, NULL);
     _InitArcadeManager();
 }
@@ -69,7 +70,6 @@ void Emulator::Init()
     retro_set_input_state(InputStateCallback);
 
     retro_init();
-    retro_get_system_info(&_info);
 }
 
 bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)

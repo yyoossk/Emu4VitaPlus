@@ -109,7 +109,7 @@ Ui::Ui() : _tab_index(TAB_INDEX_BROWSER),
            _hint_count(0)
 {
     LogFunctionName;
-    _title = std::string("Emu4Vita++ (") + CORE_FULL_NAME + ") v" + APP_VER_STR;
+    _title = std::string("Emu4Vita++ v") + APP_VER_STR + " (" + gEmulator->GetCoreName() + " " + gEmulator->GetCoreVersion() + ")";
     _InitImgui();
     _dialog = new Dialog("", {DIALOG_OK, DIALOG_CANCEL},
                          std::bind(&Ui::_OnDialog, this, std::placeholders::_1, std::placeholders::_2));
