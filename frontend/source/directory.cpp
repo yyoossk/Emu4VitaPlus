@@ -183,3 +183,31 @@ bool Directory::_ToRoot()
 
     return _items.size() > 0;
 }
+
+size_t Directory::Search(const char *s)
+{
+    _search_results.clear();
+    if (s == nullptr || *s == '\x00')
+    {
+        _search_str = "";
+        return 0;
+    }
+
+    _search_str = s;
+    size_t count = 0;
+    for (const auto &item : _items)
+    {
+        if ((!item.is_dir) && (item.name.find(s) != std::string::npos || item.entry_name.find(s) != std::string::npos))
+        {
+            _search_results.push_back(count);
+        }
+        count++;
+    }
+
+    return _search_results.size();
+}
+
+bool Directory::BeFound(size_t index)
+{
+    return std::find(_search_results.begin(), _search_results.end(), index) != _search_results.end();
+}

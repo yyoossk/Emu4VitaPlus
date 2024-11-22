@@ -5,6 +5,7 @@
 #include "emulator.h"
 #include "video.h"
 #include "app.h"
+#include "ui.h"
 #include "file.h"
 #include "log.h"
 #include "favorite.h"
@@ -12,6 +13,7 @@
 #include "icons.h"
 #include "state_manager.h"
 #include "misc.h"
+#include "utils.h"
 
 TabBrowser::TabBrowser() : TabSeletable(TAB_BROWSER),
                            _texture(nullptr),
@@ -49,6 +51,8 @@ void TabBrowser::SetInputHooks(Input *input)
     input->SetKeyUpCallback(SCE_CTRL_RIGHT, std::bind(&TabBrowser::_OnKeyRight, this, input));
     input->SetKeyUpCallback(CancelButton, std::bind(&TabBrowser::_OnKeyCross, this, input));
     input->SetKeyUpCallback(SCE_CTRL_START, std::bind(&TabBrowser::_OnKeyStart, this, input));
+    input->SetKeyUpCallback(SCE_CTRL_TRIANGLE, std::bind(&TabBrowser::_OnKeyTriangle, this, input));
+    input->SetKeyUpCallback(SCE_CTRL_SQUARE, std::bind(&TabBrowser::_OnKeySquare, this, input));
 }
 
 void TabBrowser::UnsetInputHooks(Input *input)
@@ -58,6 +62,8 @@ void TabBrowser::UnsetInputHooks(Input *input)
     input->UnsetKeyUpCallback(SCE_CTRL_RIGHT);
     input->UnsetKeyUpCallback(CancelButton);
     input->UnsetKeyUpCallback(SCE_CTRL_START);
+    input->UnsetKeyUpCallback(SCE_CTRL_TRIANGLE);
+    input->UnsetKeyUpCallback(SCE_CTRL_SQUARE);
 }
 
 void TabBrowser::Show(bool selected)
@@ -75,7 +81,12 @@ void TabBrowser::Show(bool selected)
         ImGui::BeginChild(TEXT(_title_id), size);
         ImGui::Columns(2, NULL, false);
 
-        ImGui::Text(_directory->GetCurrentPath().c_str());
+        std::string current_path = _directory->GetCurrentPath();
+        if (_directory->GetSearchString().size() > 0 && _directory->GetSearchResults().size() > 0)
+        {
+            current_path += std::string(" " ICON_SERACH) + _directory->GetSearchString();
+        }
+        ImGui::Text(current_path.c_str());
         if (ImGui::ListBoxHeader("", ImGui::GetContentRegionAvail()))
         {
             if (_in_refreshing)
@@ -336,6 +347,17 @@ void TabBrowser::_UpdateStatus()
     _status_text += EnterButton == SCE_CTRL_CIRCLE ? BUTTON_CROSS : BUTTON_CIRCLE;
     _status_text += TEXT(BROWSER_BACK_DIR);
     _status_text += "\t";
+    _status_text += BUTTON_TRIANGLE;
+    _status_text += TEXT(BROWSER_SEARCH);
+    _status_text += "\t";
+
+    if (_directory->GetSearchString().size() > 1)
+    {
+        _status_text += BUTTON_SQUARE;
+        _status_text += TEXT(BROWSER_NEXT);
+        _status_text += "\t";
+    }
+
     if (!item.is_dir)
     {
         _status_text += BUTTON_START;
@@ -354,4 +376,71 @@ void TabBrowser::ChangeLanguage(uint32_t language)
 {
     LogFunctionName;
     _UpdateStatus();
+}
+
+void TabBrowser::_OnKeyTriangle(Input *input)
+{
+    LogFunctionName;
+    SceImeDialogParam param;
+    SceImeDialogResult result{0};
+    uint16_t buf[128];
+
+    sceImeDialogParamInit(&param);
+
+    param.inputMethod = 0;
+    param.languagesForced = SCE_FALSE;
+    param.option = 0;
+    param.filter = NULL;
+    param.dialogMode = SCE_IME_DIALOG_DIALOG_MODE_WITH_CANCEL;
+    param.textBoxMode = SCE_IME_DIALOG_TEXTBOX_MODE_WITH_CLEAR;
+    param.supportedLanguages = 0;
+    param.type = SCE_IME_DIALOG_DIALOG_MODE_DEFAULT;
+    param.initialText = (SceWChar16 *)u"";
+    param.inputTextBuffer = (SceWChar16 *)buf;
+    param.title = (const SceWChar16 *)u"Search";
+    param.maxTextLength = 128;
+    param.enterLabel = SCE_IME_ENTER_LABEL_SEARCH;
+
+    sceImeDialogInit(&param);
+    while (sceImeDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED)
+    {
+        sceKernelDelayThread(200000);
+    }
+
+    if (sceImeDialogGetResult(&result) == SCE_OK)
+    {
+        LogDebug("  result:%d button:%d", result.result, result.button);
+        if (result.result == SCE_COMMON_DIALOG_RESULT_OK)
+        {
+            char utf8[512];
+            Utils::Utf16leToUtf8(buf, utf8, 512);
+            size_t count = _directory->Search(utf8);
+            if (count == 0)
+            {
+                gUi->SetHint(TEXT(TEXT_NOT_FOUND));
+            }
+            else
+            {
+                if (count == 1)
+                {
+                    snprintf(utf8, 512, "%s 1 %s", TEXT(TEXT_FOUND), TEXT(TEXT_FILE));
+                    gUi->SetHint(utf8);
+                }
+                else
+                {
+                    snprintf(utf8, 512, "%s %d %s", TEXT(TEXT_FOUND), count, TEXT(TEXT_FILES));
+                    gUi->SetHint(utf8);
+                }
+                _index = _directory->GetSearchResults()[0];
+                _UpdateStatus();
+            }
+        }
+
+        sceImeDialogTerm();
+    }
+}
+
+void TabBrowser::_OnKeySquare(Input *input)
+{
+    LogFunctionName;
 }

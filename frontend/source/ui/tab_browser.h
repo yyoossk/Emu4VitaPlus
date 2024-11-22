@@ -23,6 +23,8 @@ private:
     void _OnKeyRight(Input *input);
     void _OnKeyCross(Input *input);
     void _OnKeyStart(Input *input);
+    void _OnKeyTriangle(Input *input);
+    void _OnKeySquare(Input *input);
     void _UpdateTexture();
     void _UpdateStatus();
 
