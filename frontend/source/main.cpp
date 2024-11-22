@@ -22,9 +22,10 @@ int main(int argc, char *const argv[])
     LogInfo("Emu4Vita++ v%s", APP_VER_STR);
     LogInfo("updated on " __DATE__ " " __TIME__);
 
+    // must use for keeping this variables
     LogInfo("%d %d %d", sceUserMainThreadStackSize, sceLibcHeapExtendedAlloc, sceLibcHeapSize);
 
-    LogDebug("stack size: %d", sceKernelCheckThreadStack());
+    LogDebug("stack free size: %d", sceKernelCheckThreadStack());
 
     {
         App app(argc, argv);

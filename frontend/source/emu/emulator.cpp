@@ -137,8 +137,6 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
         _last_texture = nullptr;
         retro_get_system_av_info(&_av_info);
         SetupKeys();
-        // retro_set_controller_port_device(0, RETRO_DEVICE_JOYPAD);
-        // SetControllerPortDevice();
 
         SetSpeed(1.0);
         gUi->ClearLogs();
@@ -147,6 +145,7 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
         gConfig->Save();
 
         Load();
+        LogDebug("stack free size: %d", sceKernelCheckThreadStack());
         LogDebug("run first frame");
         retro_run();
         LogDebug("first frame end");
