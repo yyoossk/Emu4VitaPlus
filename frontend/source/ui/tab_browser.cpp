@@ -51,8 +51,8 @@ void TabBrowser::SetInputHooks(Input *input)
     input->SetKeyUpCallback(SCE_CTRL_RIGHT, std::bind(&TabBrowser::_OnKeyRight, this, input));
     input->SetKeyUpCallback(CancelButton, std::bind(&TabBrowser::_OnKeyCross, this, input));
     input->SetKeyUpCallback(SCE_CTRL_START, std::bind(&TabBrowser::_OnKeyStart, this, input));
-    input->SetKeyUpCallback(SCE_CTRL_TRIANGLE, std::bind(&TabBrowser::_OnKeyTriangle, this, input));
-    input->SetKeyUpCallback(SCE_CTRL_SQUARE, std::bind(&TabBrowser::_OnKeySquare, this, input));
+    // input->SetKeyUpCallback(SCE_CTRL_TRIANGLE, std::bind(&TabBrowser::_OnKeyTriangle, this, input));
+    // input->SetKeyUpCallback(SCE_CTRL_SQUARE, std::bind(&TabBrowser::_OnKeySquare, this, input));
 }
 
 void TabBrowser::UnsetInputHooks(Input *input)
@@ -62,8 +62,8 @@ void TabBrowser::UnsetInputHooks(Input *input)
     input->UnsetKeyUpCallback(SCE_CTRL_RIGHT);
     input->UnsetKeyUpCallback(CancelButton);
     input->UnsetKeyUpCallback(SCE_CTRL_START);
-    input->UnsetKeyUpCallback(SCE_CTRL_TRIANGLE);
-    input->UnsetKeyUpCallback(SCE_CTRL_SQUARE);
+    // input->UnsetKeyUpCallback(SCE_CTRL_TRIANGLE);
+    // input->UnsetKeyUpCallback(SCE_CTRL_SQUARE);
 }
 
 void TabBrowser::Show(bool selected)
@@ -347,16 +347,16 @@ void TabBrowser::_UpdateStatus()
     _status_text += EnterButton == SCE_CTRL_CIRCLE ? BUTTON_CROSS : BUTTON_CIRCLE;
     _status_text += TEXT(BROWSER_BACK_DIR);
     _status_text += "\t";
-    _status_text += BUTTON_TRIANGLE;
-    _status_text += TEXT(BROWSER_SEARCH);
-    _status_text += "\t";
+    // _status_text += BUTTON_TRIANGLE;
+    // _status_text += TEXT(BROWSER_SEARCH);
+    // _status_text += "\t";
 
-    if (_directory->GetSearchString().size() > 1)
-    {
-        _status_text += BUTTON_SQUARE;
-        _status_text += TEXT(BROWSER_NEXT);
-        _status_text += "\t";
-    }
+    // if (_directory->GetSearchString().size() > 1)
+    // {
+    //     _status_text += BUTTON_SQUARE;
+    //     _status_text += TEXT(BROWSER_NEXT);
+    //     _status_text += "\t";
+    // }
 
     if (!item.is_dir)
     {
@@ -378,69 +378,112 @@ void TabBrowser::ChangeLanguage(uint32_t language)
     _UpdateStatus();
 }
 
-void TabBrowser::_OnKeyTriangle(Input *input)
-{
-    LogFunctionName;
-    SceImeDialogParam param;
-    SceImeDialogResult result{0};
-    uint16_t buf[128];
+// void TabBrowser::_OnKeyTriangle(Input *input)
+// {
+//     LogFunctionName;
 
-    sceImeDialogParamInit(&param);
+//     SceImeParam param;
+//     param.languagesForced = SCE_FALSE;
+//     param.type = SCE_IME_DIALOG_DIALOG_MODE_DEFAULT;
+//     param.option = 0;
+//     param.filter = NULL;
+//     param.inputTextBuffer = (SceWChar16 *)_buf;
+//     param.maxTextLength = INPUT_BUF_SIZE;
+//     param.initialText = (SceWChar16 *)u"";
 
-    param.inputMethod = 0;
-    param.languagesForced = SCE_FALSE;
-    param.option = 0;
-    param.filter = NULL;
-    param.dialogMode = SCE_IME_DIALOG_DIALOG_MODE_WITH_CANCEL;
-    param.textBoxMode = SCE_IME_DIALOG_TEXTBOX_MODE_WITH_CLEAR;
-    param.supportedLanguages = 0;
-    param.type = SCE_IME_DIALOG_DIALOG_MODE_DEFAULT;
-    param.initialText = (SceWChar16 *)u"";
-    param.inputTextBuffer = (SceWChar16 *)buf;
-    param.title = (const SceWChar16 *)u"Search";
-    param.maxTextLength = 128;
-    param.enterLabel = SCE_IME_ENTER_LABEL_SEARCH;
+//     sceImeParamInit(&param);
 
-    sceImeDialogInit(&param);
-    while (sceImeDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED)
-    {
-        sceKernelDelayThread(200000);
-    }
+//     SceImeDialogParam param;
+//     SceImeDialogResult result{0};
+//     uint16_t buf[128];
 
-    if (sceImeDialogGetResult(&result) == SCE_OK)
-    {
-        LogDebug("  result:%d button:%d", result.result, result.button);
-        if (result.result == SCE_COMMON_DIALOG_RESULT_OK)
-        {
-            char utf8[512];
-            Utils::Utf16leToUtf8(buf, utf8, 512);
-            size_t count = _directory->Search(utf8);
-            if (count == 0)
-            {
-                gUi->SetHint(TEXT(TEXT_NOT_FOUND));
-            }
-            else
-            {
-                if (count == 1)
-                {
-                    snprintf(utf8, 512, "%s 1 %s", TEXT(TEXT_FOUND), TEXT(TEXT_FILE));
-                    gUi->SetHint(utf8);
-                }
-                else
-                {
-                    snprintf(utf8, 512, "%s %d %s", TEXT(TEXT_FOUND), count, TEXT(TEXT_FILES));
-                    gUi->SetHint(utf8);
-                }
-                _index = _directory->GetSearchResults()[0];
-                _UpdateStatus();
-            }
-        }
+//     // gVideo->Lock();
 
-        sceImeDialogTerm();
-    }
-}
+//     sceImeDialogParamInit(&param);
 
-void TabBrowser::_OnKeySquare(Input *input)
-{
-    LogFunctionName;
-}
+//     param.inputMethod = 0;
+//     param.languagesForced = SCE_FALSE;
+//     param.option = 0;
+//     param.filter = NULL;
+//     param.dialogMode = SCE_IME_DIALOG_DIALOG_MODE_WITH_CANCEL;
+//     param.textBoxMode = SCE_IME_DIALOG_TEXTBOX_MODE_WITH_CLEAR;
+//     param.supportedLanguages = 0;
+//     param.type = SCE_IME_DIALOG_DIALOG_MODE_DEFAULT;
+//     param.initialText = (SceWChar16 *)u"";
+//     param.inputTextBuffer = (SceWChar16 *)buf;
+//     param.title = (const SceWChar16 *)u"Search";
+//     param.maxTextLength = 128;
+//     param.enterLabel = SCE_IME_ENTER_LABEL_SEARCH;
+
+//     if (sceImeDialogInit(&param) != SCE_OK)
+//     {
+//         goto END;
+//     }
+
+//     while (sceImeDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED)
+//     {
+//         sceKernelDelayThread(200000);
+//     }
+
+//     if (sceImeDialogGetResult(&result) == SCE_OK)
+//     {
+//         LogDebug("  result:%d button:%d", result.result, result.button);
+//         if (result.result == SCE_COMMON_DIALOG_RESULT_OK)
+//         {
+//             char utf8[512];
+//             Utils::Utf16leToUtf8(buf, utf8, 512);
+
+//             size_t count = _directory->Search(utf8);
+//             if (count == 0)
+//             {
+//                 gUi->SetHint(TEXT(TEXT_NOT_FOUND));
+//             }
+//             else if (count == 1)
+//             {
+
+//                 snprintf(utf8, 512, "%s 1 %s", TEXT(TEXT_FOUND), TEXT(TEXT_FILE));
+//                 gUi->SetHint(utf8);
+//             }
+//             else
+//             {
+//                 snprintf(utf8, 512, "%s %d %s", TEXT(TEXT_FOUND), count, TEXT(TEXT_FILES));
+//                 gUi->SetHint(utf8);
+//             }
+
+//             _OnKeySquare(input);
+//             _UpdateStatus();
+//         }
+//     }
+
+//     sceImeDialogTerm();
+
+// END:
+//     return;
+//     // gVideo->Unlock();
+// }
+
+// void TabBrowser::_OnKeySquare(Input *input)
+// {
+//     LogFunctionName;
+
+//     auto results = _directory->GetSearchResults();
+//     if (results.size() == 0)
+//     {
+//         return;
+//     }
+//     else if (results.size() == 1)
+//     {
+//         _index = results[0];
+//     }
+//     else
+//     {
+//         for (const auto &r : results)
+//         {
+//             if (r > _index)
+//             {
+//                 _index = r;
+//                 break;
+//             }
+//         }
+//     }
+// }
