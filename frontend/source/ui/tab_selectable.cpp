@@ -67,35 +67,36 @@ void TabSeletable::Show(bool selected)
             }
         }
 
-        ImGui::BeginChild(TEXT(_title_id), size);
-        ImGui::Columns(_columns, NULL, false);
-        if (_columns == 2 && _column_ratio > 0)
+        if (ImGui::BeginChild(TEXT(_title_id), size))
         {
-            ImGui::SetColumnOffset(1, avail_width * _column_ratio);
-        }
-
-        size_t total = _GetItemCount();
-        ImGui::PushStyleColor(ImGuiCol_PopupBg, IM_COL32(36, 36, 36, 255));
-        for (size_t i = 0; i < total; i++)
-        {
-            if (ItemVisable(i))
+            ImGui::Columns(_columns, NULL, false);
+            if (_columns == 2 && _column_ratio > 0)
             {
-                _ShowItem(i, i == _index);
-                if (i == _index && ImGui::GetScrollMaxY() > 0.f)
+                ImGui::SetColumnOffset(1, avail_width * _column_ratio);
+            }
+
+            size_t total = _GetItemCount();
+            ImGui::PushStyleColor(ImGuiCol_PopupBg, IM_COL32(36, 36, 36, 255));
+            for (size_t i = 0; i < total; i++)
+            {
+                if (ItemVisable(i))
                 {
-                    ImGui::SetScrollHereY((float)_index / (float)total);
+                    _ShowItem(i, i == _index);
+                    if (i == _index && ImGui::GetScrollMaxY() > 0.f)
+                    {
+                        ImGui::SetScrollHereY((float)_index / (float)total);
+                    }
+                    ImGui::NextColumn();
                 }
-                ImGui::NextColumn();
+                else if (i == _index)
+                {
+                    LOOP_PLUS_ONE(_index, total);
+                }
             }
-            else if (i == _index)
-            {
-                LOOP_PLUS_ONE(_index, total);
-            }
+            ImGui::PopStyleColor();
+            ImGui::Columns(1);
+            ImGui::EndChild();
         }
-        ImGui::PopStyleColor();
-        ImGui::Columns(1);
-        ImGui::EndChild();
-
         if (_status_text.size() > 0)
         {
             ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));

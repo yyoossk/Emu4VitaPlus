@@ -47,50 +47,54 @@ void TabFavorite::Show(bool selected)
         ImVec2 s = ImGui::CalcTextSize(_status_text.c_str());
         size.y = -s.y * (s.x / ImGui::GetContentRegionAvailWidth() + 1);
 
-        ImGui::BeginChild(TEXT(_title_id), size);
-        ImGui::Columns(2, NULL, false);
-
-        auto iter = gFavorites->begin();
-        std::advance(iter, _index);
-        ImGui::Text(iter->second.path.c_str());
-
-        size_t count = 0;
-        const float total = gFavorites->size();
-        ImGui::ListBoxHeader("", ImGui::GetContentRegionAvail());
-        ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
-        for (const auto &fav : *gFavorites)
+        if (ImGui::BeginChild(TEXT(_title_id), size))
         {
-            if (count == _index)
+            ImGui::Columns(2, NULL, false);
+
+            auto iter = gFavorites->begin();
+            std::advance(iter, _index);
+            ImGui::Text(iter->second.path.c_str());
+
+            size_t count = 0;
+            const float total = gFavorites->size();
+            if (ImGui::ListBoxHeader("", ImGui::GetContentRegionAvail()))
             {
-                My_Imgui_Selectable(fav.second.item.name.c_str(), true, &_moving_status);
-            }
-            else
-            {
-                ImGui::Selectable(fav.second.item.name.c_str());
+                ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
+                for (const auto &fav : *gFavorites)
+                {
+                    if (count == _index)
+                    {
+                        My_Imgui_Selectable(fav.second.item.name.c_str(), true, &_moving_status);
+                    }
+                    else
+                    {
+                        ImGui::Selectable(fav.second.item.name.c_str());
+                    }
+
+                    if (count == _index && ImGui::GetScrollMaxY() > 0.f)
+                    {
+                        ImGui::SetScrollHereY((float)_index / total);
+                    }
+                    count++;
+                }
+                ImGui::PopStyleColor();
+                ImGui::ListBoxFooter();
             }
 
-            if (count == _index && ImGui::GetScrollMaxY() > 0.f)
+            ImGui::NextColumn();
+            if (_texture != nullptr)
             {
-                ImGui::SetScrollHereY((float)_index / total);
+                ImVec2 avail_size = ImGui::GetContentRegionAvail();
+                ImVec2 pos = ImGui::GetCursorScreenPos();
+                pos.x += ceilf(fmax(0.0f, (avail_size.x - _texture_width) * 0.5f));
+                pos.y += ceilf(fmax(0.0f, (avail_size.y - _texture_height) * 0.5f));
+                ImGui::SetCursorScreenPos(pos);
+                ImGui::Image(_texture, {_texture_width, _texture_height});
             }
-            count++;
+
+            ImGui::NextColumn();
+            ImGui::EndChild();
         }
-        ImGui::PopStyleColor();
-        ImGui::ListBoxFooter();
-
-        ImGui::NextColumn();
-        if (_texture != nullptr)
-        {
-            ImVec2 avail_size = ImGui::GetContentRegionAvail();
-            ImVec2 pos = ImGui::GetCursorScreenPos();
-            pos.x += ceilf(fmax(0.0f, (avail_size.x - _texture_width) * 0.5f));
-            pos.y += ceilf(fmax(0.0f, (avail_size.y - _texture_height) * 0.5f));
-            ImGui::SetCursorScreenPos(pos);
-            ImGui::Image(_texture, {_texture_width, _texture_height});
-        }
-
-        ImGui::NextColumn();
-        ImGui::EndChild();
 
         ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0xcc, 0xcc, 0xcc, 255));
         ImGui::TextWrapped(_status_text.c_str());

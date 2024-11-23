@@ -306,7 +306,8 @@ else ifeq ($(platform), vita)
    CFLAGS += -marm -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard \
 -mword-relocations -fno-optimize-sibling-calls -fsingle-precision-constant \
 -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables \
--ffast-math -ftree-vectorize
+-ffast-math -ftree-vectorize -funroll-loops -fno-short-enums
+   CXXFLAGS += $(CFLAGS)
 
 # CTR(3DS)
 else ifeq ($(platform), ctr)

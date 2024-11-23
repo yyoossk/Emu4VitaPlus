@@ -58,18 +58,19 @@ void TabAbout::Show(bool selected)
                          {1, (_title_index + 1) / TITLE_COUNT});
         }
 
-        ImGui::BeginChild("ChildAbout", {0, 0}, false, window_flags);
-
-        for (size_t i = 0; i < _texts.size(); i++)
+        if (ImGui::BeginChild("ChildAbout", {0, 0}, false, window_flags))
         {
-            My_Imgui_CenteredText(_texts[i].c_str());
-            if (i == _index && ImGui::GetScrollMaxY() > 0.f)
+            for (size_t i = 0; i < _texts.size(); i++)
             {
-                ImGui::SetScrollHereY((float)_index / _texts.size());
+                My_Imgui_CenteredText(_texts[i].c_str());
+                if (i == _index && ImGui::GetScrollMaxY() > 0.f)
+                {
+                    ImGui::SetScrollHereY((float)_index / _texts.size());
+                }
             }
-        }
 
-        ImGui::EndChild();
+            ImGui::EndChild();
+        }
         ImGui::EndTabItem();
     }
 }

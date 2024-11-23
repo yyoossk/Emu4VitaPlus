@@ -49,4 +49,17 @@ void Profiler::EndBlock(const std::string &name)
         block->next_log_time = now + _log_interval;
     }
 }
+
+extern "C"
+{
+    void StartProfile(const char *name)
+    {
+        gProfiler->BeginBlock(name);
+    }
+
+    void StopProfile(const char *name)
+    {
+        gProfiler->EndBlock(name);
+    }
+}
 #endif
