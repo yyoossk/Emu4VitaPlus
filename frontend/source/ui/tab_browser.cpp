@@ -78,80 +78,82 @@ void TabBrowser::Show(bool selected)
             size.y = -s.y * (s.x / ImGui::GetContentRegionAvailWidth() + 1);
         }
 
-        ImGui::BeginChild(TEXT(_title_id), size);
-        ImGui::Columns(2, NULL, false);
+        if (ImGui::BeginChild(TEXT(_title_id), size))
+        {
+            ImGui::Columns(2, NULL, false);
 
-        std::string current_path = _directory->GetCurrentPath();
-        if (_directory->GetSearchString().size() > 0 && _directory->GetSearchResults().size() > 0)
-        {
-            current_path += std::string(" " ICON_SERACH) + _directory->GetSearchString();
-        }
-        ImGui::Text(current_path.c_str());
-        if (ImGui::ListBoxHeader("", ImGui::GetContentRegionAvail()))
-        {
-            if (_in_refreshing)
+            std::string current_path = _directory->GetCurrentPath();
+            if (_directory->GetSearchString().size() > 0 && _directory->GetSearchResults().size() > 0)
             {
-                _spin_text.Show();
+                current_path += std::string(" " ICON_SERACH) + _directory->GetSearchString();
             }
-            else
+            ImGui::Text(current_path.c_str());
+            if (ImGui::ListBoxHeader("", ImGui::GetContentRegionAvail()))
             {
-                for (size_t i = 0; i < _directory->GetSize(); i++)
+                if (_in_refreshing)
                 {
-                    const DirItem &item = _directory->GetItem(i);
-
-                    std::string name(item.name);
-                    if (!item.is_dir)
+                    _spin_text.Show();
+                }
+                else
+                {
+                    for (size_t i = 0; i < _directory->GetSize(); i++)
                     {
+                        const DirItem &item = _directory->GetItem(i);
 
-                        ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
-                    }
+                        std::string name(item.name);
+                        if (!item.is_dir)
+                        {
 
-                    if (gFavorites->find(name) != gFavorites->end())
-                    {
-                        name.insert(0, ICON_EMPTY_STAR_SPACE);
-                    }
+                            ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
+                        }
 
-                    if (i == _index)
-                    {
-                        My_Imgui_Selectable(name.c_str(), true, &_moving_status);
-                    }
-                    else
-                    {
-                        ImGui::Selectable(name.c_str());
-                    }
+                        if (gFavorites->find(name) != gFavorites->end())
+                        {
+                            name.insert(0, ICON_EMPTY_STAR_SPACE);
+                        }
 
-                    if (!item.is_dir)
-                    {
-                        ImGui::PopStyleColor();
-                    }
+                        if (i == _index)
+                        {
+                            My_Imgui_Selectable(name.c_str(), true, &_moving_status);
+                        }
+                        else
+                        {
+                            ImGui::Selectable(name.c_str());
+                        }
 
-                    if (i == _index && ImGui::GetScrollMaxY() > 0.f)
-                    {
-                        ImGui::SetScrollHereY((float)_index / (float)_directory->GetSize());
+                        if (!item.is_dir)
+                        {
+                            ImGui::PopStyleColor();
+                        }
+
+                        if (i == _index && ImGui::GetScrollMaxY() > 0.f)
+                        {
+                            ImGui::SetScrollHereY((float)_index / (float)_directory->GetSize());
+                        }
                     }
                 }
+
+                ImGui::ListBoxFooter();
+            }
+            ImGui::NextColumn();
+            ImVec2 avail_size = ImGui::GetContentRegionAvail();
+            _texture_max_width = avail_size.x;
+            _texture_max_height = avail_size.y;
+
+            if (_texture != nullptr)
+            {
+                ImVec2 pos = ImGui::GetCursorScreenPos();
+                pos.x += ceilf(fmax(0.0f, (avail_size.x - _texture_width) * 0.5f));
+                pos.y += ceilf(fmax(0.0f, (avail_size.y - _texture_height) * 0.5f));
+                ImGui::SetCursorScreenPos(pos);
+                ImGui::Image(_texture, {_texture_width, _texture_height});
             }
 
-            ImGui::ListBoxFooter();
+            ImGui::NextColumn();
+
+            ImGui::Columns(1);
+            ImGui::EndChild();
         }
-        ImGui::NextColumn();
-        ImVec2 avail_size = ImGui::GetContentRegionAvail();
-        _texture_max_width = avail_size.x;
-        _texture_max_height = avail_size.y;
-
-        if (_texture != nullptr)
-        {
-            ImVec2 pos = ImGui::GetCursorScreenPos();
-            pos.x += ceilf(fmax(0.0f, (avail_size.x - _texture_width) * 0.5f));
-            pos.y += ceilf(fmax(0.0f, (avail_size.y - _texture_height) * 0.5f));
-            ImGui::SetCursorScreenPos(pos);
-            ImGui::Image(_texture, {_texture_width, _texture_height});
-        }
-
-        ImGui::NextColumn();
-
-        ImGui::Columns(1);
-        ImGui::EndChild();
 
         if (_status_text.size() > 0)
         {
