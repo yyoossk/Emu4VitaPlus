@@ -4,6 +4,12 @@
 #include <psp2/kernel/sysmem.h>
 #include <psp2/kernel/threadmgr.h>
 
+#ifdef SCE_LIBC_SIZE
+#define RAM_THRESHOLD 0x2000000 + SCE_LIBC_SIZE
+#else
+#define RAM_THRESHOLD 0x2000000
+#endif
+
 int _newlib_heap_memblock;
 unsigned _newlib_heap_size;
 char *_newlib_heap_base, *_newlib_heap_end, *_newlib_heap_cur;

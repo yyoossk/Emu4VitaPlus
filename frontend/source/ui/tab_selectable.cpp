@@ -95,9 +95,9 @@ void TabSeletable::Show(bool selected)
             }
             ImGui::PopStyleColor();
             ImGui::Columns(1);
-            ImGui::EndChild();
         }
 
+        ImGui::EndChild();
         if (_status_text.size() > 0)
         {
             ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));

@@ -68,9 +68,9 @@ void TabAbout::Show(bool selected)
                     ImGui::SetScrollHereY((float)_index / _texts.size());
                 }
             }
-
-            ImGui::EndChild();
         }
+
+        ImGui::EndChild();
         ImGui::EndTabItem();
     }
 }

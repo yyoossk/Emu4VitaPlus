@@ -23,7 +23,9 @@ int main(int argc, char *const argv[])
     LogInfo("updated on " __DATE__ " " __TIME__);
 
     // must use for keeping this variables
-    LogInfo("%d %d %d", sceUserMainThreadStackSize, sceLibcHeapExtendedAlloc, sceLibcHeapSize);
+    LogInfo("%d", sceUserMainThreadStackSize);
+    LogInfo("%d", sceLibcHeapExtendedAlloc);
+    LogInfo("%d", sceLibcHeapSize);
 
     LogDebug("stack free size: %d", sceKernelCheckThreadStack());
 

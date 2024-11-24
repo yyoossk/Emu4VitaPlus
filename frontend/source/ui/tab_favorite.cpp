@@ -93,9 +93,9 @@ void TabFavorite::Show(bool selected)
             }
 
             ImGui::NextColumn();
-            ImGui::EndChild();
         }
 
+        ImGui::EndChild();
         ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0xcc, 0xcc, 0xcc, 255));
         ImGui::TextWrapped(_status_text.c_str());
         ImGui::PopStyleColor();

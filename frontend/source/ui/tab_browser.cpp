@@ -152,8 +152,9 @@ void TabBrowser::Show(bool selected)
             ImGui::NextColumn();
 
             ImGui::Columns(1);
-            ImGui::EndChild();
         }
+
+        ImGui::EndChild();
 
         if (_status_text.size() > 0)
         {

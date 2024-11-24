@@ -447,10 +447,12 @@ void Emulator::Save()
         File::MakeDirs(path.c_str());
     }
 
+    Lock();
     for (auto id : RETRO_MEMORY_IDS)
     {
         void *data = NULL;
         size_t size = retro_get_memory_size(id);
+        LogDebug("  %d %d", id, size);
         if (size > 0)
         {
             data = retro_get_memory_data(id);
@@ -470,6 +472,7 @@ void Emulator::Save()
             LogDebug("%s saved", _SaveNamePath(id).c_str());
         }
     }
+    Unlock();
 }
 
 void Emulator::Load()
