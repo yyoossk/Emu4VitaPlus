@@ -33,3 +33,20 @@ private:
     size_t _index;
     bool _actived;
 };
+
+class InputTextDialog
+{
+public:
+    InputTextDialog(const char *title, const char *initial_text = "");
+    virtual ~InputTextDialog();
+
+    bool Init();
+    bool GetStatus();
+    const char *GetInput() { return _utf8; };
+
+private:
+    uint16_t _title[SCE_IME_DIALOG_MAX_TITLE_LENGTH];
+    uint16_t _text[SCE_IME_DIALOG_MAX_TITLE_LENGTH];
+    uint16_t _input[SCE_IME_DIALOG_MAX_TITLE_LENGTH];
+    char _utf8[SCE_IME_DIALOG_MAX_TITLE_LENGTH];
+};

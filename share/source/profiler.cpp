@@ -1,5 +1,6 @@
 #include <psp2/kernel/threadmgr.h>
 #include "profiler.h"
+#include "log.h"
 
 #if LOG_LEVEL <= LOG_LEVEL_DEBUG
 Profiler *gProfiler;

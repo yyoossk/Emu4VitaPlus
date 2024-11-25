@@ -2,7 +2,6 @@
 #include <unordered_map>
 #include <string>
 #include <stdint.h>
-#include "log.h"
 
 #if LOG_LEVEL <= LOG_LEVEL_DEBUG
 

@@ -120,3 +120,48 @@ void Dialog::_OnCancel(Input *input)
     input->PopCallbacks();
     gVideo->Unlock();
 }
+
+InputTextDialog::InputTextDialog(const char *title, const char *initial_text)
+{
+    Utils::Utf8ToUtf16(title, _title, SCE_IME_DIALOG_MAX_TITLE_LENGTH - 1);
+    Utils::Utf8ToUtf16(initial_text, _text, SCE_IME_DIALOG_MAX_TITLE_LENGTH - 1);
+    *_utf8 = 0;
+}
+
+InputTextDialog::~InputTextDialog()
+{
+    sceImeDialogTerm();
+}
+
+bool InputTextDialog::Init()
+{
+    SceImeDialogParam param;
+    sceImeDialogParamInit(&param);
+
+    param.supportedLanguages = 0x0001FFFF;
+    param.languagesForced = SCE_FALSE;
+    param.type = SCE_IME_TYPE_DEFAULT;
+    param.option = 0;
+    param.title = _title;
+    param.maxTextLength = SCE_IME_DIALOG_MAX_TITLE_LENGTH;
+    param.initialText = _text;
+    param.inputTextBuffer = _input;
+
+    return sceImeDialogInit(&param) == SCE_OK;
+}
+
+bool InputTextDialog::GetStatus()
+{
+    SceCommonDialogStatus status = sceImeDialogGetStatus();
+    if (status == SCE_COMMON_DIALOG_STATUS_FINISHED)
+    {
+        SceImeDialogResult result{0};
+        sceImeDialogGetResult(&result);
+        if (result.button == SCE_IME_DIALOG_BUTTON_ENTER)
+        {
+            Utils::Utf16ToUtf8(_input, _utf8, SCE_IME_DIALOG_MAX_TITLE_LENGTH - 1);
+        }
+        return true;
+    }
+    return false;
+}

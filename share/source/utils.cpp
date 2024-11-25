@@ -75,19 +75,125 @@ namespace Utils
         return utf8_str;
     }
 
-    int Utf16leToUtf8(uint16_t *utf16_str, char *utf8_str, size_t utf8_size)
+    int Utf16ToUtf8(const uint16_t *utf16, char *utf8, size_t size)
     {
-        char *p = utf8_str;
-        char utf8_char[4];
-
-        while (*utf16_str && p - utf8_str < utf8_size)
+        int count = 0;
+        while (*utf16)
         {
-            char utf8_char[4];
-            int bytes = Utf16leToUtf8(*utf16_str++, utf8_char);
-            memcpy(p, utf8_char, bytes);
-            p += bytes;
+            uint32_t code;
+            uint16_t ch = *utf16++;
+            if (ch < 0xd800 || ch >= 0xe000)
+            {
+                code = ch;
+            }
+            else // surrogate pair
+            {
+                uint16_t ch2 = *utf16++;
+                if (ch < 0xdc00 || ch > 0xe000 || ch2 < 0xd800 || ch2 > 0xdc00)
+                {
+                    return count;
+                }
+                code = 0x10000 + ((ch & 0x03FF) << 10) + (ch2 & 0x03FF);
+            }
+
+            if (code < 0x80)
+            {
+                if (size < 1)
+                    return count;
+                utf8[count++] = (char)code;
+                size--;
+            }
+            else if (code < 0x800)
+            {
+                if (size < 2)
+                    return count;
+                utf8[count++] = (char)(0xc0 | (code >> 6));
+                utf8[count++] = (char)(0x80 | (code & 0x3f));
+                size -= 2;
+            }
+            else if (code < 0x10000)
+            {
+                if (size < 3)
+                    return count;
+                utf8[count++] = (char)(0xe0 | (code >> 12));
+                utf8[count++] = (char)(0x80 | ((code >> 6) & 0x3f));
+                utf8[count++] = (char)(0x80 | (code & 0x3f));
+                size -= 3;
+            }
+            else
+            {
+                if (size < 4)
+                    return count;
+                utf8[count++] = (char)(0xf0 | (code >> 18));
+                utf8[count++] = (char)(0x80 | ((code >> 12) & 0x3f));
+                utf8[count++] = (char)(0x80 | ((code >> 6) & 0x3f));
+                utf8[count++] = (char)(0x80 | (code & 0x3f));
+                size -= 4;
+            }
         }
-        *p = 0;
-        return p - utf8_str;
+        utf8[count] = '\x00';
+        return count;
+    }
+
+    int Utf8ToUtf16(const char *utf8, uint16_t *utf16, size_t size)
+    {
+        int count = 0;
+        while (*utf8)
+        {
+            uint8_t ch = (uint8_t)*utf8++;
+            uint32_t code;
+            uint32_t extra;
+
+            if (ch < 0x80)
+            {
+                code = ch;
+                extra = 0;
+            }
+            else if ((ch & 0xe0) == 0xc0)
+            {
+                code = ch & 31;
+                extra = 1;
+            }
+            else if ((ch & 0xf0) == 0xe0)
+            {
+                code = ch & 15;
+                extra = 2;
+            }
+            else
+            {
+                // TODO: this assumes there won't be invalid utf8 codepoints
+                code = ch & 7;
+                extra = 3;
+            }
+
+            for (uint32_t i = 0; i < extra; i++)
+            {
+                uint8_t next = (uint8_t)*utf8++;
+                if (next == 0 || (next & 0xc0) != 0x80)
+                {
+                    return count;
+                }
+                code = (code << 6) | (next & 0x3f);
+            }
+
+            if (code < 0xd800 || code >= 0xe000)
+            {
+                if (size < 1)
+                    return count;
+                utf16[count++] = (uint16_t)code;
+                size--;
+            }
+            else // surrogate pair
+            {
+                if (size < 2)
+                    return count;
+                code -= 0x10000;
+                utf16[count++] = 0xd800 | (code >> 10);
+                utf16[count++] = 0xdc00 | (code & 0x3ff);
+                size -= 2;
+            }
+        }
+        utf16[count] = 0;
+        return count;
     }
 };

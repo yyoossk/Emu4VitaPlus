@@ -99,7 +99,7 @@ const char *ArchiveReader7z::GetCurrentName()
     uint16_t tmp[SCE_FIOS_PATH_MAX];
     static char name[SCE_FIOS_PATH_MAX];
     SzArEx_GetFileNameUtf16(&_db, _index, tmp);
-    Utils::Utf16leToUtf8(tmp, name, SCE_FIOS_PATH_MAX);
+    Utils::Utf16ToUtf8(tmp, name, SCE_FIOS_PATH_MAX);
     return name;
 }
 
