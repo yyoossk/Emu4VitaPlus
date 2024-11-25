@@ -130,11 +130,14 @@ InputTextDialog::InputTextDialog(const char *title, const char *initial_text)
 
 InputTextDialog::~InputTextDialog()
 {
+    LogFunctionName;
     sceImeDialogTerm();
 }
 
 bool InputTextDialog::Init()
 {
+    LogFunctionName;
+
     SceImeDialogParam param;
     sceImeDialogParamInit(&param);
 
@@ -147,7 +150,13 @@ bool InputTextDialog::Init()
     param.initialText = _text;
     param.inputTextBuffer = _input;
 
-    return sceImeDialogInit(&param) == SCE_OK;
+    int32_t result = sceImeDialogInit(&param);
+
+    if (result != SCE_OK)
+    {
+        LogWarn("init InputTextDialog failed: %08x", result);
+    }
+    return result == SCE_OK;
 }
 
 bool InputTextDialog::GetStatus()

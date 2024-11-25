@@ -1,6 +1,7 @@
 #pragma once
 #include "tab_selectable.h"
 #include "directory.h"
+#include "dialog.h"
 
 class TabBrowser : public TabSeletable
 {
@@ -23,10 +24,11 @@ private:
     void _OnKeyRight(Input *input);
     void _OnKeyCross(Input *input);
     void _OnKeyStart(Input *input);
-    // void _OnKeyTriangle(Input *input);
-    // void _OnKeySquare(Input *input);
+    void _OnKeyTriangle(Input *input);
+    void _OnKeySquare(Input *input);
     void _UpdateTexture();
     void _UpdateStatus();
+    void _Search(const char *s);
 
     Directory *_directory;
     vita2d_texture *_texture;
@@ -37,4 +39,6 @@ private:
 
     My_Imgui_SpinText _spin_text;
     bool _in_refreshing;
+    InputTextDialog *_text_dialog;
+    Input *_input;
 };
