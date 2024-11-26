@@ -7,7 +7,8 @@ Touch::Touch(SceTouchPortType port)
     : _port(port),
       _enabled(false),
       _x_scale(1.f),
-      _y_scale(1.f)
+      _y_scale(1.f),
+      _down_count(0)
 {
     LogFunctionName;
 
@@ -60,10 +61,37 @@ void Touch::Poll()
 
         _last_id = _current_id;
         _current_id = touch_data.report->id;
-        _last_axis.x = _axis.x;
-        _last_axis.y = _axis.y;
-        _axis.x = touch_data.report->x >> 1;
-        _axis.y = touch_data.report->y >> 1;
+        _last_axis = _org_axis;
+        _org_axis.x = touch_data.report->x;
+        _org_axis.y = touch_data.report->y;
+        _axis.x = _org_axis.x >> 1;
+        _axis.y = _org_axis.y >> 1;
+    }
+}
+
+TouchState Touch::GetState()
+{
+    if (_last_id == _current_id)
+    {
+        if (_org_axis == _last_axis)
+        {
+            if (_down_count < 10)
+            {
+                _down_count++;
+                return TouchDown;
+            }
+            return TouchNone;
+        }
+        else
+        {
+            _down_count = 0;
+            return TouchDown;
+        }
+    }
+    else
+    {
+        _down_count = 0;
+        return TouchUp;
     }
 }
 

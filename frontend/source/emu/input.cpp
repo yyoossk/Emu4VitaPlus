@@ -45,10 +45,11 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
 int16_t Emulator::_GetJoypadState(unsigned index, unsigned id)
 {
     uint32_t key_states = _input.GetKeyStates();
-    if (gConfig->sim_button & _input.GetRearTouch()->IsPressed())
+    auto touch = _input.GetRearTouch();
+    if (gConfig->sim_button & touch->GetState() == TouchDown)
     {
-        const auto axis = _input.GetRearTouch()->GetAxis();
-        const auto center = _input.GetRearTouch()->GetCenter();
+        const auto axis = touch->GetAxis();
+        const auto center = touch->GetCenter();
         static const uint32_t button_map[] = {SCE_CTRL_L2, SCE_CTRL_R2, SCE_CTRL_L3, SCE_CTRL_L3};
         int flag = (axis.y < center.y ? 0 : 2) | (axis.x < center.x ? 0 : 1);
         key_states |= button_map[flag];
@@ -154,7 +155,7 @@ int16_t Emulator::_GetLightGunState(unsigned index, unsigned id)
     switch (id)
     {
     case RETRO_DEVICE_ID_LIGHTGUN_TRIGGER:
-        return front->IsPressed() ? 1 : 0;
+        return front->GetState() == TouchUp ? 1 : 0;
 
     case RETRO_DEVICE_ID_LIGHTGUN_AUX_A:
         return (_input.GetKeyStates() & _keys[RETRO_DEVICE_ID_JOYPAD_A]) ? 1 : 0;
@@ -180,7 +181,7 @@ int16_t Emulator::_GetLightGunState(unsigned index, unsigned id)
     case RETRO_DEVICE_ID_LIGHTGUN_RELOAD:
     {
         const TouchAxis &axis = front->GetAxis();
-        return (!_video_rect.Contains(axis.x, axis.y)) && front->IsPressed();
+        return (!_video_rect.Contains(axis.x, axis.y)) && front->GetState() == TouchUp;
     }
 
     default:
@@ -207,10 +208,10 @@ int16_t Emulator::_GetPointerState(unsigned index, unsigned id)
         return front->GetMapedY(_video_rect);
 
     case RETRO_DEVICE_ID_POINTER_PRESSED:
-        return front->IsPressed() ? 1 : 0;
+        return front->GetState() == TouchDown ? 1 : 0;
 
     case RETRO_DEVICE_ID_POINTER_COUNT:
-        return front->GetCount();
+        return front->GetId();
 
     default:
         break;

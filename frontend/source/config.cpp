@@ -149,7 +149,7 @@ namespace Emu4Vita
         mute = DEFAULT_MUTE;
         auto_save = DEFAULT_AUTO_SAVE;
         swap_enter = false;
-        sim_button = true;
+        sim_button = false;
 
         int sys_lang;
         sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &sys_lang);
@@ -291,7 +291,7 @@ namespace Emu4Vita
         mouse = ini.GetLongValue(MAIN_SECTION, "mouse", DEFAULT_MOUSE);
         lightgun = ini.GetBoolValue(MAIN_SECTION, "lightgun", DEFAULT_LIGHTGUN);
         swap_enter = ini.GetBoolValue(MAIN_SECTION, "swap_enter", false);
-        sim_button = ini.GetBoolValue(MAIN_SECTION, "sim_button", true);
+        sim_button = ini.GetBoolValue(MAIN_SECTION, "sim_button", false);
 
         tmp = ini.GetValue(MAIN_SECTION, "last_rom");
         if (tmp && File::Exist(tmp))
@@ -348,6 +348,6 @@ namespace Emu4Vita
 
     bool Config::RearEnabled()
     {
-        return mouse == CONFIG_MOUSE_REAR;
+        return mouse == CONFIG_MOUSE_REAR || sim_button;
     }
 }

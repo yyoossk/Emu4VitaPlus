@@ -9,6 +9,20 @@ struct TouchAxis
 {
     int16_t x;
     int16_t y;
+    inline bool operator==(const TouchAxis &axis) const { return x == axis.x && y == axis.y; };
+    inline TouchAxis &operator=(const TouchAxis &axis)
+    {
+        x = axis.x;
+        y = axis.y;
+        return *this;
+    };
+};
+
+enum TouchState
+{
+    TouchNone,
+    TouchDown,
+    TouchUp,
 };
 
 class Touch
@@ -20,14 +34,14 @@ public:
     void Enable(bool enable);
     bool IsEnabled() const { return _enabled; };
     void Poll();
-    const bool IsPressed() const { return _last_id != _current_id; };
-    int16_t GetCount() const { return _current_id; };
+    TouchState GetState();
+    int16_t GetId() const { return _current_id; };
     const TouchAxis &GetAxis() const { return _axis; };
     const TouchAxis &GetCenter() const { return _center; };
     const SceTouchPanelInfo &GetInfo() const { return _info[_port]; };
     void InitMovingScale(float xscale, float yscale);
-    const int16_t GetRelativeMovingX() { return _GetRelativeMoving(&_scale_map_table_x, _axis.x - _last_axis.x); };
-    const int16_t GetRelativeMovingY() { return _GetRelativeMoving(&_scale_map_table_y, _axis.y - _last_axis.y); };
+    const int16_t GetRelativeMovingX() { return _GetRelativeMoving(&_scale_map_table_x, _axis.x - (_last_axis.x >> 1)); };
+    const int16_t GetRelativeMovingY() { return _GetRelativeMoving(&_scale_map_table_y, _axis.y - (_last_axis.y >> 1)); };
 
     template <typename T>
     void InitMapTable(const Rect<T> &rect)
@@ -107,12 +121,14 @@ private:
     static SceTouchPanelInfo _info[2];
     TouchAxis _last_axis;
     TouchAxis _axis;
+    TouchAxis _org_axis;
     TouchAxis _center;
     uint8_t _last_id;
     uint8_t _current_id;
     SceTouchPortType _port;
     float _x_scale;
     float _y_scale;
+    size_t _down_count;
 
     // map to retro's coordinate system
     // -0x7fff to 0x7fff

@@ -447,7 +447,6 @@ void Emulator::Save()
         File::MakeDirs(path.c_str());
     }
 
-    Lock();
     for (auto id : RETRO_MEMORY_IDS)
     {
         void *data = NULL;
@@ -472,7 +471,6 @@ void Emulator::Save()
             LogDebug("%s saved", _SaveNamePath(id).c_str());
         }
     }
-    Unlock();
 }
 
 void Emulator::Load()
