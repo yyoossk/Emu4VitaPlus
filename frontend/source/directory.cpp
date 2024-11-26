@@ -111,6 +111,8 @@ bool Directory::SetCurrentPath(const std::string &path)
     LogFunctionName;
     LogDebug("  path: %s", path.c_str());
 
+    _search_results.clear();
+
     if (path.size() == 0)
     {
         return _ToRoot();

@@ -38,7 +38,7 @@ class My_Imgui_SpinText
 public:
     My_Imgui_SpinText(uint64_t interval_ms = 200000, ImU32 color = IM_COL32_GREEN);
     virtual ~My_Imgui_SpinText();
-    void Show(bool show_text = true);
+    void Show();
 
 private:
     inline void _Update();

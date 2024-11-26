@@ -114,14 +114,21 @@ void TabBrowser::Show(bool selected)
                 }
                 else
                 {
+                    auto search_results = _directory->GetSearchResults();
+                    auto search_iter = search_results.begin();
+
                     for (size_t i = 0; i < _directory->GetSize(); i++)
                     {
                         const DirItem &item = _directory->GetItem(i);
 
                         std::string name(item.name);
-                        if (!item.is_dir)
-                        {
 
+                        if (search_iter != search_results.end() && *search_iter == i)
+                        {
+                            ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 33, 255));
+                        }
+                        else if (!item.is_dir)
+                        {
                             ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
                         }
 
@@ -139,7 +146,12 @@ void TabBrowser::Show(bool selected)
                             ImGui::Selectable(name.c_str());
                         }
 
-                        if (!item.is_dir)
+                        if (search_iter != search_results.end() && *search_iter == i)
+                        {
+                            ImGui::PopStyleColor();
+                            search_iter++;
+                        }
+                        else if (!item.is_dir)
                         {
                             ImGui::PopStyleColor();
                         }
