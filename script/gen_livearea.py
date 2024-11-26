@@ -20,6 +20,7 @@ TEXT_X = CONSOLE_WIDTH + STRIP_WIDTH * 4
 TEXT_Y = HEIGHT - 210
 TEXT_W = WIDTH - TEXT_X
 TEXT_H = 210 // 2
+EDGE_WIDTH = 20
 FONT = ImageFont.truetype('AlibabaPuHuiTi-2-75-SemiBold.ttf', 32)
 SMALL_FONT = ImageFont.truetype('AlibabaPuHuiTi-2-65-Medium.ttf', 24)
 TEXT = 'Emu4Vita++'
@@ -80,7 +81,7 @@ def do(console_name, cores):
         w, h = console.size
     im.paste(console, ((CONSOLE_WIDTH - w) // 2, (CONSOLE_HEIGHT - h) // 2), console)
     w, h = logo.size
-    im.paste(logo, (((LOGO_WIDTH - w) // 2, CONSOLE_HEIGHT + (LOGO_HEIGHT - h) // 2)), logo)
+    im.paste(logo, (((LOGO_WIDTH - w) // 2, CONSOLE_HEIGHT + (LOGO_HEIGHT - h) // 2 - EDGE_WIDTH)), logo)
 
     out = BytesIO()
     im.save(out, format='png')
@@ -89,14 +90,14 @@ def do(console_name, cores):
     draw = ImageDraw.Draw(im)
     for i, color in enumerate(colors):
         x = CONSOLE_WIDTH + i * STRIP_WIDTH
-        draw.rectangle((x, 0, x + STRIP_WIDTH, HEIGHT), fill=color)
+        draw.rectangle((x, EDGE_WIDTH, x + STRIP_WIDTH, HEIGHT - EDGE_WIDTH), fill=color)
 
     colors.sort(key=lambda x: get_luminance(x))
 
-    if console_name in NOT_DARKEST:
-        dark_color = colors[NOT_DARKEST[console_name]]
-    else:
-        dark_color = colors[0]
+    # if console_name in NOT_DARKEST:
+    # dark_color = colors[NOT_DARKEST[console_name]]
+    # else:
+    dark_color = colors[0]
 
     left, top, right, buttom = draw.textbbox((0, 0), TEXT, font=FONT)
     w = right - left
@@ -115,6 +116,8 @@ def do(console_name, cores):
         calculate_complementary_color(colors[0]),
         calculate_complementary_color(colors[-1]),
     )
+    white_bg = Image.new("RGBA", (WIDTH - EDGE_WIDTH * 2, HEIGHT - EDGE_WIDTH * 2), 'white')
+    bg.paste(white_bg, (EDGE_WIDTH, EDGE_WIDTH))
     bg.paste(im, mask=im)
     bg = bg.convert('RGB')
     bg.save(f'{console_name}.png')
