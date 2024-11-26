@@ -44,7 +44,16 @@ int16_t InputStateCallback(unsigned port, unsigned device, unsigned index, unsig
 
 int16_t Emulator::_GetJoypadState(unsigned index, unsigned id)
 {
-    const uint32_t key_states = _input.GetKeyStates();
+    uint32_t key_states = _input.GetKeyStates();
+    if (gConfig->sim_button & _input.GetRearTouch()->IsPressed())
+    {
+        const auto axis = _input.GetRearTouch()->GetAxis();
+        const auto center = _input.GetRearTouch()->GetCenter();
+        static const uint32_t button_map[] = {SCE_CTRL_L2, SCE_CTRL_R2, SCE_CTRL_L3, SCE_CTRL_L3};
+        int flag = (axis.y < center.y ? 0 : 2) | (axis.x < center.x ? 0 : 1);
+        key_states |= button_map[flag];
+    }
+
     if (id == RETRO_DEVICE_ID_JOYPAD_MASK)
     {
         int16_t state = 0;
@@ -292,8 +301,8 @@ void Emulator::SetupKeys()
 
     _input.GetFrontTouch()->Enable(gConfig->FrontEnabled());
     _input.GetRearTouch()->Enable(gConfig->RearEnabled());
-    uint32_t count = 0;
 
+    int count = 0;
     for (const auto &device : gConfig->device_options)
     {
         device.Apply(count++);

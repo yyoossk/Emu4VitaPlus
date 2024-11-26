@@ -23,6 +23,8 @@ public:
     const bool IsPressed() const { return _last_id != _current_id; };
     int16_t GetCount() const { return _current_id; };
     const TouchAxis &GetAxis() const { return _axis; };
+    const TouchAxis &GetCenter() const { return _center; };
+    const SceTouchPanelInfo &GetInfo() const { return _info[_port]; };
     void InitMovingScale(float xscale, float yscale);
     const int16_t GetRelativeMovingX() { return _GetRelativeMoving(&_scale_map_table_x, _axis.x - _last_axis.x); };
     const int16_t GetRelativeMovingY() { return _GetRelativeMoving(&_scale_map_table_y, _axis.y - _last_axis.y); };
@@ -102,9 +104,10 @@ private:
     }
 
     bool _enabled;
-    static SceTouchPanelInfo _info;
+    static SceTouchPanelInfo _info[2];
     TouchAxis _last_axis;
     TouchAxis _axis;
+    TouchAxis _center;
     uint8_t _last_id;
     uint8_t _current_id;
     SceTouchPortType _port;

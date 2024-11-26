@@ -39,7 +39,8 @@ Input::Input() : _last_key(0ull),
                  _turbo_interval_ms(DEFAULT_TURBO_INTERVAL),
                  _enable_key_up(true),
                  _left_analog{0},
-                 _right_analog{0}
+                 _right_analog{0},
+                 _sim_lr2lr3(false)
 {
     LogFunctionName;
     memset(_turbo_key_states, 0, sizeof(_turbo_key_states));
@@ -173,6 +174,12 @@ void Input::Poll(bool waiting)
 
     _front_touch.Poll();
     _rear_touch.Poll();
+
+    if (_sim_lr2lr3 && _rear_touch.IsPressed())
+    {
+        const auto axis = _rear_touch.GetAxis();
+        const auto info = _rear_touch.GetInfo();
+        }
 }
 
 /*

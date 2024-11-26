@@ -591,6 +591,12 @@ void Ui::UpdateControllerOptions()
                                          {DISABLED, ENABLED},
                                          std::bind(&Emulator::SetupKeys, gEmulator)));
 
+    controls.emplace_back(new ItemConfig(OPTIONS_MENU_SIM_BUTTON,
+                                         "",
+                                         &gConfig->sim_button,
+                                         {DISABLED, ENABLED},
+                                         std::bind(&Emulator::SetupKeys, gEmulator)));
+
     for (ControlMapConfig &cmap : gConfig->control_maps)
     {
         controls.emplace_back(new ItemControl(&cmap));

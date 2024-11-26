@@ -1,7 +1,7 @@
 #include "touch.h"
 #include "log.h"
 
-SceTouchPanelInfo Touch::_info{0};
+SceTouchPanelInfo Touch::_info[2] = {0};
 
 Touch::Touch(SceTouchPortType port)
     : _port(port),
@@ -11,16 +11,25 @@ Touch::Touch(SceTouchPortType port)
 {
     LogFunctionName;
 
-    if (_info.maxAaX == 0)
+    if (port != 0 && port != 1)
     {
-        sceTouchGetPanelInfo(_port, &_info);
+        LogError("Wrong Port %d, force to front", port);
+        _port = SCE_TOUCH_PORT_FRONT;
+    }
+
+    if (_info[_port].maxAaX == 0)
+    {
+        sceTouchGetPanelInfo(_port, &_info[_port]);
         LogDebug("%d:\n"
                  "   %d %d %d %d\n"
                  "   %d %d %d %d",
                  _port,
-                 _info.minAaX, _info.minAaY, _info.maxAaX, _info.maxAaY,
-                 _info.minDispX, _info.minDispY, _info.maxDispX, _info.maxDispY);
+                 _info[_port].minAaX, _info[_port].minAaY, _info[_port].maxAaX, _info[_port].maxAaY,
+                 _info[_port].minDispX, _info[_port].minDispY, _info[_port].maxDispX, _info[_port].maxDispY);
     }
+
+    _center.x = (_info[_port].maxAaX - _info[_port].minAaX) / 4;
+    _center.y = (_info[_port].maxAaY - _info[_port].minAaY) / 4;
 
     sceKernelCreateLwMutex(&_mutex, "thread_mutex", 0, 0, NULL);
 }
@@ -61,8 +70,8 @@ void Touch::Poll()
 void Touch::InitMovingScale(float xscale, float yscale)
 {
     LogFunctionName;
-    size_t sizex = _info.maxAaX - _info.minAaX;
-    size_t sizey = _info.maxAaY - _info.minAaY;
+    size_t sizex = _info[_port].maxAaX - _info[_port].minAaX;
+    size_t sizey = _info[_port].maxAaY - _info[_port].minAaY;
     _Lock();
 
     _scale_map_table_x.clear();

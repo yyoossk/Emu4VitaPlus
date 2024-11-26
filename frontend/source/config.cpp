@@ -149,6 +149,7 @@ namespace Emu4Vita
         mute = DEFAULT_MUTE;
         auto_save = DEFAULT_AUTO_SAVE;
         swap_enter = false;
+        sim_button = true;
 
         int sys_lang;
         sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &sys_lang);
@@ -223,9 +224,10 @@ namespace Emu4Vita
         ini.SetValue(MAIN_SECTION, "last_rom", last_rom.c_str());
         ini.SetBoolValue(MAIN_SECTION, "mute", mute);
         ini.SetBoolValue(MAIN_SECTION, "auto_save", auto_save);
-        ini.SetBoolValue(MAIN_SECTION, "mouse", mouse);
+        ini.SetLongValue(MAIN_SECTION, "mouse", mouse);
         ini.SetBoolValue(MAIN_SECTION, "lightgun", lightgun);
         ini.SetBoolValue(MAIN_SECTION, "swap_enter", swap_enter);
+        ini.SetBoolValue(MAIN_SECTION, "sim_button", sim_button);
 
         for (const auto &control : control_maps)
         {
@@ -286,9 +288,10 @@ namespace Emu4Vita
         rewind_buf_size = ini.GetLongValue(MAIN_SECTION, "rewind_buf_size", DEFAULT_REWIND_BUF_SIZE);
         mute = ini.GetBoolValue(MAIN_SECTION, "mute", DEFAULT_MUTE);
         auto_save = ini.GetBoolValue(MAIN_SECTION, "auto_save", DEFAULT_AUTO_SAVE);
-        mouse = ini.GetBoolValue(MAIN_SECTION, "mouse", DEFAULT_MOUSE);
+        mouse = ini.GetLongValue(MAIN_SECTION, "mouse", DEFAULT_MOUSE);
         lightgun = ini.GetBoolValue(MAIN_SECTION, "lightgun", DEFAULT_LIGHTGUN);
         swap_enter = ini.GetBoolValue(MAIN_SECTION, "swap_enter", false);
+        sim_button = ini.GetBoolValue(MAIN_SECTION, "sim_button", true);
 
         tmp = ini.GetValue(MAIN_SECTION, "last_rom");
         if (tmp && File::Exist(tmp))

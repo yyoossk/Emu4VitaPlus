@@ -142,6 +142,8 @@ private:
     Touch _front_touch{SCE_TOUCH_PORT_FRONT};
     Touch _rear_touch{SCE_TOUCH_PORT_BACK};
 
+    bool _sim_lr2lr3;
+
     std::stack<std::vector<KeyBinding>> _callback_stack;
 
     uint32_t _ProcTurbo(uint32_t key);
