@@ -11,12 +11,10 @@
 #include "utils.h"
 #include "config.h"
 
-#define MAIN_WINDOW_PADDING 10
-
 bool gRunning = true;
 char gCorePath[SCE_FIOS_PATH_MAX] = {0};
 
-App::App() : _index(0)
+App::App() : _index_x(0), _index_y(0)
 {
     LogFunctionName;
 
@@ -95,7 +93,8 @@ App::App() : _index(0)
         {
             if (gConfig->last_core == button->_cores[j].boot_name)
             {
-                _index = i;
+                _index_x = i % (_buttons.size() / ROW_COUNT);
+                _index_y = i / (_buttons.size() / ROW_COUNT);
                 button->_index = j;
                 found = true;
                 break;
@@ -143,17 +142,21 @@ void App::_Show()
 
     ImGui::Begin("Emu4Vita++ v" APP_VER_STR, NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoInputs);
     My_Imgui_ShowTimePower();
-    ImGui::SetCursorPos({0, (ImGui::GetContentRegionMax().y - BUTTON_SIZE) / 2});
+    ImVec2 pos = ImGui::GetWindowPos();
+    ImGui::SetCursorPos({pos.x, (ImGui::GetContentRegionMax().y - BUTTON_SIZE * 2) / 2 + 10});
+    ImGui::Columns(_buttons.size() / ROW_COUNT, NULL, false);
     size_t count = 0;
+    size_t index = _GetIndex();
     for (auto button : _buttons)
     {
-        bool selected = (count == _index);
+        bool selected = (count == index);
         button->Show(selected);
         if (selected)
         {
             ImGui::SetScrollHereX(float(count) / float(_buttons.size()));
         }
-        ImGui::SameLine();
+
+        ImGui::NextColumn();
         count++;
     }
 
@@ -170,8 +173,12 @@ void App::SetInputHooks(Input *input)
 {
     input->SetKeyDownCallback(SCE_CTRL_LEFT, std::bind(&App::_OnKeyLeft, this, input), true);
     input->SetKeyDownCallback(SCE_CTRL_RIGHT, std::bind(&App::_OnKeyRight, this, input), true);
+    input->SetKeyDownCallback(SCE_CTRL_UP, std::bind(&App::_OnKeyUp, this, input), true);
+    input->SetKeyDownCallback(SCE_CTRL_DOWN, std::bind(&App::_OnKeyDown, this, input), true);
     input->SetKeyDownCallback(SCE_CTRL_LSTICK_LEFT, std::bind(&App::_OnKeyLeft, this, input), true);
     input->SetKeyDownCallback(SCE_CTRL_LSTICK_RIGHT, std::bind(&App::_OnKeyRight, this, input), true);
+    input->SetKeyDownCallback(SCE_CTRL_LSTICK_UP, std::bind(&App::_OnKeyUp, this, input), true);
+    input->SetKeyDownCallback(SCE_CTRL_LSTICK_DOWN, std::bind(&App::_OnKeyDown, this, input), true);
     input->SetKeyDownCallback(SCE_CTRL_L1, std::bind(&App::_OnKeyLeft, this, input), true);
     input->SetKeyDownCallback(SCE_CTRL_R1, std::bind(&App::_OnKeyRight, this, input), true);
     input->SetKeyUpCallback(SCE_CTRL_CIRCLE, std::bind(&App::_OnClick, this, input));
@@ -181,8 +188,12 @@ void App::UnsetInputHooks(Input *input)
 {
     input->UnsetKeyDownCallback(SCE_CTRL_LEFT);
     input->UnsetKeyDownCallback(SCE_CTRL_RIGHT);
+    input->UnsetKeyDownCallback(SCE_CTRL_UP);
+    input->UnsetKeyDownCallback(SCE_CTRL_DOWN);
     input->UnsetKeyDownCallback(SCE_CTRL_LSTICK_LEFT);
     input->UnsetKeyDownCallback(SCE_CTRL_LSTICK_RIGHT);
+    input->UnsetKeyDownCallback(SCE_CTRL_LSTICK_UP);
+    input->UnsetKeyDownCallback(SCE_CTRL_LSTICK_DOWN);
     input->UnsetKeyDownCallback(SCE_CTRL_L1);
     input->UnsetKeyDownCallback(SCE_CTRL_R1);
     input->UnsetKeyUpCallback(SCE_CTRL_CIRCLE);
@@ -190,16 +201,31 @@ void App::UnsetInputHooks(Input *input)
 
 void App::_OnKeyLeft(Input *input)
 {
-    LOOP_MINUS_ONE(_index, _buttons.size());
+    LOOP_MINUS_ONE(_index_x, _buttons.size() / ROW_COUNT);
 }
 
 void App::_OnKeyRight(Input *input)
 {
-    LOOP_PLUS_ONE(_index, _buttons.size());
+    LOOP_PLUS_ONE(_index_x, _buttons.size() / ROW_COUNT);
+}
+
+void App::_OnKeyUp(Input *input)
+{
+    LOOP_MINUS_ONE(_index_y, ROW_COUNT);
+}
+
+void App::_OnKeyDown(Input *input)
+{
+    LOOP_PLUS_ONE(_index_y, ROW_COUNT);
 }
 
 void App::_OnClick(Input *input)
 {
     LogFunctionName;
-    _buttons[_index]->OnActive(input);
+    _buttons[_GetIndex()]->OnActive(input);
+}
+
+size_t App::_GetIndex()
+{
+    return _index_y * _buttons.size() / ROW_COUNT + _index_x;
 }

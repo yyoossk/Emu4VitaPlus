@@ -6,4 +6,6 @@
 #define APP_LOG_PATH APP_DATA_DIR "/Emu4Vita++.log"
 #define APP_CONFIG_PATH APP_DATA_DIR "/config.ini"
 
-#define BUTTON_SIZE 160
+#define BUTTON_SIZE 158
+#define MAIN_WINDOW_PADDING 10
+#define ROW_COUNT 2
