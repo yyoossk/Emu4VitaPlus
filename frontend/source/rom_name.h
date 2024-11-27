@@ -1,16 +1,18 @@
 #pragma once
 #include <unordered_map>
-#include <array>
-#include <string>
 #include <stdint.h>
 #include "language_define.h"
 
-typedef std::unordered_map<uint32_t, std::array<std::string, LANGUAGE_COUNT>> t_RomNameMap;
-
-class RomNameMap : public t_RomNameMap
+class RomNameMap
 {
 public:
+    RomNameMap(const char *path = nullptr);
+    virtual ~RomNameMap();
+
     bool Load(const char *path);
+    const char *GetName(uint32_t crc) const;
 
 private:
+    std::unordered_map<uint32_t, uint32_t> _map;
+    char *_names;
 };
