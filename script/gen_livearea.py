@@ -3,13 +3,11 @@ from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 from colorthief import ColorThief
 import shutil
-from cores import CORES
+from cores import *
 
 
 # svg from https://gitlab.com/recalbox/recalbox-themes
 
-
-NOT_DARKEST = {'DOS': -1, 'SNES': -1}
 
 WIDTH, HEIGHT = 840, 500
 CONSOLE_WIDTH, CONSOLE_HEIGHT = 480, 400
@@ -63,7 +61,7 @@ def get_luminance(color):
     return (0.299 * r + 0.587 * g + 0.114 * b) / 255
 
 
-def do(console_name, cores):
+def gen_bg(console_name, cores):
     print(console_name)
     out = BytesIO()
     svg2png(url=f'svgs/{console_name}/console.svg', write_to=out, output_height=350)
@@ -94,9 +92,6 @@ def do(console_name, cores):
 
     colors.sort(key=lambda x: get_luminance(x))
 
-    # if console_name in NOT_DARKEST:
-    # dark_color = colors[NOT_DARKEST[console_name]]
-    # else:
     dark_color = colors[0]
 
     left, top, right, buttom = draw.textbbox((0, 0), TEXT, font=FONT)
@@ -125,6 +120,33 @@ def do(console_name, cores):
     for core in cores:
         shutil.copy(name, f'../apps/{core}/pkg/sce_sys/livearea/contents/bg.png')
 
+    return dark_color
+
+
+STARTUP_WIDTH, STARTUP_HEIGHT = 280, 158
+ICON_WIDTH = 80
+
+
+def gen_startup(console, cores, color):
+    print(console)
+    im = Image.open(f'icons/{console}_icon0.png')
+    w, h = im.size
+    _im = im.resize((ICON_WIDTH, h * ICON_WIDTH // w))
+    im = Image.new('RGBA', (STARTUP_WIDTH, STARTUP_HEIGHT), '#cccccc66')
+    im.paste(_im, ((STARTUP_WIDTH - ICON_WIDTH) // 2, 18), _im)
+    for core in cores:
+        _im = im.copy()
+        draw = ImageDraw.Draw(_im)
+        length = draw.textlength(NAMES[core], font=SMALL_FONT)
+        draw.text(((STARTUP_WIDTH - length) // 2, ICON_WIDTH + 20), NAMES[core], font=SMALL_FONT, fill=color)
+        name = f'../apps/{core}/pkg/sce_sys/livearea/contents/startup.png'
+        try:
+            os.makedirs(os.path.split(name)[0])
+        except:
+            pass
+        _im.quantize().save(name)
+
 
 for console, cores in CORES.items():
-    do(console, cores)
+    color = gen_bg(console, cores)
+    gen_startup(console, cores, color)
