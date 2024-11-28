@@ -71,28 +71,20 @@ const char *RomNameMap::GetName(uint32_t crc) const
     if (_names == nullptr)
         return nullptr;
 
-    LogDebug("%08x", crc);
     const auto &iter = _map.find(crc);
     if (iter == _map.end())
     {
         return nullptr;
     }
-    LogDebug("%08x %08x", _names, iter->second);
+
     return _names + iter->second;
 }
 
-// const char *RomNameMap::GetName(const char *full_path, uint32_t crc) const
-// {
-//     if (IS_ARCADE)
-//     {
-//     }
-// }
-
 void RomNameMap::Load()
 {
-    bool result = Load(std::string("app0:assets/names.") + TEXT(CODE) + ".zdb");
+    bool result = Load(std::string("app0:assets/names.") + TEXT(CODE) + ".zdb") || Load(std::string(CONSOLE_DIR) + "/names." + TEXT(CODE) + ".zdb");
     if (!result && gConfig->language != LANGUAGE_ENGLISH)
     {
-        Load("app0:assets/names.en.zdb");
+        Load("app0:assets/names.en.zdb") || Load((std::string(CONSOLE_DIR) + "/names.en.zdb").c_str());
     }
 }

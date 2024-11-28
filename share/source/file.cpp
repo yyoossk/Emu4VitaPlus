@@ -65,21 +65,27 @@ namespace File
         }
     }
 
+    struct Lz4Header
+    {
+        uint32_t size;
+        uint32_t zsize;
+        char zbuf[];
+    };
+
     size_t ReadCompressedFile(const char *name, void **buf)
     {
-        uint32_t *tmp;
+        char *tmp;
         uint32_t size = ReadFile(name, (void **)&tmp);
 
-        if (size < 8)
+        if (size == 0)
         {
             return 0;
         }
 
-        size = *tmp++;
-        uint32_t zsize = *tmp++;
-        *buf = new uint8_t[size];
-        int outsize = LZ4_decompress_safe((const char *)tmp, (char *)*buf, zsize, size);
-
+        Lz4Header *header = (Lz4Header *)tmp;
+        *buf = new uint8_t[header->size];
+        int outsize = LZ4_decompress_safe((const char *)&header->zbuf, (char *)*buf, header->zsize, header->size);
+        size = header->size;
         delete[] tmp;
 
         if (outsize == size)
