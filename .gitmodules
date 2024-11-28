@@ -120,3 +120,6 @@
 	path = cores/mame2003-libretro
 	url = https://github.com/libretro/mame2003-libretro.git
     branch = master
+[submodule "deps/lz4"]
+	path = deps/lz4
+	url = https://github.com/lz4/lz4.git

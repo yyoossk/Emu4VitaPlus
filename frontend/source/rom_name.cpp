@@ -1,7 +1,9 @@
-#include <string.h>
 #include "rom_name.h"
 #include "file.h"
+#include "config.h"
+#include "language_string.h"
 #include "log.h"
+#include "defines.h"
 
 RomNameMap::RomNameMap(const char *path) : _names(nullptr)
 {
@@ -28,7 +30,7 @@ bool RomNameMap::Load(const char *path)
     }
 
     char *buf;
-    if (File::ReadFile(path, (void **)&buf) == 0)
+    if (File::ReadCompressedFile(path, (void **)&buf) == 0)
     {
         LogError("failed to load %s", path);
         return false;
@@ -42,7 +44,7 @@ bool RomNameMap::Load(const char *path)
     {
         uint32_t key = *p++;
         uint32_t value = *p++;
-        _map[key] = value;
+        _map.emplace(key, value);
     }
 
     size = *p++;
@@ -51,15 +53,46 @@ bool RomNameMap::Load(const char *path)
 
     delete[] buf;
 
+    LogDebug("  Load %d names from %s", _map.size(), path);
+    LogDebug("  name buf size: %d", size);
+
     return true;
+}
+
+bool RomNameMap::Load(const std::string &path)
+{
+    return Load(path.c_str());
 }
 
 const char *RomNameMap::GetName(uint32_t crc) const
 {
+    LogFunctionName;
+
+    if (_names == nullptr)
+        return nullptr;
+
+    LogDebug("%08x", crc);
     const auto &iter = _map.find(crc);
     if (iter == _map.end())
     {
         return nullptr;
     }
+    LogDebug("%08x %08x", _names, iter->second);
     return _names + iter->second;
+}
+
+// const char *RomNameMap::GetName(const char *full_path, uint32_t crc) const
+// {
+//     if (IS_ARCADE)
+//     {
+//     }
+// }
+
+void RomNameMap::Load()
+{
+    bool result = Load(std::string("app0:assets/names.") + TEXT(CODE) + ".zdb");
+    if (!result && gConfig->language != LANGUAGE_ENGLISH)
+    {
+        Load("app0:assets/names.en.zdb");
+    }
 }

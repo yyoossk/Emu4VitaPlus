@@ -2,13 +2,14 @@
 #include <psp2/io/dirent.h>
 #include <psp2/rtc.h>
 #include <string.h>
+#include <lz4.h>
 #include "file.h"
 #include "log.h"
 #include "utils.h"
 
 #define SCE_STM_RWU (00600)
 #define SCE_STM_RU (00400)
-#define FILE_BUF_SIZE 0x1000000
+#define FILE_BUF_SIZE 0x500000
 
 namespace File
 {
@@ -64,6 +65,35 @@ namespace File
         }
     }
 
+    size_t ReadCompressedFile(const char *name, void **buf)
+    {
+        uint32_t *tmp;
+        uint32_t size = ReadFile(name, (void **)&tmp);
+
+        if (size < 8)
+        {
+            return 0;
+        }
+
+        size = *tmp++;
+        uint32_t zsize = *tmp++;
+        *buf = new uint8_t[size];
+        int outsize = LZ4_decompress_safe((const char *)tmp, (char *)*buf, zsize, size);
+
+        delete[] tmp;
+
+        if (outsize == size)
+        {
+            return size;
+        }
+        else
+        {
+            delete[] (uint8_t *)*buf;
+            *buf = nullptr;
+            return 0;
+        }
+    }
+
     bool WriteFile(const char *name, void *buf, SceSSize size)
     {
         SceUID fd = sceIoOpen(name, SCE_O_CREAT | SCE_O_WRONLY, SCE_STM_RWU);
@@ -95,7 +125,8 @@ namespace File
             {
                 break;
             }
-            bool result = (sceIoWrite(dst_fd, buf, size) == size);
+
+            result = (sceIoWrite(dst_fd, buf, size) == size);
         } while (result && size == FILE_BUF_SIZE);
 
     END:

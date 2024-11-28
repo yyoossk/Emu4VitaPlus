@@ -1,6 +1,7 @@
 #include <vita2d.h>
 #include <string>
 #include <math.h>
+#include <zlib.h>
 #include "tab_browser.h"
 #include "emulator.h"
 #include "video.h"
@@ -20,7 +21,8 @@ TabBrowser::TabBrowser() : TabSeletable(TAB_BROWSER),
                            _texture_max_width(BROWSER_TEXTURE_MAX_WIDTH),
                            _texture_max_height(BROWSER_TEXTURE_MAX_HEIGHT),
                            _in_refreshing(false),
-                           _text_dialog(nullptr)
+                           _text_dialog(nullptr),
+                           _name(nullptr)
 {
     LogFunctionName;
 
@@ -35,8 +37,9 @@ TabBrowser::TabBrowser() : TabSeletable(TAB_BROWSER),
             break;
         }
     }
-    _UpdateStatus();
-    _UpdateTexture();
+
+    _name_map.Load();
+    _Update();
 }
 
 TabBrowser::~TabBrowser()
@@ -223,7 +226,7 @@ void TabBrowser::_OnActive(Input *input)
         _in_refreshing = false;
 
         _index = 0;
-        _UpdateStatus();
+        _Update();
     }
     else
     {
@@ -255,7 +258,8 @@ void TabBrowser::_OnKeyCross(Input *input)
     _in_refreshing = false;
 
     _index = 0;
-    _UpdateStatus();
+
+    _Update();
 }
 
 void TabBrowser::_OnKeyStart(Input *input)
@@ -288,15 +292,13 @@ void TabBrowser::_OnKeyStart(Input *input)
 void TabBrowser::_OnKeyUp(Input *input)
 {
     TabSeletable::_OnKeyUp(input);
-    _UpdateStatus();
-    _UpdateTexture();
+    _Update();
 }
 
 void TabBrowser::_OnKeyDown(Input *input)
 {
     TabSeletable::_OnKeyDown(input);
-    _UpdateStatus();
-    _UpdateTexture();
+    _Update();
 }
 
 void TabBrowser::_OnKeyLeft(Input *input)
@@ -311,8 +313,7 @@ void TabBrowser::_OnKeyLeft(Input *input)
     }
 
     _moving_status.Reset();
-    _UpdateStatus();
-    _UpdateTexture();
+    _Update();
 }
 
 void TabBrowser::_OnKeyRight(Input *input)
@@ -324,8 +325,7 @@ void TabBrowser::_OnKeyRight(Input *input)
     }
 
     _moving_status.Reset();
-    _UpdateStatus();
-    _UpdateTexture();
+    _Update();
 }
 
 void TabBrowser::_UpdateTexture()
@@ -406,6 +406,51 @@ void TabBrowser::_UpdateStatus()
     }
 }
 
+void TabBrowser::_UpdateName()
+{
+    _name = nullptr;
+
+    if (_index >= _directory->GetSize())
+    {
+        return;
+    }
+
+    const DirItem &item = _directory->GetItem(_index);
+    if (item.is_dir)
+    {
+        return;
+    }
+
+    std::string full_path = _directory->GetCurrentPath() + "/" + item.name;
+
+    const ArcadeManager *arc_manager = gEmulator->GetArcadeManager();
+    if (arc_manager)
+    {
+        const char *rom_name = arc_manager->GetRomName(full_path.c_str());
+        LogDebug("%s", rom_name);
+        std::string name = File::GetName(rom_name);
+        LogDebug("%s", name.c_str());
+        _name = _name_map.GetName(crc32(0, (Bytef *)name.c_str(), name.size()));
+        if (_name == nullptr)
+        {
+            name += ".zip";
+            _name = _name_map.GetName(crc32(0, (Bytef *)name.c_str(), name.size()));
+        }
+    }
+
+    if (_name)
+    {
+        LogDebug("rom name: %s", _name);
+    }
+}
+
+void TabBrowser::_Update()
+{
+    _UpdateTexture();
+    _UpdateStatus();
+    _UpdateName();
+}
+
 void TabBrowser::ChangeLanguage(uint32_t language)
 {
     LogFunctionName;
@@ -431,6 +476,8 @@ void TabBrowser::_OnKeyTriangle(Input *input)
         delete _text_dialog;
         _text_dialog = nullptr;
     }
+
+    _name_map.Load();
 }
 
 void TabBrowser::_OnKeySquare(Input *input)

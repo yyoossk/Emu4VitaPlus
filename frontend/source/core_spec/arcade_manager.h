@@ -11,6 +11,7 @@ public:
     ArcadeManager();
     virtual ~ArcadeManager();
     const char *GetCachedPath(const char *path);
+    const char *GetRomName(const char *path) const;
     bool NeedReplace(const char *path);
 
 private:

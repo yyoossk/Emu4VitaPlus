@@ -138,7 +138,7 @@ def gen_startup(console, cores, color):
         _im = im.copy()
         draw = ImageDraw.Draw(_im)
         length = draw.textlength(NAMES[core], font=SMALL_FONT)
-        draw.text(((STARTUP_WIDTH - length) // 2, ICON_WIDTH + 20), NAMES[core], font=SMALL_FONT, fill=color)
+        draw.text(((STARTUP_WIDTH - length) // 2, ICON_WIDTH), NAMES[core], font=SMALL_FONT, fill=color)
         name = f'../apps/{core}/pkg/sce_sys/livearea/contents/startup.png'
         try:
             os.makedirs(os.path.split(name)[0])

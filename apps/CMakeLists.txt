@@ -72,6 +72,7 @@ target_link_libraries(
     lzma
     minizip
     7zip
+    lz4
     pthread
     ScePvf_stub
     ScePgf_stub

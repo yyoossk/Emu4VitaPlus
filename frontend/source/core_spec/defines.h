@@ -38,3 +38,5 @@ extern const bool DEFAULT_REAR_TOUCH;
 extern const bool DEFAULT_MOUSE;
 extern const bool DEFAULT_LIGHTGUN;
 extern const bool DEFAULT_AUTO_SAVE;
+
+extern const bool IS_ARCADE;

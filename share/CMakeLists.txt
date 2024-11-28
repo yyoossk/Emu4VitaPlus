@@ -28,7 +28,8 @@ add_custom_command(
     ${CMAKE_CURRENT_SOURCE_DIR}/../script/translation.json
     ${CMAKE_CURRENT_SOURCE_DIR}/../script/export.py
 )
-add_custom_target(lang_cpp
+add_custom_target(
+    lang_cpp
     DEPENDS
     ${CMAKE_CURRENT_SOURCE_DIR}/source/language_define.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/source/language_define.h)
@@ -39,8 +40,10 @@ if(NOT ${CMAKE_CURRENT_SOURCE_DIR}/source/language_define.cpp IN_LIST SRC)
     list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/source/language_define.cpp)
 endif()
 
-include_directories(../deps/libretro-common/include
-    ../deps/7-zip/C)
+include_directories(
+    ../deps/libretro-common/include
+    ../deps/7-zip/C
+    ../deps/lz4/lib)
 
 add_library(share STATIC ${SRC})
 add_dependencies(share lang_cpp)

@@ -39,7 +39,7 @@ public:
 
     virtual ~CacheManager() {};
 
-    bool IsInCache(const char *name) { return _cache.find(name) != _cache.end(); };
+    bool IsInCache(const char *name) const { return _cache.find(name) != _cache.end(); };
 
     const std::string GetDirPath() const { return _dir_path; };
 

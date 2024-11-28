@@ -63,6 +63,7 @@ public:
     void SetupKeys();
     void SetupKeysWithSaveConfig();
     bool NeedRender();
+    const ArcadeManager *GetArcadeManager() const { return _arcade_manager; };
 
     friend bool EnvironmentCallback(unsigned cmd, void *data);
     friend void VideoRefreshCallback(const void *data, unsigned width, unsigned height, size_t pitch);

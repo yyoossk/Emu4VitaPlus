@@ -2,6 +2,7 @@
 #include "tab_selectable.h"
 #include "directory.h"
 #include "dialog.h"
+#include "rom_name.h"
 
 class TabBrowser : public TabSeletable
 {
@@ -28,6 +29,8 @@ private:
     void _OnKeySquare(Input *input);
     void _UpdateTexture();
     void _UpdateStatus();
+    void _UpdateName();
+    void _Update();
     void _Search(const char *s);
 
     Directory *_directory;
@@ -41,4 +44,6 @@ private:
     bool _in_refreshing;
     InputTextDialog *_text_dialog;
     Input *_input;
+    RomNameMap _name_map;
+    const char *_name;
 };

@@ -82,15 +82,13 @@ void ArcadeManager::_Load()
     delete[] buf;
 }
 
-const char *ArcadeManager::GetCachedPath(const char *path)
+const char *ArcadeManager::GetRomName(const char *path) const
 {
     LogFunctionName;
 
     std::string stem = File::GetStem(path);
-
     if (_name_hash.find(crc32(0, (Bytef *)stem.c_str(), stem.size())) != _name_hash.end())
     {
-        LogDebug("  %s found.", stem.c_str());
         return path;
     }
 
@@ -140,11 +138,24 @@ const char *ArcadeManager::GetCachedPath(const char *path)
         }
     }
 
+    return _names + offset;
+}
+
+const char *ArcadeManager::GetCachedPath(const char *path)
+{
+    LogFunctionName;
+
+    const char *name = GetRomName(path);
+    if (name == path)
+    {
+        return path;
+    }
+
     char cached_path[SCE_FIOS_PATH_MAX];
     static char cached_full_path[SCE_FIOS_PATH_MAX];
-    snprintf(cached_path, SCE_FIOS_PATH_MAX, "%s.%s", _names + offset, File::GetExt(path).c_str());
+    snprintf(cached_path, SCE_FIOS_PATH_MAX, "%s.%s", name, File::GetExt(path).c_str());
     snprintf(cached_full_path, SCE_FIOS_PATH_MAX, "%s/%s ", ARCADE_CACHE_DIR, cached_path);
-
+    LogDebug("%s %s", cached_path, cached_full_path);
     if (this->IsInCache(cached_path))
     {
         LogDebug("  %s in cache", cached_path);
