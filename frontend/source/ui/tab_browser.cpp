@@ -187,7 +187,7 @@ void TabBrowser::Show(bool selected)
             if (_name != nullptr)
             {
                 ImVec2 s = ImGui::CalcTextSize(_name);
-                pos.x += (avail_size.x - s.x) / 2;
+                pos.x += fmax(0, (avail_size.x - s.x) / 2);
                 pos.y += _texture == nullptr ? (avail_size.y - s.y) / 2 : 10;
                 ImGui::SetCursorScreenPos(pos);
 
