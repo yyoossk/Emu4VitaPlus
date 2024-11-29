@@ -34,14 +34,31 @@ def gen_db(infos, db_name):
         fp.write(zbuf)
 
 
-names = json.load(open('rom_db/arcade.names.json', encoding='utf-8'))
-for lang_name, lang_code in LANGS:
-    infos = {}
-    for n in names:
-        infos[str_crc32(n['File'])] = n[lang_name] if n[lang_name] != '' else n['English']
-    db_name = f'names.{lang_code}'
-    gen_db(infos, db_name)
-    db_name += ".zdb"
-    shutil.copy(db_name, '../arch/pkg/data/ARC')
-    for core in CORES['ARC']:
-        shutil.copy(db_name, f'../apps/{core}/pkg/assets')
+for json_name, core_name in (('arcade', 'ARC'), ('nes', 'NES'), ('snes', 'SNES'), ('gba', 'GBA'), ('gbc', 'GBC')):
+    print(json_name)
+    names = json.load(open(f'rom_db/{json_name}.names.json', encoding='utf-8'))
+    for lang_name, lang_code in LANGS:
+        infos = {}
+        need_save = False
+        for n in names:
+            name = n[lang_name]
+            if len(name) == 0:
+                if lang_name == 'English':
+                    continue
+                else:
+                    name = n['English']
+            else:
+                need_save = True
+            if 'CRC32' in n:
+                key = int(n['CRC32'], 16)
+            else:
+                key = str_crc32(n['File'])
+            infos[key] = name
+        if not need_save:
+            continue
+        db_name = f'names.{lang_code}'
+        gen_db(infos, db_name)
+        db_name += ".zdb"
+        shutil.copy(db_name, f'../arch/pkg/data/{core_name}')
+        for core in CORES[core_name]:
+            shutil.copy(db_name, f'../apps/{core}/pkg/assets')

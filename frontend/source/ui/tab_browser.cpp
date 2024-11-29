@@ -449,20 +449,31 @@ void TabBrowser::_UpdateName()
         return;
     }
 
-    std::string full_path = _directory->GetCurrentPath() + "/" + item.name;
-
-    const ArcadeManager *arc_manager = gEmulator->GetArcadeManager();
-    if (arc_manager)
+    if (item.crc32 != 0)
     {
-        const char *rom_name = arc_manager->GetRomName(full_path.c_str());
-        LogDebug("%s", rom_name);
-        std::string name = File::GetName(rom_name);
-        LogDebug("%s", name.c_str());
-        _name = _name_map.GetName(crc32(0, (Bytef *)name.c_str(), name.size()));
-        if (_name == nullptr)
+        _name = _name_map.GetName(item.crc32);
+    }
+    else
+    {
+        std::string full_path = _directory->GetCurrentPath() + "/" + item.name;
+
+        const ArcadeManager *arc_manager = gEmulator->GetArcadeManager();
+        if (arc_manager)
         {
-            name += ".zip";
+            const char *rom_name = arc_manager->GetRomName(full_path.c_str());
+            LogDebug("%s", rom_name);
+            std::string name = File::GetName(rom_name);
+            LogDebug("%s", name.c_str());
             _name = _name_map.GetName(crc32(0, (Bytef *)name.c_str(), name.size()));
+            if (_name == nullptr)
+            {
+                name += ".zip";
+                _name = _name_map.GetName(crc32(0, (Bytef *)name.c_str(), name.size()));
+            }
+        }
+        else
+        {
+            _name = _name_map.GetName(File::GetCrc32(full_path.c_str()));
         }
     }
 

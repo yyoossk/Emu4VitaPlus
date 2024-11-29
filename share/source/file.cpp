@@ -2,6 +2,7 @@
 #include <psp2/io/dirent.h>
 #include <psp2/rtc.h>
 #include <string.h>
+#include <zlib.h>
 #include <lz4.h>
 #include "file.h"
 #include "log.h"
@@ -306,5 +307,19 @@ namespace File
     {
         const char *end = _GetDirEndPos(path);
         return end ? std::string(path, end - path) : std::string(path);
+    }
+
+    uint32_t GetCrc32(const char *name)
+    {
+        uint8_t *buf;
+        size_t size = ReadFile(name, (void **)&buf);
+        if (size == 0)
+        {
+            return 0;
+        }
+
+        uint32_t crc = crc32(0, buf, size);
+        delete[] buf;
+        return crc;
     }
 }

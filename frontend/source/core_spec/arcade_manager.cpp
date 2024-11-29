@@ -176,6 +176,7 @@ const char *ArcadeManager::GetCachedPath(const char *path)
 #else
 ArcadeManager::ArcadeManager() : CacheManager(ARCADE_CACHE_DIR, ARC_CACHE_MAX_SIZE) {}
 ArcadeManager::~ArcadeManager() {}
+const char *ArcadeManager::GetRomName(const char *path) const { return NULL; }
 const char *ArcadeManager::GetCachedPath(const char *path) { return NULL; }
 bool ArcadeManager::NeedReplace(const char *path) { return false; }
 void ArcadeManager_Load() {}
