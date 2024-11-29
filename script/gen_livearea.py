@@ -115,9 +115,8 @@ def gen_bg(console_name, cores):
     white_bg = Image.new("RGBA", (WIDTH - EDGE_WIDTH * 2, HEIGHT - EDGE_WIDTH * 2), 'white')
     bg.paste(white_bg, (EDGE_WIDTH, EDGE_WIDTH))
     bg.paste(im, mask=im)
-    bg = bg.convert('P')
     name = f'{console_name}.png'
-    bg.save(name)
+    bg.convert('RGB').quantize().save(name, optimize=True)
     for core in cores:
         shutil.copy(name, f'../apps/{core}/pkg/sce_sys/livearea/contents/bg.png')
 
@@ -145,7 +144,7 @@ def gen_startup(console, cores, color):
             os.makedirs(os.path.split(name)[0])
         except:
             pass
-        _im.quantize().save(name)
+        _im.convert('RGB').quantize().save(name, optimize=True)
 
 
 for console, cores in CORES.items():
