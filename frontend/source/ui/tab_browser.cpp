@@ -187,10 +187,22 @@ void TabBrowser::Show(bool selected)
             if (_name != nullptr)
             {
                 ImVec2 s = ImGui::CalcTextSize(_name);
-                pos.x += fmax(0, (avail_size.x - s.x) / 2);
-                pos.y += _texture == nullptr ? (avail_size.y - s.y) / 2 : 10;
-                ImGui::SetCursorScreenPos(pos);
+                float x = pos.x + fmax(0, (avail_size.x - s.x) / 2);
+                float y = pos.y + (_texture == nullptr ? (avail_size.y - s.y) / 2 : 10);
 
+                ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_Border));
+                for (int i = -2; i <= 2; i++)
+                    for (int j = -2; j <= 2; j++)
+                    {
+                        if (i != 0 && j != 0)
+                        {
+                            ImGui::SetCursorScreenPos({x + i, y + j});
+                            ImGui::Text(_name);
+                        }
+                    }
+                ImGui::PopStyleColor();
+
+                ImGui::SetCursorScreenPos({x, y});
                 ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
                 ImGui::Text(_name);
                 ImGui::PopStyleColor();

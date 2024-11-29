@@ -1,20 +1,20 @@
 cmake_minimum_required(VERSION 3.10)
 
 macro(gen_arc_dat OUTPUT_PATH)
-    set(ARC_DAT_PATH ${OUTPUT_PATH}/assets/arcade_dat.bin)
+	set(ARC_DAT_NAME arcade_dat.zbin)
+    set(ARC_DAT_PATH ${OUTPUT_PATH}/assets/${ARC_DAT_NAME})
     file(RELATIVE_PATH rel ${OUTPUT_PATH} ${ARC_DAT_PATH})
     list(APPEND PRIVATE_PKG_FILES FILE ${ARC_DAT_PATH} ${rel})
 
     set(ARC_SCRIPT grab_arc_dat.py)
     set(ARC_TAG ${APP_NAME}_ARC_DAT)
-    message(${ARC_DAT_PATH})
 
     add_custom_command(
         OUTPUT
         ${ARC_DAT_PATH}
 
         COMMAND python ${ARC_SCRIPT}
-        COMMAND cp arcade_dat.bin ${ARC_DAT_PATH}
+        COMMAND cp ${ARC_DAT_NAME} ${ARC_DAT_PATH}
 
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/script
 

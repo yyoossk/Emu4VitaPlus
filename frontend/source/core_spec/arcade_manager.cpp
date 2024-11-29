@@ -10,6 +10,7 @@
 #include "archive_reader_factory.h"
 #include "file.h"
 
+#define DAT_BIN_PATH "app0:assets/arcade_dat.zbin"
 #define ARC_CACHE_MAX_SIZE 10
 
 void Emulator::_InitArcadeManager()
@@ -53,7 +54,7 @@ void ArcadeManager::_Load()
 {
     LogFunctionName;
     uint32_t *buf;
-    if (File::ReadFile(DAT_BIN_PATH, (void **)&buf) == 0)
+    if (File::ReadCompressedFile(DAT_BIN_PATH, (void **)&buf) == 0)
     {
         LogError("failed to load %s", DAT_BIN_PATH);
         return;
@@ -75,7 +76,7 @@ void ArcadeManager::_Load()
     {
         uint32_t n = *p++;
         uint32_t crc32 = *p++;
-        _roms[crc32] = std::unordered_set<uint32_t>{p, p + n};
+        _roms[crc32] = std::vector<uint32_t>{p, p + n};
         p += n;
     }
 

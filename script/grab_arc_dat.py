@@ -3,6 +3,7 @@ from pathlib import Path
 from zlib import crc32
 from io import BytesIO
 from struct import pack
+import lz4.block
 
 
 def AlignUp(offset, align):
@@ -65,3 +66,10 @@ with open('arcade_dat.bin', 'wb') as fp:
     for crc, names in roms.items():
         fp.write(pack('II', len(names), int(crc, 16)))
         fp.write(pack(f'{len(names)}I', *names))
+
+buf = open('arcade_dat.bin', 'rb').read()
+zbuf = lz4.block.compress(buf, mode='high_compression', store_size=False, compression=12)
+
+with open('arcade_dat.zbin', 'wb') as fp:
+    fp.write(pack('II', len(buf), len(zbuf)))
+    fp.write(zbuf)

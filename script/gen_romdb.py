@@ -47,7 +47,7 @@ def gen_db(infos, path):
         name_io.write(name.encode('utf-8') + b'\x00')
 
     buf = map_io.getvalue() + pack('I', name_io.tell()) + name_io.getvalue()
-    zbuf = lz4.block.compress(buf, mode='high_compression', store_size=False)
+    zbuf = lz4.block.compress(buf, mode='high_compression', store_size=False, compression=12)
 
     open('1.bin', 'wb').write(buf)
 
