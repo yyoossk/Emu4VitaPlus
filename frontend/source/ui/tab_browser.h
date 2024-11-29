@@ -46,4 +46,5 @@ private:
     Input *_input;
     RomNameMap _name_map;
     const char *_name;
+    TextMovingStatus _name_moving_status;
 };

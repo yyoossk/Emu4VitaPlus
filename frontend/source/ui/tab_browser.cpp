@@ -187,8 +187,12 @@ void TabBrowser::Show(bool selected)
             if (_name != nullptr)
             {
                 ImVec2 s = ImGui::CalcTextSize(_name);
-                float x = pos.x + fmax(0, (avail_size.x - s.x) / 2);
-                float y = pos.y + (_texture == nullptr ? (avail_size.y - s.y) / 2 : 10);
+                pos.x += fmax(0, (avail_size.x - s.x) / 2);
+                pos.y += (_texture == nullptr ? (avail_size.y - s.y) / 2 : 10);
+                if (_moving_status.Update(_name))
+                {
+                    pos.x += _moving_status.pos;
+                }
 
                 ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_Border));
                 for (int i = -2; i <= 2; i++)
@@ -196,13 +200,13 @@ void TabBrowser::Show(bool selected)
                     {
                         if (i != 0 && j != 0)
                         {
-                            ImGui::SetCursorScreenPos({x + i, y + j});
+                            ImGui::SetCursorScreenPos({pos.x + i, pos.y + j});
                             ImGui::Text(_name);
                         }
                     }
                 ImGui::PopStyleColor();
 
-                ImGui::SetCursorScreenPos({x, y});
+                ImGui::SetCursorScreenPos(pos);
                 ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
                 ImGui::Text(_name);
                 ImGui::PopStyleColor();
@@ -337,7 +341,6 @@ void TabBrowser::_OnKeyLeft(Input *input)
         _index -= 10;
     }
 
-    _moving_status.Reset();
     _Update();
 }
 
@@ -349,7 +352,6 @@ void TabBrowser::_OnKeyRight(Input *input)
         _index = _GetItemCount() - 1;
     }
 
-    _moving_status.Reset();
     _Update();
 }
 
@@ -434,6 +436,7 @@ void TabBrowser::_UpdateStatus()
 void TabBrowser::_UpdateName()
 {
     _name = nullptr;
+    _name_moving_status.Reset();
 
     if (_index >= _directory->GetSize())
     {
@@ -474,6 +477,7 @@ void TabBrowser::_Update()
     _UpdateTexture();
     _UpdateStatus();
     _UpdateName();
+    _moving_status.Reset();
 }
 
 void TabBrowser::ChangeLanguage(uint32_t language)

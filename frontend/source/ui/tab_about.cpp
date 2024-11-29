@@ -106,6 +106,7 @@ void TabAbout::_InitTexts()
               "libvita2d (MIT) https://github.com/xerpi/libvita2d",
               "libvita2d_ext (MIT) https://github.com/frangarcj/libvita2d_ext",
               "imgui-vita2d (MIT) https://github.com/cy33hc/imgui-vita2d",
+              "lz4 (BSD 2-Clause) https://github.com/lz4/lz4",
               "",
               TEXT(TAB_CORE),
               "https://gitee.com/yizhigai/libretro-fba-lite",

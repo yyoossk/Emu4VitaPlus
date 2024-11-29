@@ -14,12 +14,8 @@ struct TextMovingStatus
     int delta = -1;
     Delay delay{DEFAULT_TEXT_MOVING_INTERVAL};
 
-    void Reset()
-    {
-        pos = 0;
-        delta = -1;
-        delay.SetDelay(DEFAULT_TEXT_MOVING_START);
-    }
+    void Reset();
+    bool Update(const char *text);
 };
 
 IMGUI_API void My_ImGui_ImplVita2D_Init(uint32_t language, const char *cache_path = NULL);
