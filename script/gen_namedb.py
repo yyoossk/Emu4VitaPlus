@@ -38,7 +38,7 @@ names = json.load(open('rom_db/arcade.names.json', encoding='utf-8'))
 for lang_name, lang_code in LANGS:
     infos = {}
     for n in names:
-        infos[str_crc32(n['File'])] = n[lang_name]
+        infos[str_crc32(n['File'])] = n[lang_name] if n[lang_name] != '' else n['English']
     db_name = f'names.{lang_code}'
     gen_db(infos, db_name)
     db_name += ".zdb"

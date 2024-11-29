@@ -21,6 +21,7 @@ TEXT_H = 210 // 2
 EDGE_WIDTH = 20
 FONT = ImageFont.truetype('AlibabaPuHuiTi-2-75-SemiBold.ttf', 32)
 SMALL_FONT = ImageFont.truetype('AlibabaPuHuiTi-2-65-Medium.ttf', 24)
+TINY_FONT = ImageFont.truetype('AlibabaPuHuiTi-2-65-Medium.ttf', 20)
 TEXT = 'Emu4Vita++'
 TEXT_SMALL = 'By noword'
 
@@ -137,8 +138,8 @@ def gen_startup(console, cores, color):
     for core in cores:
         _im = im.copy()
         draw = ImageDraw.Draw(_im)
-        length = draw.textlength(NAMES[core], font=SMALL_FONT)
-        draw.text(((STARTUP_WIDTH - length) // 2, ICON_WIDTH), NAMES[core], font=SMALL_FONT, fill=color)
+        length = draw.textlength(NAMES[core], font=TINY_FONT)
+        draw.text(((STARTUP_WIDTH - length) // 2, ICON_WIDTH), NAMES[core], font=TINY_FONT, fill=color)
         name = f'../apps/{core}/pkg/sce_sys/livearea/contents/startup.png'
         try:
             os.makedirs(os.path.split(name)[0])
