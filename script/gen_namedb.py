@@ -16,7 +16,7 @@ def str_crc32(s):
     return crc32(str(s).encode('utf-8')) & 0xFFFFFFFF
 
 
-def gen_db(infos, db_name):
+def gen_db(infos, db_name, core_name):
     map_io = BytesIO()
     name_io = BytesIO()
     map_io.write(pack('I', len(infos)))
@@ -27,7 +27,7 @@ def gen_db(infos, db_name):
     buf = map_io.getvalue() + pack('I', name_io.tell()) + name_io.getvalue()
     zbuf = lz4.block.compress(buf, mode='high_compression', store_size=False, compression=12)
 
-    open(db_name + '.bin', 'wb').write(buf)
+    open(f'{db_name}.{core_name}.bin', 'wb').write(buf)
 
     with open(db_name + '.zdb', 'wb') as fp:
         fp.write(pack('II', len(buf), len(zbuf)))
@@ -57,7 +57,7 @@ for json_name, core_name in (('arcade', 'ARC'), ('nes', 'NES'), ('snes', 'SNES')
         if not need_save:
             continue
         db_name = f'names.{lang_code}'
-        gen_db(infos, db_name)
+        gen_db(infos, db_name, core_name)
         db_name += ".zdb"
         shutil.copy(db_name, f'../arch/pkg/data/{core_name}')
         for core in CORES[core_name]:

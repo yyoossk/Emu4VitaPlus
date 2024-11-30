@@ -2,6 +2,7 @@
 #include <string>
 #include <math.h>
 #include <zlib.h>
+#include <map>
 #include "tab_browser.h"
 #include "emulator.h"
 #include "video.h"
@@ -435,8 +436,16 @@ void TabBrowser::_UpdateStatus()
 
 void TabBrowser::_UpdateName()
 {
+    // LogFunctionName;
+    if (!_name_map.Valid())
+    {
+        return;
+    }
+
+    gVideo->Lock();
     _name = nullptr;
     _name_moving_status.Reset();
+    gVideo->Unlock();
 
     if (_index >= _directory->GetSize())
     {
@@ -451,35 +460,15 @@ void TabBrowser::_UpdateName()
 
     if (item.crc32 != 0)
     {
-        _name = _name_map.GetName(item.crc32);
+        gVideo->Lock();
+        _name_map.GetName(item.crc32, &_name);
+        gVideo->Unlock();
     }
     else
     {
-        std::string full_path = _directory->GetCurrentPath() + "/" + item.name;
-
-        const ArcadeManager *arc_manager = gEmulator->GetArcadeManager();
-        if (arc_manager)
-        {
-            const char *rom_name = arc_manager->GetRomName(full_path.c_str());
-            LogDebug("%s", rom_name);
-            std::string name = File::GetName(rom_name);
-            LogDebug("%s", name.c_str());
-            _name = _name_map.GetName(crc32(0, (Bytef *)name.c_str(), name.size()));
-            if (_name == nullptr)
-            {
-                name += ".zip";
-                _name = _name_map.GetName(crc32(0, (Bytef *)name.c_str(), name.size()));
-            }
-        }
-        else
-        {
-            _name = _name_map.GetName(File::GetCrc32(full_path.c_str()));
-        }
-    }
-
-    if (_name)
-    {
-        LogDebug("rom name: %s", _name);
+        SceUID thread_id = sceKernelCreateThread(__PRETTY_FUNCTION__, GetNameThread, SCE_KERNEL_DEFAULT_PRIORITY_USER, 0x4000, 0, SCE_KERNEL_THREAD_CPU_AFFINITY_MASK_DEFAULT, NULL);
+        uint32_t p = (uint32_t)this;
+        sceKernelStartThread(thread_id, sizeof(this), (void *)&p);
     }
 }
 
@@ -570,4 +559,81 @@ void TabBrowser::_Search(const char *s)
 
     _OnKeySquare(_input);
     _UpdateStatus();
+}
+
+const std::string TabBrowser::_GetCurrentFullPath(bool *is_dir)
+{
+    if (_index >= _directory->GetSize())
+    {
+        return "";
+    }
+
+    const DirItem &item = _directory->GetItem(_index);
+    if (is_dir)
+        *is_dir = item.is_dir;
+    return _directory->GetCurrentPath() + "/" + item.name;
+}
+
+static std::map<std::string, std::string> NameCache;
+#define MAX_NAME_CACHE 64
+
+int32_t GetNameThread(uint32_t args, void *argp)
+{
+    LogFunctionName;
+
+    CLASS_POINTER(TabBrowser, browser, argp);
+    bool is_dir;
+    const std::string full_path = browser->_GetCurrentFullPath(&is_dir);
+    if (is_dir || full_path.size() == 0)
+    {
+        sceKernelExitDeleteThread(0);
+        return 0;
+    }
+
+    const char *name = nullptr;
+    const auto iter = NameCache.find(full_path);
+    if (iter != NameCache.end())
+    {
+        name = iter->second.c_str();
+    }
+    else
+    {
+        const ArcadeManager *arc_manager = gEmulator->GetArcadeManager();
+        if (arc_manager)
+        {
+            const char *rom_name = arc_manager->GetRomName(full_path.c_str());
+            LogDebug("%s", rom_name);
+            std::string real_name = File::GetName(rom_name);
+            LogDebug("%s", real_name.c_str());
+
+            if (!browser->_name_map.GetName(crc32(0, (Bytef *)real_name.c_str(), real_name.size()), &name))
+            {
+                real_name += ".zip";
+                browser->_name_map.GetName(crc32(0, (Bytef *)real_name.c_str(), real_name.size()), &name);
+            }
+        }
+        else
+        {
+            browser->_name_map.GetName(File::GetCrc32(full_path.c_str()), &name);
+        }
+
+        if (name != nullptr)
+        {
+            NameCache[full_path] = name;
+            if (NameCache.size() > MAX_NAME_CACHE)
+            {
+                NameCache.erase(NameCache.begin());
+            }
+        }
+    }
+
+    if (name != nullptr && full_path == browser->_GetCurrentFullPath())
+    {
+        gVideo->Lock();
+        browser->_name = name;
+        gVideo->Unlock();
+    }
+
+    sceKernelExitDeleteThread(0);
+    return 0;
 }

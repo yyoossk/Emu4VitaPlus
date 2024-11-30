@@ -4,6 +4,8 @@
 #include "dialog.h"
 #include "rom_name.h"
 
+int32_t GetNameThread(uint32_t args, void *argc);
+
 class TabBrowser : public TabSeletable
 {
 public:
@@ -15,8 +17,13 @@ public:
     virtual void ChangeLanguage(uint32_t language) override;
     bool Visable() override { return _visable; };
 
+    friend int32_t GetNameThread(uint32_t args, void *argc);
+
 private:
-    size_t _GetItemCount() override { return _directory->GetSize(); };
+    size_t _GetItemCount() override
+    {
+        return _directory->GetSize();
+    };
     void _OnActive(Input *input) override;
     bool _ItemVisable(size_t index) override { return true; };
     void _OnKeyUp(Input *input) override;
@@ -32,6 +39,7 @@ private:
     void _UpdateName();
     void _Update();
     void _Search(const char *s);
+    const std::string _GetCurrentFullPath(bool *is_dir = nullptr);
 
     Directory *_directory;
     vita2d_texture *_texture;

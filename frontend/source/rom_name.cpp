@@ -5,7 +5,7 @@
 #include "log.h"
 #include "defines.h"
 
-RomNameMap::RomNameMap(const char *path) : _names(nullptr)
+RomNameMap::RomNameMap(const char *path) : _name_buf(nullptr)
 {
     if (path != nullptr)
     {
@@ -15,18 +15,18 @@ RomNameMap::RomNameMap(const char *path) : _names(nullptr)
 
 RomNameMap::~RomNameMap()
 {
-    if (_names != nullptr)
-        delete[] _names;
+    if (_name_buf != nullptr)
+        delete[] _name_buf;
 }
 
 bool RomNameMap::Load(const char *path)
 {
     LogFunctionName;
     _map.clear();
-    if (_names != nullptr)
+    if (_name_buf != nullptr)
     {
-        delete[] _names;
-        _names = nullptr;
+        delete[] _name_buf;
+        _name_buf = nullptr;
     }
 
     char *buf;
@@ -48,13 +48,13 @@ bool RomNameMap::Load(const char *path)
     }
 
     size = *p++;
-    _names = new char[size];
-    memcpy(_names, p, size);
+    _name_buf = new char[size];
+    memcpy(_name_buf, p, size);
 
     delete[] buf;
 
     LogDebug("  Load %d names from %s", _map.size(), path);
-    LogDebug("  name buf size: %d", size);
+    LogDebug("  name buf size: 0x%x", size);
 
     return true;
 }
@@ -64,20 +64,27 @@ bool RomNameMap::Load(const std::string &path)
     return Load(path.c_str());
 }
 
-const char *RomNameMap::GetName(uint32_t crc) const
+bool RomNameMap::GetName(uint32_t crc, const char **name) const
 {
     LogFunctionName;
 
-    if (_names == nullptr)
-        return nullptr;
+    if (_name_buf == nullptr)
+        return false;
 
     const auto &iter = _map.find(crc);
     if (iter == _map.end())
     {
-        return nullptr;
+        return false;
     }
 
-    return _names + iter->second;
+    *name = _name_buf + iter->second;
+
+    if (*name)
+    {
+        LogDebug("rom name: %s", *name);
+    }
+
+    return true;
 }
 
 void RomNameMap::Load()

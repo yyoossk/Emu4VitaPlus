@@ -13,9 +13,10 @@ public:
     void Load();
     bool Load(const char *path);
     bool Load(const std::string &path);
-    const char *GetName(uint32_t crc) const;
+    bool GetName(uint32_t crc, const char **name) const;
+    bool Valid() { return _map.size() > 0; };
 
 private:
     std::unordered_map<uint32_t, uint32_t> _map;
-    char *_names;
+    char *_name_buf;
 };
