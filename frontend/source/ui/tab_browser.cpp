@@ -442,10 +442,13 @@ void TabBrowser::_UpdateName()
         return;
     }
 
-    gVideo->Lock();
-    _name = nullptr;
-    _name_moving_status.Reset();
-    gVideo->Unlock();
+    if (_name)
+    {
+        gVideo->Lock();
+        _name = nullptr;
+        _name_moving_status.Reset();
+        gVideo->Unlock();
+    }
 
     if (_index >= _directory->GetSize())
     {
@@ -458,14 +461,32 @@ void TabBrowser::_UpdateName()
         return;
     }
 
-    if (item.crc32 != 0)
+    if (item.crc32 != 0) // It's a zip or 7z package, we have crc32
     {
         gVideo->Lock();
         _name_map.GetName(item.crc32, &_name);
         gVideo->Unlock();
+        return;
+    }
+
+    const ArcadeManager *arc_manager = gEmulator->GetArcadeManager();
+    if (arc_manager)
+    {
+        // arcade rom, calc the crc32 with rom name
+        const char *rom_name = arc_manager->GetRomName(_GetCurrentFullPath().c_str());
+        std::string real_name = File::GetName(rom_name);
+
+        gVideo->Lock();
+        if (!_name_map.GetName(crc32(0, (Bytef *)real_name.c_str(), real_name.size()), &_name))
+        {
+            real_name += ".zip";
+            _name_map.GetName(crc32(0, (Bytef *)real_name.c_str(), real_name.size()), &_name);
+        }
+        gVideo->Unlock();
     }
     else
     {
+        // calc the crc32 with read file
         SceUID thread_id = sceKernelCreateThread(__PRETTY_FUNCTION__, GetNameThread, SCE_KERNEL_DEFAULT_PRIORITY_USER, 0x4000, 0, SCE_KERNEL_THREAD_CPU_AFFINITY_MASK_DEFAULT, NULL);
         uint32_t p = (uint32_t)this;
         sceKernelStartThread(thread_id, sizeof(this), (void *)&p);
@@ -596,35 +617,13 @@ int32_t GetNameThread(uint32_t args, void *argp)
     {
         name = iter->second.c_str();
     }
-    else
+    else if (browser->_name_map.GetName(File::GetCrc32(full_path.c_str()), &name))
     {
-        const ArcadeManager *arc_manager = gEmulator->GetArcadeManager();
-        if (arc_manager)
+        if (NameCache.size() >= MAX_NAME_CACHE)
         {
-            const char *rom_name = arc_manager->GetRomName(full_path.c_str());
-            LogDebug("%s", rom_name);
-            std::string real_name = File::GetName(rom_name);
-            LogDebug("%s", real_name.c_str());
-
-            if (!browser->_name_map.GetName(crc32(0, (Bytef *)real_name.c_str(), real_name.size()), &name))
-            {
-                real_name += ".zip";
-                browser->_name_map.GetName(crc32(0, (Bytef *)real_name.c_str(), real_name.size()), &name);
-            }
+            NameCache.erase(NameCache.begin());
         }
-        else
-        {
-            browser->_name_map.GetName(File::GetCrc32(full_path.c_str()), &name);
-        }
-
-        if (name != nullptr)
-        {
-            NameCache[full_path] = name;
-            if (NameCache.size() > MAX_NAME_CACHE)
-            {
-                NameCache.erase(NameCache.begin());
-            }
-        }
+        NameCache[full_path] = name;
     }
 
     if (name != nullptr && full_path == browser->_GetCurrentFullPath())
