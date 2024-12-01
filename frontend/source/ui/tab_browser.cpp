@@ -23,8 +23,7 @@ TabBrowser::TabBrowser() : TabSeletable(TAB_BROWSER),
                            _texture_max_height(BROWSER_TEXTURE_MAX_HEIGHT),
                            _in_refreshing(false),
                            _text_dialog(nullptr),
-                           _name(nullptr),
-                           _file_manage_mode(false)
+                           _name(nullptr)
 {
     LogFunctionName;
 

@@ -4,8 +4,11 @@ set(CMAKE_DEPENDS_USE_COMPILER FALSE)
 set(CMAKE_TOOLCHAIN_FILE
     "$ENV{VITASDK}/share/vita.toolchain.cmake"
     CACHE PATH "toolchain file")
+
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 include("script/arcade_dat.cmake" REQUIRED)
+set(CMAKE_AR "$ENV{VITASDK}/bin/arm-vita-eabi-gcc-ar${TOOL_OS_SUFFIX}" CACHE PATH "archive")
+set(CMAKE_RANLIB "$ENV{VITASDK}/bin/arm-vita-eabi-gcc-ranlib${TOOL_OS_SUFFIX}" CACHE PATH "ranlib")
 
 option(WITH_LOG "log ouputting" OFF)
 

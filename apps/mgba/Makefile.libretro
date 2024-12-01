@@ -299,15 +299,16 @@ else ifeq ($(platform), psp1)
 else ifeq ($(platform), vita)
    TARGET := $(TARGET_NAME)_libretro_$(platform).a
    CC = arm-vita-eabi-gcc$(EXE_EXT)
-   AR = arm-vita-eabi-ar$(EXE_EXT)
+   AR = arm-vita-eabi-gcc-ar$(EXE_EXT)
    PLATFORM_DEFINES := -DVITA -DCC_RESAMPLER -DPSP2 -DHAVE_STRTOF_L
    STATIC_LINKING = 1
-   DEFINES += -std=c99
+   DEFINES += -std=c11
    CFLAGS += -marm -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard \
 -mword-relocations -fno-optimize-sibling-calls -fsingle-precision-constant \
 -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables \
--ffast-math -ftree-vectorize -funroll-loops -fno-short-enums
+-ffast-math -ftree-vectorize -funroll-loops -fno-short-enums -fwrapv
    CXXFLAGS += $(CFLAGS)
+   LDFLAGS += -Wl,-z,nocopyreloc
 
 # CTR(3DS)
 else ifeq ($(platform), ctr)

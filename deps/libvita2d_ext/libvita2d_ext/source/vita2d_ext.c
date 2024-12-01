@@ -11,34 +11,34 @@
 #include "utils.h"
 
 #ifdef DEBUG_BUILD
-#  include <stdio.h>
-#  define DEBUG(...) printf(__VA_ARGS__)
+#include <stdio.h>
+#define DEBUG(...) printf(__VA_ARGS__)
 #else
-#  define DEBUG(...)
+#define DEBUG(...)
 #endif
 
-#define MSAA_MODE			SCE_GXM_MULTISAMPLE_NONE
+#define MSAA_MODE SCE_GXM_MULTISAMPLE_NONE
 
 SceGxmShaderPatcher *_vita2d_ext_shader_patcher = NULL;
 SceGxmContext *_vita2d_ext_context = NULL;
 
 int vita2d_ext_init(SceGxmContext *context, SceGxmShaderPatcher *shaderPatcher)
 {
-	if(!(context && shaderPatcher))
+	if (!(context && shaderPatcher))
 		return -1;
 	_vita2d_ext_context = context;
 	_vita2d_ext_shader_patcher = shaderPatcher;
 	return 1;
 }
 
-int vita2d_ext_fini(SceGxmShaderPatcher *shaderPatcher)
+int vita2d_ext_fini()
 {
 	_vita2d_ext_context = NULL;
 	_vita2d_ext_shader_patcher = NULL;
 	return 1;
 }
 
-vita2d_shader *vita2d_create_shader(const SceGxmProgram* vertexProgramGxp, const SceGxmProgram* fragmentProgramGxp)
+vita2d_shader *vita2d_create_shader(const SceGxmProgram *vertexProgramGxp, const SceGxmProgram *fragmentProgramGxp)
 {
 	int err;
 	UNUSED(err);
@@ -82,13 +82,13 @@ vita2d_shader *vita2d_create_shader(const SceGxmProgram* vertexProgramGxp, const
 
 	// create texture shaders
 	err = sceGxmShaderPatcherCreateVertexProgram(
-	  _vita2d_ext_shader_patcher,
-	  shader->vertexProgramId,
-	  textureVertexAttributes,
-	  2,
-	  textureVertexStreams,
-	  1,
-	  &shader->vertexProgram);
+		_vita2d_ext_shader_patcher,
+		shader->vertexProgramId,
+		textureVertexAttributes,
+		2,
+		textureVertexStreams,
+		1,
+		&shader->vertexProgram);
 
 	DEBUG("texture sceGxmShaderPatcherCreateVertexProgram(): 0x%08X\n", err);
 
@@ -96,21 +96,20 @@ vita2d_shader *vita2d_create_shader(const SceGxmProgram* vertexProgramGxp, const
 	static const SceGxmBlendInfo blend_info = {
 		.colorFunc = SCE_GXM_BLEND_FUNC_ADD,
 		.alphaFunc = SCE_GXM_BLEND_FUNC_ADD,
-		.colorSrc  = SCE_GXM_BLEND_FACTOR_SRC_ALPHA,
-		.colorDst  = SCE_GXM_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
-		.alphaSrc  = SCE_GXM_BLEND_FACTOR_ONE,
-		.alphaDst  = SCE_GXM_BLEND_FACTOR_ZERO,
-		.colorMask = SCE_GXM_COLOR_MASK_ALL
-	};
+		.colorSrc = SCE_GXM_BLEND_FACTOR_SRC_ALPHA,
+		.colorDst = SCE_GXM_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+		.alphaSrc = SCE_GXM_BLEND_FACTOR_ONE,
+		.alphaDst = SCE_GXM_BLEND_FACTOR_ZERO,
+		.colorMask = SCE_GXM_COLOR_MASK_ALL};
 
 	err = sceGxmShaderPatcherCreateFragmentProgram(
-	  _vita2d_ext_shader_patcher,
-	  shader->fragmentProgramId,
-	  SCE_GXM_OUTPUT_REGISTER_FORMAT_UCHAR4,
-	  MSAA_MODE,
-	  &blend_info,
-	  vertexProgramGxp,
-	  &shader->fragmentProgram);
+		_vita2d_ext_shader_patcher,
+		shader->fragmentProgramId,
+		SCE_GXM_OUTPUT_REGISTER_FORMAT_UCHAR4,
+		MSAA_MODE,
+		&blend_info,
+		vertexProgramGxp,
+		&shader->fragmentProgram);
 
 	DEBUG("texture sceGxmShaderPatcherCreateFragmentProgram(): 0x%08X\n", err);
 
@@ -120,7 +119,7 @@ vita2d_shader *vita2d_create_shader(const SceGxmProgram* vertexProgramGxp, const
 	return shader;
 }
 
-void vita2d_free_shader(vita2d_shader* shader)
+void vita2d_free_shader(vita2d_shader *shader)
 {
 
 	sceGxmShaderPatcherReleaseFragmentProgram(_vita2d_ext_shader_patcher, shader->fragmentProgram);
