@@ -23,7 +23,8 @@ TabBrowser::TabBrowser() : TabSeletable(TAB_BROWSER),
                            _texture_max_height(BROWSER_TEXTURE_MAX_HEIGHT),
                            _in_refreshing(false),
                            _text_dialog(nullptr),
-                           _name(nullptr)
+                           _name(nullptr),
+                           _file_manage_mode(false)
 {
     LogFunctionName;
 
@@ -319,6 +320,10 @@ void TabBrowser::_OnKeyStart(Input *input)
     _UpdateStatus();
 }
 
+void TabBrowser::_OnKeySelect(Input *input)
+{
+}
+
 void TabBrowser::_OnKeyUp(Input *input)
 {
     TabSeletable::_OnKeyUp(input);
@@ -397,12 +402,15 @@ void TabBrowser::_UpdateStatus()
 {
     if (_index >= _directory->GetSize())
     {
+        gVideo->Lock();
         _status_text.clear();
+        gVideo->Unlock();
         return;
     }
 
     const DirItem &item = _directory->GetItem(_index);
 
+    gVideo->Lock();
     _status_text = EnterButton == SCE_CTRL_CIRCLE ? BUTTON_CIRCLE : BUTTON_CROSS;
     _status_text += item.is_dir ? TEXT(BROWSER_ENTER_DIR) : TEXT(BROWSER_START_GAME);
     _status_text += "\t";
@@ -431,7 +439,16 @@ void TabBrowser::_UpdateStatus()
         {
             _status_text += TEXT(BROWSER_REMOVE_FAVORITE);
         }
+        _status_text += "\t";
     }
+
+    if ((!item.is_dir) || _copy_full_path.size() > 0)
+    {
+        _status_text += BUTTON_SELECT;
+        _status_text += TEXT(BROWSER_FILE_MANAGE);
+    }
+
+    gVideo->Unlock();
 }
 
 void TabBrowser::_UpdateName()

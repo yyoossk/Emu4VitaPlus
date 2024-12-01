@@ -30,14 +30,19 @@ private:
     void _OnKeyDown(Input *input) override;
     void _OnKeyLeft(Input *input);
     void _OnKeyRight(Input *input);
-    void _OnKeyCross(Input *input);
+
     void _OnKeyStart(Input *input);
+    void _OnKeySelect(Input *input);
+
+    void _OnKeyCross(Input *input);
     void _OnKeyTriangle(Input *input);
     void _OnKeySquare(Input *input);
+
     void _UpdateTexture();
     void _UpdateStatus();
     void _UpdateName();
     void _Update();
+
     void _Search(const char *s);
     const std::string _GetCurrentFullPath(bool *is_dir = nullptr);
 
@@ -55,4 +60,6 @@ private:
     RomNameMap _name_map;
     const char *_name;
     TextMovingStatus _name_moving_status;
+
+    std::string _copy_full_path;
 };

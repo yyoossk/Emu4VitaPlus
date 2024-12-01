@@ -149,6 +149,11 @@ namespace File
         return result;
     }
 
+    bool MoveFile(const char *src_path, const char *dst_path)
+    {
+        return CopyFile(src_path, dst_path) && Remove(src_path);
+    }
+
     bool GetCreateTime(const char *name, SceDateTime *time)
     {
         SceIoStat stat;

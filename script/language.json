@@ -666,90 +666,125 @@
     },
     {
         "No.": "96",
+        "Tag": "BROWSER_FILE_MANAGE",
+        "English": "File Manag",
+        "Chinese": "文件管理",
+        "Comments": ""
+    },
+    {
+        "No.": "97",
+        "Tag": "BROWSER_COPY",
+        "English": "Copy",
+        "Chinese": "复制",
+        "Comments": ""
+    },
+    {
+        "No.": "98",
+        "Tag": "BROWSER_PASTE",
+        "English": "Paste",
+        "Chinese": "粘贴",
+        "Comments": ""
+    },
+    {
+        "No.": "99",
+        "Tag": "BROWSER_DELETE",
+        "English": "Delete",
+        "Chinese": "删除",
+        "Comments": ""
+    },
+    {
+        "No.": "100",
+        "Tag": "BROWSER_RENAME",
+        "English": "Rename",
+        "Chinese": "重命名",
+        "Comments": ""
+    },
+    {
+        "No.": "101",
         "Tag": "CORE_NOTICE",
         "English": "After changing the settings, reset the game to take effect",
         "Chinese": "更改设置后，重置游戏以生效",
         "Comments": ""
     },
     {
-        "No.": "97",
+        "No.": "102",
         "Tag": "ENABLED",
         "English": "enabled",
         "Chinese": "启用",
         "Comments": ""
     },
     {
-        "No.": "98",
+        "No.": "103",
         "Tag": "DISABLED",
         "English": "disabled",
         "Chinese": "禁用",
         "Comments": ""
     },
     {
-        "No.": "99",
+        "No.": "104",
         "Tag": "LOAD_ROM_FAILED",
         "English": "Failed to load rom",
         "Chinese": "载入 rom 失败",
         "Comments": ""
     },
     {
-        "No.": "100",
+        "No.": "105",
         "Tag": "MOUSE_FRONT_TOUCH_PANEL",
         "English": "Front touch panel + ↜ ↝",
         "Chinese": "触控屏 + ↜ ↝",
         "Comments": ""
     },
     {
-        "No.": "101",
+        "No.": "106",
         "Tag": "MOUSE_REAR_TOUCH_PANEL",
         "English": "Rear touch panel + ↜ ↝",
         "Chinese": "后触控板 + ↜ ↝",
         "Comments": ""
     },
     {
-        "No.": "102",
+        "No.": "107",
         "Tag": "UNSET",
         "English": "Unset",
         "Chinese": "未设置",
         "Comments": ""
     },
     {
-        "No.": "103",
+        "No.": "108",
         "Tag": "DEVICE_PORT",
         "English": "Device port ",
         "Chinese": "设备端口 ",
         "Comments": ""
     },
     {
-        "No.": "104",
+        "No.": "109",
         "Tag": "TEXT_FOUND",
         "English": "Found",
         "Chinese": "找到",
         "Comments": ""
     },
     {
-        "No.": "105",
+        "No.": "110",
         "Tag": "TEXT_NOT_FOUND",
         "English": "Not found",
         "Chinese": "未找到",
         "Comments": ""
     },
     {
-        "No.": "106",
+        "No.": "111",
         "Tag": "TEXT_FILE",
         "English": "file",
         "Chinese": "文件",
         "Comments": ""
     },
     {
-        "No.": "107",
+        "No.": "112",
         "Tag": "TEXT_FILES",
         "English": "files",
         "Chinese": "文件",
         "Comments": ""
     },
     {
-        "No.": "108",
+        "No.": "113",
         "Tag": "CODE",
         "English": "en",
         "Chinese": "cn",

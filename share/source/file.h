@@ -15,6 +15,7 @@ namespace File
     size_t ReadCompressedFile(const char *name, void **buf);
     bool WriteFile(const char *name, void *buf, SceSSize size);
     bool CopyFile(const char *src_path, const char *dst_path);
+    bool MoveFile(const char *src_path, const char *dst_path);
     void MakeDirs(const char *path, SceIoMode mode = (SceIoMode)0777);
     bool Remove(const char *path);
     void RemoveAllFiles(const char *path);
