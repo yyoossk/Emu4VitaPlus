@@ -112,16 +112,13 @@ void TabFavorite::Show(bool selected)
 void TabFavorite::SetInputHooks(Input *input)
 {
     TabSeletable::SetInputHooks(input);
-    input->SetKeyUpCallback(SCE_CTRL_LEFT, std::bind(&TabFavorite::_OnKeyLeft, this, input));
-    input->SetKeyUpCallback(SCE_CTRL_RIGHT, std::bind(&TabFavorite::_OnKeyRight, this, input));
+
     input->SetKeyUpCallback(CancelButton, std::bind(&TabFavorite::_OnKeyCross, this, input));
 }
 
 void TabFavorite::UnsetInputHooks(Input *input)
 {
     TabSeletable::UnsetInputHooks(input);
-    input->UnsetKeyUpCallback(SCE_CTRL_LEFT);
-    input->UnsetKeyUpCallback(SCE_CTRL_RIGHT);
     input->UnsetKeyUpCallback(CancelButton);
 }
 
@@ -139,28 +136,13 @@ void TabFavorite::_OnKeyDown(Input *input)
 
 void TabFavorite::_OnKeyLeft(Input *input)
 {
-    if (_index <= 10)
-    {
-        _index = 0;
-    }
-    else
-    {
-        _index -= 10;
-    }
-
-    _moving_status.Reset();
+    TabSeletable::_OnKeyLeft(input);
     _UpdateTexture();
 }
 
 void TabFavorite::_OnKeyRight(Input *input)
 {
-    _index += 10;
-    if (_index >= _GetItemCount())
-    {
-        _index = _GetItemCount() - 1;
-    }
-
-    _moving_status.Reset();
+    TabSeletable::_OnKeyRight(input);
     _UpdateTexture();
 }
 

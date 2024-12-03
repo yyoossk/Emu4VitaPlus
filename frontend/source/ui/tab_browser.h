@@ -28,8 +28,8 @@ private:
     bool _ItemVisable(size_t index) override { return true; };
     void _OnKeyUp(Input *input) override;
     void _OnKeyDown(Input *input) override;
-    void _OnKeyLeft(Input *input);
-    void _OnKeyRight(Input *input);
+    void _OnKeyLeft(Input *input) override;
+    void _OnKeyRight(Input *input) override;
 
     void _OnKeyStart(Input *input);
     void _OnKeySelect(Input *input);

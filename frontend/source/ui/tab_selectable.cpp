@@ -8,7 +8,8 @@ TabSeletable::TabSeletable(TEXT_ENUM title_id, std::vector<ItemBase *> items, in
       _items(std::move(items)),
       _index(0),
       _columns(columns),
-      _column_ratio(column_ratio)
+      _column_ratio(column_ratio),
+      _in_refreshing(false)
 {
     LogFunctionName;
 }
@@ -36,6 +37,8 @@ void TabSeletable::SetInputHooks(Input *input)
     input->SetKeyDownCallback(SCE_CTRL_DOWN, std::bind(&TabSeletable::_OnKeyDown, this, input), true);
     input->SetKeyDownCallback(SCE_CTRL_LSTICK_UP, std::bind(&TabSeletable::_OnKeyUp, this, input), true);
     input->SetKeyDownCallback(SCE_CTRL_LSTICK_DOWN, std::bind(&TabSeletable::_OnKeyDown, this, input), true);
+    input->SetKeyUpCallback(SCE_CTRL_LEFT, std::bind(&TabSeletable::_OnKeyLeft, this, input));
+    input->SetKeyUpCallback(SCE_CTRL_RIGHT, std::bind(&TabSeletable::_OnKeyRight, this, input));
     input->SetKeyUpCallback(EnterButton, std::bind(&TabSeletable::_OnActive, this, input));
     input->SetKeyUpCallback(SCE_CTRL_TRIANGLE, std::bind(&TabSeletable::_OnOption, this, input));
 }
@@ -46,6 +49,8 @@ void TabSeletable::UnsetInputHooks(Input *input)
     input->UnsetKeyDownCallback(SCE_CTRL_DOWN);
     input->UnsetKeyDownCallback(SCE_CTRL_LSTICK_UP);
     input->UnsetKeyDownCallback(SCE_CTRL_LSTICK_DOWN);
+    input->UnsetKeyUpCallback(SCE_CTRL_LEFT);
+    input->UnsetKeyUpCallback(SCE_CTRL_RIGHT);
     input->UnsetKeyUpCallback(EnterButton);
     input->UnsetKeyUpCallback(SCE_CTRL_TRIANGLE);
 }
@@ -75,25 +80,33 @@ void TabSeletable::Show(bool selected)
                 ImGui::SetColumnOffset(1, avail_width * _column_ratio);
             }
 
-            size_t total = _GetItemCount();
-            ImGui::PushStyleColor(ImGuiCol_PopupBg, IM_COL32(36, 36, 36, 255));
-            for (size_t i = 0; i < total; i++)
+            _ShowListTitle();
+            if (_in_refreshing)
             {
-                if (ItemVisable(i))
-                {
-                    _ShowItem(i, i == _index);
-                    if (i == _index && ImGui::GetScrollMaxY() > 0.f)
-                    {
-                        ImGui::SetScrollHereY((float)_index / (float)total);
-                    }
-                    ImGui::NextColumn();
-                }
-                else if (i == _index)
-                {
-                    LOOP_PLUS_ONE(_index, total);
-                }
+                _spin_text.Show();
             }
-            ImGui::PopStyleColor();
+            else
+            {
+                size_t total = _GetItemCount();
+                ImGui::PushStyleColor(ImGuiCol_PopupBg, IM_COL32(36, 36, 36, 255));
+                for (size_t i = 0; i < total; i++)
+                {
+                    if (ItemVisable(i))
+                    {
+                        _ShowItem(i, i == _index);
+                        if (i == _index && ImGui::GetScrollMaxY() > 0.f)
+                        {
+                            ImGui::SetScrollHereY((float)_index / (float)total);
+                        }
+                        ImGui::NextColumn();
+                    }
+                    else if (i == _index)
+                    {
+                        LOOP_PLUS_ONE(_index, total);
+                    }
+                }
+                ImGui::PopStyleColor();
+            }
             ImGui::Columns(1);
         }
 
@@ -141,6 +154,55 @@ void TabSeletable::_OnKeyDown(Input *input)
         LOOP_PLUS_ONE(_index, _GetItemCount());
         // LogDebug("_ItemVisable(_index) %d %d", _index, _ItemVisable(_index));
     } while (!_ItemVisable(_index));
+}
+
+void TabSeletable::_OnKeyLeft(Input *input)
+{
+    if (_GetItemCount() == 0)
+    {
+        return;
+    }
+
+    _moving_status.Reset();
+
+    if (_index < 10)
+    {
+        _index = 0;
+    }
+    else
+    {
+        size_t index = _index - 10;
+        while ((!_ItemVisable(index)) && index > 0)
+        {
+            index--;
+        }
+        _index = index;
+    }
+}
+
+void TabSeletable::_OnKeyRight(Input *input)
+{
+    if (_GetItemCount() == 0)
+    {
+        return;
+    }
+
+    _moving_status.Reset();
+
+    size_t index = _index + 10;
+    if (index >= _GetItemCount())
+    {
+        index = _GetItemCount() - 1;
+    }
+    else
+    {
+        while ((!_ItemVisable(index)) && index < _GetItemCount())
+        {
+            index++;
+        }
+    }
+
+    _index = index;
 }
 
 size_t TabSeletable::_GetItemCount()

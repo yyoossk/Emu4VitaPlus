@@ -24,8 +24,12 @@ public:
 protected:
     virtual void _OnKeyUp(Input *input);
     virtual void _OnKeyDown(Input *input);
+    virtual void _OnKeyLeft(Input *input);
+    virtual void _OnKeyRight(Input *input);
+
     virtual size_t _GetItemCount();
     virtual void _ShowItem(size_t index, bool selected);
+    virtual void _ShowListTitle() {};
     virtual void _OnActive(Input *input);
     virtual void _OnOption(Input *input);
     virtual bool _ItemVisable(size_t index);
@@ -36,4 +40,7 @@ protected:
     int _columns;
     float _column_ratio;
     TextMovingStatus _moving_status;
+
+    My_Imgui_SpinText _spin_text;
+    bool _in_refreshing;
 };

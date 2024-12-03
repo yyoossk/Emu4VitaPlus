@@ -56,8 +56,6 @@ TabBrowser::~TabBrowser()
 void TabBrowser::SetInputHooks(Input *input)
 {
     TabSeletable::SetInputHooks(input);
-    input->SetKeyUpCallback(SCE_CTRL_LEFT, std::bind(&TabBrowser::_OnKeyLeft, this, input));
-    input->SetKeyUpCallback(SCE_CTRL_RIGHT, std::bind(&TabBrowser::_OnKeyRight, this, input));
     input->SetKeyUpCallback(CancelButton, std::bind(&TabBrowser::_OnKeyCross, this, input));
     input->SetKeyUpCallback(SCE_CTRL_START, std::bind(&TabBrowser::_OnKeyStart, this, input));
     input->SetKeyUpCallback(SCE_CTRL_TRIANGLE, std::bind(&TabBrowser::_OnKeyTriangle, this, input));
@@ -67,8 +65,6 @@ void TabBrowser::SetInputHooks(Input *input)
 void TabBrowser::UnsetInputHooks(Input *input)
 {
     TabSeletable::UnsetInputHooks(input);
-    input->UnsetKeyUpCallback(SCE_CTRL_LEFT);
-    input->UnsetKeyUpCallback(SCE_CTRL_RIGHT);
     input->UnsetKeyUpCallback(CancelButton);
     input->UnsetKeyUpCallback(SCE_CTRL_START);
     input->UnsetKeyUpCallback(SCE_CTRL_TRIANGLE);
@@ -337,26 +333,13 @@ void TabBrowser::_OnKeyDown(Input *input)
 
 void TabBrowser::_OnKeyLeft(Input *input)
 {
-    if (_index <= 10)
-    {
-        _index = 0;
-    }
-    else
-    {
-        _index -= 10;
-    }
-
+    TabSeletable::_OnKeyLeft(input);
     _Update();
 }
 
 void TabBrowser::_OnKeyRight(Input *input)
 {
-    _index += 10;
-    if (_index >= _GetItemCount())
-    {
-        _index = _GetItemCount() - 1;
-    }
-
+    TabSeletable::_OnKeyRight(input);
     _Update();
 }
 
