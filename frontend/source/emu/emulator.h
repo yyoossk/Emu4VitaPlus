@@ -122,6 +122,7 @@ private:
     double _speed;
     Delay _delay;
     uint32_t _frame_count;
+    bool _show_video;
 
     SceKernelLwMutexWork _run_mutex;
 

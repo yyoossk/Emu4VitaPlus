@@ -33,7 +33,8 @@ Emulator::Emulator()
       _core_options_update_display_callback(nullptr),
       _arcade_manager(nullptr),
       _video_rotation(VIDEO_ROTATION_0),
-      _core_options_updated(false)
+      _core_options_updated(false),
+      _show_video(true)
 {
     retro_get_system_info(&_info);
     sceKernelCreateLwMutex(&_run_mutex, "run_mutex", 0, 0, NULL);
@@ -207,6 +208,7 @@ void Emulator::Run()
 {
     LogFunctionNameLimited;
 
+    uint64_t start = sceKernelGetProcessTimeWide();
     _input.Poll();
 
     switch (gStatus.Get())
@@ -232,7 +234,11 @@ void Emulator::Run()
 
     EndProfile("retro_run");
 
-    _delay.Wait();
+    _show_video = (sceKernelGetProcessTimeWide() - start) <= (1000000 / _av_info.timing.fps);
+    if (_show_video)
+    {
+        _delay.Wait();
+    }
 }
 
 void Emulator::Lock()
