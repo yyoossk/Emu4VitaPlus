@@ -122,30 +122,6 @@ void TabFavorite::UnsetInputHooks(Input *input)
     input->UnsetKeyUpCallback(CancelButton);
 }
 
-void TabFavorite::_OnKeyUp(Input *input)
-{
-    TabSeletable::_OnKeyUp(input);
-    _UpdateTexture();
-}
-
-void TabFavorite::_OnKeyDown(Input *input)
-{
-    TabSeletable::_OnKeyDown(input);
-    _UpdateTexture();
-}
-
-void TabFavorite::_OnKeyLeft(Input *input)
-{
-    TabSeletable::_OnKeyLeft(input);
-    _UpdateTexture();
-}
-
-void TabFavorite::_OnKeyRight(Input *input)
-{
-    TabSeletable::_OnKeyRight(input);
-    _UpdateTexture();
-}
-
 void TabFavorite::_OnActive(Input *input)
 {
     LogFunctionName;
@@ -226,4 +202,10 @@ void TabFavorite::_UpdateTexture()
                     &_texture_width,
                     &_texture_height);
     }
+}
+
+void TabFavorite::_Update()
+{
+    _UpdateStatus();
+    _UpdateTexture();
 }

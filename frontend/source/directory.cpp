@@ -201,7 +201,7 @@ size_t Directory::Search(const char *s)
     {
         if ((!item.is_dir) && (item.name.find(s) != std::string::npos || item.entry_name.find(s) != std::string::npos))
         {
-            _search_results.push_back(count);
+            _search_results.insert(count);
         }
         count++;
     }
@@ -211,5 +211,5 @@ size_t Directory::Search(const char *s)
 
 bool Directory::BeFound(size_t index)
 {
-    return std::find(_search_results.begin(), _search_results.end(), index) != _search_results.end();
+    return _search_results.find(index) != _search_results.end();
 }

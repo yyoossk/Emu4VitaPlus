@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <unordered_set>
+#include <set>
 #include <string>
 
 struct DirItem
@@ -29,12 +29,12 @@ public:
     size_t Search(const char *s);
     bool BeFound(size_t index);
     const std::string &GetSearchString() const { return _search_str; };
-    const std::vector<size_t> &GetSearchResults() const { return _search_results; };
+    const std::set<size_t> &GetSearchResults() const { return _search_results; };
 
 private:
     std::vector<DirItem> _items;
-    std::unordered_set<std::string> _ext_filters;
-    std::vector<size_t> _search_results;
+    std::set<std::string> _ext_filters;
+    std::set<size_t> _search_results;
     std::string _current_path;
     std::string _search_str;
 

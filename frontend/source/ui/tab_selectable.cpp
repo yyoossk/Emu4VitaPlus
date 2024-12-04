@@ -2,6 +2,7 @@
 #include "tab_selectable.h"
 #include "defines.h"
 #include "utils.h"
+#include "video.h"
 
 TabSeletable::TabSeletable(TEXT_ENUM title_id, std::vector<ItemBase *> items, int columns, float column_ratio)
     : TabBase(title_id),
@@ -17,7 +18,9 @@ TabSeletable::TabSeletable(TEXT_ENUM title_id, std::vector<ItemBase *> items, in
 TabSeletable::TabSeletable(TEXT_ENUM title_id, int columns)
     : TabBase(title_id),
       _index(0),
-      _columns(columns)
+      _columns(columns),
+      _column_ratio(-1.f),
+      _in_refreshing(false)
 {
     LogFunctionName;
 }
@@ -62,25 +65,21 @@ void TabSeletable::Show(bool selected)
     {
         ImVec2 size = {0.f, 0.f};
         float avail_width = ImGui::GetContentRegionAvailWidth();
-        if (ItemVisable(_index))
+        if (_status_text.size() > 0)
         {
-            _status_text = _items[_index]->GetInfo();
-            if (_status_text.size() > 0)
-            {
-                ImVec2 s = ImGui::CalcTextSize(_status_text.c_str());
-                size.y = -s.y * (s.x / avail_width + 1);
-            }
+            ImVec2 s = ImGui::CalcTextSize(_status_text.c_str());
+            size.y = -s.y * (s.x / avail_width + 1);
         }
 
         if (ImGui::BeginChild(TEXT(_title_id), size))
         {
             ImGui::Columns(_columns, NULL, false);
+
             if (_columns == 2 && _column_ratio > 0)
             {
                 ImGui::SetColumnOffset(1, avail_width * _column_ratio);
             }
 
-            _ShowListTitle();
             if (_in_refreshing)
             {
                 _spin_text.Show();
@@ -91,7 +90,7 @@ void TabSeletable::Show(bool selected)
                 ImGui::PushStyleColor(ImGuiCol_PopupBg, IM_COL32(36, 36, 36, 255));
                 for (size_t i = 0; i < total; i++)
                 {
-                    if (ItemVisable(i))
+                    if (_ItemVisable(i))
                     {
                         _ShowItem(i, i == _index);
                         if (i == _index && ImGui::GetScrollMaxY() > 0.f)
@@ -124,7 +123,6 @@ void TabSeletable::Show(bool selected)
 
 void TabSeletable::_OnKeyUp(Input *input)
 {
-    // LogFunctionName;
     if (_GetItemCount() == 0)
     {
         return;
@@ -135,13 +133,13 @@ void TabSeletable::_OnKeyUp(Input *input)
     do
     {
         LOOP_MINUS_ONE(_index, _GetItemCount());
-        // LogDebug("_ItemVisable(_index) %d", _ItemVisable(_index));
     } while (!_ItemVisable(_index));
+
+    _Update();
 }
 
 void TabSeletable::_OnKeyDown(Input *input)
 {
-    // LogFunctionName;
     if (_GetItemCount() == 0)
     {
         return;
@@ -152,8 +150,9 @@ void TabSeletable::_OnKeyDown(Input *input)
     do
     {
         LOOP_PLUS_ONE(_index, _GetItemCount());
-        // LogDebug("_ItemVisable(_index) %d %d", _index, _ItemVisable(_index));
     } while (!_ItemVisable(_index));
+
+    _Update();
 }
 
 void TabSeletable::_OnKeyLeft(Input *input)
@@ -178,6 +177,8 @@ void TabSeletable::_OnKeyLeft(Input *input)
         }
         _index = index;
     }
+
+    _Update();
 }
 
 void TabSeletable::_OnKeyRight(Input *input)
@@ -203,6 +204,8 @@ void TabSeletable::_OnKeyRight(Input *input)
     }
 
     _index = index;
+
+    _Update();
 }
 
 size_t TabSeletable::_GetItemCount()
@@ -238,7 +241,14 @@ void TabSeletable::_OnOption(Input *input)
 
 bool TabSeletable::_ItemVisable(size_t index)
 {
-    return _items[_index]->Visable();
+    if (index < _items.size())
+    {
+        return _items[index]->Visable();
+    }
+    else
+    {
+        return false;
+    }
 }
 
 void TabSeletable::SetStatusText(std::string text)
@@ -254,17 +264,17 @@ void TabSeletable::SetItemVisable(size_t index, bool visable)
     }
 }
 
-bool TabSeletable::ItemVisable(size_t index)
-{
-    if (index < _items.size())
-    {
-        return _items[index]->Visable();
-    }
-    else
-    {
-        return false;
-    }
-}
+// bool TabSeletable::ItemVisable(size_t index)
+// {
+//     if (index < _items.size())
+//     {
+//         return _items[index]->Visable();
+//     }
+//     else
+//     {
+//         return false;
+//     }
+// }
 
 void TabSeletable::SetColumns(int columns)
 {
@@ -277,4 +287,14 @@ void TabSeletable::SetIndex(size_t index)
     {
         _index = index;
     }
+}
+
+void TabSeletable::_Update()
+{
+    gVideo->Lock();
+    if (_ItemVisable(_index))
+    {
+        _status_text = _items[_index]->GetInfo();
+    }
+    gVideo->Unlock();
 }

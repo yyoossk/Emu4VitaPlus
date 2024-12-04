@@ -21,7 +21,6 @@ TabBrowser::TabBrowser() : TabSeletable(TAB_BROWSER),
                            _texture(nullptr),
                            _texture_max_width(BROWSER_TEXTURE_MAX_WIDTH),
                            _texture_max_height(BROWSER_TEXTURE_MAX_HEIGHT),
-                           _in_refreshing(false),
                            _text_dialog(nullptr),
                            _name(nullptr)
 {
@@ -114,9 +113,6 @@ void TabBrowser::Show(bool selected)
                 }
                 else
                 {
-                    auto search_results = _directory->GetSearchResults();
-                    auto search_iter = search_results.begin();
-
                     for (size_t i = 0; i < _directory->GetSize(); i++)
                     {
                         const DirItem &item = _directory->GetItem(i);
@@ -126,41 +122,26 @@ void TabBrowser::Show(bool selected)
                         if (!item.is_dir)
                         {
                             ImU32 color;
-                            if (search_iter != search_results.end() && *search_iter == i)
+                            if (_directory->BeFound(i))
                                 color = IM_COL32(255, 255, 33, 255);
                             else
                                 color = IM_COL32(0, 255, 0, 255);
 
                             ImGui::PushStyleColor(ImGuiCol_Text, color);
-                        }
-
-                        if (gFavorites->find(name) != gFavorites->end())
-                        {
-                            name.insert(0, ICON_EMPTY_STAR_SPACE);
+                            if (gFavorites->find(name) != gFavorites->end())
+                                name.insert(0, ICON_EMPTY_STAR_SPACE);
                         }
 
                         if (i == _index)
-                        {
                             My_Imgui_Selectable(name.c_str(), true, &_moving_status);
-                        }
                         else
-                        {
                             ImGui::Selectable(name.c_str());
-                        }
 
                         if (!item.is_dir)
-                        {
-                            if (search_iter != search_results.end() && *search_iter == i)
-                            {
-                                search_iter++;
-                            }
                             ImGui::PopStyleColor();
-                        }
 
                         if (i == _index && ImGui::GetScrollMaxY() > 0.f)
-                        {
                             ImGui::SetScrollHereY((float)_index / (float)_directory->GetSize());
-                        }
                     }
                 }
 
@@ -265,6 +246,7 @@ void TabBrowser::_OnActive(Input *input)
 
 void TabBrowser::_OnKeyCross(Input *input)
 {
+    LogFunctionName;
     auto path = _directory->GetCurrentPath();
 
     _in_refreshing = true;
@@ -317,30 +299,6 @@ void TabBrowser::_OnKeyStart(Input *input)
 
 void TabBrowser::_OnKeySelect(Input *input)
 {
-}
-
-void TabBrowser::_OnKeyUp(Input *input)
-{
-    TabSeletable::_OnKeyUp(input);
-    _Update();
-}
-
-void TabBrowser::_OnKeyDown(Input *input)
-{
-    TabSeletable::_OnKeyDown(input);
-    _Update();
-}
-
-void TabBrowser::_OnKeyLeft(Input *input)
-{
-    TabSeletable::_OnKeyLeft(input);
-    _Update();
-}
-
-void TabBrowser::_OnKeyRight(Input *input)
-{
-    TabSeletable::_OnKeyRight(input);
-    _Update();
 }
 
 void TabBrowser::_UpdateTexture()
@@ -540,7 +498,7 @@ void TabBrowser::_OnKeySquare(Input *input)
     }
     else if (results.size() == 1)
     {
-        _index = results[0];
+        _index = *(results.begin());
     }
     else
     {
@@ -552,7 +510,7 @@ void TabBrowser::_OnKeySquare(Input *input)
                 return;
             }
         }
-        _index = results[0];
+        _index = *(results.begin());
     }
 }
 

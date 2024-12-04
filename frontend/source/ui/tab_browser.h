@@ -20,16 +20,10 @@ public:
     friend int32_t GetNameThread(uint32_t args, void *argc);
 
 private:
-    size_t _GetItemCount() override
-    {
-        return _directory->GetSize();
-    };
+    size_t _GetItemCount() override { return _directory->GetSize(); };
+    bool _ItemVisable(size_t index) override { return index < _directory->GetSize(); };
+
     void _OnActive(Input *input) override;
-    bool _ItemVisable(size_t index) override { return true; };
-    void _OnKeyUp(Input *input) override;
-    void _OnKeyDown(Input *input) override;
-    void _OnKeyLeft(Input *input) override;
-    void _OnKeyRight(Input *input) override;
 
     void _OnKeyStart(Input *input);
     void _OnKeySelect(Input *input);
@@ -41,7 +35,7 @@ private:
     void _UpdateTexture();
     void _UpdateStatus();
     void _UpdateName();
-    void _Update();
+    void _Update() override;
 
     void _Search(const char *s);
     const std::string _GetCurrentFullPath(bool *is_dir = nullptr);
@@ -53,8 +47,6 @@ private:
     float _texture_max_width;
     float _texture_max_height;
 
-    My_Imgui_SpinText _spin_text;
-    bool _in_refreshing;
     InputTextDialog *_text_dialog;
     Input *_input;
     RomNameMap _name_map;

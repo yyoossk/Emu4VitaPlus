@@ -16,7 +16,6 @@ public:
     virtual void Show(bool selected);
     void SetStatusText(std::string text);
     void SetItemVisable(size_t index, bool visable);
-    bool ItemVisable(size_t index);
     void SetColumns(int columns);
     void SetIndex(size_t index);
     bool Visable() override { return _visable && _GetItemCount() > 0; };
@@ -29,10 +28,10 @@ protected:
 
     virtual size_t _GetItemCount();
     virtual void _ShowItem(size_t index, bool selected);
-    virtual void _ShowListTitle() {};
     virtual void _OnActive(Input *input);
     virtual void _OnOption(Input *input);
     virtual bool _ItemVisable(size_t index);
+    virtual void _Update();
 
     std::vector<ItemBase *> _items;
     size_t _index;

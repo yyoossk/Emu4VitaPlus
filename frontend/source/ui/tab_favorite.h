@@ -19,13 +19,10 @@ private:
     bool _ItemVisable(size_t index) override { return true; };
     void _OnActive(Input *input) override;
     void _OnKeyCross(Input *input);
-    void _OnKeyUp(Input *input) override;
-    void _OnKeyLeft(Input *input) override;
-    void _OnKeyRight(Input *input) override;
-    void _OnKeyDown(Input *input) override;
     void _OnDialog(Input *input, int index);
     void _UpdateStatus();
     void _UpdateTexture();
+    void _Update() override;
 
     Dialog *_dialog;
     vita2d_texture *_texture;
