@@ -16,7 +16,7 @@ void VideoRefreshCallback(const void *data, unsigned width, unsigned height, siz
     if (width == 0 || height == 0)
     {
         LogDebug("  invalid size: %d %d", width, height);
-        gEmulator->_delay.Wait();
+        // gEmulator->_delay.Wait();
         return;
     }
 

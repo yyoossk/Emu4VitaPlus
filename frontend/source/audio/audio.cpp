@@ -137,9 +137,9 @@ void Audio::NotifyBufStatus()
     {
         size_t occupancy = (_resampler == nullptr ? _out_buf.OccupancySize() : _resampler->GetInBufOccupancy());
         _buf_status_callback(gConfig->mute, occupancy, occupancy < AUDIO_SKIP_THRESHOLD);
-        if (occupancy < AUDIO_SKIP_THRESHOLD)
-        {
-            LogDebug("skip audio: %d", occupancy);
-        }
+        // if (occupancy < AUDIO_SKIP_THRESHOLD)
+        // {
+        //     LogDebug("skip audio: %d", occupancy);
+        // }
     }
 }

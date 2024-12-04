@@ -234,7 +234,7 @@ void Emulator::Run()
 
     EndProfile("retro_run");
 
-    _show_video = (sceKernelGetProcessTimeWide() - start) <= (1000000 / _av_info.timing.fps);
+    _show_video = (sceKernelGetProcessTimeWide() - start) <= _delay.GetInterval();
     if (_show_video)
     {
         _delay.Wait();
