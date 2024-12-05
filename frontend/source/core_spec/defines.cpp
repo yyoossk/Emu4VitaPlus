@@ -35,8 +35,10 @@ const size_t DEFAULT_REWIND_BUF_SIZE = 10;
 
 #if defined(ARC_BUILD)
 const bool IS_ARCADE = true;
+const bool DEFAULT_INDEPENDENT_CORE_CONFIG = true;
 #else
 const bool IS_ARCADE = false;
+const bool DEFAULT_INDEPENDENT_CORE_CONFIG = false;
 #endif
 
 #if defined(FC_BUILD) || defined(GENESIS_PLUS_GX_BUILD) || defined(SNES9X2010_BUILD)

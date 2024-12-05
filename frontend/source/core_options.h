@@ -33,6 +33,8 @@ class CoreOptions : public std::map<std::string, CoreOption>
 public:
     bool Load(CSimpleIniA &ini);
     bool Save(CSimpleIniA &ini);
+    bool Load(const char *path);
+    bool Save(const char *path);
 
     void Load(retro_variable *variables);
     void Load(retro_core_options_intl *options);

@@ -273,6 +273,38 @@ bool CoreOptions::Save(CSimpleIniA &ini)
     return true;
 }
 
+bool CoreOptions::Load(const char *path)
+{
+    LogFunctionName;
+    LogDebug("path: %s", path);
+
+    CSimpleIniA ini;
+    if (ini.LoadFile(path) != SI_OK)
+    {
+        return false;
+    }
+
+    return Load(ini);
+}
+
+bool CoreOptions::Save(const char *path)
+{
+    LogFunctionName;
+    LogDebug("path: %s", path);
+
+    CSimpleIniA ini;
+
+    if (Save(ini))
+    {
+        File::Remove(path);
+        return ini.SaveFile(path, false) == SI_OK;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 void CoreOptions::SetVisable(const struct retro_core_option_display *option_display)
 {
     LogFunctionName;

@@ -150,6 +150,7 @@ namespace Emu4Vita
         auto_save = DEFAULT_AUTO_SAVE;
         swap_enter = false;
         sim_button = false;
+        independent_core_config = DEFAULT_INDEPENDENT_CORE_CONFIG;
 
         int sys_lang;
         sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &sys_lang);
@@ -228,6 +229,7 @@ namespace Emu4Vita
         ini.SetBoolValue(MAIN_SECTION, "lightgun", lightgun);
         ini.SetBoolValue(MAIN_SECTION, "swap_enter", swap_enter);
         ini.SetBoolValue(MAIN_SECTION, "sim_button", sim_button);
+        ini.SetBoolValue(MAIN_SECTION, "independent_core_config", independent_core_config);
 
         for (const auto &control : control_maps)
         {
@@ -292,6 +294,7 @@ namespace Emu4Vita
         lightgun = ini.GetBoolValue(MAIN_SECTION, "lightgun", DEFAULT_LIGHTGUN);
         swap_enter = ini.GetBoolValue(MAIN_SECTION, "swap_enter", false);
         sim_button = ini.GetBoolValue(MAIN_SECTION, "sim_button", false);
+        independent_core_config = ini.GetBoolValue(MAIN_SECTION, "independent_core_config", DEFAULT_INDEPENDENT_CORE_CONFIG);
 
         tmp = ini.GetValue(MAIN_SECTION, "last_rom");
         if (tmp && File::Exist(tmp))

@@ -16,7 +16,6 @@ extern const char APP_DATA_DIR[];
 extern const char APP_LOG_PATH[];
 extern const char APP_CONFIG_PATH[];
 extern const char APP_INPUT_DESC_PATH[];
-extern const char APP_CORE_CONFIG_PATH[];
 extern const char APP_FAVOURITE_PATH[];
 extern const char CORE_SAVEFILES_DIR[];
 extern const char CORE_SAVESTATES_DIR[];
@@ -38,5 +37,6 @@ extern const bool DEFAULT_REAR_TOUCH;
 extern const bool DEFAULT_MOUSE;
 extern const bool DEFAULT_LIGHTGUN;
 extern const bool DEFAULT_AUTO_SAVE;
+extern const bool DEFAULT_INDEPENDENT_CORE_CONFIG;
 
 extern const bool IS_ARCADE;
