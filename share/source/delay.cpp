@@ -39,14 +39,19 @@ uint64_t Delay::GetInterval()
 bool Delay::Wait()
 {
     uint64_t current = sceKernelGetProcessTimeWide();
-    bool in_time = (current <= _next_ms);
+    bool result = (current <= _next_ms);
+
     if (current < _next_ms)
     {
         sceKernelDelayThread(_next_ms - current);
+        _next_ms += _interval_ms;
+    }
+    else
+    {
+        _next_ms = current + _interval_ms;
     }
 
-    _next_ms += _interval_ms;
-    return in_time;
+    return result;
 }
 
 bool Delay::TimeUp()
