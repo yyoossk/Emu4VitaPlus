@@ -234,11 +234,12 @@ void Emulator::Run()
 
     EndProfile("retro_run");
 
+    bool in_time = _delay.Wait();
+
     if (_show_video)
-        _show_video = (sceKernelGetProcessTimeWide() - start) <= _delay.GetInterval();
+        _show_video = in_time;
     else
         _show_video = true;
-    _delay.Wait();
 }
 
 void Emulator::Lock()

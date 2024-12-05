@@ -216,6 +216,11 @@ void CoreOptions::Default()
 bool CoreOptions::Get(retro_variable *var)
 {
     LogFunctionName;
+    if (!var || !var->key)
+    {
+        return false;
+    }
+
     LogDebug("  key: %s", var->key);
     auto iter = this->find(var->key);
     if (iter == this->end())

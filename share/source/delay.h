@@ -10,7 +10,7 @@ public:
     void SetInterval(uint64_t interval_ms);
     void SetDelay(uint64_t ms);
     uint64_t GetInterval();
-    void Wait();
+    bool Wait();
     bool TimeUp();
 
 private:
