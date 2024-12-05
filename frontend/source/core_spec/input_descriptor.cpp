@@ -63,7 +63,7 @@ const char *InputDescriptors::Get(int index)
     }
     else
     {
-        return TEXT(NONE);
+        return TEXT(LANG_NONE);
     }
 }
 

@@ -17,7 +17,7 @@
 #include "misc.h"
 #include "utils.h"
 
-TabBrowser::TabBrowser() : TabSeletable(TAB_BROWSER),
+TabBrowser::TabBrowser() : TabSeletable(LANG_BROWSER),
                            _texture(nullptr),
                            _texture_max_width(BROWSER_TEXTURE_MAX_WIDTH),
                            _texture_max_height(BROWSER_TEXTURE_MAX_HEIGHT),
@@ -352,19 +352,19 @@ void TabBrowser::_UpdateStatus()
 
     gVideo->Lock();
     _status_text = EnterButton == SCE_CTRL_CIRCLE ? BUTTON_CIRCLE : BUTTON_CROSS;
-    _status_text += item.is_dir ? TEXT(BROWSER_ENTER_DIR) : TEXT(BROWSER_START_GAME);
+    _status_text += item.is_dir ? TEXT(LANG_ENTER_DIR) : TEXT(LANG_START_GAME);
     _status_text += "\t";
     _status_text += EnterButton == SCE_CTRL_CIRCLE ? BUTTON_CROSS : BUTTON_CIRCLE;
-    _status_text += TEXT(BROWSER_BACK_DIR);
+    _status_text += TEXT(LANG_BACK_DIR);
     _status_text += "\t";
     _status_text += BUTTON_TRIANGLE;
-    _status_text += TEXT(BROWSER_SEARCH);
+    _status_text += TEXT(LANG_SEARCH);
     _status_text += "\t";
 
     if (_directory->GetSearchString().size() > 1)
     {
         _status_text += BUTTON_SQUARE;
-        _status_text += TEXT(BROWSER_NEXT);
+        _status_text += TEXT(LANG_NEXT);
         _status_text += "\t";
     }
 
@@ -373,11 +373,11 @@ void TabBrowser::_UpdateStatus()
         _status_text += BUTTON_START;
         if (gFavorites->find(item.name) == gFavorites->end())
         {
-            _status_text += TEXT(BROWSER_ADD_FAVORITE);
+            _status_text += TEXT(LANG_ADD_FAVORITE);
         }
         else
         {
-            _status_text += TEXT(BROWSER_REMOVE_FAVORITE);
+            _status_text += TEXT(LANG_REMOVE_FAVORITE);
         }
         _status_text += "\t";
     }
@@ -385,7 +385,7 @@ void TabBrowser::_UpdateStatus()
     if ((!item.is_dir) || _copy_full_path.size() > 0)
     {
         _status_text += BUTTON_SELECT;
-        _status_text += TEXT(BROWSER_FILE_MANAGE);
+        _status_text += TEXT(LANG_FILE_MANAGE);
     }
 
     gVideo->Unlock();
@@ -472,7 +472,7 @@ void TabBrowser::_OnKeyTriangle(Input *input)
         delete _text_dialog;
     }
 
-    _text_dialog = new InputTextDialog(TEXT(BROWSER_SEARCH));
+    _text_dialog = new InputTextDialog(TEXT(LANG_SEARCH));
     if (_text_dialog->Init())
     {
         _input = input;
@@ -520,18 +520,18 @@ void TabBrowser::_Search(const char *s)
     size_t count = _directory->Search(s);
     if (count == 0)
     {
-        gUi->SetHint(TEXT(TEXT_NOT_FOUND));
+        gUi->SetHint(TEXT(LANG_NOT_FOUND));
     }
     else if (count == 1)
     {
         char utf8[64];
-        snprintf(utf8, 64, "%s 1 %s", TEXT(TEXT_FOUND), TEXT(TEXT_FILE));
+        snprintf(utf8, 64, "%s 1 %s", TEXT(LANG_FOUND), TEXT(LANG_FILE));
         gUi->SetHint(utf8);
     }
     else
     {
         char utf8[64];
-        snprintf(utf8, 64, "%s %d %s", TEXT(TEXT_FOUND), count, TEXT(TEXT_FILES));
+        snprintf(utf8, 64, "%s %d %s", TEXT(LANG_FOUND), count, TEXT(LANG_FILES));
         gUi->SetHint(utf8);
     }
 

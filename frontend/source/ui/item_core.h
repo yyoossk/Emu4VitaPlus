@@ -8,7 +8,7 @@ void ItemCoreOnClick()
 {
     gConfig->Save();
     gEmulator->CoreOptionUpdate();
-    gUi->SetHint(TEXT(CORE_NOTICE));
+    gUi->SetHint(TEXT(LANG_CORE_NOTICE));
 }
 
 class ItemCore : public ItemSelectable

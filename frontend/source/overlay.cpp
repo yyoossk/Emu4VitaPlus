@@ -90,7 +90,7 @@ bool Overlays::Load(const char *path)
 std::vector<LanguageString> Overlays::GetConfigs()
 {
     std::vector<LanguageString> configs;
-    configs.emplace_back(LanguageString(NONE));
+    configs.emplace_back(LanguageString(LANG_NONE));
     for (const auto &overlay : *this)
     {
         configs.emplace_back(overlay.name);

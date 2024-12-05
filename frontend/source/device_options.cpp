@@ -3,7 +3,7 @@
 #include "log.h"
 
 #define DEVCIE_SECTION "DEVICE"
-static const char *Unset = gTexts[LANGUAGE_ENGLISH][UNSET];
+static const char *Unset = gTexts[LANGUAGE_ENGLISH][LANG_UNSET];
 
 // the order is RETRO_DEVICE_xxx
 static const char *DEVICE_ICON[] = {
@@ -19,7 +19,7 @@ const std::vector<LanguageString> ControllerTypes::GetValues() const
 {
     std::vector<LanguageString> _values;
     _values.reserve(this->size() + 1);
-    _values.emplace_back(TEXT(UNSET));
+    _values.emplace_back(TEXT(LANG_UNSET));
     for (const auto &v : *this)
     {
         uint32_t base = v.device & 0xff;

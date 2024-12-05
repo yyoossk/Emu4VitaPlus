@@ -28,8 +28,8 @@ void ItemSelectable::Show(bool selected)
 
     if (_IsOnOff())
     {
-        _ShowOnOff(strcasecmp(_GetPreviewText(), TEXT(YES)) == 0 ||
-                   strcasecmp(_GetPreviewText(), TEXT(ENABLED)) == 0);
+        _ShowOnOff(strcasecmp(_GetPreviewText(), TEXT(LANG_YES)) == 0 ||
+                   strcasecmp(_GetPreviewText(), TEXT(LANG_ENABLED)) == 0);
     }
     else
     {
@@ -147,7 +147,7 @@ bool ItemSelectable::_IsOnOff()
 {
     if (_GetTotalCount() == 2)
     {
-        if (TEST(YES, NO) || TEST(ENABLED, DISABLED))
+        if (TEST(LANG_YES, LANG_NO) || TEST(LANG_ENABLED, LANG_DISABLED))
         {
             return true;
         }

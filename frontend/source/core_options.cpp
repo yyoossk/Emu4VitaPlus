@@ -216,7 +216,7 @@ void CoreOptions::Default()
 bool CoreOptions::Get(retro_variable *var)
 {
     LogFunctionName;
-    if (!var || !var->key)
+    if (!(var && var->key))
     {
         return false;
     }

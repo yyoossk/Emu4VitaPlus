@@ -12,7 +12,7 @@
 #define TITLE_HEIGHT 100
 #define INPUT_COUNT_MAX 10
 
-TabAbout::TabAbout() : TabBase(TAB_ABOUT),
+TabAbout::TabAbout() : TabBase(LANG_ABOUT),
                        _index(0),
                        _input_count(0)
 {
@@ -94,11 +94,11 @@ void TabAbout::UnsetInputHooks(Input *input)
 void TabAbout::_InitTexts()
 {
     _last_lang = gConfig->language;
-    _texts = {std::string(TEXT(COMPILED_ON)) + " " + __DATE__ + " " + __TIME__,
-              std::string(TEXT(AUTHOR)) + ": noword   " + TEXT(SPECIAL_THANKS) + ": yizhigai, KyleBing, TearCrow",
-              std::string(TEXT(SITE)) + ": https://github.com/noword/Emu4VitaPlus",
+    _texts = {std::string(TEXT(LANG_COMPILED_ON)) + " " + __DATE__ + " " + __TIME__,
+              std::string(TEXT(LANG_AUTHOR)) + ": noword   " + TEXT(LANG_SPECIAL_THANKS) + ": yizhigai, KyleBing, TearCrow",
+              std::string(TEXT(LANG_SITE)) + ": https://github.com/noword/Emu4VitaPlus",
               "",
-              TEXT(EXTERNAL_COMPONENTS),
+              TEXT(LANG_EXTERNAL_COMPONENTS),
               "7-Zip (GPL v2.1) https://github.com/mcmilk/7-Zip.git",
               "minizip-ng (zlib) https://github.com/zlib-ng/minizip-ng",
               "simpleini (MIT) https://github.com/brofield/simpleini",
@@ -108,7 +108,7 @@ void TabAbout::_InitTexts()
               "imgui-vita2d (MIT) https://github.com/cy33hc/imgui-vita2d",
               "lz4 (BSD 2-Clause) https://github.com/lz4/lz4",
               "",
-              TEXT(TAB_CORE),
+              TEXT(LANG_CORE),
               "https://gitee.com/yizhigai/libretro-fba-lite",
               "https://github.com/libretro/FBNeo.git",
               "https://github.com/libretro/fbalpha2012.git",

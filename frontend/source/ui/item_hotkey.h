@@ -3,6 +3,7 @@
 #include <string>
 #include "item_selectable.h"
 #include "config.h"
+#include "language_define.h"
 
 static uint32_t PsvKeys[] = {
     SCE_CTRL_PSBUTTON,
@@ -38,7 +39,7 @@ class ItemHotkey : public ItemSelectable
 {
 public:
     ItemHotkey(HotKeyConfig index, uint32_t *hotkey)
-        : ItemSelectable(index + HOTKEY_SAVESTATE),
+        : ItemSelectable(_langs[index]),
           _hotkey(hotkey) {};
 
     virtual ~ItemHotkey() {};
@@ -142,4 +143,16 @@ private:
     };
 
     uint32_t *_hotkey;
+    static TEXT_ENUM _langs[];
 };
+
+TEXT_ENUM ItemHotkey::_langs[] = {
+    LANG_SAVE_STATE,
+    LANG_LOAD_STATE,
+    LANG_GAME_SPEED_UP,
+    LANG_GAME_SPEED_DOWN,
+    LANG_GAME_REWIND,
+    LANG_CONTROLLER_PORT_UP,
+    LANG_CONTROLLER_PORT_DOWN,
+    LANG_MENU_TOGGLE,
+    LANG_EXIT_GAME};

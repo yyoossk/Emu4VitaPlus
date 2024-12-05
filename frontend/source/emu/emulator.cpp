@@ -161,7 +161,7 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
     else
     {
         LogError("  load rom failed: %s", _current_name.c_str());
-        gUi->SetHint(TEXT(LOAD_ROM_FAILED));
+        gUi->SetHint(TEXT(LANG_LOAD_ROM_FAILED));
         gStatus.Set(APP_STATUS_SHOW_UI);
     }
 

@@ -152,7 +152,7 @@ bool Shaders::Load(const char *path)
 std::vector<LanguageString> Shaders::GetConfigs()
 {
     std::vector<LanguageString> configs;
-    configs.emplace_back(LanguageString(NONE));
+    configs.emplace_back(LanguageString(LANG_NONE));
     for (auto const &shader : *this)
     {
         configs.emplace_back(shader.GetName());

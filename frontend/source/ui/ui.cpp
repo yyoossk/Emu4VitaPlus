@@ -111,7 +111,7 @@ Ui::Ui() : _tab_index(TAB_INDEX_BROWSER),
     LogFunctionName;
     _title = std::string("Emu4Vita++ v") + APP_VER_STR + " (" + gEmulator->GetCoreName() + " " + gEmulator->GetCoreVersion() + ")";
     _InitImgui();
-    _dialog = new Dialog("", {DIALOG_OK, DIALOG_CANCEL},
+    _dialog = new Dialog("", {LANG_OK, LANG_CANCEL},
                          std::bind(&Ui::_OnDialog, this, std::placeholders::_1, std::placeholders::_2));
 }
 
@@ -147,18 +147,18 @@ void Ui::CreateTables()
 
     _ClearTabs();
 
-    std::vector<ItemBase *> items{new ItemBase(SYSTEM_MENU_RESUME_GAME, "", ResumeGame, NULL, false),
-                                  new ItemBase(SYSTEM_MENU_RESET_GAME, "", ResetGame, NULL, false),
-                                  new ItemBase(SYSTEM_MENU_EXIT_GAME, "", ExitGame, NULL, false)};
+    std::vector<ItemBase *> items{new ItemBase(LANG_RESUME_GAME, "", ResumeGame, NULL, false),
+                                  new ItemBase(LANG_RESET_GAME, "", ResetGame, NULL, false),
+                                  new ItemBase(LANG_EXIT_GAME, "", ExitGame, NULL, false)};
 
     if (gConfig->boot_from_arch)
     {
-        items.emplace_back(new ItemBase(SYSTEM_MENU_BACK_TO_ARCH, "", ReturnToArch));
+        items.emplace_back(new ItemBase(LANG_BACK_TO_ARCH, "", ReturnToArch));
     }
-    items.emplace_back(new ItemBase(SYSTEM_MENU_CLEAN_CACHE, "", std::bind(&Ui::_OnCleanCache, this, &_input)));
-    items.emplace_back(new ItemBase(SYSTEM_MENU_EXIT, "", ExitApp));
+    items.emplace_back(new ItemBase(LANG_CLEAN_CACHE, "", std::bind(&Ui::_OnCleanCache, this, &_input)));
+    items.emplace_back(new ItemBase(LANG_EXIT, "", ExitApp));
 
-    _tabs[TAB_INDEX_SYSTEM] = new TabSeletable(TAB_SYSTEM, items);
+    _tabs[TAB_INDEX_SYSTEM] = new TabSeletable(LANG_SYSTEM, items);
 
     std::vector<ItemBase *> states;
     states.reserve(MAX_STATES);
@@ -166,58 +166,59 @@ void Ui::CreateTables()
     {
         states.emplace_back(new ItemState(gStateManager->states[i]));
     }
-    _tabs[TAB_INDEX_STATE] = new TabSeletable(TAB_STATE, states, 1);
+    _tabs[TAB_INDEX_STATE] = new TabSeletable(LANG_STATE, states, 1);
     _tabs[TAB_INDEX_STATE]->SetVisable(false);
 
-    _tabs[TAB_INDEX_CHEAT] = new TabSeletable(TAB_CHEAT);
+    _tabs[TAB_INDEX_CHEAT] = new TabSeletable(LANG_CHEAT);
     _tabs[TAB_INDEX_CHEAT]->SetVisable(false);
 
     _tabs[TAB_INDEX_BROWSER] = new TabBrowser();
     _tabs[TAB_INDEX_FAVORITE] = new TabFavorite();
 
-    _tabs[TAB_INDEX_GRAPHICS] = new TabSeletable(TAB_GRAPHICS,
-                                                 {new ItemConfig(GRAPHICS_MENU_DISPLAY_SIZE,
+    _tabs[TAB_INDEX_GRAPHICS] = new TabSeletable(LANG_GRAPHICS,
+                                                 {new ItemConfig(LANG_DISPLAY_SIZE,
                                                                  "",
                                                                  &gConfig->graphics[DISPLAY_SIZE],
-                                                                 DISPLAY_SIZE_1X,
-                                                                 CONFIG_DISPLAY_SIZE_COUNT,
+                                                                 {LANG_1X, LANG_2X, LANG_3X, LANG_FULL},
                                                                  std::bind(&Emulator::ChangeGraphicsConfig, gEmulator)),
-                                                  new ItemConfig(GRAPHICS_MENU_ASPECT_RATIO,
+                                                  new ItemConfig(LANG_ASPECT_RATIO,
                                                                  "",
                                                                  &gConfig->graphics[DISPLAY_RATIO],
-                                                                 ASPECT_RATIO_BY_GAME_RESOLUTION,
-                                                                 CONFIG_DISPLAY_RATIO_COUNT,
+                                                                 {LANG_BY_GAME_RESOLUTION,
+                                                                  LANG_BY_DEV_SCREEN,
+                                                                  LANG_8_7,
+                                                                  LANG_4_3,
+                                                                  LANG_3_2,
+                                                                  LANG_16_9},
                                                                  std::bind(&Emulator::ChangeGraphicsConfig, gEmulator)),
 #ifdef WANT_DISPLAY_ROTATE
-                                                  new ItemConfig(GRAPHICS_MENU_DISPLAY_ROTATE,
+                                                  new ItemConfig(LANG_DISPLAY_ROTATE,
                                                                  "",
                                                                  &gConfig->graphics[DISPLAY_ROTATE],
                                                                  DISPLAY_ROTATE_DISABLE,
                                                                  CONFIG_DISPLAY_ROTATE_COUNT),
 #endif
-                                                  new ItemConfig(GRAPHICS_MENU_GRAPHICS_SHADER,
+                                                  new ItemConfig(LANG_GRAPHICS_SHADER,
                                                                  "",
                                                                  &gConfig->graphics[GRAPHICS_SHADER],
                                                                  gShaders->GetConfigs(),
                                                                  std::bind(&Emulator::ChangeGraphicsConfig, gEmulator)),
-                                                  new ItemConfig(GRAPHICS_MENU_GRAPHICS_SMOOTH,
+                                                  new ItemConfig(LANG_GRAPHICS_SMOOTH,
                                                                  "",
                                                                  &gConfig->graphics[GRAPHICS_SMOOTH],
-                                                                 NO,
-                                                                 CONFIG_GRAPHICS_SMOOTHER_COUNT,
+                                                                 {LANG_NO, LANG_YES},
                                                                  std::bind(&Emulator::ChangeGraphicsConfig, gEmulator)),
-                                                  new ItemConfig(GRAPHICS_MENU_OVERLAY_MODE,
+                                                  new ItemConfig(LANG_OVERLAY_MODE,
                                                                  "",
                                                                  &gConfig->graphics[GRAPHICS_OVERLAY_MODE],
-                                                                 OVERLAY_MODE_OVERLAY,
-                                                                 CONFIG_GRAPHICS_OVERLAY_MODE_COUNT,
+                                                                 {LANG_MODE_OVERLAY, LANG_MODE_BACKGROUND},
                                                                  std::bind(&Emulator::ChangeGraphicsConfig, gEmulator)),
-                                                  new ItemConfig(GRAPHICS_MENU_OVERLAY_SELECT,
+                                                  new ItemConfig(LANG_OVERLAY_SELECT,
                                                                  "",
                                                                  &gConfig->graphics[GRAPHICS_OVERLAY],
                                                                  gOverlays->GetConfigs(),
                                                                  std::bind(&Emulator::ChangeGraphicsConfig, gEmulator)),
-                                                  new ItemBase(RESET_CONFIGS,
+                                                  new ItemBase(LANG_RESET_CONFIGS,
                                                                "",
                                                                ResetGraphics,
                                                                std::bind(&Emulator::ChangeGraphicsConfig, gEmulator))});
@@ -228,7 +229,7 @@ void Ui::CreateTables()
     //     controls.emplace_back(new ItemControl(&cmap));
     // }
     // controls.emplace_back(new ItemBase(RESET_CONFIGS, "", ResetControl));
-    // _tabs[TAB_INDEX_CONTROL] = new TabSeletable(TAB_CONTROL, controls);
+    // _tabs[LANG_CONTROL] = new TabSeletable(TAB_CONTROL, controls);
 
     UpdateControllerOptions();
 
@@ -238,44 +239,44 @@ void Ui::CreateTables()
     {
         hotkeys.emplace_back(new ItemHotkey((HotKeyConfig)i, &gConfig->hotkeys[i]));
     }
-    hotkeys.emplace_back(new ItemBase(RESET_CONFIGS, "", ResetHotkey));
-    _tabs[TAB_INDEX_HOTKEY] = new TabSeletable(TAB_HOTKEY, hotkeys);
+    hotkeys.emplace_back(new ItemBase(LANG_RESET_CONFIGS, "", ResetHotkey));
+    _tabs[TAB_INDEX_HOTKEY] = new TabSeletable(LANG_HOTKEY, hotkeys);
 
     UpdateCoreOptions();
 
-    _tabs[TAB_INDEX_OPTIONS] = new TabSeletable(TAB_OPTIONS,
-                                                {new ItemConfig(OPTIONS_MENU_LANGUAGE,
+    _tabs[TAB_INDEX_OPTIONS] = new TabSeletable(LANG_OPTIONS,
+                                                {new ItemConfig(LANG_LANGUAGE,
                                                                 "",
                                                                 (uint32_t *)&gConfig->language,
                                                                 {LanguageString(gLanguageNames[LANGUAGE_ENGLISH]),
                                                                  LanguageString(gLanguageNames[LANGUAGE_CHINESE])},
                                                                 std::bind(&Ui::ChangeLanguage, gUi)),
-                                                 new ItemConfig(OPTIONS_MENU_REWIND,
+                                                 new ItemConfig(LANG_REWIND,
                                                                 "",
                                                                 &gConfig->rewind,
-                                                                {NO, YES},
+                                                                {LANG_NO, LANG_YES},
                                                                 std::bind(&Emulator::ChangeRewindConfig, gEmulator)),
-                                                 new ItemIntConfig(OPTIONS_MENU_REWIND_BUF_SIZE,
+                                                 new ItemIntConfig(LANG_REWIND_BUF_SIZE,
                                                                    "",
                                                                    &gConfig->rewind_buf_size,
                                                                    MIN_REWIND_BUF_SIZE,
                                                                    MAX_REWIND_BUF_SIZE,
                                                                    REWIND_BUF_SIZE_STEP,
                                                                    std::bind(&Emulator::ChangeRewindConfig, gEmulator)),
-                                                 new ItemConfig(OPTIONS_MENU_MUTE,
+                                                 new ItemConfig(LANG_MUTE,
                                                                 "",
                                                                 (uint32_t *)&gConfig->mute,
-                                                                {NO, YES},
+                                                                {LANG_NO, LANG_YES},
                                                                 std::bind(&Emulator::ChangeAudioConfig, gEmulator)),
-                                                 new ItemConfig(OPTIONS_MENU_AUTOSAVE,
+                                                 new ItemConfig(LANG_AUTO_SAVE,
                                                                 "",
                                                                 (uint32_t *)&gConfig->auto_save,
-                                                                {NO, YES},
+                                                                {LANG_NO, LANG_YES},
                                                                 nullptr),
-                                                 new ItemConfig(OPTIONS_MENU_SWAP_ENTER,
+                                                 new ItemConfig(LANG_SWAP_ENTER,
                                                                 "",
                                                                 (uint32_t *)&gConfig->swap_enter,
-                                                                {NO, YES},
+                                                                {LANG_NO, LANG_YES},
                                                                 nullptr)});
 
     _tabs[TAB_INDEX_ABOUT] = new TabAbout();
@@ -532,7 +533,7 @@ void Ui::UpdateCoreOptions()
         delete _tabs[TAB_INDEX_CORE];
     }
 
-    _tabs[TAB_INDEX_CORE] = new TabSeletable(TAB_CORE, options);
+    _tabs[TAB_INDEX_CORE] = new TabSeletable(LANG_CORE, options);
 
     gVideo->Unlock();
 }
@@ -548,7 +549,7 @@ void Ui::UpdateCheatOptions()
         options.emplace_back(new ItemConfig(cheat.desc,
                                             "",
                                             &cheat.enable,
-                                            {NO, YES},
+                                            {LANG_NO, LANG_YES},
                                             std::bind(&Emulator::ChangeCheatConfig, gEmulator)));
     }
 
@@ -558,7 +559,7 @@ void Ui::UpdateCheatOptions()
         delete _tabs[TAB_INDEX_CHEAT];
     }
 
-    _tabs[TAB_INDEX_CHEAT] = new TabSeletable(TAB_CHEAT, options, 2, 0.8);
+    _tabs[TAB_INDEX_CHEAT] = new TabSeletable(LANG_CHEAT, options, 2, 0.8);
     gVideo->Unlock();
 }
 
@@ -573,28 +574,28 @@ void Ui::UpdateControllerOptions()
     {
         for (size_t i = 0; i < gConfig->device_options.size(); i++)
         {
-            std::string port_name = TEXT(DEVICE_PORT);
+            std::string port_name = TEXT(LANG_DEVICE_PORT);
             port_name += std::to_string(i);
             controls.emplace_back(new ItemDevice(port_name, &gConfig->device_options[i]));
         }
     }
 
-    controls.emplace_back(new ItemConfig(OPTIONS_MENU_MOUSE,
+    controls.emplace_back(new ItemConfig(LANG_MOUSE,
                                          "",
                                          &gConfig->mouse,
-                                         {DISABLED, MOUSE_FRONT_TOUCH_PANEL, MOUSE_REAR_TOUCH_PANEL},
+                                         {LANG_DISABLED, LANG_MOUSE_FRONT_TOUCH_PANEL, LANG_MOUSE_REAR_TOUCH_PANEL},
                                          std::bind(&Emulator::SetupKeys, gEmulator)));
 
-    controls.emplace_back(new ItemConfig(OPTIONS_MENU_LIGHTGUN,
+    controls.emplace_back(new ItemConfig(LANG_LIGHTGUN,
                                          "",
                                          &gConfig->lightgun,
-                                         {DISABLED, ENABLED},
+                                         {LANG_DISABLED, LANG_ENABLED},
                                          std::bind(&Emulator::SetupKeys, gEmulator)));
 
-    controls.emplace_back(new ItemConfig(OPTIONS_MENU_SIM_BUTTON,
+    controls.emplace_back(new ItemConfig(LANG_SIM_BUTTON,
                                          "",
                                          &gConfig->sim_button,
-                                         {DISABLED, ENABLED},
+                                         {LANG_DISABLED, LANG_ENABLED},
                                          std::bind(&Emulator::SetupKeys, gEmulator)));
 
     for (ControlMapConfig &cmap : gConfig->control_maps)
@@ -602,14 +603,14 @@ void Ui::UpdateControllerOptions()
         controls.emplace_back(new ItemControl(&cmap));
     }
 
-    controls.emplace_back(new ItemBase(RESET_CONFIGS, "", ResetControl));
+    controls.emplace_back(new ItemBase(LANG_RESET_CONFIGS, "", ResetControl));
 
     gVideo->Lock();
     if (_tabs[TAB_INDEX_CONTROL] != nullptr)
     {
         delete _tabs[TAB_INDEX_CONTROL];
     }
-    _tabs[TAB_INDEX_CONTROL] = new TabSeletable(TAB_CONTROL, controls);
+    _tabs[TAB_INDEX_CONTROL] = new TabSeletable(LANG_CONTROL, controls);
     gVideo->Unlock();
 }
 
@@ -631,8 +632,8 @@ void Ui::ChangeLanguage()
 void Ui::_OnCleanCache(Input *input)
 {
     LogFunctionName;
-    _current_dialog = DIALOG_CLEAN_CACHE;
-    _dialog->SetText(TEXT(DIALOG_CLEAN_CACHE));
+    _current_dialog = LANG_CLEAN_CACHE;
+    _dialog->SetText(TEXT(LANG_CLEAN_CACHE));
     _dialog->OnActive(input);
 }
 
@@ -642,7 +643,7 @@ void Ui::_OnDialog(Input *input, int index)
 
     switch (_current_dialog)
     {
-    case DIALOG_CLEAN_CACHE:
+    case LANG_CLEAN_CACHE:
     default:
         File::RemoveAllFiles(ARCADE_CACHE_DIR);
         File::RemoveAllFiles(ARCHIVE_CACHE_DIR);

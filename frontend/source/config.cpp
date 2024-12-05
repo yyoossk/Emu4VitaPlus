@@ -120,7 +120,7 @@ namespace Emu4Vita
         {RETRO_DEVICE_ID_JOYPAD_R2, BUTTON_R2},
         {RETRO_DEVICE_ID_JOYPAD_L3, BUTTON_L3},
         {RETRO_DEVICE_ID_JOYPAD_R3, BUTTON_R3},
-        {RETRO_DEVICE_ID_NONE, NONE},
+        {RETRO_DEVICE_ID_NONE, LANG_NONE},
     };
 
     Config::Config()

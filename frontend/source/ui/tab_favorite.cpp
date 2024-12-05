@@ -6,7 +6,7 @@
 #include "video.h"
 #include "misc.h"
 
-TabFavorite::TabFavorite() : TabSeletable(TAB_FAVORITE), _texture(nullptr)
+TabFavorite::TabFavorite() : TabSeletable(LANG_FAVORITE), _texture(nullptr)
 {
     std::string name = File::GetName(gConfig->last_rom.c_str());
     size_t count = 0;
@@ -23,8 +23,8 @@ TabFavorite::TabFavorite() : TabSeletable(TAB_FAVORITE), _texture(nullptr)
     _UpdateStatus();
     _UpdateTexture();
 
-    _dialog = new Dialog{DIALOG_REMOVE_FAVORITE,
-                         {DIALOG_OK, DIALOG_CANCEL},
+    _dialog = new Dialog{LANG_REMOVE_FAVORITE,
+                         {LANG_OK, LANG_CANCEL},
                          std::bind(&TabFavorite::_OnDialog, this, std::placeholders::_1, std::placeholders::_2)};
 }
 
@@ -145,10 +145,10 @@ void TabFavorite::_OnKeyCross(Input *input)
 void TabFavorite::_UpdateStatus()
 {
     _status_text = EnterButton == SCE_CTRL_CIRCLE ? BUTTON_CIRCLE : BUTTON_CROSS;
-    _status_text += TEXT(BROWSER_START_GAME);
+    _status_text += TEXT(LANG_START_GAME);
     _status_text += "\t";
     _status_text += EnterButton == SCE_CTRL_CIRCLE ? BUTTON_CROSS : BUTTON_CIRCLE;
-    _status_text += TEXT(BROWSER_REMOVE_FAVORITE);
+    _status_text += TEXT(LANG_REMOVE_FAVORITE);
 }
 
 void TabFavorite::_OnDialog(Input *input, int index)

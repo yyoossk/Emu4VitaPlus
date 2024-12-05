@@ -3,8 +3,8 @@
 #include "app.h"
 #include "log.h"
 
-static const TEXT_ENUM MENU_TEXT[] = {STATE_SAVE, STATE_LOAD, STATE_DELETE, STATE_CANCEL};
-static const TEXT_ENUM AUTO_MENU_TEXT[] = {STATE_LOAD, STATE_DELETE, STATE_CANCEL};
+static const TEXT_ENUM MENU_TEXT[] = {LANG_SAVE, LANG_LOAD, LANG_DELETE, LANG_CANCEL};
+static const TEXT_ENUM AUTO_MENU_TEXT[] = {LANG_LOAD, LANG_DELETE, LANG_CANCEL};
 
 ItemState::ItemState(State *state)
     : ItemSelectable(""),
@@ -12,7 +12,7 @@ ItemState::ItemState(State *state)
 {
   if (strcmp(state->SlotName(), "auto") == 0)
   {
-    _text = LanguageString(STATE_AUTO);
+    _text = LanguageString(LANG_AUTO_SAVE);
     _menu_texts = AUTO_MENU_TEXT;
     _menu_count = sizeof(AUTO_MENU_TEXT) / sizeof(TEXT_ENUM);
   }
@@ -23,7 +23,7 @@ ItemState::ItemState(State *state)
     _menu_count = sizeof(MENU_TEXT) / sizeof(TEXT_ENUM);
   }
 
-  _dialog = new Dialog{"", {DIALOG_OK, DIALOG_CANCEL}, std::bind(&ItemState::_OnRun, this, std::placeholders::_1, std::placeholders::_2)};
+  _dialog = new Dialog{"", {LANG_OK, LANG_CANCEL}, std::bind(&ItemState::_OnRun, this, std::placeholders::_1, std::placeholders::_2)};
 }
 
 ItemState::~ItemState()
@@ -53,7 +53,7 @@ void ItemState::Show(bool selected)
   }
   else
   {
-    snprintf(text, 64, "%s (%s)", _text.Get(), TEXT(STATE_EMPTY));
+    snprintf(text, 64, "%s (%s)", _text.Get(), TEXT(LANG_EMPTY));
   }
 
   ImGui::Button(text, {size.x - w, h});
@@ -162,15 +162,15 @@ void ItemState::_OnClick(Input *input)
   switch (index)
   {
   case POPUP_SAVE:
-    _dialog->SetText(DIALOG_SAVE_CONFIRM);
+    _dialog->SetText(LANG_SAVE_CONFIRM);
     break;
 
   case POPUP_LOAD:
-    _dialog->SetText(DIALOG_LOAD_CONFIRM);
+    _dialog->SetText(LANG_LOAD_CONFIRM);
     break;
 
   case POPUP_DELETE:
-    _dialog->SetText(DIALOG_DELETE_CONFIRM);
+    _dialog->SetText(LANG_DELETE_CONFIRM);
     break;
 
   default:
