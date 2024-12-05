@@ -93,6 +93,7 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
     _core_options_updated = false;
 
     char *buf = nullptr;
+    bool result = false;
     const char *_path;
     if (*entry_name)
     {
@@ -109,8 +110,7 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
 
     if (_path == nullptr)
     {
-        gStatus.Set(APP_STATUS_SHOW_UI);
-        return false;
+        goto LOAD_END;
     }
 
     if (_info.need_fullpath)
@@ -124,13 +124,12 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
         game_info.size = File::ReadFile(_path, (void **)&buf);
         if (game_info.size == 0)
         {
-            LogError("failed to read rom: %s", _path);
-            return false;
+            goto LOAD_END;
         }
         game_info.data = buf;
     }
 
-    bool result = retro_load_game(&game_info);
+    result = retro_load_game(&game_info);
     if (result)
     {
         gStatus.Set(APP_STATUS_RUN_GAME);
@@ -158,24 +157,27 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
             _rewind_manager.Init();
         }
     }
-    else
-    {
-        LogError("  load rom failed: %s", _current_name.c_str());
-        gUi->SetHint(TEXT(LANG_LOAD_ROM_FAILED));
-        gStatus.Set(APP_STATUS_SHOW_UI);
-    }
 
+LOAD_END:
+    LogDebug("  LoadRom result: %d", result);
     if (buf)
     {
         delete[] buf;
     }
 
-    LogDebug("  LoadRom result: %d", result);
-
-    if (_LoadCheats(path))
+    if (result)
     {
-        gUi->UpdateCheatOptions();
-        _cheats.Start();
+        if (_LoadCheats(path))
+        {
+            gUi->UpdateCheatOptions();
+            _cheats.Start();
+        }
+    }
+    else
+    {
+        gUi->SetHint(TEXT(LANG_LOAD_ROM_FAILED));
+        gStatus.Set(APP_STATUS_SHOW_UI);
+        _current_name.clear();
     }
 
     return result;

@@ -31,7 +31,7 @@ void State::Init(const char *game_name)
 
     char path[SCE_FIOS_PATH_MAX];
     char name[SCE_FIOS_PATH_MAX];
-    snprintf(path, SCE_FIOS_PATH_MAX, "%s/%s", CORE_SAVESTATES_DIR, game_name);
+    snprintf(path, SCE_FIOS_PATH_MAX, "%s/%s", CORE_SAVEFILES_DIR, game_name);
     if (!File::Exist(path))
     {
         File::MakeDirs(path);

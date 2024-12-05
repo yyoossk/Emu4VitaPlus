@@ -633,7 +633,7 @@ void Ui::_OnCleanCache(Input *input)
 {
     LogFunctionName;
     _current_dialog = LANG_CLEAN_CACHE;
-    _dialog->SetText(TEXT(LANG_CLEAN_CACHE));
+    _dialog->SetText(TEXT(LANG_CLEAN_CACHE_CONFIRM));
     _dialog->OnActive(input);
 }
 

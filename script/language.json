@@ -568,14 +568,14 @@
     },
     {
         "No.": "82",
-        "Tag": "LANG_REMOVE_FAVORITE",
+        "Tag": "LANG_REMOVE_FAVORITE_CONFIRM",
         "English": "Are you sure you want to remove this game from your favorites?",
         "Chinese": "你确定要从收藏夹中移除此游戏吗？",
         "Comments": ""
     },
     {
         "No.": "83",
-        "Tag": "LANG_CLEAN_CACHE",
+        "Tag": "LANG_CLEAN_CACHE_CONFIRM",
         "English": "Are you sure you want to clean the cached files?",
         "Chinese": "你确定要清理缓存文件吗？",
         "Comments": ""

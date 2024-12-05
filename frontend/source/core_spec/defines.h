@@ -18,7 +18,6 @@ extern const char APP_CONFIG_PATH[];
 extern const char APP_INPUT_DESC_PATH[];
 extern const char APP_FAVOURITE_PATH[];
 extern const char CORE_SAVEFILES_DIR[];
-extern const char CORE_SAVESTATES_DIR[];
 extern const char CORE_CHEATS_DIR[];
 extern const char APP_TITLE_NAME[];
 extern const char CORE_FULL_NAME[];

@@ -23,7 +23,7 @@ vita2d_texture *GetRomPreviewImage(const char *path, const char *name)
     if (texture)
         goto END;
 
-    img_path = std::string(CORE_SAVESTATES_DIR) + "/" + stem + "/";
+    img_path = std::string(CORE_SAVEFILES_DIR) + "/" + stem + "/";
     time_t newest;
     for (int i = 0; i < MAX_STATES; i++)
     {

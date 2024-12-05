@@ -44,7 +44,7 @@ public:
     void Lock();
     void Unlock();
     void SetSpeed(double speed);
-    const char *CurrentName() { return _current_name.c_str(); };
+    const char *GetCurrentName() { return _current_name.c_str(); };
     bool SaveScreenShot(const char *name);
     bool GetCurrentSoftwareFramebuffer(retro_framebuffer *fb);
     const char *GetValidExtensions() const { return _info.valid_extensions; };

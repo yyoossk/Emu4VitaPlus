@@ -7,6 +7,10 @@
 void ItemCoreOnClick()
 {
     gConfig->Save();
+    if (gConfig->independent_core_config && gStatus.Get() == APP_STATUS_SHOW_UI_IN_GAME && *gEmulator->GetCurrentName())
+    {
+        gConfig->core_options.Save((std::string(CORE_SAVEFILES_DIR) + "/" + gEmulator->GetCurrentName() + "/core.ini").c_str());
+    }
     gEmulator->CoreOptionUpdate();
     gUi->SetHint(TEXT(LANG_CORE_NOTICE));
 }
