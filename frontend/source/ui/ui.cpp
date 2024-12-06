@@ -637,14 +637,20 @@ void Ui::_OnCleanCache(Input *input)
 void Ui::_OnDialog(Input *input, int index)
 {
     LogFunctionName;
+    LogDebug("_current_dialog: %d index: %d", _current_dialog, index);
 
     switch (_current_dialog)
     {
     case LANG_CLEAN_CACHE:
+        if (index == 0)
+        {
+            File::RemoveAllFiles(ARCADE_CACHE_DIR);
+            File::RemoveAllFiles(ARCHIVE_CACHE_DIR);
+            File::RemoveAllFiles(CACHE_DIR);
+        }
+        break;
+
     default:
-        File::RemoveAllFiles(ARCADE_CACHE_DIR);
-        File::RemoveAllFiles(ARCHIVE_CACHE_DIR);
-        File::RemoveAllFiles(CACHE_DIR);
         break;
     }
 }

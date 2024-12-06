@@ -6,6 +6,13 @@
 
 int32_t GetNameThread(uint32_t args, void *argc);
 
+struct Clipboard
+{
+    std::string path;
+    bool cut;
+    bool Empty() { return path.empty(); };
+};
+
 class TabBrowser : public TabSeletable
 {
 public:
@@ -24,13 +31,13 @@ private:
     bool _ItemVisable(size_t index) override { return index < _directory->GetSize(); };
 
     void _OnActive(Input *input) override;
-
-    void _OnKeyStart(Input *input);
-    void _OnKeySelect(Input *input);
-
     void _OnKeyCross(Input *input);
     void _OnKeyTriangle(Input *input);
     void _OnKeySquare(Input *input);
+    void _OnKeyStart(Input *input);
+    void _OnKeySelect(Input *input);
+
+    void _OnDialog(Input *input, int index);
 
     void _UpdateTexture();
     void _UpdateStatus();
@@ -53,5 +60,6 @@ private:
     const char *_name;
     TextMovingStatus _name_moving_status;
 
-    std::string _copy_full_path;
+    Clipboard _clipboard;
+    Dialog *_dialog;
 };

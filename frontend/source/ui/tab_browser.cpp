@@ -22,7 +22,8 @@ TabBrowser::TabBrowser() : TabSeletable(LANG_BROWSER),
                            _texture_max_width(BROWSER_TEXTURE_MAX_WIDTH),
                            _texture_max_height(BROWSER_TEXTURE_MAX_HEIGHT),
                            _text_dialog(nullptr),
-                           _name(nullptr)
+                           _name(nullptr),
+                           _dialog(nullptr)
 {
     LogFunctionName;
 
@@ -45,10 +46,17 @@ TabBrowser::TabBrowser() : TabSeletable(LANG_BROWSER),
 TabBrowser::~TabBrowser()
 {
     LogFunctionName;
+
     delete _directory;
+
     if (_text_dialog != nullptr)
     {
         delete _text_dialog;
+    }
+
+    if (_dialog != nullptr)
+    {
+        delete _dialog;
     }
 }
 
@@ -56,18 +64,20 @@ void TabBrowser::SetInputHooks(Input *input)
 {
     TabSeletable::SetInputHooks(input);
     input->SetKeyUpCallback(CancelButton, std::bind(&TabBrowser::_OnKeyCross, this, input));
-    input->SetKeyUpCallback(SCE_CTRL_START, std::bind(&TabBrowser::_OnKeyStart, this, input));
     input->SetKeyUpCallback(SCE_CTRL_TRIANGLE, std::bind(&TabBrowser::_OnKeyTriangle, this, input));
     input->SetKeyUpCallback(SCE_CTRL_SQUARE, std::bind(&TabBrowser::_OnKeySquare, this, input));
+    input->SetKeyUpCallback(SCE_CTRL_START, std::bind(&TabBrowser::_OnKeyStart, this, input));
+    input->SetKeyUpCallback(SCE_CTRL_SELECT, std::bind(&TabBrowser::_OnKeySelect, this, input));
 }
 
 void TabBrowser::UnsetInputHooks(Input *input)
 {
     TabSeletable::UnsetInputHooks(input);
     input->UnsetKeyUpCallback(CancelButton);
-    input->UnsetKeyUpCallback(SCE_CTRL_START);
     input->UnsetKeyUpCallback(SCE_CTRL_TRIANGLE);
     input->UnsetKeyUpCallback(SCE_CTRL_SQUARE);
+    input->UnsetKeyUpCallback(SCE_CTRL_START);
+    input->UnsetKeyUpCallback(SCE_CTRL_SELECT);
 }
 
 void TabBrowser::Show(bool selected)
@@ -206,6 +216,11 @@ void TabBrowser::Show(bool selected)
 
         ImGui::EndTabItem();
     }
+
+    if (_dialog && _dialog->IsActived())
+    {
+        _dialog->Show();
+    }
 }
 
 void TabBrowser::_OnActive(Input *input)
@@ -299,6 +314,64 @@ void TabBrowser::_OnKeyStart(Input *input)
 
 void TabBrowser::_OnKeySelect(Input *input)
 {
+    if (_dialog)
+    {
+        delete _dialog;
+    }
+
+    std::vector<LanguageString> options;
+    if (!_clipboard.Empty())
+    {
+        options.push_back(LANG_PASTE);
+    }
+
+    if (!_directory->GetItem(_index).is_dir)
+    {
+        options.push_back(LANG_COPY);
+        options.push_back(LANG_CUT);
+        options.push_back(LANG_DELETE);
+        options.push_back(LANG_RENAME);
+    }
+
+    _dialog = new Dialog(LANG_FILE_MANAGE,
+                         options,
+                         std::bind(&TabBrowser::_OnDialog, this, std::placeholders::_1, std::placeholders::_2));
+
+    _dialog->OnActive(input);
+}
+
+void TabBrowser::_OnDialog(Input *input, int index)
+{
+    LogFunctionName;
+    if (!_clipboard.Empty())
+    {
+        index--;
+    }
+
+    switch (index)
+    {
+    case -1:
+        LogDebug("Paste");
+        break;
+    case 0:
+        LogDebug("Copy");
+        _clipboard.path = _GetCurrentFullPath();
+        _clipboard.cut = false;
+        break;
+    case 1:
+        LogDebug("Cut");
+        _clipboard.path = _GetCurrentFullPath();
+        _clipboard.cut = true;
+        break;
+    case 2:
+        LogDebug("Delete");
+        break;
+    case 3:
+        LogDebug("Rename");
+        break;
+    default:
+        break;
+    }
 }
 
 void TabBrowser::_UpdateTexture()
@@ -382,7 +455,7 @@ void TabBrowser::_UpdateStatus()
         _status_text += "\t";
     }
 
-    if ((!item.is_dir) || _copy_full_path.size() > 0)
+    if ((!item.is_dir) || !_clipboard.Empty())
     {
         _status_text += BUTTON_SELECT;
         _status_text += TEXT(LANG_FILE_MANAGE);
