@@ -222,14 +222,6 @@ void Ui::CreateTables()
                                                                "",
                                                                ResetGraphics,
                                                                std::bind(&Emulator::ChangeGraphicsConfig, gEmulator))});
-    // std::vector<ItemBase *> controls;
-    // controls.reserve(gConfig->control_maps.size() + 1);
-    // for (ControlMapConfig &cmap : gConfig->control_maps)
-    // {
-    //     controls.emplace_back(new ItemControl(&cmap));
-    // }
-    // controls.emplace_back(new ItemBase(RESET_CONFIGS, "", ResetControl));
-    // _tabs[LANG_CONTROL] = new TabSeletable(TAB_CONTROL, controls);
 
     UpdateControllerOptions();
 
@@ -251,6 +243,11 @@ void Ui::CreateTables()
                                                                 {LanguageString(gLanguageNames[LANGUAGE_ENGLISH]),
                                                                  LanguageString(gLanguageNames[LANGUAGE_CHINESE])},
                                                                 std::bind(&Ui::ChangeLanguage, gUi)),
+                                                 new ItemConfig(LANG_INDEPENDENT_CORE_CONFIG,
+                                                                "",
+                                                                &gConfig->independent_core_config,
+                                                                {LANG_NO, LANG_YES},
+                                                                nullptr),
                                                  new ItemConfig(LANG_REWIND,
                                                                 "",
                                                                 &gConfig->rewind,

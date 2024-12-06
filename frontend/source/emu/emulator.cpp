@@ -129,6 +129,8 @@ bool Emulator::LoadRom(const char *path, const char *entry_name, uint32_t crc32)
         game_info.data = buf;
     }
 
+    gConfig->core_options.Load((std::string(CORE_SAVEFILES_DIR) + "/" + gEmulator->GetCurrentName() + "/core.ini").c_str());
+
     result = retro_load_game(&game_info);
     if (result)
     {

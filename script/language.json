@@ -754,5 +754,12 @@
         "English": "en",
         "Chinese": "cn",
         "Comments": ""
+    },
+    {
+        "No.": "109",
+        "Tag": "LANG_INDEPENDENT_CORE_CONFIG",
+        "English": "Independent core config",
+        "Chinese": "独立的核心设置",
+        "Comments": ""
     }
 ]
