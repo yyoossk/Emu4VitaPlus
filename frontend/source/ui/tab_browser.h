@@ -48,6 +48,7 @@ private:
 
     void _OnDialog(Input *input, int index);
     void _OnConfirmDialog(Input *input, int index);
+    void _PasteFile(bool overwrite);
 
     void _UpdateTexture();
     void _UpdateStatus();

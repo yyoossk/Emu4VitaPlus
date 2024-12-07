@@ -348,7 +348,7 @@ void TabBrowser::_OnKeySelect(Input *input)
         return;
     }
 
-    _dialog = new Dialog(LANG_FILE_MANAGE,
+    _dialog = new Dialog("",
                          options,
                          std::bind(&TabBrowser::_OnDialog, this, std::placeholders::_1, std::placeholders::_2));
 
@@ -368,6 +368,7 @@ void TabBrowser::_OnDialog(Input *input, int index)
     {
     case CMD_PASTE:
         LogDebug("Paste");
+        _PasteFile(false);
         break;
 
     case CMD_COPY:
@@ -384,7 +385,7 @@ void TabBrowser::_OnDialog(Input *input, int index)
 
     case CMD_DELETE:
         LogDebug("Delete");
-        _confirm_dialog->SetText(std::string("Are you sure you want to delete\n") + _GetCurrentFullPath());
+        _confirm_dialog->SetText(std::string(TEXT(LANG_DELETE_FILE_CONFIRM)) + "\n" + _GetCurrentFullPath());
         _confirm_dialog->OnActive(input);
         break;
 
@@ -396,9 +397,54 @@ void TabBrowser::_OnDialog(Input *input, int index)
     }
 }
 
-void TabBrowser::_OnConfirmDialog(Input *, int)
+void TabBrowser::_OnConfirmDialog(Input *input, int index)
 {
     LogFunctionName;
+    if (index != 0)
+    {
+        return;
+    }
+
+    switch (_cmd)
+    {
+    case CMD_PASTE:
+        LogDebug("Paste");
+        _PasteFile(true);
+        break;
+
+    case CMD_DELETE:
+        LogDebug("Delete");
+        File::Remove(_GetCurrentFullPath().c_str());
+        _directory->Refresh();
+        break;
+
+    default:
+        break;
+    }
+}
+
+void TabBrowser::_PasteFile(bool overwrite)
+{
+    if (_clipboard.path.empty())
+    {
+        return;
+    }
+
+    std::string name = File::GetName(_clipboard.path.c_str());
+    std::string dst_path = _directory->GetCurrentPath() + "/" + name;
+    if (File::Exist(dst_path.c_str()) && !overwrite)
+    {
+        _confirm_dialog->SetText(std::string(TEXT(LANG_OVERWRITE_FILE_CONFIRM)) + "\n" + dst_path);
+        _confirm_dialog->OnActive(_input);
+        return;
+    }
+
+    File::CopyFile(_clipboard.path.c_str(), dst_path.c_str());
+    if (_cmd == CMD_CUT)
+    {
+        File::Remove(_clipboard.path.c_str());
+    }
+    _directory->Refresh();
 }
 
 void TabBrowser::_UpdateTexture()

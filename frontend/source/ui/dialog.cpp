@@ -33,8 +33,12 @@ void Dialog::Show()
             ImGui::CloseCurrentPopup();
         }
 
-        ImGui::Text(_text.Get());
-        ImGui::Separator();
+        const char *text = _text.Get();
+        if (*text)
+        {
+            ImGui::Text(_text.Get());
+            ImGui::Separator();
+        }
 
         size_t i = 0;
         for (const auto &option : _options)

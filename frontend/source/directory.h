@@ -21,6 +21,7 @@ public:
 
     void SetExtensionFilter(const char *exts, char split);
     bool SetCurrentPath(const std::string &path);
+    bool Refresh() { return SetCurrentPath(_current_path.c_str()); };
     const std::string &GetCurrentPath() const { return _current_path; };
     const DirItem &GetItem(int index) const { return _items[index]; };
     const std::string &GetItemName(int index) const { return _items[index].name; };

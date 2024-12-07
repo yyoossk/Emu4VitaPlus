@@ -23,7 +23,7 @@ ItemState::ItemState(State *state)
     _menu_count = sizeof(MENU_TEXT) / sizeof(TEXT_ENUM);
   }
 
-  _dialog = new Dialog{"", {LANG_OK, LANG_CANCEL}, std::bind(&ItemState::_OnRun, this, std::placeholders::_1, std::placeholders::_2)};
+  _dialog = new Dialog("", {LANG_OK, LANG_CANCEL}, std::bind(&ItemState::_OnRun, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 ItemState::~ItemState()
