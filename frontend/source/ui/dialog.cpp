@@ -26,7 +26,7 @@ void Dialog::Show()
         ImGui::OpenPopup("Dialog");
     }
 
-    if (ImGui::BeginPopupModal("Dialog", NULL, ImGuiWindowFlags_NoTitleBar))
+    if (ImGui::BeginPopupModal("Dialog", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize))
     {
         if (!_actived && is_popup)
         {
