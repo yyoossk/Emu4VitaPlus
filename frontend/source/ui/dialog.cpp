@@ -34,6 +34,8 @@ void Dialog::Show()
         }
 
         ImGui::Text(_text.Get());
+        ImGui::Separator();
+
         size_t i = 0;
         for (const auto &option : _options)
         {

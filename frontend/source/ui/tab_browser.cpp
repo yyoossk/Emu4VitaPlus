@@ -39,6 +39,10 @@ TabBrowser::TabBrowser() : TabSeletable(LANG_BROWSER),
         }
     }
 
+    _confirm_dialog = new Dialog{"",
+                                 {LANG_OK, LANG_CANCEL},
+                                 std::bind(&TabBrowser::_OnConfirmDialog, this, std::placeholders::_1, std::placeholders::_2)};
+
     _name_map.Load();
     _Update();
 }
@@ -48,6 +52,7 @@ TabBrowser::~TabBrowser()
     LogFunctionName;
 
     delete _directory;
+    delete _confirm_dialog;
 
     if (_text_dialog != nullptr)
     {
@@ -221,6 +226,11 @@ void TabBrowser::Show(bool selected)
     {
         _dialog->Show();
     }
+
+    if (_confirm_dialog->IsActived())
+    {
+        _confirm_dialog->Show();
+    }
 }
 
 void TabBrowser::_OnActive(Input *input)
@@ -333,6 +343,11 @@ void TabBrowser::_OnKeySelect(Input *input)
         options.push_back(LANG_RENAME);
     }
 
+    if (options.size() == 0)
+    {
+        return;
+    }
+
     _dialog = new Dialog(LANG_FILE_MANAGE,
                          options,
                          std::bind(&TabBrowser::_OnDialog, this, std::placeholders::_1, std::placeholders::_2));
@@ -348,30 +363,42 @@ void TabBrowser::_OnDialog(Input *input, int index)
         index--;
     }
 
+    _cmd = index;
     switch (index)
     {
-    case -1:
+    case CMD_PASTE:
         LogDebug("Paste");
         break;
-    case 0:
+
+    case CMD_COPY:
         LogDebug("Copy");
         _clipboard.path = _GetCurrentFullPath();
         _clipboard.cut = false;
         break;
-    case 1:
+
+    case CMD_CUT:
         LogDebug("Cut");
         _clipboard.path = _GetCurrentFullPath();
         _clipboard.cut = true;
         break;
-    case 2:
+
+    case CMD_DELETE:
         LogDebug("Delete");
+        _confirm_dialog->SetText(std::string("Are you sure you want to delete\n") + _GetCurrentFullPath());
+        _confirm_dialog->OnActive(input);
         break;
-    case 3:
+
+    case CMD_RENAME:
         LogDebug("Rename");
         break;
     default:
         break;
     }
+}
+
+void TabBrowser::_OnConfirmDialog(Input *, int)
+{
+    LogFunctionName;
 }
 
 void TabBrowser::_UpdateTexture()

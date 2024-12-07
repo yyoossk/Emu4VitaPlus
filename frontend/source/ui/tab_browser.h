@@ -6,6 +6,15 @@
 
 int32_t GetNameThread(uint32_t args, void *argc);
 
+enum
+{
+    CMD_PASTE = -1,
+    CMD_COPY = 0,
+    CMD_CUT,
+    CMD_DELETE,
+    CMD_RENAME
+};
+
 struct Clipboard
 {
     std::string path;
@@ -38,6 +47,7 @@ private:
     void _OnKeySelect(Input *input);
 
     void _OnDialog(Input *input, int index);
+    void _OnConfirmDialog(Input *input, int index);
 
     void _UpdateTexture();
     void _UpdateStatus();
@@ -62,4 +72,6 @@ private:
 
     Clipboard _clipboard;
     Dialog *_dialog;
+    Dialog *_confirm_dialog;
+    int _cmd;
 };

@@ -6,7 +6,11 @@
 #include "video.h"
 #include "misc.h"
 
-TabFavorite::TabFavorite() : TabSeletable(LANG_FAVORITE), _texture(nullptr)
+TabFavorite::TabFavorite()
+    : TabSeletable(LANG_FAVORITE),
+      _texture(nullptr),
+      _texture_max_width(BROWSER_TEXTURE_MAX_WIDTH),
+      _texture_max_height(BROWSER_TEXTURE_MAX_HEIGHT)
 {
     std::string name = File::GetName(gConfig->last_rom.c_str());
     size_t count = 0;
@@ -82,9 +86,13 @@ void TabFavorite::Show(bool selected)
             }
 
             ImGui::NextColumn();
+
+            ImVec2 avail_size = ImGui::GetContentRegionAvail();
+            _texture_max_width = avail_size.x;
+            _texture_max_height = avail_size.y;
+
             if (_texture != nullptr)
             {
-                ImVec2 avail_size = ImGui::GetContentRegionAvail();
                 ImVec2 pos = ImGui::GetCursorScreenPos();
                 pos.x += ceilf(fmax(0.0f, (avail_size.x - _texture_width) * 0.5f));
                 pos.y += ceilf(fmax(0.0f, (avail_size.y - _texture_height) * 0.5f));
@@ -197,8 +205,8 @@ void TabFavorite::_UpdateTexture()
     {
         CalcFitSize(vita2d_texture_get_width(_texture),
                     vita2d_texture_get_height(_texture),
-                    BROWSER_TEXTURE_MAX_WIDTH,
-                    BROWSER_TEXTURE_MAX_HEIGHT,
+                    _texture_max_width,
+                    _texture_max_height,
                     &_texture_width,
                     &_texture_height);
     }
